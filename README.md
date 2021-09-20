@@ -20,7 +20,7 @@ Dependencies:
 In order to authenticate with Travel Time API, you will have to supply the Application Id and Api Key. 
 
 ```python
-    import ttpy
+    import traveltimepy as ttpy
     import os
     #store your credentials in an environment variable
     os.environ["TRAVELTIME_ID"] = 'YOUR_API_ID'
