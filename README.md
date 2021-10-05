@@ -22,6 +22,7 @@ In order to authenticate with Travel Time API, you will have to supply the Appli
 ```python
     import traveltimepy as ttpy
     import os
+    from datetime import datetime #for examples
     #store your credentials in an environment variable
     os.environ["TRAVELTIME_ID"] = 'YOUR_API_ID'
     os.environ["TRAVELTIME_KEY"] = 'YOUR_API_KEY'
@@ -33,7 +34,7 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 ```python
     departure_search1 = {
         'id': "public transport from Trafalgar Square",
-        'departure_time': "2021-09-01T08:00:00Z",
+        'departure_time':  datetime.utcnow().isoformat(),
         'travel_time': 900,
         'coords': {'lat': 51.507609, 'lng': -0.128315},
         'transportation': {'type': "public_transport"},
@@ -41,14 +42,14 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
     }
     departure_search2 = {
         'id': "driving from Trafalgar Square",
-        'departure_time': "2021-09-01T08:00:00Z",
+        'departure_time':  datetime.utcnow().isoformat(),
         'travel_time': 900,
         'coords': {'lat': 51.507609, 'lng': -0.128315},
         'transportation': {'type': "driving"}
     }
     arrival_search = {
         'id': "public transport to Trafalgar Square",
-        'arrival_time': "2021-09-01T08:00:00Z",
+        'arrival_time':  datetime.utcnow().isoformat(),
         'travel_time': 900,
         'coords': {'lat': 51.507609, 'lng': -0.128315},
         'transportation': {'type': "public_transport"},
@@ -81,7 +82,7 @@ Given origin and destination points filter out points that cannot be reached wit
         "departure_location_id": "London center",
         "arrival_location_ids": ["Hyde Park", "ZSL London Zoo"],
         "transportation": {"type": "bus"},
-        "departure_time": "2021-09-01T08:00:00Z",
+        "departure_time":  datetime.utcnow().isoformat(),
         "travel_time": 1800,
         "properties": ["travel_time"],
         "range": {"enabled": True, "max_results": 3, "width": 600}
@@ -92,7 +93,7 @@ Given origin and destination points filter out points that cannot be reached wit
         "departure_location_ids": ["Hyde Park", "ZSL London Zoo"],
         "arrival_location_id": "London center",
         "transportation": {"type": "public_transport"},
-        "arrival_time": "2021-09-01T08:00:00Z",
+        "arrival_time":  datetime.utcnow().isoformat(),
         "travel_time": 1900,
         "properties": ["travel_time", "distance", "distance_breakdown", "fares"]
     }
@@ -116,7 +117,7 @@ Returns routing information between source and destinations.
         "departure_location_id": "London center",
         "arrival_location_ids": ["Hyde Park", "ZSL London Zoo"],
         "transportation": {"type": "driving"},
-        "departure_time": "2021-09-01T08:00:00Z",
+        "departure_time":  datetime.utcnow().isoformat(),
         "properties": ["travel_time", "distance", "route"]
     }
 
@@ -125,7 +126,7 @@ Returns routing information between source and destinations.
         "departure_location_ids": ["Hyde Park", "ZSL London Zoo"],
         "arrival_location_id": "London center",
         "transportation": {"type": "public_transport"},
-        "arrival_time": "2021-09-01T08:00:00Z",
+        "arrival_time":  datetime.utcnow().isoformat(),
         "properties": ["travel_time", "distance", "route", "fares"],
         "range": {"enabled": True, "max_results": 1, "width": 1800}
     }
@@ -173,7 +174,7 @@ Find reachable postcodes from origin (or to destination) and get statistics abou
 ```python
     departure_search = {
         'id': "public transport from Trafalgar Square",
-        'departure_time': "2021-09-01T08:00:00Z",
+        'departure_time':  datetime.utcnow().isoformat(),
         'travel_time': 1800,
         'coords': {'lat': 51.507609, 'lng': -0.128315},
         'transportation': {'type': "public_transport"},
@@ -182,7 +183,7 @@ Find reachable postcodes from origin (or to destination) and get statistics abou
     }
     arrival_search = {
         'id': "public transport to Trafalgar Square",
-        'arrival_time': "2021-09-01T08:00:00Z",
+        'arrival_time':  datetime.utcnow().isoformat(),
         'travel_time': 1800,
         'coords': {'lat': 51.507609, 'lng': -0.128315},
         'transportation': {'type': "public_transport"},
@@ -198,7 +199,7 @@ Find sectors that have a certain coverage from origin (or to destination) and ge
 ```python
     departure_search = {
         'id': "public transport from Trafalgar Square",
-        'departure_time': "2021-09-01T08:00:00Z",
+        'departure_time':  datetime.utcnow().isoformat(),
         'travel_time': 1800,
         'coords': {'lat': 51.507609, 'lng': -0.128315},
         'transportation': {'type': "public_transport"},
@@ -207,7 +208,7 @@ Find sectors that have a certain coverage from origin (or to destination) and ge
     }
     arrival_search = {
         'id': "public transport to Trafalgar Square",
-        'arrival_time': "2021-09-01T08:00:00Z",
+        'arrival_time':  datetime.utcnow().isoformat(),
         'travel_time': 1800,
         'coords': {'lat': 51.507609, 'lng': -0.128315},
         'transportation': {'type': "public_transport"},
@@ -223,7 +224,7 @@ Find reachable postcodes from origin (or to destination) and get statistics abou
 ```python
     departure_search = {
         'id': "public transport from Trafalgar Square",
-        'departure_time': "2021-09-01T08:00:00Z",
+        'departure_time':  datetime.utcnow().isoformat(),
         'travel_time': 1800,
         'coords': {'lat': 51.507609, 'lng': -0.128315},
         'transportation': {'type': "public_transport"},
@@ -231,7 +232,7 @@ Find reachable postcodes from origin (or to destination) and get statistics abou
     }
     arrival_search = {
         'id': "public transport to Trafalgar Square",
-        'arrival_time': "2021-09-01T08:00:00Z",
+        'arrival_time':  datetime.utcnow().isoformat(),
         'travel_time': 1800,
         'coords': {'lat': 51.507609, 'lng': -0.128315},
         'transportation': {'type': "public_transport"},
