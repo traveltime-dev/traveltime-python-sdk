@@ -7,7 +7,7 @@ def readme():
 
 
 setup(name='traveltimepy',
-      version='0.1',
+      version='0.2',
       description='Python Interface to Travel Time',
       long_description=readme(),
       long_description_content_type='text/markdown',
@@ -17,6 +17,6 @@ setup(name='traveltimepy',
       license='MIT',
       packages=['traveltimepy'],
       install_requires=[
-          'requests',
+          'requests', 'certifi >= 2021.5.30'
       ]
-      )
+    )
