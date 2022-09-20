@@ -11,7 +11,7 @@ Dependencies:
 ## Installation
 
 ```python
-    pip install git+https://github.com/traveltime-dev/traveltime-python-sdk
+    pip install traveltimepy
 ```
 
 ## Usage
