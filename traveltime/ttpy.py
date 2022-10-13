@@ -1,4 +1,4 @@
-from .utils import traveltime_api, APIError, build_body
+from .sdk import traveltime_api, APIError, build_body
 
 
 def map_info():

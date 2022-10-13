@@ -6,7 +6,7 @@ def readme():
         return f.read()
 
 
-setup(name='traveltimepy',
+setup(name='traveltime',
       version='1.0.0',
       description='Python Interface to Travel Time',
       long_description=readme(),
@@ -14,7 +14,7 @@ setup(name='traveltimepy',
       url='https://github.com/traveltime-dev/traveltime-python-sdk',
       author='TravelTime',
       license='MIT',
-      packages=['traveltimepy'],
+      packages=['traveltime'],
       keywords=['traveltime', 'api', 'maps'],
       install_requires=[
           'requests', 'certifi >= 2021.5.30'
