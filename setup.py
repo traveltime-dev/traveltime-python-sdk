@@ -17,6 +17,6 @@ setup(name='traveltime',
       packages=['traveltime'],
       keywords=['traveltime', 'api', 'maps'],
       install_requires=[
-          'requests', 'certifi >= 2021.5.30'
+          'requests', 'dacite', 'certifi >= 2021.5.30'
       ]
     )

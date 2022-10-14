@@ -9,5 +9,5 @@ class Transportation(ABC):
 
 @dataclass
 class Driving(Transportation):
-    type: str = 'Driving'
+    type: str = 'driving'
 

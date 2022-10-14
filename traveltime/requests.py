@@ -10,7 +10,7 @@ from traveltime.transportation import Transportation
 @dataclass(frozen=True)
 class DepartureSearch:
     id: SearchId
-    coord: Coordinate
+    coords: Coordinate
     departure_time: datetime
     travel_time: int
     transportation: Transportation
@@ -19,7 +19,7 @@ class DepartureSearch:
 @dataclass(frozen=True)
 class ArrivalSearch:
     id: SearchId
-    coord: Coordinate
+    coords: Coordinate
     arrival_time: datetime
     travel_time: int
     transportation: Transportation

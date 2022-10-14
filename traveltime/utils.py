@@ -4,16 +4,15 @@ from datetime import datetime
 
 import requests
 
-from traveltime import RequestType
 from traveltime.errors import ApiError
 
 
-def send_request(path, headers, params, body, request_type):
-    url = "https://api.traveltimeapp.com/v4/" + path
-    if request_type == RequestType.GET:
-        resp = requests.get(url=url, headers=headers, params=params)
+def send_request(path, headers, body=None, query=None):
+    url = "/".join(["https://api.traveltimeapp.com", 'v4', path])
+    if body is None:
+        resp = requests.get(url=url, headers=headers, params=query)
     else:
-        resp = requests.post(url=url, headers=headers, body=to_json(body))
+        resp = requests.post(url=url, headers=headers, data=to_json(body))
 
     try:
         parsed = resp.json()
