@@ -2,9 +2,17 @@ import dataclasses
 import json
 from datetime import datetime
 
+import aiohttp
 import requests
 
 from traveltime.errors import ApiError
+
+
+async def send_request_async(path, headers, body=None, query=None):
+    url = 'https://api.traveltimeapp.com/v4/' + path
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url=url, headers=headers) as resp:
+            return resp.json()
 
 
 def send_request(path, headers, body=None, query=None):
@@ -18,6 +26,7 @@ def send_request(path, headers, body=None, query=None):
         parsed = resp.json()
     except:
         raise ApiError('Travel Time API did not return json') from None
+
 
     if resp.status_code != 200:
         msg = "Travel Time API request failed [{}]\n{}\nError code: {}\n<{}>\n".format(

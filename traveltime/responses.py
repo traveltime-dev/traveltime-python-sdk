@@ -19,3 +19,14 @@ class Result:
 @dataclass(frozen=True)
 class TimeMapResponse:
     results: List[Result]
+
+@dataclass(frozen=True)
+class Map:
+    name: str
+
+@dataclass(frozen=True)
+class MapInfo:
+    maps: List[Map]
+
+
+
