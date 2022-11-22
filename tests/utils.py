@@ -15,7 +15,7 @@ def mocked_requests(*args, **kwargs):
     if url == 'https://api.traveltimeapp.com/v4/map-info':
         json_data = read_file("resources/responses/map_info.json")
         return MockResponse(json_data, 200)
-    elif url == 'https://api.traveltimeapp.com/v4/time_map':
+    elif url == 'https://api.traveltimeapp.com/v4/time-map':
         json_data = read_file("resources/responses/time_map.json")
         return MockResponse(json_data, 200)
     else:

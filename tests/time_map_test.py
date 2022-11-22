@@ -5,7 +5,6 @@ from datetime import datetime
 from tests.utils import mocked_requests, read_file
 from traveltime.dto import Coordinate, SearchId
 from traveltime.dto.requests.time_map_request import DepartureSearch
-from traveltime.dto.responses.map_info_response import MapInfoResponse
 from traveltime.dto.responses.time_map_response import TimeMapResponse
 from traveltime.sdk import TravelTimeSdk
 from traveltime.transportation import Driving
