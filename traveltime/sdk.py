@@ -1,11 +1,9 @@
-from typing import Dict
-
-from dacite import from_dict
-
 from traveltime import AcceptType
-from traveltime.requests import *
-from traveltime.responses import TimeMapResponse, MapInfo
-from traveltime.utils import send_request
+
+from traveltime.dto.requests.time_map_request import *
+from traveltime.dto.responses.map_info_response import MapInfoResponse
+from traveltime.dto.responses.time_map_response import TimeMapResponse
+from traveltime.utils import *
 
 
 class TravelTimeSdk:
@@ -14,9 +12,11 @@ class TravelTimeSdk:
         self.__app_id = app_id
         self.__api_key = api_key
 
-    def map_info(self):
-        response = send_request(path='map-info', headers=self.__headers(AcceptType.JSON))
-        return from_dict(data_class=MapInfo, data=response)
+    def map_info(self) -> MapInfoResponse:
+        return send_get_request(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+
+    async def map_info_async(self) -> MapInfoResponse:
+        return await send_get_request_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
 
     def time_map(
         self,
@@ -25,14 +25,18 @@ class TravelTimeSdk:
         unions: List[Union] = None,
         intersections: List[Intersection] = None
     ) -> TimeMapResponse:
-        response = send_request(
-            path='time-map',
-            headers=self.__headers(AcceptType.JSON),
-            body=TimeMapRequest(departure_searches, arrival_searches, unions, intersections)
-        )
-        return from_dict(data_class=TimeMapResponse, data=response)
+        request = TimeMapRequest(departure_searches, arrival_searches, unions, intersections)
+        return send_post_request(TimeMapResponse, 'time-map', self.__headers(AcceptType.JSON), request)
 
-   # async def time_map_async(self,arrival_searches: List[ArrivalSearch] = None, departure_searches: List[DepartureSearch] = None,unions: List[Union] = None,intersections: List[Intersection] = None) -> TimeMapResponse:
+    async def time_map_async(
+        self,
+        arrival_searches: List[ArrivalSearch] = None,
+        departure_searches: List[DepartureSearch] = None,
+        unions: List[Union] = None,
+        intersections: List[Intersection] = None
+    ) -> TimeMapResponse:
+        request = TimeMapRequest(departure_searches, arrival_searches, unions, intersections)
+        return await send_post_request_async(TimeMapResponse, 'time-map', self.__headers(AcceptType.JSON), request)
 
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {

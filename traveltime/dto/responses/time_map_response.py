@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from traveltime import SearchId, Coordinate
+from traveltime.dto import SearchId, Coordinate
 
 
 @dataclass(frozen=True)
@@ -19,14 +19,3 @@ class Result:
 @dataclass(frozen=True)
 class TimeMapResponse:
     results: List[Result]
-
-@dataclass(frozen=True)
-class Map:
-    name: str
-
-@dataclass(frozen=True)
-class MapInfo:
-    maps: List[Map]
-
-
-

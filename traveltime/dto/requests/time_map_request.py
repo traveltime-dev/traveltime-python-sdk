@@ -3,7 +3,7 @@ from datetime import datetime
 
 from typing import List
 
-from traveltime import Coordinate, SearchId
+from traveltime.dto import Coordinate, SearchId
 from traveltime.transportation import Transportation
 
 
