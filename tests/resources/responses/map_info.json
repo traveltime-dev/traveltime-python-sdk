@@ -23,6 +23,14 @@
         "fares": false,
         "postcodes": false
       }
+    },
+    {
+      "name": "bh",
+      "features": {
+        "cross_country_modes": [],
+        "fares": false,
+        "postcodes": false
+      }
     }
   ]
 }

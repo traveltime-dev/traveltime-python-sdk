@@ -20,9 +20,8 @@ async def send_post_request_async(response_class: Type[T], path: str, headers: D
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     async with aiohttp.ClientSession() as session:
         async with session.post(url=url, headers=headers, data=to_json(body)) as resp:
-            json_body = resp.json()
-            process_error(resp.status_code, json_body)
-            return from_json(response_class, json_body)
+            data = await resp.text()
+            return __process_response(response_class, resp.status, resp.text)
 
 
 async def send_get_request_async(
@@ -34,30 +33,24 @@ async def send_get_request_async(
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     async with aiohttp.ClientSession() as session:
         async with session.get(url=url, headers=headers, query=query) as resp:
-            json_body = resp.json()
-            process_error(resp.status_code, json_body)
-            return from_json(response_class, json_body)
+            return __process_response(response_class, resp.status_code, resp.text)
 
 
 def send_get_request(response_class: Type[T], path: str, headers: Dict[str, str], query: Optional[str] = None) -> T:
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     resp = requests.get(url=url, headers=headers, params=query)
-    json_body = resp.json()
-    process_error(resp.status_code, json_body)
-    return from_json(response_class, json_body)
+    return __process_response(response_class, resp.status_code, resp.text)
 
 
 def send_post_request(response_class: Type[T], path: str, headers: Dict[str, str], body: R) -> T:
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     resp = requests.post(url=url, headers=headers, data=to_json(body))
-    json_body = resp.json()
-    process_error(resp.status_code, json_body)
-    return from_json(response_class, json_body)
+    return __process_response(response_class, resp.status_code, resp.text)
 
 
-def process_error(status_code: int, json_body: str):
+def __process_response(response_class: Type[T], status_code: int, text: str) -> T:
     if status_code != 200:
-        parsed = from_json(ResponseError, json_body)
+        parsed = from_json(ResponseError, text)
         msg = 'Travel Time API request failed \n{}\nError code: {}\n<{}>\n'.format(
             parsed.description,
             parsed.error_code,
@@ -65,6 +58,8 @@ def process_error(status_code: int, json_body: str):
         )
 
         raise ApiError(msg)
+
+    return from_json(response_class, text)
 
 
 def object_hook(json_dict):
