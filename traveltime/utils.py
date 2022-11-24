@@ -20,8 +20,8 @@ async def send_post_request_async(response_class: Type[T], path: str, headers: D
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     async with aiohttp.ClientSession() as session:
         async with session.post(url=url, headers=headers, data=to_json(body)) as resp:
-            data = await resp.text()
-            return __process_response(response_class, resp.status, resp.text)
+            body_text = await resp.text()
+            return __process_response(response_class, resp.status, body_text)
 
 
 async def send_get_request_async(
@@ -33,7 +33,8 @@ async def send_get_request_async(
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     async with aiohttp.ClientSession() as session:
         async with session.get(url=url, headers=headers, query=query) as resp:
-            return __process_response(response_class, resp.status_code, resp.text)
+            body_text = await resp.text()
+            return __process_response(response_class, resp.status, body_text)
 
 
 def send_get_request(response_class: Type[T], path: str, headers: Dict[str, str], query: Optional[str] = None) -> T:

@@ -1,28 +1,30 @@
 from dataclasses import dataclass
 from datetime import datetime
 
-from typing import List
+from typing import List, Optional
 
-from traveltime.dto import Coordinate, SearchId
+from traveltime.dto import Coordinates, SearchId, Range
 from traveltime.transportation import Transportation
 
 
 @dataclass(frozen=True)
 class DepartureSearch:
     id: SearchId
-    coords: Coordinate
+    coords: Coordinates
     departure_time: datetime
     travel_time: int
     transportation: Transportation
+    range: Optional[Range] = None
 
 
 @dataclass(frozen=True)
 class ArrivalSearch:
     id: SearchId
-    coords: Coordinate
+    coords: Coordinates
     arrival_time: datetime
     travel_time: int
     transportation: Transportation
+    range: Optional[Range] = None
 
 
 @dataclass(frozen=True)

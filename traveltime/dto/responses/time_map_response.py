@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from typing import List
 
-from traveltime.dto import SearchId, Coordinate
+from traveltime.dto import SearchId, Coordinates
 
 
 @dataclass(frozen=True)
 class Shape:
-    shell: List[Coordinate]
-    holes: List[List[Coordinate]]
+    shell: List[Coordinates]
+    holes: List[List[Coordinates]]
 
 
 @dataclass(frozen=True)
