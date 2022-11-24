@@ -14,7 +14,7 @@ class TimeFilterTest(unittest.TestCase):
 
     @mock.patch('requests.post', side_effect=mocked_requests)
     def test_time_filter(self, mock_post):
-        sdk = TravelTimeSdk('4da26ce0', '1724661047021afd210e49c3e5d2b5b8')
+        sdk = TravelTimeSdk('appId', 'apiKey')
         locations = [
             Location('London center', Coordinates(51.508930, -0.131387)),
             Location('Hyde Park', Coordinates(51.508824, -0.167093)),
