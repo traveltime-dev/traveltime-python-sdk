@@ -7,7 +7,7 @@
           "id": "ZSL London Zoo",
           "properties": [
             {
-              "travel_time": 2347,
+              "travel_time": 2324,
               "fares": {
                 "breakdown": [
                   {
@@ -65,8 +65,8 @@
                 ]
               },
               "route": {
-                "departure_time": "2022-11-24T10:22:16+00:00",
-                "arrival_time": "2022-11-24T10:58:37+00:00",
+                "departure_time": "2022-11-24T11:21:16+00:00",
+                "arrival_time": "2022-11-24T11:58:13+00:00",
                 "parts": [
                   {
                     "id": 0,
@@ -348,9 +348,9 @@
                     "id": 5,
                     "type": "public_transport",
                     "mode": "bus",
-                    "directions": "Take a bus (88 (of LONDON GENERAL TRANSPOR)) from 'Regent's Park Barracks' (leaves at 10:33) to 'Haymarket  Charles II Street' (arrives at 10:57) (10 stops)",
+                    "directions": "Take a bus (88 (of LONDON GENERAL TRANSPOR)) from 'Regent's Park Barracks' (leaves at 11:32) to 'Haymarket  Charles II Street' (arrives at 11:56) (10 stops)",
                     "distance": 0,
-                    "travel_time": 1452,
+                    "travel_time": 1488,
                     "coords": [
                       {
                         "lat": 51.5344581103,
@@ -400,8 +400,8 @@
                     "line": "88 (of LONDON GENERAL TRANSPOR)",
                     "departure_station": "Regent's Park Barracks",
                     "arrival_station": "Haymarket  Charles II Street",
-                    "departs_at": "10:33",
-                    "arrives_at": "10:57",
+                    "departs_at": "11:32",
+                    "arrives_at": "11:56",
                     "num_stops": 10
                   },
                   {
@@ -469,7 +469,7 @@
           "id": "Hyde Park",
           "properties": [
             {
-              "travel_time": 1990,
+              "travel_time": 2241,
               "fares": {
                 "breakdown": [
                   {
@@ -484,33 +484,7 @@
                         "type": "single",
                         "price": 1.5,
                         "currency": "GBP"
-                      }
-                    ]
-                  },
-                  {
-                    "modes": [
-                      "bus"
-                    ],
-                    "route_part_ids": [
-                      7
-                    ],
-                    "tickets": [
-                      {
-                        "type": "single",
-                        "price": 1.5,
-                        "currency": "GBP"
-                      }
-                    ]
-                  },
-                  {
-                    "modes": [
-                      "bus"
-                    ],
-                    "route_part_ids": [
-                      5,
-                      7
-                    ],
-                    "tickets": [
+                      },
                       {
                         "type": "week",
                         "price": 21,
@@ -531,6 +505,11 @@
                 ],
                 "tickets_total": [
                   {
+                    "type": "single",
+                    "price": 1.5,
+                    "currency": "GBP"
+                  },
+                  {
                     "type": "week",
                     "price": 21,
                     "currency": "GBP"
@@ -544,17 +523,12 @@
                     "type": "year",
                     "price": 840,
                     "currency": "GBP"
-                  },
-                  {
-                    "type": "single",
-                    "price": 3,
-                    "currency": "GBP"
                   }
                 ]
               },
               "route": {
-                "departure_time": "2022-11-24T10:28:13+00:00",
-                "arrival_time": "2022-11-24T11:00:06+00:00",
+                "departure_time": "2022-11-24T11:22:39+00:00",
+                "arrival_time": "2022-11-24T11:56:39+00:00",
                 "parts": [
                   {
                     "id": 0,
@@ -763,9 +737,9 @@
                     "id": 5,
                     "type": "public_transport",
                     "mode": "bus",
-                    "directions": "Take a bus (274 (of METROLINE TRAVEL LIMITED)) from 'Hyde Park Street' (leaves at 10:36) to 'Orchard Street  Selfridges' (arrives at 10:41) (3 stops)",
+                    "directions": "Take a bus (94 (of LONDON UNITED BUSWAYS L)) from 'Hyde Park Street' (leaves at 11:31) to 'Charles II Street' (arrives at 11:53) (8 stops)",
                     "distance": 0,
-                    "travel_time": 260,
+                    "travel_time": 1320,
                     "coords": [
                       {
                         "lat": 51.5125707038,
@@ -780,52 +754,6 @@
                         "lng": -0.1567521002
                       },
                       {
-                        "lat": 51.5146089733,
-                        "lng": -0.1542215131
-                      }
-                    ],
-                    "line": "274 (of METROLINE TRAVEL LIMITED)",
-                    "departure_station": "Hyde Park Street",
-                    "arrival_station": "Orchard Street  Selfridges",
-                    "departs_at": "10:36",
-                    "arrives_at": "10:41",
-                    "num_stops": 3
-                  },
-                  {
-                    "id": 6,
-                    "type": "basic",
-                    "mode": "walk",
-                    "directions": "Enter 'Orchard Street / Selfridges' and go to 'Stop BZ'",
-                    "distance": 38,
-                    "travel_time": 54,
-                    "coords": [
-                      {
-                        "lat": 51.5146089733,
-                        "lng": -0.1542215131
-                      },
-                      {
-                        "lat": 51.514626199999846,
-                        "lng": -0.15412359999998992
-                      },
-                      {
-                        "lat": 51.5143793171,
-                        "lng": -0.1539137244
-                      }
-                    ]
-                  },
-                  {
-                    "id": 7,
-                    "type": "public_transport",
-                    "mode": "bus",
-                    "directions": "Take a bus (139 (of METROLINE TRAVEL LIMITED)) from 'Orchard Street  Selfridges' (leaves at 10:42) to 'Haymarket  Jermyn Street' (arrives at 10:57) (6 stops)",
-                    "distance": 0,
-                    "travel_time": 907,
-                    "coords": [
-                      {
-                        "lat": 51.5143793171,
-                        "lng": -0.1539137244
-                      },
-                      {
                         "lat": 51.5142109449,
                         "lng": -0.1517875085
                       },
@@ -838,99 +766,99 @@
                         "lng": -0.1416690138
                       },
                       {
-                        "lat": 51.5111279374,
-                        "lng": -0.1387979495
+                        "lat": 51.5123407616,
+                        "lng": -0.1398582224
                       },
                       {
                         "lat": 51.5098942875,
                         "lng": -0.1364271815
                       },
                       {
-                        "lat": 51.5096826461,
-                        "lng": -0.1327322109
+                        "lat": 51.5079435876,
+                        "lng": -0.1330771095
                       }
                     ],
-                    "line": "139 (of METROLINE TRAVEL LIMITED)",
-                    "departure_station": "Orchard Street  Selfridges",
-                    "arrival_station": "Haymarket  Jermyn Street",
-                    "departs_at": "10:42",
-                    "arrives_at": "10:57",
-                    "num_stops": 6
+                    "line": "94 (of LONDON UNITED BUSWAYS L)",
+                    "departure_station": "Hyde Park Street",
+                    "arrival_station": "Charles II Street",
+                    "departs_at": "11:31",
+                    "arrives_at": "11:53",
+                    "num_stops": 8
                   },
                   {
-                    "id": 8,
+                    "id": 6,
                     "type": "basic",
                     "mode": "walk",
-                    "directions": "Leave Haymarket  Jermyn Street",
-                    "distance": 10,
-                    "travel_time": 15,
+                    "directions": "Enter 'Charles II Street' through 'Stop U'",
+                    "distance": 16,
+                    "travel_time": 23,
                     "coords": [
                       {
-                        "lat": 51.5096826461,
-                        "lng": -0.1327322109
+                        "lat": 51.5079435876,
+                        "lng": -0.1330771095
                       },
                       {
-                        "lat": 51.5097155999999,
-                        "lng": -0.1328749999999974
+                        "lat": 51.508055099999886,
+                        "lng": -0.13292430000000416
                       }
                     ]
                   },
                   {
-                    "id": 9,
+                    "id": 7,
                     "type": "road",
                     "mode": "walk",
-                    "directions": "Walk 111 meters along Haymarket (A4)",
-                    "distance": 111,
-                    "travel_time": 101,
+                    "directions": "Walk 93 meters along Charles II Street (B327)",
+                    "distance": 93,
+                    "travel_time": 67,
                     "coords": [
                       {
-                        "lat": 51.5097155999999,
-                        "lng": -0.1328749999999974
+                        "lat": 51.508055099999886,
+                        "lng": -0.13292430000000416
                       },
                       {
-                        "lat": 51.5096918999999,
-                        "lng": -0.1328514999999974
+                        "lat": 51.508204000000205,
+                        "lng": -0.13248430000001024
                       },
                       {
-                        "lat": 51.50957779999989,
-                        "lng": -0.13273760000000415
+                        "lat": 51.50845769999997,
+                        "lng": -0.13172879999999818
+                      }
+                    ],
+                    "road": "Charles II Street (B327)"
+                  },
+                  {
+                    "id": 8,
+                    "type": "road",
+                    "mode": "walk",
+                    "directions": "Turn left onto Haymarket (A4) and walk 46 meters",
+                    "distance": 46,
+                    "travel_time": 54,
+                    "coords": [
+                      {
+                        "lat": 51.50845769999997,
+                        "lng": -0.13172879999999818
                       },
                       {
-                        "lat": 51.5094939000002,
-                        "lng": -0.1326532000000099
+                        "lat": 51.50854679999998,
+                        "lng": -0.1318032000000006
                       },
                       {
-                        "lat": 51.5093312000003,
-                        "lng": -0.13250020000000431
-                      },
-                      {
-                        "lat": 51.5092864000003,
-                        "lng": -0.1324533000000043
-                      },
-                      {
-                        "lat": 51.50922989999997,
-                        "lng": -0.13240279999999818
-                      },
-                      {
-                        "lat": 51.509201899999965,
-                        "lng": -0.13237820000000156
-                      },
-                      {
-                        "lat": 51.50896719999989,
-                        "lng": -0.13217220000000415
+                        "lat": 51.5085872000003,
+                        "lng": -0.1318387000000043
                       },
                       {
                         "lat": 51.50882940000022,
                         "lng": -0.13205080000001024
                       }
                     ],
-                    "road": "Haymarket (A4)"
+                    "road": "Haymarket (A4)",
+                    "turn": "left"
                   },
                   {
-                    "id": 10,
+                    "id": 9,
                     "type": "road",
                     "mode": "walk",
-                    "directions": "Turn left onto Orange Street and walk 69 meters",
+                    "directions": "Turn right onto Orange Street and walk 69 meters",
                     "distance": 69,
                     "travel_time": 49,
                     "coords": [
@@ -948,10 +876,10 @@
                       }
                     ],
                     "road": "Orange Street",
-                    "turn": "left"
+                    "turn": "right"
                   },
                   {
-                    "id": 11,
+                    "id": 10,
                     "type": "start_end",
                     "mode": "walk",
                     "directions": "Your destination is 28 meters southwest",
@@ -984,7 +912,7 @@
           "id": "ZSL London Zoo",
           "properties": [
             {
-              "travel_time": 2667
+              "travel_time": 2751
             }
           ]
         },
@@ -992,7 +920,7 @@
           "id": "Hyde Park",
           "properties": [
             {
-              "travel_time": 2042
+              "travel_time": 2126
             }
           ]
         }

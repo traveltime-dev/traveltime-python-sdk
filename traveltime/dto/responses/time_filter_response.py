@@ -13,8 +13,8 @@ class DistanceBreakdown:
 @dataclass(frozen=True)
 class Property:
     travel_time: int
-    distance: int
-    distance_breakdown: List[DistanceBreakdown]
+    distance: Optional[int]
+    distance_breakdown: Optional[List[DistanceBreakdown]]
     fares: Optional[Fares]
     #route: Optional[Route] to be implemented
 
@@ -28,6 +28,7 @@ class Location:
 @dataclass(frozen=True)
 class Result:
     search_id: SearchId
+    locations: List[Location]
     unreachable: List[LocationId]
 
 

@@ -30,7 +30,7 @@
         "ZSL London Zoo"
       ],
       "departure_location_id": "London center",
-      "departure_time": "2022-11-24T11:01:23.408786",
+      "departure_time": "2022-11-24T12:00:00",
       "travel_time": 3600,
       "transportation": {
         "type": "bus"
@@ -53,7 +53,7 @@
         "ZSL London Zoo"
       ],
       "arrival_location_id": "London center",
-      "arrival_time": "2022-11-24T11:01:23.408798",
+      "arrival_time": "2022-11-24T12:00:00",
       "travel_time": 3800,
       "transportation": {
         "type": "bus"

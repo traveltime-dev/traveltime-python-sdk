@@ -15,7 +15,7 @@ class ArrivalSearch:
     travel_time: int
     transportation: Transportation
     properties: List[Property]
-    full_range: Optional[FullRange]
+    full_range: Optional[FullRange] = None
 
 
 @dataclass(frozen=True)
@@ -27,7 +27,7 @@ class DepartureSearch:
     travel_time: int
     transportation: Transportation
     properties: List[Property]
-    full_range: Optional[FullRange]
+    full_range: Optional[FullRange] = None
 
 
 @dataclass(frozen=True)
