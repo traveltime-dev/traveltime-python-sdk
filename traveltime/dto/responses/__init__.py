@@ -1,6 +1,6 @@
 from datetime import datetime, time
 from pydantic import BaseModel
-from typing import Literal, NewType, List, Union
+from typing import Literal, NewType, List, Union, Optional
 
 from traveltime.dto import Coordinates
 
@@ -15,6 +15,29 @@ class BasicPart(BaseModel):
     travel_time: int
     coords: List[Coordinates]
     type: Literal['basic']
+
+
+class RoadPart(BaseModel):
+    id: PartId
+    mode: str
+    directions: str
+    distance: int
+    travel_time: int
+    coords: List[Coordinates]
+    type: Literal['road']
+    road: Optional[str]
+    turn: Optional[str]
+
+
+class StartEndPart(BaseModel):
+    id: PartId
+    mode: str
+    directions: str
+    distance: int
+    travel_time: int
+    coords: List[Coordinates]
+    type: Literal['start_end']
+    direction: str
 
 
 class PublicTransportPart(BaseModel):
@@ -36,4 +59,4 @@ class PublicTransportPart(BaseModel):
 class Route(BaseModel):
     departure_time: datetime
     arrival_time: datetime
-    parts: List[Union[BasicPart, PublicTransportPart]]
+    parts: List[Union[BasicPart, PublicTransportPart, StartEndPart, RoadPart]]

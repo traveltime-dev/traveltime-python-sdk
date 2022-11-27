@@ -13,10 +13,10 @@ T = TypeVar('T')
 R = TypeVar('R')
 
 
-async def send_post_request_async(response_class: Type[T], path: str, headers: Dict[str, str], body: R) -> T:
+async def send_post_request_async(response_class: Type[T], path: str, headers: Dict[str, str], body: BaseModel) -> T:
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     async with aiohttp.ClientSession() as session:
-        async with session.post(url=url, headers=headers, data=to_json(body)) as resp:
+        async with session.post(url=url, headers=headers, data=body.json()) as resp:
             body_text = await resp.text()
             return __process_response(response_class, resp.status, body_text)
 

@@ -58,7 +58,12 @@ class TravelTimeSdk:
         departure_searches: List[time_map_request.DepartureSearch],
         arrival_searches: List[time_map_request.ArrivalSearch]
     ) -> TimeFilterResponse:
-        request = TimeFilterRequest(locations, departure_searches, arrival_searches)
+        request = TimeFilterRequest(
+            locations=locations,
+            departure_searches=departure_searches,
+            arrival_searches=arrival_searches
+        )
+        print(request.json())
         return send_post_request(TimeFilterResponse, 'time-filter', self.__headers(AcceptType.JSON), request)
 
     async def time_filter_async(
@@ -67,7 +72,11 @@ class TravelTimeSdk:
         departure_searches: List[time_filter_request.DepartureSearch],
         arrival_searches: List[time_filter_request.ArrivalSearch]
     ) -> TimeFilterResponse:
-        request = TimeFilterRequest(locations, departure_searches, arrival_searches)
+        request = TimeFilterRequest(
+            locations=locations,
+            departure_searches=departure_searches,
+            arrival_searches=arrival_searches
+        )
         return await send_post_request_async(TimeFilterResponse, 'time-filter', self.__headers(AcceptType.JSON), request)
 
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
