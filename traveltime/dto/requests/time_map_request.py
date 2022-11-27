@@ -1,46 +1,43 @@
-from dataclasses import dataclass
+import typing
 from datetime import datetime
 
 from typing import List, Optional
 
+from pydantic.main import BaseModel
+
 from traveltime.dto import Coordinates, SearchId, Range
-from traveltime.transportation import Transportation
+from traveltime.transportation import Bus, PublicTransport, Driving
 
 
-@dataclass(frozen=True)
-class DepartureSearch:
+class DepartureSearch(BaseModel):
     id: SearchId
     coords: Coordinates
     departure_time: datetime
     travel_time: int
-    transportation: Transportation
+    transportation: typing.Union[Bus, PublicTransport, Driving]
     range: Optional[Range] = None
 
 
-@dataclass(frozen=True)
-class ArrivalSearch:
+class ArrivalSearch(BaseModel):
     id: SearchId
     coords: Coordinates
     arrival_time: datetime
     travel_time: int
-    transportation: Transportation
+    transportation: typing.Union[Bus, PublicTransport, Driving]
     range: Optional[Range] = None
 
 
-@dataclass(frozen=True)
-class Intersection:
+class Intersection(BaseModel):
     id: SearchId
     search_ids: List[SearchId]
 
 
-@dataclass(frozen=True)
-class Union:
+class Union(BaseModel):
     id: SearchId
     search_ids: List[SearchId]
 
 
-@dataclass(frozen=True)
-class TimeMapRequest:
+class TimeMapRequest(BaseModel):
     departure_searches: List[DepartureSearch]
     arrival_searches: List[ArrivalSearch]
     unions: List[Union]

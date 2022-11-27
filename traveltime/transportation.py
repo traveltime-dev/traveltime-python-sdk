@@ -1,21 +1,15 @@
-from abc import ABC
-from dataclasses import dataclass
+from typing import Literal
+
+from pydantic.main import BaseModel
 
 
-class Transportation(ABC):
-    type: str
+class Driving(BaseModel):
+    type: Literal['driving'] = 'driving'
 
 
-@dataclass(frozen=True)
-class Driving(Transportation):
-    type: str = 'driving'
+class Bus(BaseModel):
+    type: Literal['bus'] = 'bus'
 
 
-@dataclass(frozen=True)
-class Bus(Transportation):
-    type: str = 'bus'
-
-
-@dataclass(frozen=True)
-class PublicTransport(Transportation):
-    type: str = 'public_transport'
+class PublicTransport(BaseModel):
+    type: Literal['public_transport'] = 'public_transport'

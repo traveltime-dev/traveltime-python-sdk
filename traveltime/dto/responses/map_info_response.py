@@ -1,27 +1,24 @@
-from dataclasses import dataclass
 from datetime import datetime
 from typing import List, Optional
 
+from pydantic.main import BaseModel
 
-@dataclass(frozen=True)
-class PublicTransport:
+
+class PublicTransport(BaseModel):
     date_start: datetime
     date_end: datetime
 
 
-@dataclass(frozen=True)
-class Features:
+class Features(BaseModel):
     fares: bool
     postcodes: bool
     public_transport: Optional[PublicTransport]
 
 
-@dataclass(frozen=True)
-class Map:
+class Map(BaseModel):
     name: str
     features: Features
 
 
-@dataclass(frozen=True)
-class MapInfoResponse:
+class MapInfoResponse(BaseModel):
     maps: List[Map]

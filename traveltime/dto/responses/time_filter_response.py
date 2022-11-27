@@ -1,37 +1,34 @@
-from dataclasses import dataclass
 from typing import List, Optional
 
+from pydantic.main import BaseModel
+
 from traveltime.dto import SearchId, LocationId, Fares
+from traveltime.dto.responses import Route
 
 
-@dataclass(frozen=True)
-class DistanceBreakdown:
+class DistanceBreakdown(BaseModel):
     mode: str
     distance: int
 
 
-@dataclass(frozen=True)
-class Property:
+class Property(BaseModel):
     travel_time: int
     distance: Optional[int]
     distance_breakdown: Optional[List[DistanceBreakdown]]
     fares: Optional[Fares]
-    #route: Optional[Route] to be implemented
+    route: Optional[Route]
 
 
-@dataclass(frozen=True)
-class Location:
+class Location(BaseModel):
     id: LocationId
     properties: List[Property]
 
 
-@dataclass(frozen=True)
-class Result:
+class Result(BaseModel):
     search_id: SearchId
     locations: List[Location]
     unreachable: List[LocationId]
 
 
-@dataclass(frozen=True)
-class TimeFilterResponse:
+class TimeFilterResponse(BaseModel):
     results: List[Result]

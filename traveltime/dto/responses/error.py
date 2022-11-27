@@ -1,8 +1,7 @@
-from dataclasses import dataclass
+from pydantic.main import BaseModel
 
 
-@dataclass(frozen=True)
-class ResponseError:
+class ResponseError(BaseModel):
     error_code: int
     description: str
     documentation_link: str

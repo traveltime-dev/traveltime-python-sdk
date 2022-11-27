@@ -1,21 +1,19 @@
-from dataclasses import dataclass
 from typing import List
+
+from pydantic.main import BaseModel
 
 from traveltime.dto import SearchId, Coordinates
 
 
-@dataclass(frozen=True)
-class Shape:
+class Shape(BaseModel):
     shell: List[Coordinates]
     holes: List[List[Coordinates]]
 
 
-@dataclass(frozen=True)
-class Result:
+class Result(BaseModel):
     search_id: SearchId
     shapes: List[Shape]
 
 
-@dataclass(frozen=True)
-class TimeMapResponse:
+class TimeMapResponse(BaseModel):
     results: List[Result]

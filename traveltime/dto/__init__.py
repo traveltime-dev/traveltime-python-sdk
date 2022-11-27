@@ -1,53 +1,47 @@
-from dataclasses import dataclass
 from enum import Enum
 
 from typing import NewType, List
+
+from pydantic.main import BaseModel
 
 SearchId = NewType('SearchId', str)
 LocationId = NewType('LocationId', str)
 
 
-@dataclass(frozen=True)
-class Coordinates:
+class Coordinates(BaseModel):
     lat: float
     lng: float
 
 
-@dataclass(frozen=True)
-class Ticket:
+class Ticket(BaseModel):
     type: str
     price: float
     currency: str
 
 
-@dataclass(frozen=True)
-class FareBreakdown:
+class FareBreakdown(BaseModel):
     modes: List[str]
     route_part_ids: List[int]
     tickets: List[Ticket]
 
 
-@dataclass(frozen=True)
-class Fares:
+class Fares(BaseModel):
     breakdown: List[FareBreakdown]
     tickets_total: List[Ticket]
 
 
-@dataclass(frozen=True)
-class Location:
+class Location(BaseModel):
     id: str
     coords: Coordinates
 
 
-@dataclass(frozen=True)
-class FullRange:
+class FullRange(BaseModel):
     enabled: bool
     max_results: int
     width: int
 
 
-@dataclass(frozen=True)
-class Range:
+class Range(BaseModel):
     enabled: bool
     width: int
 

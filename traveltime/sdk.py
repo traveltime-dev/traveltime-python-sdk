@@ -29,7 +29,12 @@ class TravelTimeSdk:
         unions: List[Union] = None,
         intersections: List[Intersection] = None
     ) -> TimeMapResponse:
-        request = TimeMapRequest(departure_searches, arrival_searches, unions, intersections)
+        request = TimeMapRequest(
+            departure_searches=departure_searches,
+            arrival_searches=arrival_searches,
+            unions=unions,
+            intersections=intersections
+        )
         return send_post_request(TimeMapResponse, 'time-map', self.__headers(AcceptType.JSON), request)
 
     async def time_map_async(
@@ -39,7 +44,12 @@ class TravelTimeSdk:
         unions: List[Union] = None,
         intersections: List[Intersection] = None
     ) -> TimeMapResponse:
-        request = TimeMapRequest(departure_searches, arrival_searches, unions, intersections)
+        request = TimeMapRequest(
+            departure_searches=departure_searches,
+            arrival_searches=arrival_searches,
+            unions=unions,
+            intersections=intersections
+        )
         return await send_post_request_async(TimeMapResponse, 'time-map', self.__headers(AcceptType.JSON), request)
 
     def time_filter(
