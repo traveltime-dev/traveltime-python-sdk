@@ -152,6 +152,15 @@ class TravelTimeSdk:
         params = {key: str(value) for (key, value) in full_query.items() if value is not None}
         return send_get_request(FeatureCollection, 'geocoding/search', self.__headers(AcceptType.JSON), params)
 
+    def geocoding_reverse(self, lat: float, lng: float, within_countries: Optional[List[str]] = None):
+        full_query = {
+            'lat': lat,
+            'lng': lng,
+            'within.country': self.__combine_countries(within_countries)
+        }
+        params = {key: str(value) for (key, value) in full_query.items() if value is not None}
+        return send_get_request(FeatureCollection, 'geocoding/reverse', self.__headers(AcceptType.JSON), params)
+
     @staticmethod
     def __bounds(rectangle: Optional[Rectangle]) -> Optional[str]:
         if rectangle is not None:

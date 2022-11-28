@@ -6,7 +6,8 @@ from unittest import mock
 from pydantic.tools import parse_raw_as
 
 from tests.utils import mocked_requests, read_file
-from traveltime.dto import Location, Coordinates, Property, FullRange, SearchId, LocationId
+from traveltime.dto import Location, Coordinates
+from traveltime.dto.requests import FullRange, Property
 from traveltime.dto.requests.time_filter import DepartureSearch, ArrivalSearch
 from traveltime.dto.responses.time_filter import TimeFilterResponse
 from traveltime.sdk import TravelTimeSdk
@@ -25,9 +26,9 @@ class TimeFilterTest(unittest.TestCase):
         ]
 
         departure_search = DepartureSearch(
-            id=SearchId('forward search example'),
-            arrival_location_ids=[LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
-            departure_location_id=LocationId('London center'),
+            id='forward search example',
+            arrival_location_ids=['Hyde Park', 'ZSL London Zoo'],
+            departure_location_id='London center',
             departure_time=datetime(2022, 11, 24, 12, 0, 0),
             travel_time=3600,
             transportation=PublicTransport(type='bus'),
@@ -36,9 +37,9 @@ class TimeFilterTest(unittest.TestCase):
         )
 
         arrival_search = ArrivalSearch(
-            id=SearchId('backward search example'),
-            departure_location_ids=[LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
-            arrival_location_id=LocationId('London center'),
+            id='backward search example',
+            departure_location_ids=['Hyde Park', 'ZSL London Zoo'],
+            arrival_location_id='London center',
             arrival_time=datetime(2022, 11, 24, 12, 0, 0),
             travel_time=3800,
             transportation=PublicTransport(type='bus'),

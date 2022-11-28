@@ -15,21 +15,21 @@ class TimeMapTest(unittest.TestCase):
     def test_time_map(self, mock_post):
         sdk = TravelTimeSdk('appId', 'apiKey')
         departure_search1 = DepartureSearch(
-            id=SearchId('search_1'),
+            id='search_1',
             coords=Coordinates(lat=51.507609, lng=-0.128315),
             departure_time=datetime(2022, 11, 24, 12, 0, 0),
             travel_time=900,
             transportation=PublicTransport()
         )
         departure_search2 = DepartureSearch(
-            id=SearchId('search_2'),
+            id='search_2',
             coords=Coordinates(lat=51.507609, lng=-0.128315),
             departure_time=datetime(2022, 11, 24, 12, 0, 0),
             travel_time=900,
             transportation=Driving()
         )
         arrival_search = ArrivalSearch(
-            id=SearchId('search_3'),
+            id='search_3',
             coords=Coordinates(lat=51.507609, lng=-0.128315),
             arrival_time=datetime(2022, 11, 24, 12, 0, 0),
             travel_time=900,
@@ -37,12 +37,12 @@ class TimeMapTest(unittest.TestCase):
             range=Range(enabled=True, width=3600)
         )
         union = Union(
-            id=SearchId('search_4'),
-            search_ids=[SearchId('search_2'), SearchId('search_3')]
+            id='search_4',
+            search_ids=['search_2', 'search_3']
         )
         intersection = Intersection(
-            id=SearchId('search_5'),
-            search_ids=[SearchId('search_2'), SearchId('search_3')]
+            id='search_5',
+            search_ids=['search_2', 'search_3']
         )
         response = sdk.time_map(
             [arrival_search],

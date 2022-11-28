@@ -6,7 +6,8 @@ from unittest import mock
 from pydantic.tools import parse_raw_as
 
 from tests.utils import mocked_requests, read_file
-from traveltime.dto import Location, Coordinates, Property, FullRange, SearchId, LocationId
+from traveltime.dto import Location, Coordinates
+from traveltime.dto.requests import FullRange, Property
 from traveltime.dto.requests.routes import DepartureSearch, ArrivalSearch
 from traveltime.dto.responses.routes import RoutesResponse
 from traveltime.sdk import TravelTimeSdk
@@ -25,9 +26,9 @@ class RoutesTest(unittest.TestCase):
         ]
 
         departure_search = DepartureSearch(
-            id=SearchId('departure search example'),
-            arrival_location_ids=[LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
-            departure_location_id=LocationId('London center'),
+            id='departure search example',
+            arrival_location_ids=['Hyde Park', 'ZSL London Zoo'],
+            departure_location_id='London center',
             departure_time=datetime(2022, 11, 24, 12, 0, 0),
             transportation=PublicTransport(type='bus'),
             properties=[Property.TRAVEL_TIME],
@@ -35,9 +36,9 @@ class RoutesTest(unittest.TestCase):
         )
 
         arrival_search = ArrivalSearch(
-            id=SearchId('arrival search example'),
-            departure_location_ids=[LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
-            arrival_location_id=LocationId('London center'),
+            id='arrival search example',
+            departure_location_ids=['Hyde Park', 'ZSL London Zoo'],
+            arrival_location_id='London center',
             arrival_time=datetime(2022, 11, 24, 12, 0, 0),
             transportation=PublicTransport(type='bus'),
             properties=[Property.TRAVEL_TIME, Property.FARES, Property.ROUTE],

@@ -2,8 +2,8 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltime.dto import SearchId, LocationId, Fares
-from traveltime.dto.responses import Route
+from traveltime.dto import SearchId, LocationId
+from traveltime.dto.responses import Route, Fares
 
 
 class DistanceBreakdown(BaseModel):

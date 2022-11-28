@@ -3,7 +3,8 @@ from typing import List, Optional, Union
 
 from pydantic.main import BaseModel
 
-from traveltime.dto import SearchId, Location, LocationId, FullRange, Property
+from traveltime.dto import SearchId, Location, LocationId
+from traveltime.dto.requests import FullRange, Property
 from traveltime.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 

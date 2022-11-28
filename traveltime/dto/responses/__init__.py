@@ -60,3 +60,20 @@ class Route(BaseModel):
     departure_time: datetime
     arrival_time: datetime
     parts: List[Union[BasicPart, PublicTransportPart, StartEndPart, RoadPart]]
+
+
+class Ticket(BaseModel):
+    type: str
+    price: float
+    currency: str
+
+
+class FareBreakdown(BaseModel):
+    modes: List[str]
+    route_part_ids: List[int]
+    tickets: List[Ticket]
+
+
+class Fares(BaseModel):
+    breakdown: List[FareBreakdown]
+    tickets_total: List[Ticket]

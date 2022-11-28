@@ -5,7 +5,8 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltime.dto import Coordinates, SearchId, Range
+from traveltime.dto import Coordinates, SearchId
+from traveltime.dto.requests import Range
 from traveltime.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 
