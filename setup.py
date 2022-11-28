@@ -18,6 +18,6 @@ setup(
     packages=['traveltime'],
     keywords=['traveltime', 'api', 'maps'],
     install_requires=[
-        'requests', 'aiohttp', 'pydantic', 'geojson-pydantic', 'dacite', 'certifi >= 2021.5.30'
+        'requests', 'pydantic', 'geojson-pydantic', 'dacite', 'certifi >= 2021.5.30', 'aiohttp'
     ]
 )
