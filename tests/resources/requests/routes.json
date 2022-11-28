@@ -1,148 +1,73 @@
 {
-  "departure_time": "2022-11-24T11:22:39+00:00",
-  "arrival_time": "2022-11-24T11:56:39+00:00",
-  "parts": [
+  "locations": [
     {
-      "id": 0,
-      "type": "start_end",
-      "mode": "walk",
-      "directions": "Start your journey 38 meters southwest",
-      "distance": 38,
-      "travel_time": 27,
-      "coords": [
-        {
-          "lat": 51.508824,
-          "lng": -0.167093
-        },
-        {
-          "lat": 51.508593799999886,
-          "lng": -0.1675051999999999
-        }
-      ],
-      "direction": "southwest"
+      "id": "London center",
+      "coords": {
+        "lat": 51.50893,
+        "lng": -0.131387
+      }
     },
     {
-      "id": 1,
-      "type": "road",
-      "mode": "walk",
-      "directions": "Walk 581 meters",
-      "distance": 581,
-      "travel_time": 449,
-      "coords": [
-        {
-          "lat": 51.508593799999886,
-          "lng": -0.1675051999999999
-        },
-        {
-          "lat": 51.50855369999989,
-          "lng": -0.16743409999999992
-        },
-        {
-          "lat": 51.508438399999875,
-          "lng": -0.16743410000000114
-        },
-        {
-          "lat": 51.50834719999981,
-          "lng": -0.16745550000000597
-        },
-        {
-          "lat": 51.50825509999981,
-          "lng": -0.16740940000000595
-        },
-        {
-          "lat": 51.5083197999998,
-          "lng": -0.16728100000000595
-        },
-        {
-          "lat": 51.50834119999981,
-          "lng": -0.16718660000000587
-        },
-        {
-          "lat": 51.50963389999987,
-          "lng": -0.1673583000000029
-        },
-        {
-          "lat": 51.510060599999775,
-          "lng": -0.1680954000000059
-        },
-        {
-          "lat": 51.51024720000006,
-          "lng": -0.16788479999999428
-        },
-        {
-          "lat": 51.51040129999998,
-          "lng": -0.16771069999999896
-        },
-        {
-          "lat": 51.5108099999998,
-          "lng": -0.1672531000000071
-        },
-        {
-          "lat": 51.51097990000006,
-          "lng": -0.16704639999999427
-        },
-        {
-          "lat": 51.51104660000006,
-          "lng": -0.16696519999999426
-        },
-        {
-          "lat": 51.5112150999998,
-          "lng": -0.1667602000000071
-        },
-        {
-          "lat": 51.5115816999998,
-          "lng": -0.1663888000000071
-        },
-        {
-          "lat": 51.511758599999844,
-          "lng": -0.16631980000000776
-        },
-        {
-          "lat": 51.51182379999997,
-          "lng": -0.16634669999999804
-        },
-        {
-          "lat": 51.512102299999924,
-          "lng": -0.16642420000001346
-        },
-        {
-          "lat": 51.512155099999916,
-          "lng": -0.1664400000000006
-        },
-        {
-          "lat": 51.51218359999999,
-          "lng": -0.16644819999999533
-        },
-        {
-          "lat": 51.512216800000004,
-          "lng": -0.1664585999999989
-        },
-        {
-          "lat": 51.5123795,
-          "lng": -0.1665098999999999
-        },
-        {
-          "lat": 51.512431900000365,
-          "lng": -0.16652320000000595
-        },
-        {
-          "lat": 51.512453800000465,
-          "lng": -0.16652890000001316
-        },
-        {
-          "lat": 51.512469600000365,
-          "lng": -0.16653180000000595
-        },
-        {
-          "lat": 51.51251069999991,
-          "lng": -0.16654189999999502
-        },
-        {
-          "lat": 51.51254120000013,
-          "lng": -0.1665521000000117
-        }
-      ]
+      "id": "Hyde Park",
+      "coords": {
+        "lat": 51.508824,
+        "lng": -0.167093
+      }
+    },
+    {
+      "id": "ZSL London Zoo",
+      "coords": {
+        "lat": 51.536067,
+        "lng": -0.153596
+      }
+    }
+  ],
+  "departure_searches": [
+    {
+      "id": "departure search example",
+      "arrival_location_ids": [
+        "Hyde Park",
+        "ZSL London Zoo"
+      ],
+      "departure_location_id": "London center",
+      "departure_time": "2022-11-24T12:00:00",
+      "transportation": {
+        "type": "bus",
+        "pt_change_delay": null,
+        "walking_time": null,
+        "max_changes": null
+      },
+      "properties": [
+        "travel_time"
+      ],
+      "full_range": {
+        "enabled": true,
+        "max_results": 3,
+        "width": 600
+      }
+    }
+  ],
+  "arrival_searches": [
+    {
+      "id": "arrival search example",
+      "departure_location_ids": [
+        "Hyde Park",
+        "ZSL London Zoo"
+      ],
+      "arrival_location_id": "London center",
+      "arrival_time": "2022-11-24T12:00:00",
+      "transportation": {
+        "type": "bus",
+        "pt_change_delay": null,
+        "walking_time": null,
+        "max_changes": null
+      },
+      "properties": [
+        "travel_time",
+        "fares",
+        "route"
+      ],
+      "full_range": null
     }
   ]
 }
-

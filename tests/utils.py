@@ -10,8 +10,7 @@ class MockResponse:
     def text(self) -> Optional[str]:
         return self.data
 
-# {"departure_searches":[{"id":"search_1","coords":{"lat":51.507609,"lng":-0.128315},"departure_time":"2022-11-24T12:00:00","travel_time":900,"transportation":{"type":"public_transport","pt_change_delay":null,"walking_time":null,"max_changes":null},"range":null},{"id":"search_2","coords":{"lat":51.507609,"lng":-0.128315},"departure_time":"2022-11-24T12:00:00","travel_time":900,"transportation":{"type":"driving","disable_border_crossing":null},"range":null}],"arrival_searches":[{"id":"search_3","coords":{"lat":51.507609,"lng":-0.128315},"arrival_time":"2022-11-24T12:00:00","travel_time":900,"transportation":{"type":"public_transport","pt_change_delay":null,"walking_time":null,"max_changes":null},"range":{"enabled":true,"width":3600}}],"unions":[{"id":"search_4","search_ids":["search_2","search_3"]}],"intersections":[{"id":"search_5","search_ids":["search_2","search_3"]}]}
-# {"departure_searches":[{"id":"search_1","coords":{"lat":51.507609,"lng":-0.128315},"departure_time":"2022-11-24T12:00:00","travel_time":900,"transportation":{"type":"public_transport"},"range":null},{"id":"search_2","coords":{"lat":51.507609,"lng":-0.128315},"departure_time":"2022-11-24T12:00:00","travel_time":900,"transportation":{"type":"driving"},"range":null}],"arrival_searches":[{"id":"search_3","coords":{"lat":51.507609,"lng":-0.128315},"arrival_time":"2022-11-24T12:00:00","travel_time":900,"transportation":{"type":"public_transport"},"range":{"enabled":true,"width":3600}}],"unions":[{"id":"search_4","search_ids":["search_2","search_3"]}],"intersections":[{"id":"search_5","search_ids":["search_2","search_3"]}]}
+
 class UrlInfo:
     def __init__(self, request_file: Optional[str], response_file: str, status_code: int) -> None:
         self.request_file = request_file
@@ -33,7 +32,9 @@ class UrlInfo:
 urls = {
     'https://api.traveltimeapp.com/v4/map-info': UrlInfo(None, 'map_info.json', 200),
     'https://api.traveltimeapp.com/v4/time-map': UrlInfo('time_map.json', 'time_map.json', 200),
-    'https://api.traveltimeapp.com/v4/time-filter': UrlInfo('time_filter.json', 'time_filter.json', 200)
+    'https://api.traveltimeapp.com/v4/routes': UrlInfo('routes.json', 'routes.json', 200),
+    'https://api.traveltimeapp.com/v4/time-filter': UrlInfo('time_filter.json', 'time_filter.json', 200),
+    'https://api.traveltimeapp.com/v4/geocoding/search': UrlInfo(None, 'geocoding.json', 200)
 }
 
 

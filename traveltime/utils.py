@@ -25,18 +25,18 @@ async def send_get_request_async(
     response_class: Type[T],
     path: str,
     headers: Dict[str, str],
-    query: Optional[str] = None
+    params: Dict[str, str] = None
 ) -> T:
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     async with aiohttp.ClientSession() as session:
-        async with session.get(url=url, headers=headers, query=query) as resp:
+        async with session.get(url=url, headers=headers, params=params) as resp:
             body_text = await resp.text()
             return __process_response(response_class, resp.status, body_text)
 
 
-def send_get_request(response_class: Type[T], path: str, headers: Dict[str, str], query: Optional[str] = None) -> T:
+def send_get_request(response_class: Type[T], path: str, headers: Dict[str, str], params: Dict[str, str] = None) -> T:
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
-    resp = requests.get(url=url, headers=headers, params=query)
+    resp = requests.get(url=url, headers=headers, params=params)
     return __process_response(response_class, resp.status_code, resp.text)
 
 

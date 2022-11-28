@@ -1,6 +1,6 @@
 from traveltime import AcceptType, dto
 from traveltime.dto import Location
-from traveltime.dto.requests import time_map, time_filter, routes
+from traveltime.dto.requests import time_map, time_filter, routes, Rectangle
 from traveltime.dto.requests.routes import RoutesRequest
 from traveltime.dto.requests.time_filter import TimeFilterRequest
 
@@ -10,6 +10,8 @@ from traveltime.dto.responses.routes import RoutesResponse
 from traveltime.dto.responses.time_filter import TimeFilterResponse
 from traveltime.dto.responses.time_map import TimeMapResponse
 from traveltime.utils import *
+
+from geojson_pydantic import FeatureCollection
 
 
 class TravelTimeSdk:
@@ -129,6 +131,37 @@ class TravelTimeSdk:
                 arrival_searches=arrival_searches
             )
         )
+
+    def geocoding(
+        self,
+        query: str,
+        limit: Optional[int] = None,
+        within_countries: Optional[List[str]] = None,
+        format_name: Optional[bool] = None,
+        format_exclude_country: Optional[bool] = None,
+        rectangle: Optional[Rectangle] = None
+    ) -> FeatureCollection:
+        full_query = {
+            'query': query,
+            'limit': limit,
+            'within.country': self.__combine_countries(within_countries),
+            'format.name': format_name,
+            'format.exclude.country': format_exclude_country,
+            'bounds': self.__bounds(rectangle)
+        }
+        params = {key: str(value) for (key, value) in full_query.items() if value is not None}
+        return send_get_request(FeatureCollection, 'geocoding/search', self.__headers(AcceptType.JSON), params)
+
+    @staticmethod
+    def __bounds(rectangle: Optional[Rectangle]) -> Optional[str]:
+        if rectangle is not None:
+            return f'{rectangle.min_lat},{rectangle.min_lng},{rectangle.max_lat},{rectangle.max_lng}'
+        else:
+            return None
+
+    @staticmethod
+    def __combine_countries(within_countries: Optional[List[str]]) -> Optional[str]:
+        return ','.join(within_countries) if within_countries is not None and len(within_countries) != 0 else None
 
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {
