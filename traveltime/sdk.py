@@ -2,11 +2,13 @@ from traveltime import AcceptType, dto
 from traveltime.dto import Location
 from traveltime.dto.requests import time_map, time_filter, routes, Rectangle
 from traveltime.dto.requests.routes import RoutesRequest
+from traveltime.dto.requests.supported_locations import SupportedLocationsRequest
 from traveltime.dto.requests.time_filter import TimeFilterRequest
 
 from traveltime.dto.requests.time_map import *
 from traveltime.dto.responses.map_info import MapInfoResponse
 from traveltime.dto.responses.routes import RoutesResponse
+from traveltime.dto.responses.supported_locations import SupportedLocationsResponse
 from traveltime.dto.responses.time_filter import TimeFilterResponse
 from traveltime.dto.responses.time_map import TimeMapResponse
 from traveltime.utils import *
@@ -152,7 +154,12 @@ class TravelTimeSdk:
         params = {key: str(value) for (key, value) in full_query.items() if value is not None}
         return send_get_request(FeatureCollection, 'geocoding/search', self.__headers(AcceptType.JSON), params)
 
-    def geocoding_reverse(self, lat: float, lng: float, within_countries: Optional[List[str]] = None):
+    def geocoding_reverse(
+        self,
+        lat: float,
+        lng: float,
+        within_countries: Optional[List[str]] = None
+    ) -> FeatureCollection:
         full_query = {
             'lat': lat,
             'lng': lng,
@@ -160,6 +167,14 @@ class TravelTimeSdk:
         }
         params = {key: str(value) for (key, value) in full_query.items() if value is not None}
         return send_get_request(FeatureCollection, 'geocoding/reverse', self.__headers(AcceptType.JSON), params)
+
+    def supported_locations(self, locations: List[Location]) -> SupportedLocationsResponse:
+        return send_post_request(
+            SupportedLocationsResponse,
+            'supported-locations',
+            self.__headers(AcceptType.JSON),
+            SupportedLocationsRequest(locations=locations)
+        )
 
     @staticmethod
     def __bounds(rectangle: Optional[Rectangle]) -> Optional[str]:
