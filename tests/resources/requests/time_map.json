@@ -9,7 +9,10 @@
       "departure_time": "2022-11-24T12:00:00",
       "travel_time": 900,
       "transportation": {
-        "type": "public_transport"
+        "type": "public_transport",
+        "pt_change_delay": null,
+        "walking_time": null,
+        "max_changes": null
       },
       "range": null
     },
@@ -22,7 +25,8 @@
       "departure_time": "2022-11-24T12:00:00",
       "travel_time": 900,
       "transportation": {
-        "type": "driving"
+        "type": "driving",
+        "disable_border_crossing": null
       },
       "range": null
     }
@@ -37,7 +41,10 @@
       "arrival_time": "2022-11-24T12:00:00",
       "travel_time": 900,
       "transportation": {
-        "type": "public_transport"
+        "type": "public_transport",
+        "pt_change_delay": null,
+        "walking_time": null,
+        "max_changes": null
       },
       "range": {
         "enabled": true,

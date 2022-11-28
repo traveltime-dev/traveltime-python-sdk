@@ -6,7 +6,7 @@ from typing import List, Optional
 from pydantic.main import BaseModel
 
 from traveltime.dto import Coordinates, SearchId, Range
-from traveltime.transportation import Bus, PublicTransport, Driving
+from traveltime.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 
 class DepartureSearch(BaseModel):
@@ -14,7 +14,7 @@ class DepartureSearch(BaseModel):
     coords: Coordinates
     departure_time: datetime
     travel_time: int
-    transportation: typing.Union[Bus, PublicTransport, Driving]
+    transportation: typing.Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     range: Optional[Range] = None
 
 
@@ -23,7 +23,7 @@ class ArrivalSearch(BaseModel):
     coords: Coordinates
     arrival_time: datetime
     travel_time: int
-    transportation: typing.Union[Bus, PublicTransport, Driving]
+    transportation: typing.Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     range: Optional[Range] = None
 
 

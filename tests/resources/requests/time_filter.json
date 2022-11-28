@@ -33,7 +33,10 @@
       "departure_time": "2022-11-24T12:00:00",
       "travel_time": 3600,
       "transportation": {
-        "type": "bus"
+        "type": "bus",
+        "pt_change_delay": null,
+        "walking_time": null,
+        "max_changes": null
       },
       "properties": [
         "travel_time"
@@ -56,7 +59,10 @@
       "arrival_time": "2022-11-24T12:00:00",
       "travel_time": 3800,
       "transportation": {
-        "type": "bus"
+        "type": "bus",
+        "pt_change_delay": null,
+        "walking_time": null,
+        "max_changes": null
       },
       "properties": [
         "travel_time",

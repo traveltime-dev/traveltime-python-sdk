@@ -7,10 +7,10 @@ from pydantic.tools import parse_raw_as
 
 from tests.utils import mocked_requests, read_file
 from traveltime.dto import Location, Coordinates, Property, FullRange, SearchId, LocationId
-from traveltime.dto.requests.time_filter_request import DepartureSearch, ArrivalSearch
-from traveltime.dto.responses.time_filter_response import TimeFilterResponse
+from traveltime.dto.requests.time_filter import DepartureSearch, ArrivalSearch
+from traveltime.dto.responses.time_filter import TimeFilterResponse
 from traveltime.sdk import TravelTimeSdk
-from traveltime.transportation import Bus
+from traveltime.transportation import PublicTransport
 
 
 class TimeFilterTest(unittest.TestCase):
@@ -30,7 +30,7 @@ class TimeFilterTest(unittest.TestCase):
             departure_location_id=LocationId('London center'),
             departure_time=datetime(2022, 11, 24, 12, 0, 0),
             travel_time=3600,
-            transportation=Bus(),
+            transportation=PublicTransport(type='bus'),
             properties=[Property.TRAVEL_TIME],
             full_range=FullRange(enabled=True, max_results=3, width=600)
         )
@@ -41,7 +41,7 @@ class TimeFilterTest(unittest.TestCase):
             arrival_location_id=LocationId('London center'),
             arrival_time=datetime(2022, 11, 24, 12, 0, 0),
             travel_time=3800,
-            transportation=Bus(),
+            transportation=PublicTransport(type='bus'),
             properties=[Property.TRAVEL_TIME, Property.FARES, Property.ROUTE],
         )
 
