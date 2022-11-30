@@ -2,7 +2,7 @@ from datetime import datetime, time
 from pydantic import BaseModel
 from typing import Literal, NewType, List, Union, Optional
 
-from traveltime.dto import Coordinates
+from traveltimepy.dto import Coordinates
 
 PartId = NewType('PartId', str)
 

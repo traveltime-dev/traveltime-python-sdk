@@ -2,11 +2,11 @@ import unittest
 from unittest import mock
 
 from tests.utils import mocked_requests, read_file
-from traveltime.dto.requests.time_map import *
+from traveltimepy.dto.requests.time_map import *
 from pydantic import parse_raw_as
-from traveltime.dto.responses.time_map import TimeMapResponse
-from traveltime.sdk import TravelTimeSdk
-from traveltime.transportation import PublicTransport, Driving
+from traveltimepy.dto.responses.time_map import TimeMapResponse
+from traveltimepy.sdk import TravelTimeSdk
+from traveltimepy.transportation import PublicTransport, Driving
 
 
 class TimeMapTest(unittest.TestCase):

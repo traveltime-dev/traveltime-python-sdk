@@ -5,9 +5,9 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltime.dto import Coordinates, SearchId
-from traveltime.dto.requests import Range
-from traveltime.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy.dto import Coordinates, SearchId
+from traveltimepy.dto.requests import Range
+from traveltimepy.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 
 class DepartureSearch(BaseModel):

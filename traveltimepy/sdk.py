@@ -1,17 +1,17 @@
-from traveltime import AcceptType, dto
-from traveltime.dto import Location
-from traveltime.dto.requests import time_map, time_filter, routes, Rectangle
-from traveltime.dto.requests.routes import RoutesRequest
-from traveltime.dto.requests.supported_locations import SupportedLocationsRequest
-from traveltime.dto.requests.time_filter import TimeFilterRequest
+from traveltimepy import AcceptType, dto
+from traveltimepy.dto import Location
+from traveltimepy.dto.requests import time_map, time_filter, routes, Rectangle
+from traveltimepy.dto.requests.routes import RoutesRequest
+from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
+from traveltimepy.dto.requests.time_filter import TimeFilterRequest
 
-from traveltime.dto.requests.time_map import *
-from traveltime.dto.responses.map_info import MapInfoResponse
-from traveltime.dto.responses.routes import RoutesResponse
-from traveltime.dto.responses.supported_locations import SupportedLocationsResponse
-from traveltime.dto.responses.time_filter import TimeFilterResponse
-from traveltime.dto.responses.time_map import TimeMapResponse
-from traveltime.utils import *
+from traveltimepy.dto.requests.time_map import *
+from traveltimepy.dto.responses.map_info import MapInfoResponse
+from traveltimepy.dto.responses.routes import RoutesResponse
+from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
+from traveltimepy.dto.responses.time_filter import TimeFilterResponse
+from traveltimepy.dto.responses.time_map import TimeMapResponse
+from traveltimepy.utils import *
 
 from geojson_pydantic import FeatureCollection
 

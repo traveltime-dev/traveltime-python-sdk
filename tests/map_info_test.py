@@ -4,8 +4,8 @@ from unittest import mock
 from pydantic.tools import parse_raw_as
 
 from tests.utils import mocked_requests, read_file
-from traveltime.dto.responses.map_info import MapInfoResponse
-from traveltime.sdk import TravelTimeSdk
+from traveltimepy.dto.responses.map_info import MapInfoResponse
+from traveltimepy.sdk import TravelTimeSdk
 
 
 class MapInfoTest(unittest.TestCase):

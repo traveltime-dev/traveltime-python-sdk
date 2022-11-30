@@ -4,9 +4,9 @@ from unittest import mock
 from pydantic.tools import parse_raw_as
 
 from tests.utils import mocked_requests, read_file
-from traveltime.dto import Location, Coordinates
-from traveltime.dto.responses.supported_locations import SupportedLocationsResponse
-from traveltime.sdk import TravelTimeSdk
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
+from traveltimepy.sdk import TravelTimeSdk
 
 
 class SupportedLocationsTest(unittest.TestCase):

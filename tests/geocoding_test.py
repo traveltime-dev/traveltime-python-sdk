@@ -5,7 +5,7 @@ from geojson_pydantic import FeatureCollection
 from pydantic.tools import parse_raw_as
 
 from tests.utils import mocked_requests, read_file
-from traveltime.sdk import TravelTimeSdk
+from traveltimepy.sdk import TravelTimeSdk
 
 
 class GeocodingTest(unittest.TestCase):

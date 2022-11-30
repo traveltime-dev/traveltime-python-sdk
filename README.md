@@ -10,7 +10,7 @@ Time-based searching gives users more opportunities for personalisation and deli
 In order to authenticate with Travel Time API, you will have to supply the Application Id and Api Key.
 
 ```python
-from traveltime.sdk import TravelTimeSdk
+from traveltimepy.sdk import TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_API_ID', 'YOUR_API_KEY')
 ```

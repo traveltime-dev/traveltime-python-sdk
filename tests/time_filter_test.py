@@ -6,12 +6,12 @@ from unittest import mock
 from pydantic.tools import parse_raw_as
 
 from tests.utils import mocked_requests, read_file
-from traveltime.dto import Location, Coordinates
-from traveltime.dto.requests import FullRange, Property
-from traveltime.dto.requests.time_filter import DepartureSearch, ArrivalSearch
-from traveltime.dto.responses.time_filter import TimeFilterResponse
-from traveltime.sdk import TravelTimeSdk
-from traveltime.transportation import PublicTransport
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.requests import FullRange, Property
+from traveltimepy.dto.requests.time_filter import DepartureSearch, ArrivalSearch
+from traveltimepy.dto.responses.time_filter import TimeFilterResponse
+from traveltimepy.sdk import TravelTimeSdk
+from traveltimepy.transportation import PublicTransport
 
 
 class TimeFilterTest(unittest.TestCase):
