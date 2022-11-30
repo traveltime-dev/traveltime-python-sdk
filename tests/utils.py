@@ -19,14 +19,14 @@ class UrlInfo:
 
     def check_request_data(self, request_data: str) -> bool:
         if self.request_file is not None:
-            expected_request = read_file(f'resources/requests/{self.request_file}').replace(' ', '')
+            expected_request = read_file(f'tests/resources/requests/{self.request_file}').replace(' ', '')
             cur_request = request_data.replace(' ', '')
             return expected_request == cur_request
         else:
             return True
 
     def response_file_path(self) -> str:
-        return f'resources/responses/{self.response_file}'
+        return f'tests/resources/responses/{self.response_file}'
 
 
 urls = {

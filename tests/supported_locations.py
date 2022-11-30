@@ -4,9 +4,9 @@ from unittest import mock
 from pydantic.tools import parse_raw_as
 
 from tests.utils import mocked_requests, read_file
-from traveltime.dto import Location, Coordinates
-from traveltime.dto.responses.supported_locations import SupportedLocationsResponse
-from traveltime.sdk import TravelTimeSdk
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
+from traveltimepy.sdk import TravelTimeSdk
 
 
 class SupportedLocationsTest(unittest.TestCase):
@@ -21,6 +21,6 @@ class SupportedLocationsTest(unittest.TestCase):
             Location(id='Lisbon', coords=Coordinates(lat=38.721869, lng=-9.138549)),
         ]
         response = sdk.supported_locations(locations)
-        supported_locations = read_file('resources/responses/supported_locations.json')
+        supported_locations = read_file('tests/resources/responses/supported_locations.json')
         expected_response = parse_raw_as(SupportedLocationsResponse, supported_locations)
         self.assertEqual(response, expected_response)

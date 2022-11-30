@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from traveltime.dto import Location
+from traveltimepy.dto import Location
 
 
 class SupportedLocationsRequest(BaseModel):

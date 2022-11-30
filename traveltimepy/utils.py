@@ -5,8 +5,8 @@ import requests
 from pydantic.main import BaseModel
 from pydantic.tools import parse_raw_as
 
-from traveltime.dto.responses.error import ResponseError
-from traveltime.errors import ApiError
+from traveltimepy.dto.responses.error import ResponseError
+from traveltimepy.errors import ApiError
 
 
 T = TypeVar('T')

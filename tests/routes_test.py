@@ -6,12 +6,12 @@ from unittest import mock
 from pydantic.tools import parse_raw_as
 
 from tests.utils import mocked_requests, read_file
-from traveltime.dto import Location, Coordinates
-from traveltime.dto.requests import FullRange, Property
-from traveltime.dto.requests.routes import DepartureSearch, ArrivalSearch
-from traveltime.dto.responses.routes import RoutesResponse
-from traveltime.sdk import TravelTimeSdk
-from traveltime.transportation import PublicTransport
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.requests import FullRange, Property
+from traveltimepy.dto.requests.routes import DepartureSearch, ArrivalSearch
+from traveltimepy.dto.responses.routes import RoutesResponse
+from traveltimepy.sdk import TravelTimeSdk
+from traveltimepy.transportation import PublicTransport
 
 
 class RoutesTest(unittest.TestCase):
@@ -45,5 +45,5 @@ class RoutesTest(unittest.TestCase):
         )
 
         response = sdk.routes(locations, [departure_search], [arrival_search])
-        expected_response = parse_raw_as(RoutesResponse, read_file("resources/responses/routes.json"))
+        expected_response = parse_raw_as(RoutesResponse, read_file("tests/resources/responses/routes.json"))
         self.assertEqual(response, expected_response)

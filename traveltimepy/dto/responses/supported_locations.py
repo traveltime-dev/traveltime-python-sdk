@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-from traveltime.dto import LocationId
+from traveltimepy.dto import LocationId
 
 
 class Location(BaseModel):
