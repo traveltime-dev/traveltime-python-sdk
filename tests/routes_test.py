@@ -45,5 +45,5 @@ class RoutesTest(unittest.TestCase):
         )
 
         response = sdk.routes(locations, [departure_search], [arrival_search])
-        expected_response = parse_raw_as(RoutesResponse, read_file("resources/responses/routes.json"))
+        expected_response = parse_raw_as(RoutesResponse, read_file("tests/resources/responses/routes.json"))
         self.assertEqual(response, expected_response)

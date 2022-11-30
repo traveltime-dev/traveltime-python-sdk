@@ -15,5 +15,5 @@ class MapInfoTest(unittest.TestCase):
         sdk = TravelTimeSdk('appId', 'apiKey')
 
         response = sdk.map_info()
-        expected_response = parse_raw_as(MapInfoResponse, read_file("resources/responses/map_info.json"))
+        expected_response = parse_raw_as(MapInfoResponse, read_file('tests/resources/responses/map_info.json'))
         self.assertEqual(response, expected_response)

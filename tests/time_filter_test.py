@@ -47,5 +47,5 @@ class TimeFilterTest(unittest.TestCase):
         )
 
         response = sdk.time_filter(locations, [departure_search], [arrival_search])
-        expected_response = parse_raw_as(TimeFilterResponse, read_file("resources/responses/time_filter.json"))
+        expected_response = parse_raw_as(TimeFilterResponse, read_file('tests/resources/responses/time_filter.json'))
         self.assertEqual(response, expected_response)

@@ -50,6 +50,6 @@ class TimeMapTest(unittest.TestCase):
             [union],
             [intersection]
         )
-        expected_response = parse_raw_as(TimeMapResponse, read_file('resources/responses/time_map.json'))
+        expected_response = parse_raw_as(TimeMapResponse, read_file('tests/resources/responses/time_map.json'))
         self.assertEqual(response, expected_response)
 

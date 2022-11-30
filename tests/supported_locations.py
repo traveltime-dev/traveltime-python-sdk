@@ -21,6 +21,6 @@ class SupportedLocationsTest(unittest.TestCase):
             Location(id='Lisbon', coords=Coordinates(lat=38.721869, lng=-9.138549)),
         ]
         response = sdk.supported_locations(locations)
-        supported_locations = read_file('resources/responses/supported_locations.json')
+        supported_locations = read_file('tests/resources/responses/supported_locations.json')
         expected_response = parse_raw_as(SupportedLocationsResponse, supported_locations)
         self.assertEqual(response, expected_response)
