@@ -5,9 +5,9 @@ name: Unit Tests
 
 on:
   push:
-    branches: [create/new-version]
+    branches: [master]
   pull_request:
-    branches: [create/new-version]
+    branches: [master]
 
 jobs:
   build:
