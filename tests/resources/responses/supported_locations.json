@@ -1,0 +1,29 @@
+{
+  "locations": [
+    {
+      "id": "Kaunas",
+      "map_name": "lt",
+      "additional_map_names": [
+        "europe"
+      ]
+    },
+    {
+      "id": "London",
+      "map_name": "gb",
+      "additional_map_names": []
+    },
+    {
+      "id": "Bangkok",
+      "map_name": "th",
+      "additional_map_names": []
+    },
+    {
+      "id": "Lisbon",
+      "map_name": "pt",
+      "additional_map_names": [
+        "europe"
+      ]
+    }
+  ],
+  "unsupported_locations": []
+}

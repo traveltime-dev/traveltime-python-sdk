@@ -1,0 +1,36 @@
+{
+  "maps": [
+    {
+      "name": "gh",
+      "features": {
+        "public_transport": {
+          "date_start": "2022-11-05T00:00:00+00:00",
+          "date_end": "2023-01-08T00:00:00+00:00"
+        },
+        "cross_country_modes": [],
+        "fares": false,
+        "postcodes": false
+      }
+    },
+    {
+      "name": "hu",
+      "features": {
+        "public_transport": {
+          "date_start": "2022-11-05T00:00:00+01:00",
+          "date_end": "2023-01-08T00:00:00+01:00"
+        },
+        "cross_country_modes": [],
+        "fares": false,
+        "postcodes": false
+      }
+    },
+    {
+      "name": "bh",
+      "features": {
+        "cross_country_modes": [],
+        "fares": false,
+        "postcodes": false
+      }
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "results": [
+    {
+      "search_id": "public transport from Trafalgar Square",
+      "sectors": [
+        {
+          "code": "sw1y5",
+          "properties": {
+            "travel_time_all": {
+              "min": 91,
+              "max": 200,
+              "mean": 150,
+              "median": 143
+            },
+            "travel_time_reachable": {
+              "min": 91,
+              "max": 200,
+              "mean": 150,
+              "median": 143
+            }
+          }
+        },
+        {
+          "code": "sw1a2",
+          "properties": {
+            "travel_time_all": {
+              "min": 103,
+              "max": 197,
+              "mean": 151,
+              "median": 155
+            },
+            "travel_time_reachable": {
+              "min": 103,
+              "max": 197,
+              "mean": 151,
+              "median": 155
+            }
+          }
+        },
+        {
+          "code": "wc2n5",
+          "properties": {
+            "travel_time_all": {
+              "min": 10,
+              "max": 200,
+              "mean": 128,
+              "median": 147
+            },
+            "travel_time_reachable": {
+              "min": 10,
+              "max": 200,
+              "mean": 128,
+              "median": 147
+            }
+          }
+        }
+      ]
+    },
+    {
+      "search_id": "public transport to Trafalgar Square",
+      "sectors": [
+        {
+          "code": "sw1y5",
+          "properties": {
+            "coverage": 21.052631578947366
+          }
+        },
+        {
+          "code": "sw1a2",
+          "properties": {
+            "coverage": 25
+          }
+        },
+        {
+          "code": "wc2n5",
+          "properties": {
+            "coverage": 30.434782608695656
+          }
+        }
+      ]
+    }
+  ]
+}
