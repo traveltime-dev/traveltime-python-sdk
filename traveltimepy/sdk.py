@@ -1,10 +1,11 @@
 from traveltimepy import AcceptType, dto
 from traveltimepy.dto import Location
-from traveltimepy.dto.requests import time_map, time_filter, routes, postcodes, zones, Rectangle
+from traveltimepy.dto.requests import time_map, time_filter, time_filter_fast, routes, postcodes, zones, Rectangle
 from traveltimepy.dto.requests.postcodes import PostcodesRequest
 from traveltimepy.dto.requests.routes import RoutesRequest
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
 from traveltimepy.dto.requests.time_filter import TimeFilterRequest
+from traveltimepy.dto.requests.time_filter_fast import ArrivalSearches, TimeFilterFastRequest, ManyToOne, OneToMany
 
 from traveltimepy.dto.requests.time_map import *
 from traveltimepy.dto.requests.zones import DistrictsRequest, SectorsRequest
@@ -13,6 +14,7 @@ from traveltimepy.dto.responses.postcodes import PostcodesResponse
 from traveltimepy.dto.responses.routes import RoutesResponse
 from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
 from traveltimepy.dto.responses.time_filter import TimeFilterResponse
+from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
 from traveltimepy.utils import *
@@ -101,6 +103,38 @@ class TravelTimeSdk:
                 locations=locations,
                 departure_searches=departure_searches,
                 arrival_searches=arrival_searches
+            )
+        )
+
+    def time_filter_fast(
+        self,
+        locations: List[Location],
+        many_to_one: List[ManyToOne],
+        one_to_many: List[OneToMany]
+    ) -> TimeFilterFastResponse:
+        return send_post_request(
+            TimeFilterFastResponse,
+            'time-filter/fast',
+            self.__headers(AcceptType.JSON),
+            TimeFilterFastRequest(
+                locations=locations,
+                arrival_searches=ArrivalSearches(many_to_one=many_to_one, one_to_many=one_to_many)
+            )
+        )
+
+    async def time_filter_fast_async(
+        self,
+        locations: List[Location],
+        many_to_one: List[ManyToOne],
+        one_to_many: List[OneToMany]
+    ) -> TimeFilterFastResponse:
+        return await send_post_request_async(
+            TimeFilterFastResponse,
+            'time-filter/fast',
+            self.__headers(AcceptType.JSON),
+            TimeFilterFastRequest(
+                locations=locations,
+                arrival_searches=ArrivalSearches(many_to_one=many_to_one, one_to_many=one_to_many)
             )
         )
 

@@ -39,7 +39,12 @@ urls = {
     'https://api.traveltimeapp.com/v4/time-filter/postcodes': UrlInfo('postcodes.json', 'postcodes.json', 200),
     'https://api.traveltimeapp.com/v4/time-filter/postcode-districts': UrlInfo('districts.json', 'districts.json', 200),
     'https://api.traveltimeapp.com/v4/time-filter/postcode-sectors': UrlInfo('sectors.json', 'sectors.json', 200),
-    'https://api.traveltimeapp.com/v4/supported-locations': UrlInfo('supported_locations.json', 'supported_locations.json', 200)
+    'https://api.traveltimeapp.com/v4/time-filter/fast': UrlInfo('time_filter_fast.json', 'time_filter_fast.json', 200),
+    'https://api.traveltimeapp.com/v4/supported-locations': UrlInfo(
+        'supported_locations.json',
+        'supported_locations.json',
+        200
+    )
 }
 
 
