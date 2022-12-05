@@ -127,6 +127,85 @@ arrival_search = ArrivalSearch(
 response = sdk.routes(locations, [departure_search], [arrival_search])
 ```
 
+### [Time Filter (Postcodes)](https://traveltime.com/docs/api/reference/postcode-search)
+Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
+
+```python
+departure_search = DepartureSearch(
+    id='public transport from Trafalgar Square',
+    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    travel_time=1800,
+    coords=Coordinates(lat=51.507609, lng=-0.128315),
+    transportation=PublicTransport(),
+    properties=[Property.TRAVEL_TIME, Property.DISTANCE]
+)
+
+arrival_search = ArrivalSearch(
+    id='public transport to Trafalgar Square',
+    arrival_time=datetime(2022, 11, 24, 12, 0, 0),
+    travel_time=1800,
+    coords=Coordinates(lat=51.507609, lng=-0.128315),
+    transportation=PublicTransport(),
+    properties=[Property.TRAVEL_TIME, Property.DISTANCE]
+)
+
+response = sdk.postcodes([departure_search], [arrival_search])
+```
+
+### [Time Filter (Postcode Sectors)](https://traveltime.com/docs/api/reference/postcode-sector-filter)
+Find sectors that have a certain coverage from origin (or to destination) and get statistics about postcodes within such sectors.
+
+```python
+departure_search = DepartureSearch(
+    id='public transport from Trafalgar Square',
+    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    travel_time=200,
+    coords=Coordinates(lat=51.507609, lng=-0.128315),
+    reachable_postcodes_threshold=0.1,
+    transportation=PublicTransport(),
+    properties=[Property.TRAVEL_TIME_ALL, Property.TRAVEL_TIME_REACHABLE]
+)
+
+arrival_search = ArrivalSearch(
+    id='public transport to Trafalgar Square',
+    arrival_time=datetime(2022, 11, 24, 12, 0, 0),
+    travel_time=200,
+    coords=Coordinates(lat=51.507609, lng=-0.128315),
+    reachable_postcodes_threshold=0.1,
+    transportation=PublicTransport(),
+    properties=[Property.COVERAGE]
+)
+
+response = sdk.sectors([departure_search], [arrival_search])
+```
+
+### [Time Filter (Postcode Districts)](https://traveltime.com/docs/api/reference/postcode-district-filter)
+Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
+
+```python
+departure_search = DepartureSearch(
+    id='public transport from Trafalgar Square',
+    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    travel_time=200,
+    coords=Coordinates(lat=51.507609, lng=-0.128315),
+    reachable_postcodes_threshold=0.1,
+    transportation=PublicTransport(),
+    properties=[Property.TRAVEL_TIME_ALL, Property.TRAVEL_TIME_REACHABLE]
+)
+
+arrival_search = ArrivalSearch(
+    id='public transport to Trafalgar Square',
+    arrival_time=datetime(2022, 11, 24, 12, 0, 0),
+    travel_time=200,
+    coords=Coordinates(lat=51.507609, lng=-0.128315),
+    reachable_postcodes_threshold=0.1,
+    transportation=PublicTransport(),
+    properties=[Property.COVERAGE]
+)
+
+response = sdk.districts([departure_search], [arrival_search])
+```
+
 ### [Geocoding (Search)](https://traveltime.com/docs/api/reference/geocoding-search)
 
 Match a query string to geographic coordinates.
