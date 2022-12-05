@@ -42,6 +42,7 @@ def send_get_request(response_class: Type[T], path: str, headers: Dict[str, str]
 
 def send_post_request(response_class: Type[T], path: str, headers: Dict[str, str], body: BaseModel) -> T:
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
+    print(body.json())
     resp = requests.post(url=url, headers=headers, data=body.json())
     return __process_response(response_class, resp.status_code, resp.text)
 

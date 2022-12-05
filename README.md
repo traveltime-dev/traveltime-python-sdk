@@ -94,6 +94,41 @@ arrival_search = ArrivalSearch(
 response = sdk.time_filter(locations, [departure_search], [arrival_search])
 ```
 
+
+### [Time Filter (Fast)](https://traveltime.com/api/reference/time-filter-fast)
+
+A very fast version of time_filter()
+
+```python
+locations = [
+    Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
+    Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
+    Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
+]
+many_to_one = ManyToOne(
+    id='many-to-one search example',
+    departure_location_ids=['Hyde Park', 'ZSL London Zoo'],
+    arrival_location_id='London center',
+    transportation=Transportation(type='public_transport'),
+    arrival_time_period='weekday_morning',
+    travel_time=1900,
+    properties=[Property.TRAVEL_TIME, Property.FARES]
+)
+one_to_many = OneToMany(
+    id='one-to-many search example',
+    arrival_location_ids=['Hyde Park', 'ZSL London Zoo'],
+    departure_location_id='London center',
+    transportation=Transportation(type='public_transport'),
+    arrival_time_period='weekday_morning',
+    travel_time=1900,
+    properties=[Property.TRAVEL_TIME, Property.FARES]
+)
+
+response = sdk.time_filter_fast(locations, [many_to_one], [one_to_many])
+```
+
+
+
 ### [Routes](https://traveltime.com/docs/api/reference/routes)
 
 Returns routing information between source and destinations.
