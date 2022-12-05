@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "search_id": "public transport from Trafalgar Square",
+      "districts": [
+        {
+          "code": "sw1a",
+          "properties": {
+            "travel_time_all": {
+              "min": 103,
+              "max": 197,
+              "mean": 151,
+              "median": 155
+            },
+            "travel_time_reachable": {
+              "min": 103,
+              "max": 197,
+              "mean": 151,
+              "median": 155
+            }
+          }
+        }
+      ]
+    },
+    {
+      "search_id": "public transport to Trafalgar Square",
+      "districts": [
+        {
+          "code": "sw1a",
+          "properties": {
+            "coverage": 12.258064516129032
+          }
+        }
+      ]
+    }
+  ]
+}

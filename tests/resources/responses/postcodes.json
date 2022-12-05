@@ -1,0 +1,158 @@
+{
+  "results": [
+    {
+      "search_id": "public transport from Trafalgar Square",
+      "postcodes": [
+        {
+          "code": "WC2N 5DU",
+          "properties": [
+            {
+              "travel_time": 50,
+              "distance": 39
+            }
+          ]
+        },
+        {
+          "code": "SW1Y 5BJ",
+          "properties": [
+            {
+              "travel_time": 91,
+              "distance": 95
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5DW",
+          "properties": [
+            {
+              "travel_time": 83,
+              "distance": 85
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5EJ",
+          "properties": [
+            {
+              "travel_time": 99,
+              "distance": 135
+            }
+          ]
+        },
+        {
+          "code": "SW1Y 5AY",
+          "properties": [
+            {
+              "travel_time": 91,
+              "distance": 95
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5DS",
+          "properties": [
+            {
+              "travel_time": 68,
+              "distance": 50
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5JR",
+          "properties": [
+            {
+              "travel_time": 99,
+              "distance": 135
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5DX",
+          "properties": [
+            {
+              "travel_time": 83,
+              "distance": 85
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "search_id": "public transport to Trafalgar Square",
+      "postcodes": [
+        {
+          "code": "WC2N 5DU",
+          "properties": [
+            {
+              "travel_time": 50,
+              "distance": 39
+            }
+          ]
+        },
+        {
+          "code": "SW1Y 5BJ",
+          "properties": [
+            {
+              "travel_time": 91,
+              "distance": 95
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5DW",
+          "properties": [
+            {
+              "travel_time": 83,
+              "distance": 85
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5EJ",
+          "properties": [
+            {
+              "travel_time": 99,
+              "distance": 135
+            }
+          ]
+        },
+        {
+          "code": "SW1Y 5AY",
+          "properties": [
+            {
+              "travel_time": 91,
+              "distance": 95
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5DS",
+          "properties": [
+            {
+              "travel_time": 58,
+              "distance": 50
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5JR",
+          "properties": [
+            {
+              "travel_time": 99,
+              "distance": 135
+            }
+          ]
+        },
+        {
+          "code": "WC2N 5DX",
+          "properties": [
+            {
+              "travel_time": 83,
+              "distance": 85
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

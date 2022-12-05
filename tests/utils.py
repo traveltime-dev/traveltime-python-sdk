@@ -36,6 +36,9 @@ urls = {
     'https://api.traveltimeapp.com/v4/time-filter': UrlInfo('time_filter.json', 'time_filter.json', 200),
     'https://api.traveltimeapp.com/v4/geocoding/search': UrlInfo(None, 'geocoding.json', 200),
     'https://api.traveltimeapp.com/v4/geocoding/reverse': UrlInfo(None, 'geocoding.json', 200),
+    'https://api.traveltimeapp.com/v4/time-filter/postcodes': UrlInfo('postcodes.json', 'postcodes.json', 200),
+    'https://api.traveltimeapp.com/v4/time-filter/postcode-districts': UrlInfo('districts.json', 'districts.json', 200),
+    'https://api.traveltimeapp.com/v4/time-filter/postcode-sectors': UrlInfo('sectors.json', 'sectors.json', 200),
     'https://api.traveltimeapp.com/v4/supported-locations': UrlInfo('supported_locations.json', 'supported_locations.json', 200)
 }
 

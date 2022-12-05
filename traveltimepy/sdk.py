@@ -1,16 +1,20 @@
 from traveltimepy import AcceptType, dto
 from traveltimepy.dto import Location
-from traveltimepy.dto.requests import time_map, time_filter, routes, Rectangle
+from traveltimepy.dto.requests import time_map, time_filter, routes, postcodes, zones, Rectangle
+from traveltimepy.dto.requests.postcodes import PostcodesRequest
 from traveltimepy.dto.requests.routes import RoutesRequest
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
 from traveltimepy.dto.requests.time_filter import TimeFilterRequest
 
 from traveltimepy.dto.requests.time_map import *
+from traveltimepy.dto.requests.zones import DistrictsRequest, SectorsRequest
 from traveltimepy.dto.responses.map_info import MapInfoResponse
+from traveltimepy.dto.responses.postcodes import PostcodesResponse
 from traveltimepy.dto.responses.routes import RoutesResponse
 from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
 from traveltimepy.dto.responses.time_filter import TimeFilterResponse
 from traveltimepy.dto.responses.time_map import TimeMapResponse
+from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
 from traveltimepy.utils import *
 
 from geojson_pydantic import FeatureCollection
@@ -95,6 +99,51 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             TimeFilterRequest(
                 locations=locations,
+                departure_searches=departure_searches,
+                arrival_searches=arrival_searches
+            )
+        )
+
+    def postcodes(
+        self,
+        departure_searches: List[postcodes.DepartureSearch],
+        arrival_searches: List[postcodes.ArrivalSearch]
+    ) -> PostcodesResponse:
+        return send_post_request(
+            PostcodesResponse,
+            'time-filter/postcodes',
+            self.__headers(AcceptType.JSON),
+            PostcodesRequest(
+                departure_searches=departure_searches,
+                arrival_searches=arrival_searches
+            )
+        )
+
+    def districts(
+        self,
+        departure_searches: List[zones.DepartureSearch],
+        arrival_searches: List[zones.ArrivalSearch]
+    ) -> DistrictsResponse:
+        return send_post_request(
+            DistrictsResponse,
+            'time-filter/postcode-districts',
+            self.__headers(AcceptType.JSON),
+            DistrictsRequest(
+                departure_searches=departure_searches,
+                arrival_searches=arrival_searches
+            )
+        )
+
+    def sectors(
+        self,
+        departure_searches: List[zones.DepartureSearch],
+        arrival_searches: List[zones.ArrivalSearch]
+    ) -> SectorsResponse:
+        return send_post_request(
+            SectorsResponse,
+            'time-filter/postcode-sectors',
+            self.__headers(AcceptType.JSON),
+            SectorsRequest(
                 departure_searches=departure_searches,
                 arrival_searches=arrival_searches
             )
