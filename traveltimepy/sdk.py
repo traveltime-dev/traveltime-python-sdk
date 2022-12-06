@@ -1,6 +1,6 @@
 from traveltimepy import AcceptType, dto
 from traveltimepy.dto import Location
-from traveltimepy.dto.requests import time_map, time_filter, time_filter_fast, routes, postcodes, zones, Rectangle
+from traveltimepy.dto.requests import time_map, time_filter, routes, postcodes, zones, Rectangle
 from traveltimepy.dto.requests.postcodes import PostcodesRequest
 from traveltimepy.dto.requests.routes import RoutesRequest
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
