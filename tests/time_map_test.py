@@ -2,8 +2,12 @@ import unittest
 from unittest import mock
 
 from tests.utils import mocked_requests, read_file
-from traveltimepy.dto.requests.time_map import *
+from datetime import datetime
 from pydantic import parse_raw_as
+
+from traveltimepy.dto import Coordinates
+from traveltimepy.dto.requests import Range
+from traveltimepy.dto.requests.time_map import DepartureSearch, ArrivalSearch, Union, Intersection
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.sdk import TravelTimeSdk
 from traveltimepy.transportation import PublicTransport, Driving
@@ -52,4 +56,3 @@ class TimeMapTest(unittest.TestCase):
         )
         expected_response = parse_raw_as(TimeMapResponse, read_file('tests/resources/responses/time_map.json'))
         self.assertEqual(response, expected_response)
-
