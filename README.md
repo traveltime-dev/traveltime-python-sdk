@@ -21,24 +21,31 @@ sdk = TravelTimeSdk('YOUR_API_ID', 'YOUR_API_KEY')
 Given origin coordinates, find shapes of zones reachable within corresponding travel time.
 
 ```python
+from datetime import datetime
+
+from traveltimepy.dto import Coordinates
+from traveltimepy.dto.requests import Range
+from traveltimepy.dto.requests.time_map import DepartureSearch, ArrivalSearch, Union, Intersection
+from traveltimepy.transportation import PublicTransport, Driving
+
 departure_search1 = DepartureSearch(
     id='search_1',
     coords=Coordinates(lat=51.507609, lng=-0.128315),
-    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    departure_time=datetime.now(),
     travel_time=900,
     transportation=PublicTransport()
 )
 departure_search2 = DepartureSearch(
     id='search_2',
     coords=Coordinates(lat=51.507609, lng=-0.128315),
-    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    departure_time=datetime.now(),
     travel_time=900,
     transportation=Driving()
 )
 arrival_search = ArrivalSearch(
     id='search_3',
     coords=Coordinates(lat=51.507609, lng=-0.128315),
-    arrival_time=datetime(2022, 11, 24, 12, 0, 0),
+    arrival_time=datetime.now(),
     travel_time=900,
     transportation=PublicTransport(),
     range=Range(enabled=True, width=3600)
@@ -64,6 +71,13 @@ response = sdk.time_map(
 Given origin and destination points filter out points that cannot be reached within specified time limit.
 
 ```python
+from datetime import datetime
+
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.requests import FullRange, Property
+from traveltimepy.dto.requests.time_filter import DepartureSearch, ArrivalSearch
+from traveltimepy.transportation import PublicTransport
+
 locations = [
     Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
     Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
@@ -74,7 +88,7 @@ departure_search = DepartureSearch(
     id='forward search example',
     arrival_location_ids=['Hyde Park', 'ZSL London Zoo'],
     departure_location_id='London center',
-    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    departure_time=datetime.now(),
     travel_time=3600,
     transportation=PublicTransport(type='bus'),
     properties=[Property.TRAVEL_TIME],
@@ -85,7 +99,7 @@ arrival_search = ArrivalSearch(
     id='backward search example',
     departure_location_ids=['Hyde Park', 'ZSL London Zoo'],
     arrival_location_id='London center',
-    arrival_time=datetime(2022, 11, 24, 12, 0, 0),
+    arrival_time=datetime.now(),
     travel_time=3800,
     transportation=PublicTransport(type='bus'),
     properties=[Property.TRAVEL_TIME, Property.FARES, Property.ROUTE],
@@ -100,6 +114,10 @@ response = sdk.time_filter(locations, [departure_search], [arrival_search])
 A very fast version of time_filter()
 
 ```python
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.requests import Property
+from traveltimepy.dto.requests.time_filter_fast import Transportation, ManyToOne, OneToMany
+
 locations = [
     Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
     Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
@@ -134,6 +152,13 @@ response = sdk.time_filter_fast(locations, [many_to_one], [one_to_many])
 Returns routing information between source and destinations.
 
 ```python
+from datetime import datetime
+
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.requests import FullRange, Property
+from traveltimepy.dto.requests.routes import DepartureSearch, ArrivalSearch
+from traveltimepy.transportation import PublicTransport
+
 locations = [
     Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
     Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
@@ -144,7 +169,7 @@ departure_search = DepartureSearch(
     id='departure search example',
     arrival_location_ids=['Hyde Park', 'ZSL London Zoo'],
     departure_location_id='London center',
-    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    departure_time=datetime.now(),
     transportation=PublicTransport(type='bus'),
     properties=[Property.TRAVEL_TIME],
     full_range=FullRange(enabled=True, max_results=3, width=600)
@@ -166,9 +191,16 @@ response = sdk.routes(locations, [departure_search], [arrival_search])
 Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
 
 ```python
+from datetime import datetime
+
+from traveltimepy.dto import Coordinates
+from traveltimepy.dto.requests import Property
+from traveltimepy.dto.requests.postcodes import DepartureSearch, ArrivalSearch
+from traveltimepy.transportation import PublicTransport
+
 departure_search = DepartureSearch(
     id='public transport from Trafalgar Square',
-    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    departure_time=datetime.now(),
     travel_time=1800,
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     transportation=PublicTransport(),
@@ -177,7 +209,7 @@ departure_search = DepartureSearch(
 
 arrival_search = ArrivalSearch(
     id='public transport to Trafalgar Square',
-    arrival_time=datetime(2022, 11, 24, 12, 0, 0),
+    arrival_time=datetime.now(),
     travel_time=1800,
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     transportation=PublicTransport(),
@@ -191,9 +223,14 @@ response = sdk.postcodes([departure_search], [arrival_search])
 Find sectors that have a certain coverage from origin (or to destination) and get statistics about postcodes within such sectors.
 
 ```python
+from datetime import datetime
+from traveltimepy.dto import Coordinates
+from traveltimepy.dto.requests.zones import DepartureSearch, ArrivalSearch, Property
+from traveltimepy.transportation import PublicTransport
+
 departure_search = DepartureSearch(
     id='public transport from Trafalgar Square',
-    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    departure_time=datetime.now(),
     travel_time=200,
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     reachable_postcodes_threshold=0.1,
@@ -203,7 +240,7 @@ departure_search = DepartureSearch(
 
 arrival_search = ArrivalSearch(
     id='public transport to Trafalgar Square',
-    arrival_time=datetime(2022, 11, 24, 12, 0, 0),
+    arrival_time=datetime.now(),
     travel_time=200,
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     reachable_postcodes_threshold=0.1,
@@ -218,9 +255,14 @@ response = sdk.sectors([departure_search], [arrival_search])
 Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
 
 ```python
+from datetime import datetime
+from traveltimepy.dto import Coordinates
+from traveltimepy.dto.requests.zones import DepartureSearch, ArrivalSearch, Property
+from traveltimepy.transportation import PublicTransport
+
 departure_search = DepartureSearch(
     id='public transport from Trafalgar Square',
-    departure_time=datetime(2022, 11, 24, 12, 0, 0),
+    departure_time=datetime.now(),
     travel_time=200,
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     reachable_postcodes_threshold=0.1,
@@ -230,7 +272,7 @@ departure_search = DepartureSearch(
 
 arrival_search = ArrivalSearch(
     id='public transport to Trafalgar Square',
-    arrival_time=datetime(2022, 11, 24, 12, 0, 0),
+    arrival_time=datetime.now(),
     travel_time=200,
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     reachable_postcodes_threshold=0.1,
@@ -270,6 +312,8 @@ response = sdk.map_info()
 Find out what points are supported by the api.
 
 ```python
+from traveltimepy.dto import Location, Coordinates
+
 locations = [
     Location(id='Kaunas', coords=Coordinates(lat=54.900008, lng=23.957734)),
     Location(id='London', coords=Coordinates(lat=51.506756, lng=-0.12805)),
