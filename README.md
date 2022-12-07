@@ -31,7 +31,7 @@ from traveltimepy.transportation import PublicTransport, Driving
 departure_search1 = DepartureSearch(
     id='search_1',
     coords=Coordinates(lat=51.507609, lng=-0.128315),
-    departure_time=datetime.now(()),
+    departure_time=datetime.now(),
     travel_time=900,
     transportation=PublicTransport()
 )
