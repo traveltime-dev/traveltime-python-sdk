@@ -179,7 +179,7 @@ arrival_search = ArrivalSearch(
     id='arrival search example',
     departure_location_ids=['Hyde Park', 'ZSL London Zoo'],
     arrival_location_id='London center',
-    arrival_time=datetime(2022, 11, 24, 12, 0, 0),
+    arrival_time=datetime.now(),
     transportation=PublicTransport(type='bus'),
     properties=[Property.TRAVEL_TIME, Property.FARES, Property.ROUTE],
 )
