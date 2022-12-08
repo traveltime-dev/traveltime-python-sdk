@@ -5,8 +5,13 @@ import requests
 from pydantic.main import BaseModel
 from pydantic.tools import parse_raw_as
 
+from traveltimepy.dto.proto import TimeFilterFastRequest_pb2, RequestsCommon_pb2
+from traveltimepy.dto.requests.time_filter_proto import OneToMany
 from traveltimepy.dto.responses.error import ResponseError
 from traveltimepy.errors import ApiError
+
+
+
 
 
 T = TypeVar('T')
@@ -58,3 +63,19 @@ def __process_response(response_class: Type[T], status_code: int, text: str) -> 
         raise ApiError(msg)
 
     return parse_raw_as(response_class, text)
+
+
+def to_proto_request(one_to_many: OneToMany):
+    #request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()
+
+    departure = RequestsCommon_pb2.Coords()
+    departure.lat = one_to_many.origin_coordinates.lat
+    departure.lng = one_to_many.origin_coordinates.lng
+
+    #transportation = RequestsCommon_pb2.Transportation()
+    #transportation.type = RequestsCommon_pb2.TransportationType().Value(one_to_many.transportation.value)
+    # print(transportation)
+    print(departure)
+
+
+
