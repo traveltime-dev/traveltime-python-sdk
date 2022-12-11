@@ -10,7 +10,7 @@ class CustomBuild(install):
     def __generate_proto():
         print("helo")
         proto_interface_dir = "./proto"
-        generated_src_dir = "./traveltimepy/dto/proto/"
+        generated_src_dir = "traveltimepy/proto/"
         out_folder = "traveltimepy"
         if not os.path.exists(generated_src_dir):
             os.mkdir(generated_src_dir)

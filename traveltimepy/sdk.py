@@ -1,6 +1,6 @@
 from traveltimepy import AcceptType, dto
 from traveltimepy.dto import Location
-from traveltimepy.dto.requests import time_map, time_filter, routes, postcodes, zones, Rectangle
+from traveltimepy.dto.requests import time_map, time_filter, time_filter_proto, routes, postcodes, zones, Rectangle
 from traveltimepy.dto.requests.postcodes import PostcodesRequest
 from traveltimepy.dto.requests.routes import RoutesRequest
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
@@ -27,6 +27,13 @@ class TravelTimeSdk:
     def __init__(self, app_id: str, api_key: str) -> None:
         self.__app_id = app_id
         self.__api_key = api_key
+
+    def time_filter_proto(self, one_to_many: time_filter_proto.OneToMany) -> TimeFilterProtoResponse:
+        return send_proto_request(
+            TimeFilterProtoRequest(one_to_many=one_to_many),
+            self.__app_id,
+            self.__api_key
+        )
 
     def map_info(self) -> MapInfoResponse:
         return send_get_request(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
