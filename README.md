@@ -145,6 +145,43 @@ one_to_many = OneToMany(
 response = sdk.time_filter_fast(locations, [many_to_one], [one_to_many])
 ```
 
+### Time Filter Fast (Proto)
+
+A fast version of time filter communicating using [protocol buffers](https://github.com/protocolbuffers/protobuf).
+
+The request parameters are much more limited and only travel time is returned. In addition, the results are only approximately correct (95% of the results are guaranteed to be within 5% of the routes returned by regular time filter).
+
+This inflexibility comes with a benefit of faster response times (Over 5x faster compared to regular time filter) and larger limits on the amount of destination points.
+
+Body attributes:
+* origin: Origin point.
+* destination: Destination points. Cannot be more than 200,000.
+* transportation: Transportation type.
+* travelTime: Time limit;
+* country: Return the results that are within the specified country
+
+```python
+from traveltimepy.dto import Coordinates
+
+from traveltimepy.dto.requests.time_filter_proto import OneToMany, Transportation, Country
+
+one_to_many = OneToMany(
+    origin_coordinates=Coordinates(lat=51.425709, lng=-0.122061),
+    destination_coordinates=[
+        Coordinates(lat=51.348605, lng=-0.314783),
+        Coordinates(lat=51.337205, lng=-0.315793)
+    ],
+    transportation=Transportation.DRIVING,
+    travel_time=7200,
+    country=Country.UNITED_KINGDOM
+)
+
+response = sdk.time_filter_proto(one_to_many)
+```
+
+The responses are in the form of a list where each position denotes either a
+travel time (in seconds) of a journey, or if negative that the journey from the
+origin to the destination point is impossible.
 
 
 ### [Routes](https://traveltime.com/docs/api/reference/routes)
