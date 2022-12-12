@@ -10,6 +10,6 @@ class CustomBuild(install):
 
     def run(self):
         super().run()
-        print('File generation started')
+        print('Proto files generation started')
         self.__generate_proto()
-        print('File generation done')
+        print('Proto files generation is done')
