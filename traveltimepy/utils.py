@@ -49,7 +49,7 @@ def send_proto_request(
 
     resp = requests.post(
         url,
-        headers={'Content-Type': AcceptType.OCTET_STREAM},
+        headers={'Content-Type': AcceptType.OCTET_STREAM.value},
         data=proto_request.to_proto().SerializeToString(),
         auth=(app_id, api_key)
     )
