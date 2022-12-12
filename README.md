@@ -154,10 +154,10 @@ The request parameters are much more limited and only travel time is returned. I
 This inflexibility comes with a benefit of faster response times (Over 5x faster compared to regular time filter) and larger limits on the amount of destination points.
 
 Body attributes:
-* origin: Origin point.
-* destination: Destination points. Cannot be more than 200,000.
+* origin_coordinates: Origin point.
+* destination_coordinates: Destination points. Cannot be more than 200,000.
 * transportation: Transportation type.
-* travelTime: Time limit;
+* travel_time: Time limit;
 * country: Return the results that are within the specified country
 
 ```python
