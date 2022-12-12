@@ -4,6 +4,7 @@ import aiohttp
 import requests
 from pydantic.main import BaseModel
 from pydantic.tools import parse_raw_as
+from traveltimepy import AcceptType
 
 import TimeFilterFastResponse_pb2
 from traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
@@ -48,7 +49,7 @@ def send_proto_request(
 
     resp = requests.post(
         url,
-        headers={'Content-Type': 'application/octet-stream'},
+        headers={'Content-Type': AcceptType.OCTET_STREAM},
         data=proto_request.to_proto().SerializeToString(),
         auth=(app_id, api_key)
     )
