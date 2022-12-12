@@ -25,7 +25,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install Package with dependencies
         run: |
-          pip install -e .
+          python setup.py install
           pip install flake8 pytest
       - name: Test with pytest
         run: |
