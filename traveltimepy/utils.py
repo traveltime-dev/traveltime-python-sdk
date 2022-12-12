@@ -56,7 +56,7 @@ def send_proto_request(
     response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()
 
     if resp.status_code != 200:
-        msg = 'Travel Time API request failed with error code: {}\n'.format(resp.status_code)
+        msg = 'Travel Time API proto request failed with error code: {}\n'.format(resp.status_code)
         raise ApiError(msg)
 
     response_body.ParseFromString(resp.content)
@@ -87,7 +87,3 @@ def __process_response(response_class: Type[T], status_code: int, text: str) -> 
         raise ApiError(msg)
 
     return parse_raw_as(response_class, text)
-
-
-
-
