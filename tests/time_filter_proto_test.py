@@ -10,7 +10,7 @@ from traveltimepy.sdk import TravelTimeSdk
 class TimeFilterProtoTest(unittest.TestCase):
 
     def test_proto(self):
-        sdk = TravelTimeSdk(os.environ.get('PROTO_APP_ID'), os.environ.get('PROTO_API_KEY'))
+        sdk = TravelTimeSdk(os.environ['PROTO_APP_ID'], os.environ['PROTO_API_KEY'])
         one_to_many = OneToMany(
             origin_coordinates=Coordinates(lat=51.425709, lng=-0.122061),
             destination_coordinates=[
