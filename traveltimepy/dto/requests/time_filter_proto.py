@@ -30,6 +30,11 @@ class Country(str, Enum):
     NETHERLANDS = 'nl'
     AUSTRIA = 'at'
     UNITED_KINGDOM = 'uk'
+    BELGIUM = 'be'
+    GERMANY = 'de'
+    FRANCE = 'fr'
+    IRELAND = 'ie'
+    LITHUANIA = 'lt'
 
 
 class OneToMany(BaseModel):
