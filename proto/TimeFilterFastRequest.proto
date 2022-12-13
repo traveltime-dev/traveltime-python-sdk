@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package com.igeolise.traveltime.rabbitmq.requests;
+
+import "RequestsCommon.proto";
+
+message TimeFilterFastRequest {
+  enum Property {
+    FARES = 0;
+    DISTANCES = 1;
+  }
+  message OneToMany {
+    Coords departureLocation = 1;
+    /*
+     *  We encode arrival locations as deltas (relative to the source) using a fixedpoint encoding i.e
+     *    deltaLat = round((lat - sourceLat) * 10^5).toInt
+     *    deltaLon = round((lon - sourceLon) * 10^5).toInt
+     *
+     * The deltas should be interleaved in the `locationDeltas` field i.e
+     *
+     * locationDeltas[0] should be the first lat
+     * locationDeltas[1] should be the first lon
+     * locationDeltas[2] should be the second lat
+     * ...
+     * etc
+     */
+    repeated sint32 locationDeltas = 2;
+    Transportation transportation = 3;
+    TimePeriod arrivalTimePeriod = 4;
+    sint32 travelTime = 5;
+    repeated Property properties = 6;
+  }
+
+  OneToMany oneToManyRequest = 1;
+}

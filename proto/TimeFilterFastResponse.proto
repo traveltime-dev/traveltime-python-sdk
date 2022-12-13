@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+package com.igeolise.traveltime.rabbitmq.responses;
+
+message TimeFilterFastResponse {
+  message Properties {
+    repeated sint32 travelTimes = 1;
+    repeated int32 monthlyFares = 2;
+    repeated int32 distances = 3;
+  }
+
+  message Error {
+     ErrorType type = 1;
+  }
+
+  enum ErrorType {
+     /*
+      * Catch all unknown error type
+      */
+     UNKNOWN                                    = 0;
+     /*
+      * oneToManyRequest to many field must not be null
+      */
+     ONE_TO_MANY_MUST_NOT_BE_NULL               = 1;
+     /*
+      * Source (either departure or arrival location) must not be null
+      */
+     SOURCE_MUST_NOT_BE_NULL                    = 2;
+     /*
+      * Transportation mode must not be null.
+      */
+     TRANSPORTATION_MUST_NOT_BE_NULL            = 3;
+     /*
+      * Source (either departure or arrival location) must not be null
+      */
+     SOURCE_NOT_IN_GEOMETRY                     = 4;
+
+     /*
+      * Transportation mode unrecognized.
+      */
+     UNRECOGNIZED_TRANSPORTATION_MODE           = 5;
+
+     /*
+      * The travel time limit is too low to process this request.
+      */
+     TRAVEL_TIME_LIMIT_TOO_LOW                  = 6;
+
+     /*
+      * The travel time limit is too high to process this request.
+      */
+     TRAVEL_TIME_LIMIT_TOO_HIGH                 = 7;
+
+     /*
+      * User id not set.
+      */
+     AUTH_ERROR_NO_USER_ID                      = 8;
+
+     /*
+      * Message sent to wrong queue - transportation mode cannot be handled.
+      */
+     SERVICE_MISMATCH_WRONG_TRANSPORTATION_MODE = 9;
+
+     /*
+      * Source is in a area that doesn't have any points that can be out of
+      * search e.g a lake, mountains or other desolate areas.
+      */
+     SOURCE_OUT_OF_REACH = 10;
+
+     /*
+      * The interleaved deltas array should have (lat/lon) deltas and have an
+      * even number of elements
+      */
+     INTERLEAVED_DELTAS_INVALID_COORDINATE_PAIRS = 11;
+
+     /*
+      * Public transport requests do not support returning distances for
+      * returned points.
+      */
+     DISTANCE_PROPERTY_NOT_SUPPORTED = 12;
+  }
+
+  Error error = 1;
+  Properties properties = 2;
+}
