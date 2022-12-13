@@ -21,4 +21,4 @@ class CustomSdistCommand(sdist):
 
 
 def generate_proto():
-    os.system('protoc -I=./proto --python_out=./ ./proto/*')
+    os.system('protoc -I=./proto --python_out=./traveltimepy/ ./proto/*')
