@@ -4,9 +4,8 @@ import aiohttp
 import requests
 from pydantic.main import BaseModel
 from pydantic.tools import parse_raw_as
-from traveltimepy import AcceptType
+from traveltimepy import AcceptType, TimeFilterFastResponse_pb2
 
-import TimeFilterFastResponse_pb2
 from traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
 from traveltimepy.dto.responses.error import ResponseError
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse

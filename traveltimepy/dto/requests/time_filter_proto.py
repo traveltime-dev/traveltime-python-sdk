@@ -5,8 +5,7 @@ from typing import List
 
 from pydantic import BaseModel
 
-import RequestsCommon_pb2
-import TimeFilterFastRequest_pb2
+from traveltimepy import TimeFilterFastRequest_pb2
 from traveltimepy.dto import Coordinates
 
 
@@ -56,7 +55,7 @@ class TimeFilterProtoRequest(BaseModel):
 
         request.oneToManyRequest.transportation.type = self.one_to_many.transportation.value.code
         request.oneToManyRequest.travelTime = self.one_to_many.travel_time
-        request.oneToManyRequest.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING
+        request.oneToManyRequest.arrivalTimePeriod = TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
 
         mult = math.pow(10, 5)
         for destination in self.one_to_many.destination_coordinates:
