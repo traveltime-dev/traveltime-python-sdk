@@ -45,8 +45,8 @@ class TravelTimeSdk:
         self,
         arrival_searches: List[dto.requests.time_map.ArrivalSearch],
         departure_searches: List[dto.requests.time_map.DepartureSearch],
-        unions: List[Union] = None,
-        intersections: List[Intersection] = None
+        unions: List[Union] = [],
+        intersections: List[Intersection] = []
     ) -> TimeMapResponse:
         return send_post_request(
             TimeMapResponse,
@@ -62,10 +62,10 @@ class TravelTimeSdk:
 
     async def time_map_async(
         self,
-        arrival_searches: List[dto.requests.time_map.ArrivalSearch] = None,
-        departure_searches: List[dto.requests.time_map.DepartureSearch] = None,
-        unions: List[Union] = None,
-        intersections: List[Intersection] = None
+        arrival_searches: List[dto.requests.time_map.ArrivalSearch],
+        departure_searches: List[dto.requests.time_map.DepartureSearch],
+        unions: List[Union] = [],
+        intersections: List[Intersection] = []
     ) -> TimeMapResponse:
         return await send_post_request_async(
             TimeMapResponse,
