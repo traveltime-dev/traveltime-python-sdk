@@ -23,12 +23,15 @@ jobs:
         with:
           version: '3.x'
 
-      - name: Install dependencies
+      - name: Generate proto files
+        run: |
+          protoc -I=./proto --python_out=./traveltimepy/ ./proto/*
+
+      - name: Install setuptools
         run: |
           python -m pip install --upgrade pip
           pip install setuptools wheel twine
-          pip install -e .
-          python setup.py install
+
       - name: Build and publish
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
