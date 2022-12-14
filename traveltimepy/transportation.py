@@ -1,4 +1,5 @@
-from typing import Literal, Optional
+from typing import Optional
+from typing_extensions import Literal
 
 from pydantic.main import BaseModel
 

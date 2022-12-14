@@ -16,7 +16,11 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
+          - "3.7"
+          - "3.8"
+          - "3.9"
           - "3.10"
+          - "3.11"
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -29,10 +33,13 @@ jobs:
         with:
           version: '3.x'
 
+      - name: Generate proto files
+        run: |
+          protoc -I=./proto --python_out=./traveltimepy/ ./proto/*
+
       - name: Install Package with dependencies
         run: |
           pip install -e .
-          python setup.py install
           pip install flake8 pytest
       - name: Test with pytest
         run: |
