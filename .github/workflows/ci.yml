@@ -30,10 +30,13 @@ jobs:
         with:
           version: '3.x'
 
+      - name: Generate proto files
+        run: |
+          protoc -I=./proto --python_out=./traveltimepy/ ./proto/*
+
       - name: Install Package with dependencies
         run: |
           pip install -e .
-          python setup.py install
           pip install flake8 pytest
       - name: Test with pytest
         run: |
