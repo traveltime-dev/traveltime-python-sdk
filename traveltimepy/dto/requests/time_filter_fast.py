@@ -1,4 +1,5 @@
-from typing import Literal, List
+from typing import List
+from typing_extensions import Literal
 
 from pydantic import BaseModel
 

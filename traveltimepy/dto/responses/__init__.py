@@ -1,6 +1,7 @@
 from datetime import datetime, time
 from pydantic import BaseModel
-from typing import Literal, NewType, List, Union, Optional
+from typing import NewType, List, Union, Optional
+from typing_extensions import Literal
 
 from traveltimepy.dto import Coordinates
 
