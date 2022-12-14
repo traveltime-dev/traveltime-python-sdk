@@ -16,7 +16,7 @@ from traveltimepy.sdk import TravelTimeSdk
 sdk = TravelTimeSdk('YOUR_API_ID', 'YOUR_API_KEY')
 ```
 
-### [Isochrones (Time Map)](https://traveltime.com/docs/api/reference/isochrones)
+### [Isochrones (Time Map)](https://docs.traveltime.com/api/reference/isochrones)
 
 Given origin coordinates, find shapes of zones reachable within corresponding travel time.
 
@@ -66,7 +66,7 @@ response = sdk.time_map(
 )
 ```
 
-### [Distance Matrix (Time Filter)](https://traveltime.com/docs/api/reference/distance-matrix)
+### [Distance Matrix (Time Filter)](https://docs.traveltime.com/api/reference/travel-time-distance-matrix)
 
 Given origin and destination points filter out points that cannot be reached within specified time limit.
 
@@ -109,7 +109,7 @@ response = sdk.time_filter(locations, [departure_search], [arrival_search])
 ```
 
 
-### [Time Filter (Fast)](https://traveltime.com/api/reference/time-filter-fast)
+### [Time Filter (Fast)](https://docs.traveltime.com/api/reference/time-filter-fast)
 
 A very fast version of time_filter()
 
@@ -145,7 +145,7 @@ one_to_many = OneToMany(
 response = sdk.time_filter_fast(locations, [many_to_one], [one_to_many])
 ```
 
-### Time Filter Fast (Proto)
+### [Time Filter Fast (Proto)](https://docs.traveltime.com/api/reference/travel-time-distance-matrix-proto)
 
 A fast version of time filter communicating using [protocol buffers](https://github.com/protocolbuffers/protobuf).
 
@@ -184,7 +184,7 @@ travel time (in seconds) of a journey, or if negative that the journey from the
 origin to the destination point is impossible.
 
 
-### [Routes](https://traveltime.com/docs/api/reference/routes)
+### [Routes](https://docs.traveltime.com/api/reference/routes)
 
 Returns routing information between source and destinations.
 
@@ -224,7 +224,7 @@ arrival_search = ArrivalSearch(
 response = sdk.routes(locations, [departure_search], [arrival_search])
 ```
 
-### [Time Filter (Postcodes)](https://traveltime.com/docs/api/reference/postcode-search)
+### [Time Filter (Postcodes)](https://docs.traveltime.com/api/reference/postcode-search)
 Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
 
 ```python
@@ -256,7 +256,7 @@ arrival_search = ArrivalSearch(
 response = sdk.postcodes([departure_search], [arrival_search])
 ```
 
-### [Time Filter (Postcode Sectors)](https://traveltime.com/docs/api/reference/postcode-sector-filter)
+### [Time Filter (Postcode Sectors)](https://docs.traveltime.com/api/reference/postcode-sector-filter)
 Find sectors that have a certain coverage from origin (or to destination) and get statistics about postcodes within such sectors.
 
 ```python
@@ -288,7 +288,7 @@ arrival_search = ArrivalSearch(
 response = sdk.sectors([departure_search], [arrival_search])
 ```
 
-### [Time Filter (Postcode Districts)](https://traveltime.com/docs/api/reference/postcode-district-filter)
+### [Time Filter (Postcode Districts)](https://docs.traveltime.com/api/reference/postcode-district-filter)
 Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
 
 ```python
@@ -320,7 +320,7 @@ arrival_search = ArrivalSearch(
 response = sdk.districts([departure_search], [arrival_search])
 ```
 
-### [Geocoding (Search)](https://traveltime.com/docs/api/reference/geocoding-search)
+### [Geocoding (Search)](https://docs.traveltime.com/api/reference/geocoding-search)
 
 Match a query string to geographic coordinates.
 
@@ -328,7 +328,7 @@ Match a query string to geographic coordinates.
 response = sdk.geocoding(query='Parliament square', limit=30)
 ```
 
-### [Reverse Geocoding](https://traveltime.com/docs/api/reference/geocoding-reverse)
+### [Reverse Geocoding](https://docs.traveltime.com/api/reference/geocoding-reverse)
 
 Match a latitude, longitude pair to an address.
 
@@ -336,7 +336,7 @@ Match a latitude, longitude pair to an address.
 response = sdk.geocoding_reverse(lat=51.507281, lng=-0.132120)
 ```
 
-### [Map Info](https://traveltime.com/docs/api/reference/map-info)
+### [Map Info](https://docs.traveltime.com/api/reference/map-info)
 
 Get information about currently supported countries.
 
@@ -344,7 +344,7 @@ Get information about currently supported countries.
 response = sdk.map_info()
 ```
 
-### [Supported Locations](https://traveltime.com/docs/api/reference/supported-locations)
+### [Supported Locations](https://docs.traveltime.com/api/reference/supported-locations)
 
 Find out what points are supported by the api.
 
