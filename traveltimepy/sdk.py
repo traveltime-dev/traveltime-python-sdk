@@ -1,7 +1,8 @@
 from typing import List, Optional, Dict
 
-from build.lib.traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
-from build.lib.traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
+
 from traveltimepy import AcceptType
 from traveltimepy.dto import Location
 from traveltimepy.dto.requests import (
