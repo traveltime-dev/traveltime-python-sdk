@@ -1,13 +1,25 @@
-from traveltimepy import AcceptType, dto
+from typing import List, Optional, Dict
+
+from build.lib.traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
+from build.lib.traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy import AcceptType
 from traveltimepy.dto import Location
-from traveltimepy.dto.requests import time_map, time_filter, time_filter_proto, routes, postcodes, zones, Rectangle
+from traveltimepy.dto.requests import (
+    time_map as time_map_package,
+    time_filter as time_filter_package,
+    time_filter_proto as time_filter_proto_package,
+    routes as routes_package,
+    postcodes as postcodes_package,
+    zones,
+    Rectangle
+)
 from traveltimepy.dto.requests.postcodes import PostcodesRequest
 from traveltimepy.dto.requests.routes import RoutesRequest
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
 from traveltimepy.dto.requests.time_filter import TimeFilterRequest
 from traveltimepy.dto.requests.time_filter_fast import ArrivalSearches, TimeFilterFastRequest, ManyToOne, OneToMany
 
-from traveltimepy.dto.requests.time_map import *
+from traveltimepy.dto.requests.time_map import Union, Intersection, TimeMapRequest
 from traveltimepy.dto.requests.zones import DistrictsRequest, SectorsRequest
 from traveltimepy.dto.responses.map_info import MapInfoResponse
 from traveltimepy.dto.responses.postcodes import PostcodesResponse
@@ -17,7 +29,13 @@ from traveltimepy.dto.responses.time_filter import TimeFilterResponse
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
-from traveltimepy.utils import *
+from traveltimepy.utils import (
+    send_get_request,
+    send_post_request,
+    send_post_request_async,
+    send_get_request_async,
+    send_proto_request
+)
 
 from geojson_pydantic import FeatureCollection
 
@@ -28,7 +46,7 @@ class TravelTimeSdk:
         self.__app_id = app_id
         self.__api_key = api_key
 
-    def time_filter_proto(self, one_to_many: time_filter_proto.OneToMany) -> TimeFilterProtoResponse:
+    def time_filter_proto(self, one_to_many: time_filter_proto_package.OneToMany) -> TimeFilterProtoResponse:
         return send_proto_request(
             TimeFilterProtoRequest(one_to_many=one_to_many),
             self.__app_id,
@@ -43,8 +61,8 @@ class TravelTimeSdk:
 
     def time_map(
         self,
-        arrival_searches: List[dto.requests.time_map.ArrivalSearch],
-        departure_searches: List[dto.requests.time_map.DepartureSearch],
+        arrival_searches: List[time_map_package.ArrivalSearch],
+        departure_searches: List[time_map_package.DepartureSearch],
         unions: List[Union] = [],
         intersections: List[Intersection] = []
     ) -> TimeMapResponse:
@@ -62,8 +80,8 @@ class TravelTimeSdk:
 
     async def time_map_async(
         self,
-        arrival_searches: List[dto.requests.time_map.ArrivalSearch],
-        departure_searches: List[dto.requests.time_map.DepartureSearch],
+        arrival_searches: List[time_map_package.ArrivalSearch],
+        departure_searches: List[time_map_package.DepartureSearch],
         unions: List[Union] = [],
         intersections: List[Intersection] = []
     ) -> TimeMapResponse:
@@ -82,8 +100,8 @@ class TravelTimeSdk:
     def time_filter(
         self,
         locations: List[Location],
-        departure_searches: List[dto.requests.time_filter.DepartureSearch],
-        arrival_searches: List[dto.requests.time_filter.ArrivalSearch]
+        departure_searches: List[time_filter_package.DepartureSearch],
+        arrival_searches: List[time_filter_package.ArrivalSearch]
     ) -> TimeFilterResponse:
         return send_post_request(
             TimeFilterResponse,
@@ -99,8 +117,8 @@ class TravelTimeSdk:
     async def time_filter_async(
         self,
         locations: List[Location],
-        departure_searches: List[dto.requests.time_filter.DepartureSearch],
-        arrival_searches: List[dto.requests.time_filter.ArrivalSearch]
+        departure_searches: List[time_filter_package.DepartureSearch],
+        arrival_searches: List[time_filter_package.ArrivalSearch]
     ) -> TimeFilterResponse:
         return await send_post_request_async(
             TimeFilterResponse,
@@ -147,8 +165,8 @@ class TravelTimeSdk:
 
     def postcodes(
         self,
-        departure_searches: List[postcodes.DepartureSearch],
-        arrival_searches: List[postcodes.ArrivalSearch]
+        departure_searches: List[postcodes_package.DepartureSearch],
+        arrival_searches: List[postcodes_package.ArrivalSearch]
     ) -> PostcodesResponse:
         return send_post_request(
             PostcodesResponse,
@@ -193,8 +211,8 @@ class TravelTimeSdk:
     def routes(
         self,
         locations: List[Location],
-        departure_searches: List[dto.requests.routes.DepartureSearch],
-        arrival_searches: List[dto.requests.routes.ArrivalSearch]
+        departure_searches: List[routes_package.DepartureSearch],
+        arrival_searches: List[routes_package.ArrivalSearch]
     ) -> RoutesResponse:
         return send_post_request(
             RoutesResponse,
@@ -210,8 +228,8 @@ class TravelTimeSdk:
     async def routes_async(
         self,
         locations: List[Location],
-        departure_searches: List[dto.requests.time_filter.DepartureSearch],
-        arrival_searches: List[dto.requests.time_filter.ArrivalSearch]
+        departure_searches: List[time_filter_package.DepartureSearch],
+        arrival_searches: List[time_filter_package.ArrivalSearch]
     ) -> RoutesResponse:
         return await send_post_request_async(
             RoutesResponse,

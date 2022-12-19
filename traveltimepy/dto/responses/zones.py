@@ -39,5 +39,3 @@ class SectorsResponse(BaseModel):
 
 class DistrictsResponse(BaseModel):
     results: List[DistrictsResult]
-
-
