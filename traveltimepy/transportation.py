@@ -7,7 +7,7 @@ from pydantic.main import BaseModel
 class MaxChanges(BaseModel):
     enabled: bool
     limit: int
-    
+
 
 class Driving(BaseModel):
     type: Literal['driving'] = 'driving'
@@ -37,7 +37,12 @@ class DrivingTrain(BaseModel):
 
 
 class PublicTransport(BaseModel):
-    type: Literal['public_transport', 'train', 'bus', 'coach'] = 'public_transport'
+    type: Literal[
+        'public_transport',
+        'train',
+        'bus',
+        'coach'
+    ] = 'public_transport'
     pt_change_delay: Optional[int] = None
     walking_time: Optional[int] = None
     max_changes: Optional[int] = None

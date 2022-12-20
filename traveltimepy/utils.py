@@ -63,13 +63,23 @@ def send_proto_request(
     return TimeFilterProtoResponse(travel_times=response_body.properties.travelTimes[:])
 
 
-def send_get_request(response_class: Type[T], path: str, headers: Dict[str, str], params: Dict[str, str] = None) -> T:
+def send_get_request(
+    response_class: Type[T],
+    path: str,
+    headers: Dict[str, str],
+    params: Dict[str, str] = None
+) -> T:
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     resp = requests.get(url=url, headers=headers, params=params)
     return __process_response(response_class, resp.status_code, resp.text)
 
 
-def send_post_request(response_class: Type[T], path: str, headers: Dict[str, str], body: BaseModel) -> T:
+def send_post_request(
+    response_class: Type[T],
+    path: str,
+    headers: Dict[str, str],
+    body: BaseModel
+) -> T:
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     resp = requests.post(url=url, headers=headers, data=body.json())
     return __process_response(response_class, resp.status_code, resp.text)
