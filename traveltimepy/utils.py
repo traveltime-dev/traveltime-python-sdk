@@ -48,7 +48,7 @@ def send_proto_request(
 
     resp = requests.post(
         url,
-        headers={'Content-Type': AcceptType.OCTET_STREAM.value},
+        headers={'Content-Type': AcceptType.OCTET_STREAM.value, 'User-Agent': 'Travel Time Python SDK'},
         data=proto_request.to_proto().SerializeToString(),
         auth=(app_id, api_key)
     )
