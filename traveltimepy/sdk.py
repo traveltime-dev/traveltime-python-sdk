@@ -300,6 +300,7 @@ class TravelTimeSdk:
         return {
             'X-Application-Id': self.__app_id,
             'X-Api-Key': self.__api_key,
+            'User-Agent': 'Travel Time Python SDK',
             'Content-Type': 'application/json',
             'Accept': accept_type.value
         }
