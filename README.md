@@ -117,7 +117,7 @@ departure_locations = [
 arrival_search = ArrivalSearch(
     id='arrival_search',
     departure_location_ids=map(lambda location: location.id, departure_locations),
-    arrival_location_id=arrival_location,
+    arrival_location_id=arrival_location.id,
     arrival_time=datetime.now(),
     travel_time=3800,
     transportation=PublicTransport(type='bus'),
