@@ -87,7 +87,7 @@ arrival_locations = [
 
 departure_search = DepartureSearch(
     id='departure_search',
-    arrival_location_ids=map(lambda location: location.id, arrival_locations),
+    arrival_location_ids=list(map(lambda location: location.id, arrival_locations)),
     departure_location_id=departure_location.id,
     departure_time=datetime.now(),
     travel_time=3600,
@@ -96,7 +96,7 @@ departure_search = DepartureSearch(
     full_range=FullRange(enabled=True, max_results=3, width=600)
 )
 
-response = sdk.time_filter(arrival_locations + departure_location, [departure_search], [])
+response = sdk.time_filter(arrival_locations + [departure_location], [departure_search], [])
 ```
 
 Backward search example (many to one matrix):
@@ -116,7 +116,7 @@ departure_locations = [
 
 arrival_search = ArrivalSearch(
     id='arrival_search',
-    departure_location_ids=map(lambda location: location.id, departure_locations),
+    departure_location_ids=list(map(lambda location: location.id, departure_locations)),
     arrival_location_id=arrival_location.id,
     arrival_time=datetime.now(),
     travel_time=3800,
@@ -124,7 +124,7 @@ arrival_search = ArrivalSearch(
     properties=[Property.TRAVEL_TIME, Property.FARES, Property.ROUTE],
 )
 
-response = sdk.time_filter(departure_locations + arrival_location, [], [arrival_search])
+response = sdk.time_filter(departure_locations + [arrival_location], [], [arrival_search])
 ```
 
 ### [Time Filter (Fast)](https://docs.traveltime.com/api/reference/time-filter-fast)
@@ -145,7 +145,7 @@ arrival_locations = [
 
 one_to_many = OneToMany(
     id='one_to_many',
-    arrival_location_ids=map(lambda location: location.id, arrival_locations),
+    arrival_location_ids=list(map(lambda location: location.id, arrival_locations)),
     departure_location_id=departure_location.id,
     transportation=Transportation(type='public_transport'),
     arrival_time_period='weekday_morning',
@@ -153,7 +153,7 @@ one_to_many = OneToMany(
     properties=[Property.TRAVEL_TIME, Property.FARES]
 )
 
-response = sdk.time_filter_fast(arrival_locations + departure_location, [], [one_to_many])
+response = sdk.time_filter_fast(arrival_locations + [departure_location], [], [one_to_many])
 ```
 
 Backward search example (many to one matrix):
@@ -170,7 +170,7 @@ departure_locations = [
 
 many_to_one = ManyToOne(
     id='many_to_one',
-    departure_location_ids=map(lambda location: location.id, departure_locations),
+    departure_location_ids=list(map(lambda location: location.id, departure_locations)),
     arrival_location_id=arrival_location.id,
     transportation=Transportation(type='public_transport'),
     arrival_time_period='weekday_morning',
@@ -178,7 +178,7 @@ many_to_one = ManyToOne(
     properties=[Property.TRAVEL_TIME, Property.FARES]
 )
 
-response = sdk.time_filter_fast(departure_locations + arrival_location, [many_to_one], [])
+response = sdk.time_filter_fast(departure_locations + [arrival_location], [many_to_one], [])
 ```
 
 ### [Time Filter Fast (Proto)](https://docs.traveltime.com/api/reference/travel-time-distance-matrix-proto)
@@ -242,7 +242,7 @@ arrival_locations = [
 
 departure_search = DepartureSearch(
     id='departure_search',
-    arrival_location_ids=map(lambda location: location.id, arrival_locations),
+    arrival_location_ids=list(map(lambda location: location.id, arrival_locations)),
     departure_location_id=departure_location.id,
     departure_time=datetime.now(),
     transportation=PublicTransport(type='bus'),
@@ -250,7 +250,7 @@ departure_search = DepartureSearch(
     full_range=FullRange(enabled=True, max_results=3, width=600)
 )
 
-response = sdk.routes(arrival_locations + departure_location, [departure_search], [])
+response = sdk.routes(arrival_locations + [departure_location], [departure_search], [])
 ```
 
 Backward search example (many to one matrix):
@@ -270,14 +270,14 @@ departure_locations = [
 
 arrival_search = ArrivalSearch(
     id='arrival_search',
-    departure_location_ids=map(lambda location: location.id, departure_locations),
+    departure_location_ids=list(map(lambda location: location.id, departure_locations)),
     arrival_location_id=arrival_location.id,
     arrival_time=datetime.now(),
     transportation=PublicTransport(type='bus'),
     properties=[Property.TRAVEL_TIME, Property.FARES, Property.ROUTE],
 )
 
-response = sdk.routes(departure_locations + arrival_location, [], [arrival_search])
+response = sdk.routes(departure_locations + [arrival_location], [], [arrival_search])
 ```
 
 ### [Time Filter (Postcodes)](https://docs.traveltime.com/api/reference/postcode-search)
