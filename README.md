@@ -1,7 +1,7 @@
 # Travel Time Python SDK
 [![PyPI version](https://badge.fury.io/py/traveltimepy.svg)](https://badge.fury.io/py/traveltimepy) [![Unit Tests](https://github.com/traveltime-dev/traveltime-python-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/traveltime-dev/traveltime-python-sdk/actions/workflows/ci.yml) [![Python support](https://img.shields.io/badge/python-3.7+-blue.svg)](https://img.shields.io/badge/python-3.7+-blue)
 
-Travel Time Python SDK helps users find locations by journey time rather than using ‘as the crow flies’ distance.  
+[Travel Time](https://docs.traveltime.com/api/overview/introduction) Python SDK helps users find locations by journey time rather than using ‘as the crow flies’ distance.  
 Time-based searching gives users more opportunities for personalisation and delivers a more relevant search.
 
 ## Usage
@@ -13,12 +13,18 @@ In order to authenticate with Travel Time API, you will have to supply the Appli
 ```python
 from traveltimepy.sdk import TravelTimeSdk
 
-sdk = TravelTimeSdk('YOUR_API_ID', 'YOUR_API_KEY')
+sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 ```
 
 ### [Isochrones (Time Map)](https://docs.traveltime.com/api/reference/isochrones)
 
-Given origin coordinates, find shapes of zones reachable within corresponding travel time.
+Given origin coordinates, find shapes of zones reachable within corresponding travel time. Find unions/intersections between different searches.
+
+Body attributes:
+* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches.
+* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
+* unions: Define unions of shapes that are results of previously defined searches.
+* intersections: Define intersections of shapes that are results of previously defined searches.
 
 ```python
 from datetime import datetime
@@ -68,7 +74,12 @@ response = sdk.time_map(
 
 ### [Distance Matrix (Time Filter)](https://docs.traveltime.com/api/reference/travel-time-distance-matrix)
 
-Given origin and destination points filter out points that cannot be reached within specified time limit.
+Given origin and destination points filter out points that cannot be reached within specified time limit. Find out travel times, distances and costs between an origin and up to 2,000 destination points.
+
+Body attributes:
+* locations: Locations to use. Each location requires an id and lat/lng values.
+* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches.
+* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
 
 Forward search example (one to many matrix):
 ```python
@@ -129,7 +140,7 @@ response = sdk.time_filter(departure_locations + [arrival_location], [], [arriva
 
 ### [Time Filter (Fast)](https://docs.traveltime.com/api/reference/time-filter-fast)
 
-A very fast version of time_filter()
+A very fast version of ```time_filter()```. However, the request parameters are much more limited. Currently only supports UK and Ireland.
 
 Forward search example (one to many matrix):
 ```python
@@ -193,8 +204,8 @@ Body attributes:
 * origin_coordinates: Origin point.
 * destination_coordinates: Destination points. Cannot be more than 200,000.
 * transportation: Transportation type.
-* travel_time: Time limit;
-* country: Return the results that are within the specified country
+* travel_time: Time limit.
+* country: Return the results that are within the specified country.
 
 Forward search example (one to many matrix):
 ```python
@@ -225,7 +236,14 @@ origin to the destination point is impossible.
 
 Returns routing information between source and destinations.
 
+
+Body attributes:
+* locations: Locations to use. Each location requires an id and lat/lng values.
+* departure_searches: Searches based on departure times. Leave departure location at no earlier than given time. You can define a maximum of 10 searches.
+* arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
+
 Forward search example (one to many matrix):
+
 ```python
 from datetime import datetime
 
@@ -281,7 +299,7 @@ response = sdk.routes(departure_locations + [arrival_location], [], [arrival_sea
 ```
 
 ### [Time Filter (Postcodes)](https://docs.traveltime.com/api/reference/postcode-search)
-Find reachable postcodes from origin (or to destination) and get statistics about such postcodes.
+Find reachable postcodes from origin (or to destination) and get statistics about such postcodes. Currently only supports United Kingdom.
 
 ```python
 from datetime import datetime
