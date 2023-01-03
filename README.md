@@ -29,21 +29,21 @@ from traveltimepy.dto.requests.time_map import DepartureSearch, ArrivalSearch, U
 from traveltimepy.transportation import PublicTransport, Driving
 
 departure_search1 = DepartureSearch(
-    id='search_1',
+    id='departure_search1',
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     departure_time=datetime.now(),
     travel_time=900,
     transportation=PublicTransport()
 )
 departure_search2 = DepartureSearch(
-    id='search_2',
+    id='departure_search2',
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     departure_time=datetime.now(),
     travel_time=900,
     transportation=Driving()
 )
 arrival_search = ArrivalSearch(
-    id='search_3',
+    id='arrival_search',
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     arrival_time=datetime.now(),
     travel_time=900,
@@ -51,12 +51,12 @@ arrival_search = ArrivalSearch(
     range=Range(enabled=True, width=3600)
 )
 union = Union(
-    id='search_4',
-    search_ids=['search_2', 'search_3']
+    id='union',
+    search_ids=[departure_search2.id, arrival_search.id]
 )
 intersection = Intersection(
-    id='search_5',
-    search_ids=['search_2', 'search_3']
+    id='intersection',
+    search_ids=[departure_search2.id, arrival_search.id]
 )
 response = sdk.time_map(
     [arrival_search],
@@ -70,24 +70,25 @@ response = sdk.time_map(
 
 Given origin and destination points filter out points that cannot be reached within specified time limit.
 
+Forward search example (one to many matrix):
 ```python
 from datetime import datetime
 
 from traveltimepy.dto import Location, Coordinates
 from traveltimepy.dto.requests import FullRange, Property
-from traveltimepy.dto.requests.time_filter import DepartureSearch, ArrivalSearch
+from traveltimepy.dto.requests.time_filter import DepartureSearch
 from traveltimepy.transportation import PublicTransport
 
-locations = [
-    Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
+departure_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
+arrival_locations = [
     Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
     Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
 ]
 
 departure_search = DepartureSearch(
-    id='forward search example',
-    arrival_location_ids=['Hyde Park', 'ZSL London Zoo'],
-    departure_location_id='London center',
+    id='departure_search',
+    arrival_location_ids=list(map(lambda location: location.id, arrival_locations)),
+    departure_location_id=departure_location.id,
     departure_time=datetime.now(),
     travel_time=3600,
     transportation=PublicTransport(type='bus'),
@@ -95,54 +96,89 @@ departure_search = DepartureSearch(
     full_range=FullRange(enabled=True, max_results=3, width=600)
 )
 
+response = sdk.time_filter(arrival_locations + [departure_location], [departure_search], [])
+```
+
+Backward search example (many to one matrix):
+```python
+from datetime import datetime
+
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.requests import Property
+from traveltimepy.dto.requests.time_filter import ArrivalSearch
+from traveltimepy.transportation import PublicTransport
+
+arrival_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
+departure_locations = [
+    Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
+    Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
+]
+
 arrival_search = ArrivalSearch(
-    id='backward search example',
-    departure_location_ids=['Hyde Park', 'ZSL London Zoo'],
-    arrival_location_id='London center',
+    id='arrival_search',
+    departure_location_ids=list(map(lambda location: location.id, departure_locations)),
+    arrival_location_id=arrival_location.id,
     arrival_time=datetime.now(),
     travel_time=3800,
     transportation=PublicTransport(type='bus'),
     properties=[Property.TRAVEL_TIME, Property.FARES, Property.ROUTE],
 )
 
-response = sdk.time_filter(locations, [departure_search], [arrival_search])
+response = sdk.time_filter(departure_locations + [arrival_location], [], [arrival_search])
 ```
-
 
 ### [Time Filter (Fast)](https://docs.traveltime.com/api/reference/time-filter-fast)
 
 A very fast version of time_filter()
 
+Forward search example (one to many matrix):
 ```python
 from traveltimepy.dto import Location, Coordinates
 from traveltimepy.dto.requests import Property
-from traveltimepy.dto.requests.time_filter_fast import Transportation, ManyToOne, OneToMany
+from traveltimepy.dto.requests.time_filter_fast import Transportation, OneToMany
 
-locations = [
-    Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
+departure_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
+arrival_locations = [
     Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
     Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
 ]
-many_to_one = ManyToOne(
-    id='many-to-one search example',
-    departure_location_ids=['Hyde Park', 'ZSL London Zoo'],
-    arrival_location_id='London center',
-    transportation=Transportation(type='public_transport'),
-    arrival_time_period='weekday_morning',
-    travel_time=1900,
-    properties=[Property.TRAVEL_TIME, Property.FARES]
-)
+
 one_to_many = OneToMany(
-    id='one-to-many search example',
-    arrival_location_ids=['Hyde Park', 'ZSL London Zoo'],
-    departure_location_id='London center',
+    id='one_to_many',
+    arrival_location_ids=list(map(lambda location: location.id, arrival_locations)),
+    departure_location_id=departure_location.id,
     transportation=Transportation(type='public_transport'),
     arrival_time_period='weekday_morning',
     travel_time=1900,
     properties=[Property.TRAVEL_TIME, Property.FARES]
 )
 
-response = sdk.time_filter_fast(locations, [many_to_one], [one_to_many])
+response = sdk.time_filter_fast(arrival_locations + [departure_location], [], [one_to_many])
+```
+
+Backward search example (many to one matrix):
+```python
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.requests import Property
+from traveltimepy.dto.requests.time_filter_fast import Transportation, ManyToOne
+
+arrival_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
+departure_locations = [
+    Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
+    Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
+]
+
+many_to_one = ManyToOne(
+    id='many_to_one',
+    departure_location_ids=list(map(lambda location: location.id, departure_locations)),
+    arrival_location_id=arrival_location.id,
+    transportation=Transportation(type='public_transport'),
+    arrival_time_period='weekday_morning',
+    travel_time=1900,
+    properties=[Property.TRAVEL_TIME, Property.FARES]
+)
+
+response = sdk.time_filter_fast(departure_locations + [arrival_location], [many_to_one], [])
 ```
 
 ### [Time Filter Fast (Proto)](https://docs.traveltime.com/api/reference/travel-time-distance-matrix-proto)
@@ -160,6 +196,7 @@ Body attributes:
 * travel_time: Time limit;
 * country: Return the results that are within the specified country
 
+Forward search example (one to many matrix):
 ```python
 from traveltimepy.dto import Coordinates
 
@@ -188,40 +225,59 @@ origin to the destination point is impossible.
 
 Returns routing information between source and destinations.
 
+Forward search example (one to many matrix):
 ```python
 from datetime import datetime
 
 from traveltimepy.dto import Location, Coordinates
 from traveltimepy.dto.requests import FullRange, Property
-from traveltimepy.dto.requests.routes import DepartureSearch, ArrivalSearch
+from traveltimepy.dto.requests.routes import DepartureSearch
 from traveltimepy.transportation import PublicTransport
 
-locations = [
-    Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
+departure_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
+arrival_locations = [
     Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
     Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
 ]
 
 departure_search = DepartureSearch(
-    id='departure search example',
-    arrival_location_ids=['Hyde Park', 'ZSL London Zoo'],
-    departure_location_id='London center',
+    id='departure_search',
+    arrival_location_ids=list(map(lambda location: location.id, arrival_locations)),
+    departure_location_id=departure_location.id,
     departure_time=datetime.now(),
     transportation=PublicTransport(type='bus'),
     properties=[Property.TRAVEL_TIME],
     full_range=FullRange(enabled=True, max_results=3, width=600)
 )
 
+response = sdk.routes(arrival_locations + [departure_location], [departure_search], [])
+```
+
+Backward search example (many to one matrix):
+```python
+from datetime import datetime
+
+from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto.requests import Property
+from traveltimepy.dto.requests.routes import ArrivalSearch
+from traveltimepy.transportation import PublicTransport
+
+arrival_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
+departure_locations = [
+    Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
+    Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
+]
+
 arrival_search = ArrivalSearch(
-    id='arrival search example',
-    departure_location_ids=['Hyde Park', 'ZSL London Zoo'],
-    arrival_location_id='London center',
+    id='arrival_search',
+    departure_location_ids=list(map(lambda location: location.id, departure_locations)),
+    arrival_location_id=arrival_location.id,
     arrival_time=datetime.now(),
     transportation=PublicTransport(type='bus'),
     properties=[Property.TRAVEL_TIME, Property.FARES, Property.ROUTE],
 )
 
-response = sdk.routes(locations, [departure_search], [arrival_search])
+response = sdk.routes(departure_locations + [arrival_location], [], [arrival_search])
 ```
 
 ### [Time Filter (Postcodes)](https://docs.traveltime.com/api/reference/postcode-search)
