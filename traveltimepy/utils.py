@@ -1,27 +1,45 @@
-from typing import TypeVar, Type, Dict
+import asyncio
+from typing import TypeVar, Type, Dict, List
 
 import aiohttp
 import requests
+from aiohttp import ClientSession, ClientResponse
 from pydantic.main import BaseModel
 from pydantic.tools import parse_raw_as
 from traveltimepy import AcceptType, TimeFilterFastResponse_pb2
+from traveltimepy.dto.requests.request import TravelTimeRequest
 
 from traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
 from traveltimepy.dto.responses.error import ResponseError
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.errors import ApiError
 
-
 T = TypeVar('T')
 R = TypeVar('R')
 
 
-async def send_post_request_async(response_class: Type[T], path: str, headers: Dict[str, str], body: BaseModel) -> T:
+async def send_post_request_async(
+    session: ClientSession,
+    response_class: Type[T],
+    path: str,
+    headers: Dict[str, str],
+    request: TravelTimeRequest
+) -> T:
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
-    async with aiohttp.ClientSession() as session:
-        async with session.post(url=url, headers=headers, data=body.json()) as resp:
-            body_text = await resp.text()
-            return __process_response(response_class, resp.status, body_text)
+    async with session.post(url=url, headers=headers, data=request.json()) as resp:
+        return await __process_response(response_class, resp)
+
+
+async def send_post_request(
+    response_class: Type[T],
+    path: str,
+    headers: Dict[str, str],
+    request: TravelTimeRequest
+) -> T:
+    async with ClientSession() as session:
+        tasks = [send_post_request_async(session, response_class, path, headers, part) for part in request.split()]
+        responses = await asyncio.gather(tasks)
+        return request.merge([responses])
 
 
 async def send_get_request_async(
@@ -33,8 +51,7 @@ async def send_get_request_async(
     url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
     async with aiohttp.ClientSession() as session:
         async with session.get(url=url, headers=headers, params=params) as resp:
-            body_text = await resp.text()
-            return __process_response(response_class, resp.status, body_text)
+            return await __process_response(response_class, resp)
 
 
 def send_proto_request(
@@ -63,30 +80,10 @@ def send_proto_request(
     return TimeFilterProtoResponse(travel_times=response_body.properties.travelTimes[:])
 
 
-def send_get_request(
-    response_class: Type[T],
-    path: str,
-    headers: Dict[str, str],
-    params: Dict[str, str] = None
-) -> T:
-    url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
-    resp = requests.get(url=url, headers=headers, params=params)
-    return __process_response(response_class, resp.status_code, resp.text)
-
-
-def send_post_request(
-    response_class: Type[T],
-    path: str,
-    headers: Dict[str, str],
-    body: BaseModel
-) -> T:
-    url = '/'.join(['https://api.traveltimeapp.com', 'v4', path])
-    resp = requests.post(url=url, headers=headers, data=body.json())
-    return __process_response(response_class, resp.status_code, resp.text)
-
-
-def __process_response(response_class: Type[T], status_code: int, text: str) -> T:
-    if status_code != 200:
+async def __process_response(response_class: Type[T], response: ClientResponse) -> T:
+    text = await response.text()
+    # Add details here
+    if response.status != 200:
         parsed = parse_raw_as(ResponseError, text)
         msg = 'Travel Time API request failed \n{}\nError code: {}\n<{}>\n'.format(
             parsed.description,
@@ -95,5 +92,5 @@ def __process_response(response_class: Type[T], status_code: int, text: str) -> 
         )
 
         raise ApiError(msg)
-
-    return parse_raw_as(response_class, text)
+    else:
+        return parse_raw_as(response_class, text)

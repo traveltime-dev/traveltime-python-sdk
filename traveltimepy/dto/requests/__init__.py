@@ -1,6 +1,8 @@
+import itertools
 from enum import Enum
 
 from pydantic import BaseModel
+from typing import TypeVar, Dict, List
 
 
 class Rectangle(BaseModel):
@@ -26,3 +28,14 @@ class FullRange(BaseModel):
 class Range(BaseModel):
     enabled: bool
     width: int
+
+
+T = TypeVar('T')
+
+
+def flatten(list_of_lists: List[List[T]]):
+    return list(itertools.chain.from_iterable(list_of_lists))
+
+
+def to_list(values: Dict[T, List[T]]) -> List[T]:
+    return flatten([[k] + v for k, v in values.items()])
