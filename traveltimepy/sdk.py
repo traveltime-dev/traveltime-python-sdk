@@ -8,7 +8,7 @@ from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
 
 from traveltimepy import AcceptType
-from traveltimepy.dto import Location, Coordinates
+from traveltimepy.dto import Location, Coordinates, LocationId
 from traveltimepy.dto.requests import (
     time_map as time_map_package,
     time_filter as time_filter_package,
@@ -35,11 +35,12 @@ from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
 from traveltimepy.errors import ApiError
-from traveltimepy.mapper import create_time_filter_request
-from traveltimepy.utils import (
-    send_post_request_async,
-    send_get_request_async,
-    send_proto_request, send_post_async, send_post
+from traveltimepy.mapper import create_time_filter
+from traveltimepy.http import (
+    send_get,
+    send_get_async,
+    send_post,
+    send_post_async
 )
 
 from geojson_pydantic import FeatureCollection
@@ -53,7 +54,8 @@ class TravelTimeSdk:
 
     async def time_filter_async(
         self,
-        locations: Dict[Location, List[Location]],
+        locations: List[Location],
+        searches: Dict[LocationId, List[LocationId]],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
         properties: Optional[List[Property]] = None,
         departure_time: Optional[datetime] = None,
@@ -65,8 +67,9 @@ class TravelTimeSdk:
             TimeFilterResponse,
             'time-filter',
             self.__headers(AcceptType.JSON),
-            create_time_filter_request(
+            create_time_filter(
                 locations,
+                searches,
                 transportation,
                 properties,
                 departure_time,
@@ -78,11 +81,12 @@ class TravelTimeSdk:
 
     def time_filter(
         self,
-        locations: Dict[Location, List[Location]],
+        locations: List[Location],
+        searches: Dict[LocationId, List[LocationId]],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
-        properties: Optional[List[Property]] = None,
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
+        properties: Optional[List[Property]] = None,
         travel_time: int = 3600,
         full_range: Optional[FullRange] = None
     ) -> TimeFilterResponse:
@@ -90,8 +94,9 @@ class TravelTimeSdk:
             TimeFilterResponse,
             'time-filter',
             self.__headers(AcceptType.JSON),
-            create_time_filter_request(
+            create_time_filter(
                 locations,
+                searches,
                 transportation,
                 properties,
                 departure_time,
@@ -100,6 +105,12 @@ class TravelTimeSdk:
                 full_range
             )
         )
+
+    def map_info(self) -> MapInfoResponse:
+        return send_get(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+
+    async def map_info_async(self) -> MapInfoResponse:
+        return await send_get_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
 
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {

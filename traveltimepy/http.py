@@ -1,5 +1,5 @@
 import asyncio
-from typing import TypeVar, Type, Dict, List
+from typing import TypeVar, Type, Dict
 
 import aiohttp
 import requests
@@ -29,14 +29,14 @@ async def send_post_request_async(
         return await __process_response(response_class, resp)
 
 
-async def gather_with_concurrency(n, *coros):
+async def __gather_with_concurrency(n, *tasks):
     semaphore = asyncio.Semaphore(n)
 
-    async def sem_coro(coro):
+    async def sem(coro):
         async with semaphore:
             return await coro
 
-    return await asyncio.gather(*(sem_coro(c) for c in coros))
+    return await asyncio.gather(*(sem(task) for task in tasks))
 
 
 async def send_post_async(
@@ -47,7 +47,7 @@ async def send_post_async(
 ) -> T:
     async with ClientSession() as session:
         tasks = [send_post_request_async(session, response_class, path, headers, part) for part in request.split_searches()]
-        responses = await gather_with_concurrency(5, *tasks)
+        responses = await __gather_with_concurrency(5, *tasks)
         return request.merge(responses)
 
 
@@ -60,7 +60,7 @@ def send_post(
     return asyncio.run(send_post_async(response_class, path, headers, request))
 
 
-async def send_get_request_async(
+async def send_get_async(
     response_class: Type[T],
     path: str,
     headers: Dict[str, str],
@@ -70,6 +70,15 @@ async def send_get_request_async(
     async with aiohttp.ClientSession() as session:
         async with session.get(url=url, headers=headers, params=params) as resp:
             return await __process_response(response_class, resp)
+
+
+def send_get(
+    response_class: Type[T],
+    path: str,
+    headers: Dict[str, str],
+    params: Dict[str, str] = None
+) -> T:
+    return asyncio.run(send_get_async(response_class, path, headers, params))
 
 
 def send_proto_request(
