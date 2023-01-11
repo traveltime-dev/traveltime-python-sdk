@@ -10,7 +10,7 @@ T = TypeVar('T')
 
 class TravelTimeRequest(ABC, BaseModel, Generic[T]):
     @abstractmethod
-    def split(self) -> List[TravelTimeRequest]:
+    def split_searches(self) -> List[TravelTimeRequest]:
         pass
 
     @abstractmethod

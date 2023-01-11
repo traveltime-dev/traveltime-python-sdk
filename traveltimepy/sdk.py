@@ -1,6 +1,6 @@
 import itertools
 from datetime import datetime
-from typing import List, Optional, Dict, TypeVar, Union
+from typing import List, Optional, Dict, TypeVar, Union, Tuple
 
 from traveltime.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
@@ -39,7 +39,7 @@ from traveltimepy.mapper import create_time_filter_request
 from traveltimepy.utils import (
     send_post_request_async,
     send_get_request_async,
-    send_proto_request, send_post_request
+    send_proto_request, send_post_async, send_post
 )
 
 from geojson_pydantic import FeatureCollection
@@ -55,13 +55,13 @@ class TravelTimeSdk:
         self,
         locations: Dict[Location, List[Location]],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
-        properties: List[Property],
+        properties: Optional[List[Property]] = None,
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
         travel_time: int = 3600,
         full_range: Optional[FullRange] = None
     ) -> TimeFilterResponse:
-        return send_post_request(
+        return await send_post_async(
             TimeFilterResponse,
             'time-filter',
             self.__headers(AcceptType.JSON),
@@ -76,20 +76,28 @@ class TravelTimeSdk:
             )
         )
 
-    async def time_filter_extended_async(
+    def time_filter(
         self,
-        locations: List[Location],
-        departure_searches: List[time_filter_package.DepartureSearch],
-        arrival_searches: List[time_filter_package.ArrivalSearch]
-    ):
-        return send_post_request(
+        locations: Dict[Location, List[Location]],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        properties: Optional[List[Property]] = None,
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        full_range: Optional[FullRange] = None
+    ) -> TimeFilterResponse:
+        return send_post(
             TimeFilterResponse,
             'time-filter',
             self.__headers(AcceptType.JSON),
-            TimeFilterRequest(
-                locations=locations,
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
+            create_time_filter_request(
+                locations,
+                transportation,
+                properties,
+                departure_time,
+                arrival_time,
+                travel_time,
+                full_range
             )
         )
 

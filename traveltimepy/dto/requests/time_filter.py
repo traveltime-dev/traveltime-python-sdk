@@ -7,6 +7,7 @@ from traveltimepy.dto import SearchId, Location, LocationId
 from traveltimepy.dto.requests import FullRange, Property, flatten
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_filter import TimeFilterResponse
+from traveltimepy.itertools import split
 from traveltimepy.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 
@@ -37,14 +38,11 @@ class TimeFilterRequest(TravelTimeRequest[TimeFilterResponse]):
     departure_searches: List[DepartureSearch]
     arrival_searches: List[ArrivalSearch]
 
-    def split(self) -> List[TravelTimeRequest]:
+    def split_searches(self) -> List[TravelTimeRequest]:
         return [
-            TimeFilterRequest(
-                locations=self.locations,
-                departure_searches=self.departure_searches,
-                arrival_searches=self.arrival_searches
-            )
+            TimeFilterRequest(locations=self.locations, departure_searches=departures, arrival_searches=arrivals)
+            for departures, arrivals in split(self.departure_searches, self.arrival_searches, 10)
         ]
 
     def merge(self, responses: List[TimeFilterResponse]) -> TimeFilterResponse:
-        return TimeFilterResponse(results=flatten([response.results for response in responses]))
+        return TimeFilterResponse(results=list(flatten([response.results for response in responses])))

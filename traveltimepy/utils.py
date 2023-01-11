@@ -4,7 +4,6 @@ from typing import TypeVar, Type, Dict, List
 import aiohttp
 import requests
 from aiohttp import ClientSession, ClientResponse
-from pydantic.main import BaseModel
 from pydantic.tools import parse_raw_as
 from traveltimepy import AcceptType, TimeFilterFastResponse_pb2
 from traveltimepy.dto.requests.request import TravelTimeRequest
@@ -30,16 +29,35 @@ async def send_post_request_async(
         return await __process_response(response_class, resp)
 
 
-async def send_post_request(
+async def gather_with_concurrency(n, *coros):
+    semaphore = asyncio.Semaphore(n)
+
+    async def sem_coro(coro):
+        async with semaphore:
+            return await coro
+
+    return await asyncio.gather(*(sem_coro(c) for c in coros))
+
+
+async def send_post_async(
     response_class: Type[T],
     path: str,
     headers: Dict[str, str],
     request: TravelTimeRequest
 ) -> T:
     async with ClientSession() as session:
-        tasks = [send_post_request_async(session, response_class, path, headers, part) for part in request.split()]
-        responses = await asyncio.gather(tasks)
-        return request.merge([responses])
+        tasks = [send_post_request_async(session, response_class, path, headers, part) for part in request.split_searches()]
+        responses = await gather_with_concurrency(5, *tasks)
+        return request.merge(responses)
+
+
+def send_post(
+    response_class: Type[T],
+    path: str,
+    headers: Dict[str, str],
+    request: TravelTimeRequest
+) -> T:
+    return asyncio.run(send_post_async(response_class, path, headers, request))
 
 
 async def send_get_request_async(
@@ -84,10 +102,12 @@ async def __process_response(response_class: Type[T], response: ClientResponse) 
     text = await response.text()
     # Add details here
     if response.status != 200:
+        print(text)
         parsed = parse_raw_as(ResponseError, text)
-        msg = 'Travel Time API request failed \n{}\nError code: {}\n<{}>\n'.format(
+        msg = 'Travel Time API request failed \n{}\nError code: {}\nMsg: {}\n<{}>\n'.format(
             parsed.description,
             parsed.error_code,
+            parsed.additional_info,
             parsed.documentation_link
         )
 

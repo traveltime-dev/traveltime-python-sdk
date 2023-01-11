@@ -2,7 +2,7 @@ import itertools
 from enum import Enum
 
 from pydantic import BaseModel
-from typing import TypeVar, Dict, List
+from typing import TypeVar, Dict, List, Iterator
 
 
 class Rectangle(BaseModel):
@@ -33,9 +33,9 @@ class Range(BaseModel):
 T = TypeVar('T')
 
 
-def flatten(list_of_lists: List[List[T]]):
-    return list(itertools.chain.from_iterable(list_of_lists))
+def flatten(list_of_lists: List[List[T]]) -> Iterator[T]:
+    return itertools.chain.from_iterable(list_of_lists)
 
 
 def to_list(values: Dict[T, List[T]]) -> List[T]:
-    return flatten([[k] + v for k, v in values.items()])
+    return list(set(flatten([[k] + v for k, v in values.items()])))
