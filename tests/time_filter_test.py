@@ -3,16 +3,7 @@ from datetime import datetime
 
 from traveltimepy.dto import Location, Coordinates, LocationId
 from traveltimepy.transportation import PublicTransport
-from tests.fixture import sdk
-
-
-@pytest.fixture
-def locations():
-    return [
-        Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
-        Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
-        Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
-    ]
+from tests.fixture import sdk, locations
 
 
 def test_departures(sdk, locations):

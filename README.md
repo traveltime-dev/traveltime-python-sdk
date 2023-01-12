@@ -359,7 +359,7 @@ Find sectors that have a certain coverage from origin (or to destination) and ge
 ```python
 from datetime import datetime
 from traveltimepy.dto import Coordinates
-from traveltimepy.dto.requests.zones import DepartureSearch, ArrivalSearch, Property
+from traveltimepy.dto.requests.zones import DepartureSearch, ArrivalSearch, ZonesProperty
 from traveltimepy.transportation import PublicTransport
 
 departure_search = DepartureSearch(
@@ -369,7 +369,7 @@ departure_search = DepartureSearch(
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     reachable_postcodes_threshold=0.1,
     transportation=PublicTransport(),
-    properties=[Property.TRAVEL_TIME_ALL, Property.TRAVEL_TIME_REACHABLE]
+    properties=[ZonesProperty.TRAVEL_TIME_ALL, ZonesProperty.TRAVEL_TIME_REACHABLE]
 )
 
 arrival_search = ArrivalSearch(
@@ -379,7 +379,7 @@ arrival_search = ArrivalSearch(
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     reachable_postcodes_threshold=0.1,
     transportation=PublicTransport(),
-    properties=[Property.COVERAGE]
+    properties=[ZonesProperty.COVERAGE]
 )
 
 response = sdk.sectors([departure_search], [arrival_search])
@@ -391,7 +391,7 @@ Find reachable postcodes from origin (or to destination) and get statistics abou
 ```python
 from datetime import datetime
 from traveltimepy.dto import Coordinates
-from traveltimepy.dto.requests.zones import DepartureSearch, ArrivalSearch, Property
+from traveltimepy.dto.requests.zones import DepartureSearch, ArrivalSearch, ZonesProperty
 from traveltimepy.transportation import PublicTransport
 
 departure_search = DepartureSearch(
@@ -401,7 +401,7 @@ departure_search = DepartureSearch(
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     reachable_postcodes_threshold=0.1,
     transportation=PublicTransport(),
-    properties=[Property.TRAVEL_TIME_ALL, Property.TRAVEL_TIME_REACHABLE]
+    properties=[ZonesProperty.TRAVEL_TIME_ALL, ZonesProperty.TRAVEL_TIME_REACHABLE]
 )
 
 arrival_search = ArrivalSearch(
@@ -411,7 +411,7 @@ arrival_search = ArrivalSearch(
     coords=Coordinates(lat=51.507609, lng=-0.128315),
     reachable_postcodes_threshold=0.1,
     transportation=PublicTransport(),
-    properties=[Property.COVERAGE]
+    properties=[ZonesProperty.COVERAGE]
 )
 
 response = sdk.districts([departure_search], [arrival_search])

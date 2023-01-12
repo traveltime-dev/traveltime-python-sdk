@@ -1,16 +1,9 @@
-
-from tests.fixture import sdk
-from traveltimepy.dto import Location, Coordinates, LocationId
+from tests.fixture import sdk, locations
+from traveltimepy.dto import LocationId
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 
 
-def test_one_to_many(sdk):
-    locations = [
-        Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
-        Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
-        Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
-    ]
-
+def test_one_to_many(sdk, locations):
     response = sdk.time_filter_fast(
         locations=locations,
         searches={
@@ -23,13 +16,7 @@ def test_one_to_many(sdk):
     assert len(response.results) > 0
 
 
-def test_many_to_one(sdk):
-    locations = [
-        Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
-        Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
-        Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
-    ]
-
+def test_many_to_one(sdk, locations):
     response = sdk.time_filter_fast(
         locations=locations,
         searches={
