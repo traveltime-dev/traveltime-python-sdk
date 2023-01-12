@@ -78,6 +78,7 @@ def send_get(
     headers: Dict[str, str],
     params: Dict[str, str] = None
 ) -> T:
+    print(params)
     return asyncio.run(send_get_async(response_class, path, headers, params))
 
 
@@ -109,9 +110,7 @@ def send_proto_request(
 
 async def __process_response(response_class: Type[T], response: ClientResponse) -> T:
     text = await response.text()
-    # Add details here
     if response.status != 200:
-        print(text)
         parsed = parse_raw_as(ResponseError, text)
         msg = 'Travel Time API request failed \n{}\nError code: {}\nMsg: {}\n<{}>\n'.format(
             parsed.description,

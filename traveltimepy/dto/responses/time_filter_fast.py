@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -17,7 +17,7 @@ class Fares(BaseModel):
 
 class Properties(BaseModel):
     travel_time: int
-    fares: Fares
+    fares: Optional[Fares]
 
 
 class Location(BaseModel):

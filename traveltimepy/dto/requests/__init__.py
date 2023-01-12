@@ -11,6 +11,9 @@ class Rectangle(BaseModel):
     min_lng: float
     max_lng: float
 
+    def to_str(self):
+        return f'{self.min_lat},{self.min_lng},{self.max_lat},{self.max_lng}'
+
 
 class Property(str, Enum):
     TRAVEL_TIME = 'travel_time'
@@ -33,9 +36,5 @@ class Range(BaseModel):
 T = TypeVar('T')
 
 
-def flatten(list_of_lists: List[List[T]]) -> Iterator[T]:
-    return itertools.chain.from_iterable(list_of_lists)
 
 
-def to_list(values: Dict[T, List[T]]) -> List[T]:
-    return list(set(flatten([[k] + v for k, v in values.items()])))

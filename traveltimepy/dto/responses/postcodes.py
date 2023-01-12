@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 
 class Property(BaseModel):
-    travel_time: int
-    distance: int
+    travel_time: Optional[int]
+    distance: Optional[int]
 
 
 class Postcode(BaseModel):

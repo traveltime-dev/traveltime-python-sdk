@@ -1,27 +1,12 @@
-import unittest
-from unittest import mock
-
-from geojson_pydantic import FeatureCollection
-from pydantic.tools import parse_raw_as
-
-from tests.utils import mocked_requests, read_file
-from traveltimepy.sdk import TravelTimeSdk
+from tests.fixture import sdk
 
 
-class GeocodingTest(unittest.TestCase):
+def test_geocoding_search(sdk):
+    response = sdk.geocoding(query='Parliament square', limit=30, within_countries=['gb', 'de'])
+    assert len(response.features) > 0
+    assert len(response.features) < 31
 
-    @mock.patch('requests.get', side_effect=mocked_requests)
-    def test_geocoding_search(self, mock_get):
-        sdk = TravelTimeSdk('appId', 'apiKey')
 
-        response = sdk.geocoding(query='Parliament square', limit=30)
-        expected_response = parse_raw_as(FeatureCollection, read_file('tests/resources/responses/geocoding.json'))
-        self.assertEqual(response, expected_response)
-
-    @mock.patch('requests.get', side_effect=mocked_requests)
-    def test_geocoding_reverse(self, mock_get):
-        sdk = TravelTimeSdk('appId', 'apiKey')
-
-        response = sdk.geocoding_reverse(lat=51.507281, lng=-0.132120)
-        expected_response = parse_raw_as(FeatureCollection, read_file('tests/resources/responses/geocoding.json'))
-        self.assertEqual(response, expected_response)
+def test_geocoding_reverse(sdk):
+    response = sdk.geocoding_reverse(lat=51.507281, lng=-0.132120, within_countries=['gb', 'de'])
+    assert len(response.features) > 0

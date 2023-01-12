@@ -57,11 +57,13 @@ def generate_departures(coordinates: List[Coordinates]):
 
 
 async def send():
-    sdk = TravelTimeSdk("", "")
-    locations: List[Location] = generate_locations(51.507609, -0.128315, 0.05, 'Location', 50)
-    all_locations = [(location, list(filter(lambda cur: cur.id != location.id, locations))) for location in locations]
+    sdk = TravelTimeSdk("4da26ce0", "2b02f9b9e85a21abe9a1611733c2c53a")
+    locations = generate_locations(51.507609, -0.128315, 0.05, 'Location', 50)
+    location_ids = [location.id for location in locations]
+    searches = [(location_id, list(filter(lambda cur_id: cur_id != location_id, location_ids))) for location_id in location_ids]
     return await sdk.time_filter_async(
-        locations=dict(all_locations),
+        locations=locations,
+        searches=dict(searches),
         transportation=PublicTransport(),
         arrival_time=datetime.now(),
     )

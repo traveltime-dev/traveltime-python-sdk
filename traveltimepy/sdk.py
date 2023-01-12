@@ -1,4 +1,3 @@
-import itertools
 from datetime import datetime
 from typing import List, Optional, Dict, TypeVar, Union, Tuple
 
@@ -16,13 +15,13 @@ from traveltimepy.dto.requests import (
     routes as routes_package,
     postcodes as postcodes_package,
     zones,
-    Rectangle, Property, FullRange, to_list
+    Rectangle, Property, FullRange
 )
 from traveltimepy.dto.requests.postcodes import PostcodesRequest
 from traveltimepy.dto.requests.routes import RoutesRequest
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
 from traveltimepy.dto.requests.time_filter import TimeFilterRequest
-from traveltimepy.dto.requests.time_filter_fast import ArrivalSearches, TimeFilterFastRequest, ManyToOne, OneToMany
+from traveltimepy.dto.requests.time_filter_fast import Transportation
 
 from traveltimepy.dto.requests.time_map import Intersection, TimeMapRequest
 from traveltimepy.dto.requests.zones import DistrictsRequest, SectorsRequest
@@ -35,7 +34,8 @@ from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
 from traveltimepy.errors import ApiError
-from traveltimepy.mapper import create_time_filter
+from traveltimepy.itertools import join_opt
+from traveltimepy.mapper import create_time_filter, create_time_filter_fast, create_postcodes
 from traveltimepy.http import (
     send_get,
     send_get_async,
@@ -90,7 +90,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         full_range: Optional[FullRange] = None
     ) -> TimeFilterResponse:
-        return send_post(
+        res = send_post(
             TimeFilterResponse,
             'time-filter',
             self.__headers(AcceptType.JSON),
@@ -106,11 +106,229 @@ class TravelTimeSdk:
             )
         )
 
-    def map_info(self) -> MapInfoResponse:
-        return send_get(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+        return res
 
     async def map_info_async(self) -> MapInfoResponse:
         return await send_get_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+
+    def map_info(self) -> MapInfoResponse:
+        return send_get(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+
+    async def geocoding_async(
+        self,
+        query: str,
+        limit: Optional[int] = None,
+        within_countries: Optional[List[str]] = None,
+        format_name: Optional[bool] = None,
+        format_exclude_country: Optional[bool] = None,
+        rectangle: Optional[Rectangle] = None
+    ) -> FeatureCollection:
+        return await send_get_async(
+            FeatureCollection,
+            'geocoding/search',
+            self.__headers(AcceptType.JSON),
+            self.__geocoding_params(
+                query,
+                limit,
+                within_countries,
+                format_name,
+                format_exclude_country,
+                rectangle
+            )
+        )
+
+    def geocoding(
+        self,
+        query: str,
+        limit: Optional[int] = None,
+        within_countries: Optional[List[str]] = None,
+        format_name: Optional[bool] = None,
+        format_exclude_country: Optional[bool] = None,
+        rectangle: Optional[Rectangle] = None
+    ) -> FeatureCollection:
+        return send_get(
+            FeatureCollection,
+            'geocoding/search',
+            self.__headers(AcceptType.JSON),
+            self.__geocoding_params(
+                query,
+                limit,
+                within_countries,
+                format_name,
+                format_exclude_country,
+                rectangle
+            )
+        )
+
+    async def geocoding_reverse_async(
+        self,
+        lat: float,
+        lng: float,
+        within_countries: Optional[List[str]] = None
+    ) -> FeatureCollection:
+        return await send_get_async(
+            FeatureCollection,
+            'geocoding/reverse',
+            self.__headers(AcceptType.JSON),
+            self.__geocoding_reverse_params(lat, lng, within_countries)
+        )
+
+    def geocoding_reverse(
+        self,
+        lat: float,
+        lng: float,
+        within_countries: Optional[List[str]] = None
+    ) -> FeatureCollection:
+        return send_get(
+            FeatureCollection,
+            'geocoding/reverse',
+            self.__headers(AcceptType.JSON),
+            self.__geocoding_reverse_params(lat, lng, within_countries)
+        )
+
+    async def supported_locations_async(self, locations: List[Location]) -> SupportedLocationsResponse:
+        return await send_post_async(
+            SupportedLocationsResponse,
+            'supported-locations',
+            self.__headers(AcceptType.JSON),
+            SupportedLocationsRequest(locations=locations)
+        )
+
+    def supported_locations(self, locations: List[Location]) -> SupportedLocationsResponse:
+        return send_post(
+            SupportedLocationsResponse,
+            'supported-locations',
+            self.__headers(AcceptType.JSON),
+            SupportedLocationsRequest(locations=locations)
+        )
+
+    async def time_filter_fast_async(
+        self,
+        locations: List[Location],
+        searches: Dict[LocationId, List[LocationId]],
+        transportation: Transportation,
+        travel_time: int = 3600,
+        properties: Optional[List[Property]] = None,
+        one_to_many: bool = False
+    ) -> TimeFilterFastResponse:
+        return await send_post_async(
+            TimeFilterFastResponse,
+            'time-filter/fast',
+            self.__headers(AcceptType.JSON),
+            create_time_filter_fast(
+                locations,
+                searches,
+                transportation,
+                travel_time,
+                properties,
+                one_to_many
+            )
+        )
+
+    def time_filter_fast(
+        self,
+        locations: List[Location],
+        searches: Dict[LocationId, List[LocationId]],
+        transportation: Transportation,
+        travel_time: int = 3600,
+        properties: Optional[List[Property]] = None,
+        one_to_many: bool = False
+    ) -> TimeFilterFastResponse:
+        return send_post(
+            TimeFilterFastResponse,
+            'time-filter/fast',
+            self.__headers(AcceptType.JSON),
+            create_time_filter_fast(
+                locations,
+                searches,
+                transportation,
+                travel_time,
+                properties,
+                one_to_many
+            )
+        )
+
+    async def postcodes_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        properties: Optional[List[Property]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> PostcodesResponse:
+        return await send_post_async(
+            PostcodesResponse,
+            'time-filter/postcodes',
+            self.__headers(AcceptType.JSON),
+            create_postcodes(
+                coordinates,
+                departure_time,
+                arrival_time,
+                transportation,
+                travel_time,
+                properties,
+                full_range
+            )
+        )
+
+    def postcodes(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 1800,
+        properties: Optional[List[Property]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> PostcodesResponse:
+        return send_post(
+            PostcodesResponse,
+            'time-filter/postcodes',
+            self.__headers(AcceptType.JSON),
+            create_postcodes(
+                coordinates,
+                departure_time,
+                arrival_time,
+                transportation,
+                travel_time,
+                properties,
+                full_range
+            )
+        )
+
+    @staticmethod
+    def __geocoding_reverse_params(
+        lat: float,
+        lng: float,
+        within_countries: Optional[List[str]] = None
+    ) -> Dict[str, str]:
+        full_query = {
+            'lat': lat,
+            'lng': lng,
+            'within.country': join_opt(within_countries, ',')
+        }
+        return {key: str(value) for (key, value) in full_query.items() if value is not None}
+
+    @staticmethod
+    def __geocoding_params(
+        query: str,
+        limit: Optional[int] = None,
+        within_countries: Optional[List[str]] = None,
+        format_name: Optional[bool] = None,
+        format_exclude_country: Optional[bool] = None,
+        rectangle: Optional[Rectangle] = None
+    ) -> Dict[str, str]:
+        full_query = {
+            'query': query,
+            'limit': limit,
+            'within.country': join_opt(within_countries, ','),
+            'format.name': format_name,
+            'format.exclude.country': format_exclude_country,
+            'bounds': rectangle.to_str() if rectangle is not None else rectangle
+        }
+        return {key: str(value) for (key, value) in full_query.items() if value is not None}
 
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {
@@ -129,12 +347,6 @@ class TravelTimeSdk:
             self.__app_id,
             self.__api_key
         )
-
-    def map_info(self) -> MapInfoResponse:
-        return send_get_request(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
-
-    async def map_info_async(self) -> MapInfoResponse:
-        return await send_get_request_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
 
     def time_map(
         self,
@@ -190,78 +402,6 @@ class TravelTimeSdk:
             return requests
         else:
             return [request]
-
-    T = TypeVar('T')
-
-    @staticmethod
-    def sliding(values: List[T], window_size) -> List[List[T]]:
-        return [values[i: i + window_size] for i in range(len(values) - window_size + 1)]
-
-    def time_filter(
-        self,
-        locations: List[Location],
-        departure_searches: List[time_filter_package.DepartureSearch],
-        arrival_searches: List[time_filter_package.ArrivalSearch]
-    ) -> TimeFilterResponse:
-        return send_post_request(
-            TimeFilterResponse,
-            'time-filter',
-            self.__headers(AcceptType.JSON),
-            TimeFilterRequest(
-                locations=locations,
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
-            )
-        )
-
-    async def time_filter_async(
-        self,
-        locations: List[Location],
-        departure_searches: List[time_filter_package.DepartureSearch],
-        arrival_searches: List[time_filter_package.ArrivalSearch]
-    ) -> TimeFilterResponse:
-        return await send_post_request_async(
-            TimeFilterResponse,
-            'time-filter',
-            self.__headers(AcceptType.JSON),
-            TimeFilterRequest(
-                locations=locations,
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
-            )
-        )
-
-    def time_filter_fast(
-        self,
-        locations: List[Location],
-        many_to_one: List[ManyToOne],
-        one_to_many: List[OneToMany]
-    ) -> TimeFilterFastResponse:
-        return send_post_request(
-            TimeFilterFastResponse,
-            'time-filter/fast',
-            self.__headers(AcceptType.JSON),
-            TimeFilterFastRequest(
-                locations=locations,
-                arrival_searches=ArrivalSearches(many_to_one=many_to_one, one_to_many=one_to_many)
-            )
-        )
-
-    async def time_filter_fast_async(
-        self,
-        locations: List[Location],
-        many_to_one: List[ManyToOne],
-        one_to_many: List[OneToMany]
-    ) -> TimeFilterFastResponse:
-        return await send_post_request_async(
-            TimeFilterFastResponse,
-            'time-filter/fast',
-            self.__headers(AcceptType.JSON),
-            TimeFilterFastRequest(
-                locations=locations,
-                arrival_searches=ArrivalSearches(many_to_one=many_to_one, one_to_many=one_to_many)
-            )
-        )
 
     def postcodes(
         self,
@@ -341,59 +481,5 @@ class TravelTimeSdk:
                 arrival_searches=arrival_searches
             )
         )
-
-    def geocoding(
-        self,
-        query: str,
-        limit: Optional[int] = None,
-        within_countries: Optional[List[str]] = None,
-        format_name: Optional[bool] = None,
-        format_exclude_country: Optional[bool] = None,
-        rectangle: Optional[Rectangle] = None
-    ) -> FeatureCollection:
-        full_query = {
-            'query': query,
-            'limit': limit,
-            'within.country': self.__combine_countries(within_countries),
-            'format.name': format_name,
-            'format.exclude.country': format_exclude_country,
-            'bounds': self.__bounds(rectangle)
-        }
-        params = {key: str(value) for (key, value) in full_query.items() if value is not None}
-        return send_get_request(FeatureCollection, 'geocoding/search', self.__headers(AcceptType.JSON), params)
-
-    def geocoding_reverse(
-        self,
-        lat: float,
-        lng: float,
-        within_countries: Optional[List[str]] = None
-    ) -> FeatureCollection:
-        full_query = {
-            'lat': lat,
-            'lng': lng,
-            'within.country': self.__combine_countries(within_countries)
-        }
-        params = {key: str(value) for (key, value) in full_query.items() if value is not None}
-        return send_get_request(FeatureCollection, 'geocoding/reverse', self.__headers(AcceptType.JSON), params)
-
-    def supported_locations(self, locations: List[Location]) -> SupportedLocationsResponse:
-        return send_post_request(
-            SupportedLocationsResponse,
-            'supported-locations',
-            self.__headers(AcceptType.JSON),
-            SupportedLocationsRequest(locations=locations)
-        )
-
-    @staticmethod
-    def __bounds(rectangle: Optional[Rectangle]) -> Optional[str]:
-        if rectangle is not None:
-            return f'{rectangle.min_lat},{rectangle.min_lng},{rectangle.max_lat},{rectangle.max_lng}'
-        else:
-            return None
-
-    @staticmethod
-    def __combine_countries(within_countries: Optional[List[str]]) -> Optional[str]:
-        return ','.join(within_countries) if within_countries is not None and len(within_countries) != 0 else None
-
-
+        
 """
