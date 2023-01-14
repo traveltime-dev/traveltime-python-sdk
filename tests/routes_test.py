@@ -28,4 +28,3 @@ def test_arrivals(sdk, locations):
         departure_time=datetime.now()
     )
     assert len(response.results) == 2
-

@@ -1,9 +1,7 @@
-import pytest
 from datetime import datetime
 
-from traveltimepy.dto import Location, Coordinates, LocationId
+from traveltimepy.dto import LocationId
 from traveltimepy.transportation import PublicTransport
-from tests.fixture import sdk, locations
 
 
 def test_departures(sdk, locations):
@@ -30,4 +28,3 @@ def test_arrivals(sdk, locations):
         departure_time=datetime.now()
     )
     assert len(response.results) == 2
-

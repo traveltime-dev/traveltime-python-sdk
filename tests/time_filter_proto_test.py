@@ -1,6 +1,5 @@
 from traveltimepy.dto import Coordinates
 from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation, Country
-from tests.fixture import proto_sdk
 
 
 def test_proto(proto_sdk):

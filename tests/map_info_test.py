@@ -1,5 +1,3 @@
-from tests.fixture import sdk
-
 
 def test_map_info(sdk):
     response = sdk.map_info()

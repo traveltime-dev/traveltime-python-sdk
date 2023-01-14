@@ -1,5 +1,3 @@
-from tests.fixture import sdk
-
 
 def test_geocoding_search(sdk):
     response = sdk.geocoding(query='Parliament square', limit=30, within_countries=['gb', 'de'])

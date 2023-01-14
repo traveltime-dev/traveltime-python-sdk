@@ -1,6 +1,5 @@
 from traveltimepy.dto import LocationId
 from traveltimepy.dto.requests.time_filter_fast import Transportation
-from tests.fixture import sdk, locations
 
 
 def test_one_to_many(sdk, locations):
