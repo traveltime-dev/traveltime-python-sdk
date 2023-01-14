@@ -4,10 +4,7 @@ import random
 from datetime import datetime
 from typing import List
 
-from traveltimepy import Coordinates, Location, Range
-from traveltimepy.dto.requests.time_filter import DepartureSearch
-from traveltimepy.sdk import TravelTimeSdk
-from traveltimepy.dto.transportation import PublicTransport
+from traveltimepy import Coordinates, Location, TravelTimeSdk, Driving
 
 
 def generate_float(value: float, radius: float) -> float:
@@ -23,20 +20,6 @@ def generate_locations(lat: float, lng: float, radius: float, name: str, amount:
     ]
 
 
-def generate_departures(coordinates: List[Coordinates]):
-    return [
-        DepartureSearch(
-            id="search for {}".format(coordinate),
-            coords=coordinate,
-            arrival_time=datetime.now(),
-            travel_time=900,
-            transportation=PublicTransport(),
-            range=Range(enabled=True, width=3600)
-        )
-        for coordinate in coordinates
-    ]
-
-
 async def send():
     sdk = TravelTimeSdk("APP_ID", "API_KEY")
     locations = generate_locations(51.507609, -0.128315, 0.05, 'Location', 50)
@@ -48,7 +31,7 @@ async def send():
     return await sdk.time_filter_async(
         locations=locations,
         searches=dict(searches),
-        transportation=PublicTransport(),
+        transportation=Driving(),
         arrival_time=datetime.now(),
     )
 

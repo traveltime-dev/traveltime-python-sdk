@@ -39,7 +39,7 @@ def send_proto(
 async def __process_response(response: ClientResponse) -> TimeFilterProtoResponse:
     content = await response.read()
     if response.status != 200:
-        msg = 'Travel Time API proto request failed with error code: {}\n'.format(response.status)
+        msg = f'Travel Time API proto request failed with error code: {response.status}\n'
         raise ApiError(msg)
     else:
         response_body = TimeFilterFastResponse()
