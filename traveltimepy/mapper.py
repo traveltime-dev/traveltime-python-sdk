@@ -7,18 +7,19 @@ from traveltimepy import TimeFilterFastRequest_pb2
 
 from traveltimepy.dto.common import Location, LocationId, Coordinates, FullRange, Property, Range
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
-from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 from traveltimepy.dto.requests.zones import ZonesProperty
 
+from traveltimepy.dto.requests.postcodes import PostcodesRequest
+from traveltimepy.dto.requests.routes import RoutesRequest
+from traveltimepy.dto.requests.time_filter import TimeFilterRequest
+from traveltimepy.dto.requests.time_filter_fast import TimeFilterFastRequest
+from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
+from traveltimepy.dto.requests.zones import DistrictsRequest, SectorsRequest
+from traveltimepy.dto.requests.time_map import TimeMapRequest
+
+
 from traveltimepy.dto.requests import (
-    PostcodesRequest,
-    RoutesRequest,
-    TimeFilterRequest,
-    TimeFilterFastRequest,
-    TimeMapRequest,
-    DistrictsRequest,
-    SectorsRequest,
     time_filter,
     time_filter_fast,
     postcodes,

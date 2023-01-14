@@ -18,20 +18,17 @@ from traveltimepy.dto.requests.time_filter_fast import Transportation
 
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.itertools import join_opt
-from traveltimepy.dto.requests import SupportedLocationsRequest
+from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
 
-from traveltimepy.dto.responses import (
-    MapInfoResponse,
-    TimeFilterProtoResponse,
-    PostcodesResponse,
-    RoutesResponse,
-    SupportedLocationsResponse,
-    TimeFilterResponse,
-    TimeFilterFastResponse,
-    TimeMapResponse,
-    DistrictsResponse,
-    SectorsResponse
-)
+from traveltimepy.dto.responses.map_info import MapInfoResponse
+from traveltimepy.dto.responses.postcodes import PostcodesResponse
+from traveltimepy.dto.responses.routes import RoutesResponse
+from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
+from traveltimepy.dto.responses.time_filter import TimeFilterResponse
+from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
+from traveltimepy.dto.responses.time_map import TimeMapResponse
+from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
+from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 
 from traveltimepy.mapper import (
     create_time_filter,

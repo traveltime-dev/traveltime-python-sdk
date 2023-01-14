@@ -5,7 +5,7 @@ from aiohttp import ClientSession, ClientResponse, BasicAuth
 
 from traveltimepy.TimeFilterFastResponse_pb2 import TimeFilterFastResponse
 from traveltimepy.TimeFilterFastRequest_pb2 import TimeFilterFastRequest
-from traveltimepy.dto.responses import TimeFilterProtoResponse
+from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.errors import ApiError
 
 

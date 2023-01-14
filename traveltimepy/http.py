@@ -81,8 +81,10 @@ def send_get(
 async def __process_response(response_class: Type[T], response: ClientResponse) -> T:
     text = await response.text()
     if response.status != 200:
+        print(text)
+
         parsed = parse_raw_as(ResponseError, text)
-        msg = 'Travel Time API request failed \n{}\nError code: {}\nMsg: {}\n<{}>\n'.format(
+        msg = 'Travel Time API request failed \n{}\nError code: {}\nAdditional info: {}\n<{}>\n'.format(
             parsed.description,
             parsed.error_code,
             parsed.additional_info,
