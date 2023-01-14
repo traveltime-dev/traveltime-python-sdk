@@ -5,7 +5,6 @@ from datetime import datetime
 from typing import List
 
 from traveltimepy import Coordinates, Location, Range
-from traveltimepy.dto.requests import Range
 from traveltimepy.dto.requests.time_filter import DepartureSearch
 from traveltimepy.sdk import TravelTimeSdk
 from traveltimepy.dto.transportation import PublicTransport
@@ -22,24 +21,6 @@ def generate_locations(lat: float, lng: float, radius: float, name: str, amount:
             coords=Coordinates(lat=generate_float(lat, radius), lng=generate_float(lng, radius))
         ) for i in range(amount)
     ]
-
-
-"""
-
-def generate_searches(coordinates: List[Coordinates]):
-    return [
-        ArrivalSearch(
-            id="search for {}".format(coordinate),
-            coords=coordinate,
-            arrival_time=datetime.now(),
-            travel_time=900,
-            transportation=PublicTransport(),
-            range=Range(enabled=True, width=3600)
-        )
-        for coordinate in coordinates
-    ]
-
-"""
 
 
 def generate_departures(coordinates: List[Coordinates]):
