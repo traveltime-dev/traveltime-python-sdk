@@ -1,8 +1,7 @@
-import itertools
 from enum import Enum
 
 from pydantic import BaseModel
-from typing import TypeVar, Dict, List, Iterator
+from typing import TypeVar
 
 
 class Rectangle(BaseModel):
@@ -34,7 +33,3 @@ class Range(BaseModel):
 
 
 T = TypeVar('T')
-
-
-
-

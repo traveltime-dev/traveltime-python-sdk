@@ -1,6 +1,5 @@
-from tests.fixture import sdk
-
 from traveltimepy.dto import Location, Coordinates
+from tests.fixture import sdk
 
 
 def test_supported_locations(sdk):

@@ -1,28 +1,47 @@
-from traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
+import asyncio
+from typing import Dict
+
+from aiohttp import ClientSession, ClientResponse, BasicAuth
+
+from traveltimepy.TimeFilterFastResponse_pb2 import TimeFilterFastResponse
+from traveltimepy.TimeFilterFastRequest_pb2 import TimeFilterFastRequest
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.errors import ApiError
 
 
-def send_proto_request(
-    proto_request: TimeFilterProtoRequest,
+async def send_proto_async(
+    url: str,
+    headers: Dict[str, str],
+    data: TimeFilterFastRequest,
     app_id: str,
     api_key: str
-) -> TimeFilterProtoResponse:
-    country = proto_request.one_to_many.country.value
-    transport = proto_request.one_to_many.transportation.value.name
-    url = '/'.join(['https://proto.api.traveltimeapp.com', 'api', 'v2', country, 'time-filter', 'fast', transport])
+) -> TimeFilterFastResponse:
+    async with ClientSession() as session:
+        async with session.post(
+            url=url,
+            headers=headers,
+            data=data.SerializeToString(),
+            auth=BasicAuth(app_id, api_key)
+        ) as resp:
+            return await __process_response(resp)
 
-    resp = requests.post(
-        url,
-        headers={'Content-Type': AcceptType.OCTET_STREAM.value, 'User-Agent': 'Travel Time Python SDK'},
-        data=proto_request.to_proto().SerializeToString(),
-        auth=(app_id, api_key)
-    )
 
-    response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()
+def send_proto(
+    url: str,
+    headers: Dict[str, str],
+    data: TimeFilterFastRequest,
+    app_id: str,
+    api_key: str
+) -> TimeFilterFastResponse:
+    return asyncio.run(send_proto_async(url, headers, data, app_id, api_key))
 
-    if resp.status_code != 200:
-        msg = 'Travel Time API proto request failed with error code: {}\n'.format(resp.status_code)
+
+async def __process_response(response: ClientResponse) -> TimeFilterProtoResponse:
+    content = await response.read()
+    if response.status != 200:
+        msg = 'Travel Time API proto request failed with error code: {}\n'.format(response.status)
         raise ApiError(msg)
-
-    response_body.ParseFromString(resp.content)
-    return TimeFilterProtoResponse(travel_times=response_body.properties.travelTimes[:])
+    else:
+        response_body = TimeFilterFastResponse()
+        response_body.ParseFromString(content)
+        return TimeFilterProtoResponse(travel_times=response_body.properties.travelTimes[:])

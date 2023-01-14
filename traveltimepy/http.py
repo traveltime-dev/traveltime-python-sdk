@@ -2,15 +2,11 @@ import asyncio
 from typing import TypeVar, Type, Dict
 
 import aiohttp
-import requests
 from aiohttp import ClientSession, ClientResponse
 from pydantic.tools import parse_raw_as
-from traveltimepy import AcceptType, TimeFilterFastResponse_pb2
 from traveltimepy.dto.requests.request import TravelTimeRequest
 
-from traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
 from traveltimepy.dto.responses.error import ResponseError
-from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.errors import ApiError
 
 T = TypeVar('T')

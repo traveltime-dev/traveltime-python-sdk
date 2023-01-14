@@ -231,10 +231,11 @@ Body attributes:
 * country: Return the results that are within the specified country.
 
 Forward search example (one to many matrix):
+
 ```python
 from traveltimepy.dto import Coordinates
 
-from traveltimepy.dto.requests.time_filter_proto import OneToMany, Transportation, Country
+from traveltimepy.dto.requests.time_filter_proto import OneToMany, ProtoTransportation, Country
 
 one_to_many = OneToMany(
     origin_coordinates=Coordinates(lat=51.425709, lng=-0.122061),
@@ -242,7 +243,7 @@ one_to_many = OneToMany(
         Coordinates(lat=51.348605, lng=-0.314783),
         Coordinates(lat=51.337205, lng=-0.315793)
     ],
-    transportation=Transportation.DRIVING,
+    transportation=ProtoTransportation.DRIVING,
     travel_time=7200,
     country=Country.UNITED_KINGDOM
 )

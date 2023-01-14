@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from tests.fixture import sdk
 from traveltimepy.dto import Coordinates
 from traveltimepy.transportation import PublicTransport
 

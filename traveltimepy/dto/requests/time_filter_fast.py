@@ -5,7 +5,7 @@ from pydantic import BaseModel
 
 from traveltimepy.dto import LocationId, Location
 from traveltimepy.dto.requests import Property
-from traveltimepy.dto.requests.request import TravelTimeRequest, T
+from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.itertools import split, flatten
 

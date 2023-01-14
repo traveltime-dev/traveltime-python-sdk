@@ -44,5 +44,3 @@ class RoutesRequest(TravelTimeRequest[RoutesResponse]):
 
     def merge(self, responses: List[RoutesResponse]) -> RoutesResponse:
         return RoutesResponse(results=flatten([response.results for response in responses]))
-
-

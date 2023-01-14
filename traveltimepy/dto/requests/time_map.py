@@ -7,6 +7,9 @@ from pydantic.main import BaseModel
 
 from traveltimepy.dto import Coordinates, SearchId
 from traveltimepy.dto.requests import Range
+from traveltimepy.dto.requests.request import TravelTimeRequest
+from traveltimepy.dto.responses.time_map import TimeMapResponse
+from traveltimepy.itertools import split, flatten
 from traveltimepy.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 
@@ -38,8 +41,22 @@ class Union(BaseModel):
     search_ids: List[SearchId]
 
 
-class TimeMapRequest(BaseModel):
+class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
     departure_searches: List[DepartureSearch]
     arrival_searches: List[ArrivalSearch]
     unions: List[Union]
     intersections: List[Intersection]
+
+    def split_searches(self) -> List[TravelTimeRequest]:
+        return [
+            TimeMapRequest(
+                departure_searches=departures,
+                arrival_searches=arrivals,
+                unions=self.unions,
+                intersections=self.intersections
+            )
+            for departures, arrivals in split(self.departure_searches, self.arrival_searches, 10)
+        ]
+
+    def merge(self, responses: List[TimeMapResponse]) -> TimeMapResponse:
+        return TimeMapResponse(results=flatten([response.results for response in responses]))

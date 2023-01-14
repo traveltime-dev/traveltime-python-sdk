@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 from traveltimepy.dto import SearchId, Coordinates
 from traveltimepy.dto.requests import FullRange
-from traveltimepy.dto.requests.request import TravelTimeRequest, T
+from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
 from traveltimepy.itertools import split, flatten
 from traveltimepy.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
@@ -66,4 +66,3 @@ class DistrictsRequest(TravelTimeRequest[DistrictsResponse]):
 
     def merge(self, responses: List[DistrictsResponse]) -> DistrictsResponse:
         return DistrictsResponse(results=flatten([response.results for response in responses]))
-

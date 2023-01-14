@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from tests.fixture import sdk
 from traveltimepy.dto import Coordinates
 from traveltimepy.transportation import PublicTransport
+from tests.fixture import sdk
 
 
 def test_districts_departure(sdk):

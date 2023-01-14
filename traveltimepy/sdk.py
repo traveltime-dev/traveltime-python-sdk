@@ -1,30 +1,19 @@
 from datetime import datetime
-from typing import List, Optional, Dict, TypeVar, Union, Tuple
+from typing import List, Optional, Dict, Union
 
 from traveltime.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
-from traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
+from traveltimepy.dto.requests.time_filter_proto import Country, ProtoTransportation
 
 from traveltimepy import AcceptType
 from traveltimepy.dto import Location, Coordinates, LocationId
-from traveltimepy.dto.requests import (
-    time_map as time_map_package,
-    time_filter as time_filter_package,
-    time_filter_proto as time_filter_proto_package,
-    routes as routes_package,
-    postcodes as postcodes_package,
-    zones,
-    Rectangle, Property, FullRange
-)
-from traveltimepy.dto.requests.postcodes import PostcodesRequest
-from traveltimepy.dto.requests.routes import RoutesRequest
+from traveltimepy.dto.requests import Rectangle, Property, FullRange, Range
+
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
-from traveltimepy.dto.requests.time_filter import TimeFilterRequest
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 
-from traveltimepy.dto.requests.time_map import Intersection, TimeMapRequest
-from traveltimepy.dto.requests.zones import DistrictsRequest, SectorsRequest, ZonesProperty
+from traveltimepy.dto.requests.zones import ZonesProperty
 from traveltimepy.dto.responses.map_info import MapInfoResponse
 from traveltimepy.dto.responses.postcodes import PostcodesResponse
 from traveltimepy.dto.responses.routes import RoutesResponse
@@ -33,7 +22,6 @@ from traveltimepy.dto.responses.time_filter import TimeFilterResponse
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
-from traveltimepy.errors import ApiError
 from traveltimepy.itertools import join_opt
 from traveltimepy.mapper import (
     create_time_filter,
@@ -41,7 +29,7 @@ from traveltimepy.mapper import (
     create_postcodes,
     create_districts,
     create_sectors,
-    create_routes
+    create_routes, create_proto_request, create_time_map
 )
 from traveltimepy.http import (
     send_get,
@@ -51,6 +39,8 @@ from traveltimepy.http import (
 )
 
 from geojson_pydantic import FeatureCollection
+
+from traveltimepy.proto_http import send_proto, send_proto_async
 
 
 class TravelTimeSdk:
@@ -461,11 +451,82 @@ class TravelTimeSdk:
             )
         )
 
-    def time_filter_proto(self, one_to_many: time_filter_proto_package.OneToMany) -> TimeFilterProtoResponse:
-        return send_proto_request(
-            TimeFilterProtoRequest(one_to_many=one_to_many),
+    def time_filter_proto(
+        self,
+        origin: Coordinates,
+        destinations: List[Coordinates],
+        country: Country,
+        transportation: ProtoTransportation,
+        travel_time: int,
+    ) -> TimeFilterProtoResponse:
+        return send_proto(
+            f'https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.name}',
+            self.__proto_headers(),
+            create_proto_request(origin, destinations, transportation, travel_time),
             self.__app_id,
             self.__api_key
+        )
+
+    async def time_filter_proto_async(
+        self,
+        origin: Coordinates,
+        destinations: List[Coordinates],
+        country: Country,
+        transportation: ProtoTransportation,
+        travel_time: int,
+    ) -> TimeFilterProtoResponse:
+        return await send_proto_async(
+            f'https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.name}',
+            self.__proto_headers(),
+            create_proto_request(origin, destinations, transportation, travel_time),
+            self.__app_id,
+            self.__api_key
+        )
+
+    def time_map(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResponse:
+        return send_post(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_time_map(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            )
+        )
+
+    async def time_map_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResponse:
+        return await send_post_async(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_time_map(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            )
         )
 
     @staticmethod
@@ -500,6 +561,13 @@ class TravelTimeSdk:
         }
         return {key: str(value) for (key, value) in full_query.items() if value is not None}
 
+    @staticmethod
+    def __proto_headers() -> Dict[str, str]:
+        return {
+            'Content-Type': AcceptType.OCTET_STREAM.value,
+            'User-Agent': 'Travel Time Python SDK'
+        }
+
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {
             'X-Application-Id': self.__app_id,
@@ -508,46 +576,3 @@ class TravelTimeSdk:
             'Content-Type': 'application/json',
             'Accept': accept_type.value
         }
-
-"""
-
-    def time_map(
-        self,
-        arrival_searches: List[time_map_package.ArrivalSearch],
-        departure_searches: List[time_map_package.DepartureSearch],
-        unions: List[Union] = [],
-        intersections: List[Intersection] = []
-    ) -> TimeMapResponse:
-        return send_post_request(
-            TimeMapResponse,
-            'time-map',
-            self.__headers(AcceptType.JSON),
-            TimeMapRequest(
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches,
-                unions=unions,
-                intersections=intersections
-            )
-        )
-
-    async def time_map_async(
-        self,
-        arrival_searches: List[time_map_package.ArrivalSearch],
-        departure_searches: List[time_map_package.DepartureSearch],
-        unions: List[Union] = [],
-        intersections: List[Intersection] = []
-    ) -> List[TimeMapResponse]:
-        return await send_post_requests(
-            TimeMapResponse,
-            'time-map',
-            self.__headers(AcceptType.JSON),
-            self.split(
-                TimeMapRequest(
-                    departure_searches=departure_searches,
-                    arrival_searches=arrival_searches,
-                    unions=unions,
-                    intersections=intersections
-                )
-            )
-        )
-"""
