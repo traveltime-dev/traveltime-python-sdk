@@ -1,4 +1,4 @@
-from traveltimepy.dto import LocationId
+from traveltimepy import LocationId
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 
 

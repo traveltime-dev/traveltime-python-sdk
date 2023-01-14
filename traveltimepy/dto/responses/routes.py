@@ -2,8 +2,7 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto import SearchId, LocationId
-from traveltimepy.dto.responses import Fares
+from traveltimepy.dto.common import SearchId, LocationId, Fares
 
 
 class Property(BaseModel):

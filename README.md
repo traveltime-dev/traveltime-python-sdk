@@ -55,7 +55,7 @@ from datetime import datetime
 from traveltimepy.dto import Coordinates
 from traveltimepy.dto.requests import Range
 from traveltimepy.dto.requests.time_map import DepartureSearch, ArrivalSearch, Union, Intersection
-from traveltimepy.transportation import PublicTransport, Driving
+from traveltimepy.dto.transportation import PublicTransport, Driving
 
 departure_search1 = DepartureSearch(
     id='departure_search1',
@@ -105,13 +105,14 @@ Body attributes:
 * arrival_searches: Searches based on arrival times. Arrive at destination location at no later than given time. You can define a maximum of 10 searches.
 
 Forward search example (one to many matrix):
+
 ```python
 from datetime import datetime
 
 from traveltimepy.dto import Location, Coordinates
 from traveltimepy.dto.requests import FullRange, Property
 from traveltimepy.dto.requests.time_filter import DepartureSearch
-from traveltimepy.transportation import PublicTransport
+from traveltimepy.dto.transportation import PublicTransport
 
 departure_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
 arrival_locations = [
@@ -134,13 +135,14 @@ response = sdk.time_filter(arrival_locations + [departure_location], [departure_
 ```
 
 Backward search example (many to one matrix):
+
 ```python
 from datetime import datetime
 
 from traveltimepy.dto import Location, Coordinates
 from traveltimepy.dto.requests import Property
 from traveltimepy.dto.requests.time_filter import ArrivalSearch
-from traveltimepy.transportation import PublicTransport
+from traveltimepy.dto.transportation import PublicTransport
 
 arrival_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
 departure_locations = [
@@ -235,7 +237,7 @@ Forward search example (one to many matrix):
 ```python
 from traveltimepy.dto import Coordinates
 
-from traveltimepy.dto.requests.time_filter_proto import OneToMany, ProtoTransportation, Country
+from traveltimepy.dto.requests.time_filter_proto import OneToMany, ProtoTransportation, ProtoCountry
 
 one_to_many = OneToMany(
     origin_coordinates=Coordinates(lat=51.425709, lng=-0.122061),
@@ -245,7 +247,7 @@ one_to_many = OneToMany(
     ],
     transportation=ProtoTransportation.DRIVING,
     travel_time=7200,
-    country=Country.UNITED_KINGDOM
+    country=ProtoCountry.UNITED_KINGDOM
 )
 
 response = sdk.time_filter_proto(one_to_many)
@@ -274,7 +276,7 @@ from datetime import datetime
 from traveltimepy.dto import Location, Coordinates
 from traveltimepy.dto.requests import FullRange, Property
 from traveltimepy.dto.requests.routes import DepartureSearch
-from traveltimepy.transportation import PublicTransport
+from traveltimepy.dto.transportation import PublicTransport
 
 departure_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
 arrival_locations = [
@@ -296,13 +298,14 @@ response = sdk.routes(arrival_locations + [departure_location], [departure_searc
 ```
 
 Backward search example (many to one matrix):
+
 ```python
 from datetime import datetime
 
 from traveltimepy.dto import Location, Coordinates
 from traveltimepy.dto.requests import Property
 from traveltimepy.dto.requests.routes import ArrivalSearch
-from traveltimepy.transportation import PublicTransport
+from traveltimepy.dto.transportation import PublicTransport
 
 arrival_location = Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387))
 departure_locations = [
@@ -331,7 +334,7 @@ from datetime import datetime
 from traveltimepy.dto import Coordinates
 from traveltimepy.dto.requests import Property
 from traveltimepy.dto.requests.postcodes import DepartureSearch, ArrivalSearch
-from traveltimepy.transportation import PublicTransport
+from traveltimepy.dto.transportation import PublicTransport
 
 departure_search = DepartureSearch(
     id='public transport from Trafalgar Square',
@@ -361,7 +364,7 @@ Find sectors that have a certain coverage from origin (or to destination) and ge
 from datetime import datetime
 from traveltimepy.dto import Coordinates
 from traveltimepy.dto.requests.zones import DepartureSearch, ArrivalSearch, ZonesProperty
-from traveltimepy.transportation import PublicTransport
+from traveltimepy.dto.transportation import PublicTransport
 
 departure_search = DepartureSearch(
     id='public transport from Trafalgar Square',
@@ -393,7 +396,7 @@ Find reachable postcodes from origin (or to destination) and get statistics abou
 from datetime import datetime
 from traveltimepy.dto import Coordinates
 from traveltimepy.dto.requests.zones import DepartureSearch, ArrivalSearch, ZonesProperty
-from traveltimepy.transportation import PublicTransport
+from traveltimepy.dto.transportation import PublicTransport
 
 departure_search = DepartureSearch(
     id='public transport from Trafalgar Square',

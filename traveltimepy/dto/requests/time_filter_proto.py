@@ -18,7 +18,7 @@ class ProtoTransportation(Enum):
     WALKING_FERRY = TransportationInfo(7, 'walking+ferry')
 
 
-class Country(str, Enum):
+class ProtoCountry(str, Enum):
     NETHERLANDS = 'nl'
     AUSTRIA = 'at'
     UNITED_KINGDOM = 'uk'

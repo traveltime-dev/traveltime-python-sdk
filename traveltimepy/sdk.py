@@ -1,36 +1,50 @@
 from datetime import datetime
 from typing import List, Optional, Dict, Union
 
-from traveltime.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy.dto.common import (
+    Location,
+    Coordinates,
+    LocationId,
+    Rectangle,
+    Property,
+    FullRange,
+    Range
+)
 
-from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
-from traveltimepy.dto.requests.time_filter_proto import Country, ProtoTransportation
-
-from traveltimepy import AcceptType
-from traveltimepy.dto import Location, Coordinates, LocationId
-from traveltimepy.dto.requests import Rectangle, Property, FullRange, Range
-
-from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
+from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy.dto.requests.zones import ZonesProperty
+from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 
-from traveltimepy.dto.requests.zones import ZonesProperty
-from traveltimepy.dto.responses.map_info import MapInfoResponse
-from traveltimepy.dto.responses.postcodes import PostcodesResponse
-from traveltimepy.dto.responses.routes import RoutesResponse
-from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
-from traveltimepy.dto.responses.time_filter import TimeFilterResponse
-from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
-from traveltimepy.dto.responses.time_map import TimeMapResponse
-from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
+from traveltimepy.accept_type import AcceptType
 from traveltimepy.itertools import join_opt
+from traveltimepy.dto.requests import SupportedLocationsRequest
+
+from traveltimepy.dto.responses import (
+    MapInfoResponse,
+    TimeFilterProtoResponse,
+    PostcodesResponse,
+    RoutesResponse,
+    SupportedLocationsResponse,
+    TimeFilterResponse,
+    TimeFilterFastResponse,
+    TimeMapResponse,
+    DistrictsResponse,
+    SectorsResponse
+)
+
 from traveltimepy.mapper import (
     create_time_filter,
     create_time_filter_fast,
     create_postcodes,
     create_districts,
     create_sectors,
-    create_routes, create_proto_request, create_time_map
+    create_routes,
+    create_proto_request,
+    create_time_map
 )
+
+from traveltimepy.proto_http import send_proto, send_proto_async
 from traveltimepy.http import (
     send_get,
     send_get_async,
@@ -39,8 +53,6 @@ from traveltimepy.http import (
 )
 
 from geojson_pydantic import FeatureCollection
-
-from traveltimepy.proto_http import send_proto, send_proto_async
 
 
 class TravelTimeSdk:
@@ -455,7 +467,7 @@ class TravelTimeSdk:
         self,
         origin: Coordinates,
         destinations: List[Coordinates],
-        country: Country,
+        country: ProtoCountry,
         transportation: ProtoTransportation,
         travel_time: int,
     ) -> TimeFilterProtoResponse:
@@ -471,7 +483,7 @@ class TravelTimeSdk:
         self,
         origin: Coordinates,
         destinations: List[Coordinates],
-        country: Country,
+        country: ProtoCountry,
         transportation: ProtoTransportation,
         travel_time: int,
     ) -> TimeFilterProtoResponse:

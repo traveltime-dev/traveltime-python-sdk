@@ -1,5 +1,5 @@
-from traveltimepy.dto import Coordinates
-from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation, Country
+from traveltimepy import Coordinates
+from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation, ProtoCountry
 
 
 def test_proto(proto_sdk):
@@ -11,6 +11,6 @@ def test_proto(proto_sdk):
         ],
         transportation=ProtoTransportation.DRIVING,
         travel_time=7200,
-        country=Country.UNITED_KINGDOM
+        country=ProtoCountry.UNITED_KINGDOM
     )
     assert len(response.travel_times) == 2

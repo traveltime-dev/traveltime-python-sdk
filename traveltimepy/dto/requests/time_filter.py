@@ -3,12 +3,11 @@ from typing import List, Optional, Union
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto import SearchId, Location, LocationId
-from traveltimepy.dto.requests import FullRange, Property
+from traveltimepy.dto.common import SearchId, Location, LocationId, FullRange, Property
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_filter import TimeFilterResponse
 from traveltimepy.itertools import split, flatten
-from traveltimepy.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 
 class ArrivalSearch(BaseModel):

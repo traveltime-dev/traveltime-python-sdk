@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from traveltimepy.dto import Coordinates
-from traveltimepy.transportation import Driving
+from traveltimepy import Coordinates, Driving
 
 
 def test_departures(sdk):

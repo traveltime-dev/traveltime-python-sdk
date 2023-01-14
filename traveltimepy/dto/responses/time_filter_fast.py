@@ -1,8 +1,7 @@
 from typing import List, Optional
-
 from pydantic import BaseModel
 
-from traveltimepy.dto import SearchId, LocationId
+from traveltimepy.dto.common import SearchId, LocationId
 
 
 class Ticket(BaseModel):

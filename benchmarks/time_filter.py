@@ -4,11 +4,11 @@ import random
 from datetime import datetime
 from typing import List
 
-from traveltimepy.dto import Coordinates, Location
+from traveltimepy import Coordinates, Location, Range
 from traveltimepy.dto.requests import Range
 from traveltimepy.dto.requests.time_filter import DepartureSearch
 from traveltimepy.sdk import TravelTimeSdk
-from traveltimepy.transportation import PublicTransport
+from traveltimepy.dto.transportation import PublicTransport
 
 
 def generate_float(value: float, radius: float) -> float:

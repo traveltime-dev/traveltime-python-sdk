@@ -1,7 +1,6 @@
 from datetime import datetime
 
-from traveltimepy.dto import Coordinates
-from traveltimepy.transportation import PublicTransport
+from traveltimepy import Coordinates, PublicTransport
 
 
 def test_departures(sdk):

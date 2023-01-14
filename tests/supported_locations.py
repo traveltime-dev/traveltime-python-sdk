@@ -1,4 +1,4 @@
-from traveltimepy.dto import Location, Coordinates
+from traveltimepy import Location, Coordinates
 
 
 def test_supported_locations(sdk):

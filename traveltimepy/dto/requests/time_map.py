@@ -5,12 +5,10 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto import Coordinates, SearchId
-from traveltimepy.dto.requests import Range
+from traveltimepy import Coordinates, SearchId, Range, PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
-from traveltimepy.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 
 class DepartureSearch(BaseModel):

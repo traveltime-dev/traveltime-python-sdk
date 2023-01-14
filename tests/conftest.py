@@ -3,7 +3,7 @@ from typing import List
 
 import pytest
 
-from traveltimepy.dto import Location, Coordinates
+from traveltimepy import Location, Coordinates
 from traveltimepy.sdk import TravelTimeSdk
 
 

@@ -2,25 +2,28 @@ import math
 from datetime import datetime
 from typing import Dict, Union, List, Optional
 
-from traveltime.errors import ApiError
-
+from traveltimepy.errors import ApiError
 from traveltimepy import TimeFilterFastRequest_pb2
-from traveltimepy.dto import Location, LocationId, Coordinates
-from traveltimepy.dto.requests import FullRange, Property, Range
-from traveltimepy.dto.requests.postcodes import PostcodesRequest
-from traveltimepy.dto.requests.routes import RoutesRequest
-from traveltimepy.dto.requests.time_filter import TimeFilterRequest
-from traveltimepy.dto.requests.time_filter_fast import TimeFilterFastRequest, Transportation, OneToMany, ManyToOne
+
+from traveltimepy.dto.common import Location, LocationId, Coordinates, FullRange, Property, Range
+from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
-from traveltimepy.dto.requests.zones import ZonesProperty, DistrictsRequest, SectorsRequest
-from traveltimepy.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy.dto.requests.time_filter_fast import Transportation
+from traveltimepy.dto.requests.zones import ZonesProperty
+
 from traveltimepy.dto.requests import (
-    time_filter as time_filter_package,
-    time_filter_fast as time_filter_fast_package,
-    postcodes as postcodes_package,
-    zones as zones_package,
-    routes as routes_package,
-    time_map as time_map_package
+    PostcodesRequest,
+    RoutesRequest,
+    TimeFilterRequest,
+    TimeFilterFastRequest,
+    DistrictsRequest,
+    SectorsRequest,
+    time_filter,
+    time_filter_fast,
+    postcodes,
+    zones,
+    routes,
+    time_map
 )
 
 
@@ -40,7 +43,7 @@ def create_time_filter(
         return TimeFilterRequest(
             locations=locations,
             arrival_searches=[
-                time_filter_package.ArrivalSearch(
+                time_filter.ArrivalSearch(
                     id=arrival_id,
                     arrival_location_id=arrival_id,
                     departure_location_ids=[departure_id for departure_id in departure_ids],
@@ -58,7 +61,7 @@ def create_time_filter(
         return TimeFilterRequest(
             locations=locations,
             departure_searches=[
-                time_filter_package.DepartureSearch(
+                time_filter.DepartureSearch(
                     id=departure_id,
                     departure_location_id=departure_id,
                     arrival_location_ids=[arrival_id for arrival_id in arrival_ids],
@@ -89,9 +92,9 @@ def create_time_filter_fast(
     if one_to_many:
         return TimeFilterFastRequest(
             locations=locations,
-            arrival_searches=time_filter_fast_package.ArrivalSearches(
+            arrival_searches=time_filter_fast.ArrivalSearches(
                 one_to_many=[
-                    OneToMany(
+                    time_filter_fast.OneToMany(
                         id=departure_id,
                         departure_location_id=departure_id,
                         arrival_location_ids=arrival_ids,
@@ -108,9 +111,9 @@ def create_time_filter_fast(
     else:
         return TimeFilterFastRequest(
             locations=locations,
-            arrival_searches=time_filter_fast_package.ArrivalSearches(
+            arrival_searches=time_filter_fast.ArrivalSearches(
                 many_to_one=[
-                    ManyToOne(
+                    time_filter_fast.ManyToOne(
                         id=arrival_id,
                         arrival_location_id=arrival_id,
                         departure_location_ids=departure_ids,
@@ -141,7 +144,7 @@ def create_postcodes(
     if departure_time is not None:
         return PostcodesRequest(
             departure_searches=[
-                postcodes_package.DepartureSearch(
+                postcodes.DepartureSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -157,7 +160,7 @@ def create_postcodes(
     elif arrival_time is not None:
         return PostcodesRequest(
             arrival_searches=[
-                postcodes_package.ArrivalSearch(
+                postcodes.ArrivalSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -189,7 +192,7 @@ def create_districts(
     if arrival_time is not None:
         return DistrictsRequest(
             arrival_searches=[
-                zones_package.ArrivalSearch(
+                zones.ArrivalSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -206,7 +209,7 @@ def create_districts(
     elif departure_time is not None:
         return DistrictsRequest(
             arrival_searches=[
-                zones_package.ArrivalSearch(
+                zones.ArrivalSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -239,7 +242,7 @@ def create_sectors(
     if arrival_time is not None:
         return SectorsRequest(
             arrival_searches=[
-                zones_package.ArrivalSearch(
+                zones.ArrivalSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -256,7 +259,7 @@ def create_sectors(
     elif departure_time is not None:
         return SectorsRequest(
             departure_searches=[
-                zones_package.DepartureSearch(
+                zones.DepartureSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -285,7 +288,7 @@ def create_time_map(
     if arrival_time is not None:
         return SectorsRequest(
             arrival_searches=[
-                time_map_package.ArrivalSearch(
+                time_map.ArrivalSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -302,7 +305,7 @@ def create_time_map(
     elif departure_time is not None:
         return SectorsRequest(
             departure_searches=[
-                time_map_package.DepartureSearch(
+                time_map.DepartureSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -335,7 +338,7 @@ def create_routes(
         return RoutesRequest(
             locations=locations,
             arrival_searches=[
-                routes_package.ArrivalSearch(
+                routes.ArrivalSearch(
                     id=arrival_id,
                     arrival_location_id=arrival_id,
                     departure_location_ids=[departure_id for departure_id in departure_ids],
@@ -352,7 +355,7 @@ def create_routes(
         return RoutesRequest(
             locations=locations,
             departure_searches=[
-                routes_package.DepartureSearch(
+                routes.DepartureSearch(
                     id=departure_id,
                     departure_location_id=departure_id,
                     arrival_location_ids=[arrival_id for arrival_id in arrival_ids],
