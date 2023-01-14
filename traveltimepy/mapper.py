@@ -16,6 +16,7 @@ from traveltimepy.dto.requests import (
     RoutesRequest,
     TimeFilterRequest,
     TimeFilterFastRequest,
+    TimeMapRequest,
     DistrictsRequest,
     SectorsRequest,
     time_filter,
@@ -284,9 +285,9 @@ def create_time_map(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     search_range: Optional[Range]
-) -> SectorsRequest:
+) -> TimeMapRequest:
     if arrival_time is not None:
-        return SectorsRequest(
+        return TimeMapRequest(
             arrival_searches=[
                 time_map.ArrivalSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
@@ -303,7 +304,7 @@ def create_time_map(
             intesections=[]
         )
     elif departure_time is not None:
-        return SectorsRequest(
+        return TimeMapRequest(
             departure_searches=[
                 time_map.DepartureSearch(
                     id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
