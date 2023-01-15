@@ -34,7 +34,7 @@ virtualenv <your-env>
 In order to authenticate with Travel Time API, you will have to supply the Application Id and Api Key.
 
 ```python
-from traveltimepy.sdk import TravelTimeSdk
+from traveltimepy import TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 ```

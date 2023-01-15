@@ -1,3 +1,5 @@
+"""Python sdk for working with traveltime api"""
+
 __all__ = [
     '__version__',
     'PublicTransport',
