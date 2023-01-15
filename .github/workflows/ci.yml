@@ -39,8 +39,7 @@ jobs:
 
       - name: Install Package with dependencies
         run: |
-          python setup.py install
-
+          python -m pip install -e .
           pip install flake8 pytest
       - name: Lint with flake8
         run: |
