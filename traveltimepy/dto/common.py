@@ -1,7 +1,6 @@
 from datetime import datetime, time
 from enum import Enum
-from typing import NewType, List, Union, Optional
-from typing_extensions import Literal
+from typing import NewType, List, Union, Optional, Literal
 from pydantic.main import BaseModel
 
 SearchId = NewType('SearchId', str)

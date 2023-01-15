@@ -301,7 +301,7 @@ def create_time_map(
                 for cur_coordinates in coordinates
             ],
             departure_searches=[],
-            union=[],
+            unions=[],
             intesections=[]
         )
     elif departure_time is not None:
@@ -318,7 +318,7 @@ def create_time_map(
                 for cur_coordinates in coordinates
             ],
             arrival_searches=[],
-            union=[],
+            unions=[],
             intesections=[]
         )
     else:
