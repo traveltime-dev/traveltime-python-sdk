@@ -13,10 +13,10 @@ class Postcode(BaseModel):
     properties: List[Property]
 
 
-class Result(BaseModel):
+class PostcodesResult(BaseModel):
     search_id: str
     postcodes: List[Postcode]
 
 
 class PostcodesResponse(BaseModel):
-    results: List[Result]
+    results: List[PostcodesResult]

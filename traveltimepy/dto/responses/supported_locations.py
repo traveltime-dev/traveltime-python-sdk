@@ -5,12 +5,12 @@ from pydantic import BaseModel
 from traveltimepy.dto.common import LocationId
 
 
-class Location(BaseModel):
+class SupportedLocation(BaseModel):
     id: LocationId
     map_name: str
     additional_map_names: List[str]
 
 
 class SupportedLocationsResponse(BaseModel):
-    locations: List[Location]
+    locations: List[SupportedLocation]
     unsupported_locations: List[LocationId]

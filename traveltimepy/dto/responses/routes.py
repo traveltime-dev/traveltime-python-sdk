@@ -15,11 +15,11 @@ class Location(BaseModel):
     properties: List[Property]
 
 
-class Result(BaseModel):
+class RoutesResult(BaseModel):
     search_id: SearchId
     locations: List[Location]
     unreachable: List[LocationId]
 
 
 class RoutesResponse(BaseModel):
-    results: List[Result]
+    results: List[RoutesResult]
