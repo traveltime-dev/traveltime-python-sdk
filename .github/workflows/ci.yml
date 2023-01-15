@@ -39,8 +39,8 @@ jobs:
 
       - name: Install Package with dependencies
         run: |
-          pip install typing-extensions
-          pip install -e .
+          python setup.py install
+
           pip install flake8 pytest
       - name: Lint with flake8
         run: |
