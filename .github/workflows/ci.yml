@@ -39,8 +39,8 @@ jobs:
 
       - name: Install Package with dependencies
         run: |
-          pip install -e .
-          pip install flake8 pytest
+          pip3 install -e .
+          pip3 install flake8 pytest
       - name: Lint with flake8
         run: |
           flake8  --max-line-length=127
