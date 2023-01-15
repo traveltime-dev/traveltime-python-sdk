@@ -302,7 +302,7 @@ def create_time_map(
             ],
             departure_searches=[],
             unions=[],
-            intesections=[]
+            intersections=[]
         )
     elif departure_time is not None:
         return TimeMapRequest(
@@ -319,7 +319,7 @@ def create_time_map(
             ],
             arrival_searches=[],
             unions=[],
-            intesections=[]
+            intersections=[]
         )
     else:
         raise ApiError('arrival_time or departure_time should be specified')
