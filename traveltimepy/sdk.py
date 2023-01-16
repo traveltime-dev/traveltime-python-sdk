@@ -20,15 +20,14 @@ from traveltimepy.accept_type import AcceptType
 from traveltimepy.itertools import join_opt
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
 
-from traveltimepy.dto.responses.map_info import MapInfoResponse
-from traveltimepy.dto.responses.postcodes import PostcodesResponse
-from traveltimepy.dto.responses.routes import RoutesResponse
+from traveltimepy.dto.responses.map_info import MapInfoResponse, Map
+from traveltimepy.dto.responses.postcodes import PostcodesResponse, PostcodesResult
+from traveltimepy.dto.responses.routes import RoutesResponse, RoutesResult
 from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
-from traveltimepy.dto.responses.time_filter import TimeFilterResponse
-from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
-from traveltimepy.dto.responses.time_map import TimeMapResponse
-from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
-from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.dto.responses.time_filter import TimeFilterResponse, TimeFilterResult
+from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse, TimeFilterFastResult
+from traveltimepy.dto.responses.time_map import TimeMapResponse, TimeMapResult
+from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse, DistrictsResult, SectorsResult
 
 from traveltimepy.mapper import (
     create_time_filter,
@@ -38,7 +37,8 @@ from traveltimepy.mapper import (
     create_sectors,
     create_routes,
     create_proto_request,
-    create_time_map
+    create_time_map,
+    create_intersection, create_union
 )
 
 from traveltimepy.proto_http import send_proto, send_proto_async
@@ -68,8 +68,8 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_time: int = 3600,
         full_range: Optional[FullRange] = None
-    ) -> TimeFilterResponse:
-        return await send_post_async(
+    ) -> List[TimeFilterResult]:
+        resp = await send_post_async(
             TimeFilterResponse,
             'time-filter',
             self.__headers(AcceptType.JSON),
@@ -85,6 +85,8 @@ class TravelTimeSdk:
             )
         )
 
+        return resp.results
+
     def time_filter(
         self,
         locations: List[Location],
@@ -95,7 +97,7 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         travel_time: int = 3600,
         full_range: Optional[FullRange] = None
-    ) -> TimeFilterResponse:
+    ) -> List[TimeFilterResult]:
         return send_post(
             TimeFilterResponse,
             'time-filter',
@@ -110,13 +112,14 @@ class TravelTimeSdk:
                 travel_time,
                 full_range
             )
-        )
+        ).results
 
-    async def map_info_async(self) -> MapInfoResponse:
-        return await send_get_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+    async def map_info_async(self) -> List[Map]:
+        res = await send_get_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+        return res.maps
 
-    def map_info(self) -> MapInfoResponse:
-        return send_get(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+    def map_info(self) -> List[Map]:
+        return send_get(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON)).maps
 
     async def geocoding_async(
         self,
@@ -214,8 +217,8 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         properties: Optional[List[Property]] = None,
         one_to_many: bool = False
-    ) -> TimeFilterFastResponse:
-        return await send_post_async(
+    ) -> List[TimeFilterFastResult]:
+        resp = await send_post_async(
             TimeFilterFastResponse,
             'time-filter/fast',
             self.__headers(AcceptType.JSON),
@@ -228,6 +231,7 @@ class TravelTimeSdk:
                 one_to_many
             )
         )
+        return resp.results
 
     def time_filter_fast(
         self,
@@ -237,7 +241,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         properties: Optional[List[Property]] = None,
         one_to_many: bool = False
-    ) -> TimeFilterFastResponse:
+    ) -> List[TimeFilterFastResult]:
         return send_post(
             TimeFilterFastResponse,
             'time-filter/fast',
@@ -250,7 +254,7 @@ class TravelTimeSdk:
                 properties,
                 one_to_many
             )
-        )
+        ).results
 
     async def postcodes_async(
         self,
@@ -261,8 +265,8 @@ class TravelTimeSdk:
         travel_time: int = 1800,
         properties: Optional[List[Property]] = None,
         full_range: Optional[FullRange] = None
-    ) -> PostcodesResponse:
-        return await send_post_async(
+    ) -> List[PostcodesResult]:
+        resp = await send_post_async(
             PostcodesResponse,
             'time-filter/postcodes',
             self.__headers(AcceptType.JSON),
@@ -276,6 +280,7 @@ class TravelTimeSdk:
                 full_range
             )
         )
+        return resp.results
 
     def postcodes(
         self,
@@ -286,7 +291,7 @@ class TravelTimeSdk:
         travel_time: int = 1800,
         properties: Optional[List[Property]] = None,
         full_range: Optional[FullRange] = None
-    ) -> PostcodesResponse:
+    ) -> List[PostcodesResult]:
         return send_post(
             PostcodesResponse,
             'time-filter/postcodes',
@@ -300,7 +305,7 @@ class TravelTimeSdk:
                 properties,
                 full_range
             )
-        )
+        ).results
 
     async def districts_async(
         self,
@@ -312,8 +317,8 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         full_range: Optional[FullRange] = None
-    ) -> DistrictsResponse:
-        return await send_post_async(
+    ) -> List[DistrictsResult]:
+        res = await send_post_async(
             DistrictsResponse,
             'time-filter/postcode-districts',
             self.__headers(AcceptType.JSON),
@@ -328,6 +333,7 @@ class TravelTimeSdk:
                 full_range
             )
         )
+        return res.results
 
     def districts(
         self,
@@ -339,7 +345,7 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         full_range: Optional[FullRange] = None
-    ) -> DistrictsResponse:
+    ) -> List[DistrictsResult]:
         return send_post(
             DistrictsResponse,
             'time-filter/postcode-districts',
@@ -354,7 +360,7 @@ class TravelTimeSdk:
                 properties,
                 full_range
             )
-        )
+        ).results
 
     async def sectors_async(
         self,
@@ -366,8 +372,8 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         full_range: Optional[FullRange] = None
-    ) -> SectorsResponse:
-        return await send_post_async(
+    ) -> List[SectorsResult]:
+        resp = await send_post_async(
             SectorsResponse,
             'time-filter/postcode-sectors',
             self.__headers(AcceptType.JSON),
@@ -382,6 +388,7 @@ class TravelTimeSdk:
                 full_range
             )
         )
+        return resp.results
 
     def sectors(
         self,
@@ -393,7 +400,7 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         full_range: Optional[FullRange] = None
-    ) -> SectorsResponse:
+    ) -> List[SectorsResult]:
         return send_post(
             SectorsResponse,
             'time-filter/postcode-sectors',
@@ -408,7 +415,7 @@ class TravelTimeSdk:
                 properties,
                 full_range
             )
-        )
+        ).results
 
     def routes(
         self,
@@ -419,7 +426,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         properties: Optional[List[Property]] = None,
         full_range: Optional[FullRange] = None
-    ) -> RoutesResponse:
+    ) -> List[RoutesResult]:
         return send_post(
             RoutesResponse,
             'routes',
@@ -433,7 +440,7 @@ class TravelTimeSdk:
                 properties,
                 full_range
             )
-        )
+        ).results
 
     async def routes_async(
         self,
@@ -444,8 +451,8 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         properties: Optional[List[Property]] = None,
         full_range: Optional[FullRange] = None
-    ) -> RoutesResponse:
-        return send_post(
+    ) -> List[RoutesResult]:
+        resp = await send_post_async(
             RoutesResponse,
             'routes',
             self.__headers(AcceptType.JSON),
@@ -459,6 +466,7 @@ class TravelTimeSdk:
                 full_range
             )
         )
+        return resp.results
 
     def time_filter_proto(
         self,
@@ -467,14 +475,14 @@ class TravelTimeSdk:
         country: ProtoCountry,
         transportation: ProtoTransportation,
         travel_time: int,
-    ) -> TimeFilterProtoResponse:
+    ) -> List[int]:
         return send_proto(
             f'https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.name}',
             self.__proto_headers(),
             create_proto_request(origin, destinations, transportation, travel_time),
             self.__app_id,
             self.__api_key
-        )
+        ).travel_times
 
     async def time_filter_proto_async(
         self,
@@ -483,14 +491,15 @@ class TravelTimeSdk:
         country: ProtoCountry,
         transportation: ProtoTransportation,
         travel_time: int,
-    ) -> TimeFilterProtoResponse:
-        return await send_proto_async(
+    ) -> List[int]:
+        resp = await send_proto_async(
             f'https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.name}',
             self.__proto_headers(),
             create_proto_request(origin, destinations, transportation, travel_time),
             self.__app_id,
             self.__api_key
         )
+        return resp.travel_times
 
     def time_map(
         self,
@@ -500,7 +509,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         travel_time: int = 3600,
         search_range: Optional[Range] = None
-    ) -> TimeMapResponse:
+    ) -> List[TimeMapResult]:
         return send_post(
             TimeMapResponse,
             'time-map',
@@ -513,7 +522,102 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             )
+        ).results
+
+    def intersection(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResult:
+        return send_post(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_intersection(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            )
+        ).results[0]
+
+    async def intersection_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResult:
+        resp = await send_post_async(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_intersection(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            )
         )
+        return resp.results[0]
+
+    def union(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResult:
+        return send_post(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_union(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            )
+        ).results[0]
+
+    async def union_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResult:
+        resp = await send_post_async(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_union(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            )
+        )
+
+        return resp.results[0]
 
     async def time_map_async(
         self,
@@ -523,8 +627,8 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         travel_time: int = 3600,
         search_range: Optional[Range] = None
-    ) -> TimeMapResponse:
-        return await send_post_async(
+    ) -> List[TimeMapResult]:
+        resp = await send_post_async(
             TimeMapResponse,
             'time-map',
             self.__headers(AcceptType.JSON),
@@ -537,6 +641,7 @@ class TravelTimeSdk:
                 search_range
             )
         )
+        return resp.results
 
     @staticmethod
     def __geocoding_reverse_params(

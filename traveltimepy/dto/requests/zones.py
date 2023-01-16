@@ -50,7 +50,9 @@ class SectorsRequest(TravelTimeRequest[SectorsResponse]):
         ]
 
     def merge(self, responses: List[SectorsResponse]) -> SectorsResponse:
-        return SectorsResponse(results=flatten([response.results for response in responses]))
+        return SectorsResponse(
+            results=sorted(flatten([response.results for response in responses]), key=lambda res: res.search_id)
+        )
 
 
 class DistrictsRequest(TravelTimeRequest[DistrictsResponse]):
@@ -64,4 +66,6 @@ class DistrictsRequest(TravelTimeRequest[DistrictsResponse]):
         ]
 
     def merge(self, responses: List[DistrictsResponse]) -> DistrictsResponse:
-        return DistrictsResponse(results=flatten([response.results for response in responses]))
+        return DistrictsResponse(
+            results=sorted(flatten([response.results for response in responses]), key=lambda res: res.search_id)
+        )

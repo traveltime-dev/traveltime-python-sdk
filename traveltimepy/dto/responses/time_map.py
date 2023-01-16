@@ -10,10 +10,10 @@ class Shape(BaseModel):
     holes: List[List[Coordinates]]
 
 
-class Result(BaseModel):
+class TimeMapResult(BaseModel):
     search_id: SearchId
     shapes: List[Shape]
 
 
 class TimeMapResponse(BaseModel):
-    results: List[Result]
+    results: List[TimeMapResult]

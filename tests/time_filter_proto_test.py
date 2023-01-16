@@ -3,7 +3,7 @@ from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation, Pro
 
 
 def test_proto(proto_sdk):
-    response = proto_sdk.time_filter_proto(
+    travel_times = proto_sdk.time_filter_proto(
         origin=Coordinates(lat=51.425709, lng=-0.122061),
         destinations=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -13,4 +13,4 @@ def test_proto(proto_sdk):
         travel_time=7200,
         country=ProtoCountry.UNITED_KINGDOM
     )
-    assert len(response.travel_times) == 2
+    assert len(travel_times) == 2

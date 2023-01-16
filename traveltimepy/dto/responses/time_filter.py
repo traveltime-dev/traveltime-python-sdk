@@ -23,11 +23,11 @@ class Location(BaseModel):
     properties: List[Property]
 
 
-class Result(BaseModel):
+class TimeFilterResult(BaseModel):
     search_id: SearchId
     locations: List[Location]
     unreachable: List[LocationId]
 
 
 class TimeFilterResponse(BaseModel):
-    results: List[Result]
+    results: List[TimeFilterResult]

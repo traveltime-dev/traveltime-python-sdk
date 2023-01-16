@@ -41,4 +41,6 @@ class PostcodesRequest(TravelTimeRequest[PostcodesResponse]):
         ]
 
     def merge(self, responses: List[PostcodesResponse]) -> PostcodesResponse:
-        return PostcodesResponse(results=flatten([response.results for response in responses]))
+        return PostcodesResponse(
+            results=sorted(flatten([response.results for response in responses]), key=lambda res: res.search_id)
+        )

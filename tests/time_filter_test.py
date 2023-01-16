@@ -4,7 +4,7 @@ from traveltimepy import LocationId, PublicTransport
 
 
 def test_departures(sdk, locations):
-    response = sdk.time_filter(
+    results = sdk.time_filter(
         locations=locations,
         searches={
             LocationId('London center'): [LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
@@ -13,11 +13,11 @@ def test_departures(sdk, locations):
         transportation=PublicTransport(),
         departure_time=datetime.now()
     )
-    assert len(response.results) == 2
+    assert len(results) == 2
 
 
 def test_arrivals(sdk, locations):
-    response = sdk.time_filter(
+    results = sdk.time_filter(
         locations=locations,
         searches={
             LocationId('London center'): [LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
@@ -26,4 +26,4 @@ def test_arrivals(sdk, locations):
         transportation=PublicTransport(),
         departure_time=datetime.now()
     )
-    assert len(response.results) == 2
+    assert len(results) == 2

@@ -147,7 +147,7 @@ def create_postcodes(
         return PostcodesRequest(
             departure_searches=[
                 postcodes.DepartureSearch(
-                    id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
+                    id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
@@ -155,7 +155,7 @@ def create_postcodes(
                     properties=properties,
                     full_range=full_range
                 )
-                for cur_coordinates in coordinates
+                for ind, cur_coordinates in enumerate(coordinates)
             ],
             arrival_searches=[]
         )
@@ -163,7 +163,7 @@ def create_postcodes(
         return PostcodesRequest(
             arrival_searches=[
                 postcodes.ArrivalSearch(
-                    id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
+                    id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
@@ -171,7 +171,7 @@ def create_postcodes(
                     properties=properties,
                     full_range=full_range
                 )
-                for cur_coordinates in coordinates
+                for ind, cur_coordinates in enumerate(coordinates)
             ],
             departure_searches=[]
         )
@@ -195,7 +195,7 @@ def create_districts(
         return DistrictsRequest(
             arrival_searches=[
                 zones.ArrivalSearch(
-                    id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
+                    id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
@@ -204,7 +204,7 @@ def create_districts(
                     properties=properties,
                     full_range=full_range
                 )
-                for cur_coordinates in coordinates
+                for ind, cur_coordinates in enumerate(coordinates)
             ],
             departure_searches=[]
         )
@@ -212,7 +212,7 @@ def create_districts(
         return DistrictsRequest(
             arrival_searches=[
                 zones.ArrivalSearch(
-                    id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
+                    id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
@@ -221,7 +221,7 @@ def create_districts(
                     properties=properties,
                     full_range=full_range
                 )
-                for cur_coordinates in coordinates
+                for ind, cur_coordinates in enumerate(coordinates)
             ],
             departure_searches=[]
         )
@@ -245,7 +245,7 @@ def create_sectors(
         return SectorsRequest(
             arrival_searches=[
                 zones.ArrivalSearch(
-                    id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
+                    id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
@@ -254,7 +254,7 @@ def create_sectors(
                     properties=properties,
                     full_range=full_range
                 )
-                for cur_coordinates in coordinates
+                for ind, cur_coordinates in enumerate(coordinates)
             ],
             departure_searches=[]
         )
@@ -262,7 +262,7 @@ def create_sectors(
         return SectorsRequest(
             departure_searches=[
                 zones.DepartureSearch(
-                    id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
+                    id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
@@ -271,7 +271,7 @@ def create_sectors(
                     properties=properties,
                     full_range=full_range
                 )
-                for cur_coordinates in coordinates
+                for ind, cur_coordinates in enumerate(coordinates)
             ],
             arrival_searches=[]
         )
@@ -291,14 +291,14 @@ def create_time_map(
         return TimeMapRequest(
             arrival_searches=[
                 time_map.ArrivalSearch(
-                    id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
+                    id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
                     transportation=transportation,
                     range=search_range
                 )
-                for cur_coordinates in coordinates
+                for ind, cur_coordinates in enumerate(coordinates)
             ],
             departure_searches=[],
             unions=[],
@@ -308,17 +308,129 @@ def create_time_map(
         return TimeMapRequest(
             departure_searches=[
                 time_map.DepartureSearch(
-                    id=f'Search for Coordinate({cur_coordinates.lat}, {cur_coordinates.lng})',
+                    id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
                     transportation=transportation,
                     range=search_range
                 )
-                for cur_coordinates in coordinates
+                for ind, cur_coordinates in enumerate(coordinates)
             ],
             arrival_searches=[],
             unions=[],
+            intersections=[]
+        )
+    else:
+        raise ApiError('arrival_time or departure_time should be specified')
+
+
+def create_intersection(
+    coordinates: List[Coordinates],
+    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    travel_time: int,
+    departure_time: Optional[datetime],
+    arrival_time: Optional[datetime],
+    search_range: Optional[Range]
+) -> TimeMapRequest:
+    if arrival_time is not None:
+        return TimeMapRequest(
+            arrival_searches=[
+                time_map.ArrivalSearch(
+                    id=f'Search {ind}',
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=arrival_time,
+                    transportation=transportation,
+                    range=search_range
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+            unions=[],
+            intersections=[
+                time_map.Intersection(
+                    id='Intersection search',
+                    search_ids=[f'Search {ind}' for ind, _ in enumerate(coordinates)]
+                )
+            ]
+        )
+    elif departure_time is not None:
+        return TimeMapRequest(
+            departure_searches=[
+                time_map.DepartureSearch(
+                    id=f'Search {ind}',
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=departure_time,
+                    transportation=transportation,
+                    range=search_range
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+            unions=[],
+            intersections=[
+                time_map.Intersection(
+                    id='Intersection search',
+                    search_ids=[f'Search {ind}' for ind, _ in enumerate(coordinates)]
+                )
+            ]
+        )
+    else:
+        raise ApiError('arrival_time or departure_time should be specified')
+
+
+def create_union(
+    coordinates: List[Coordinates],
+    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    travel_time: int,
+    departure_time: Optional[datetime],
+    arrival_time: Optional[datetime],
+    search_range: Optional[Range]
+) -> TimeMapRequest:
+    if arrival_time is not None:
+        return TimeMapRequest(
+            arrival_searches=[
+                time_map.ArrivalSearch(
+                    id=f'Search {ind}',
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=arrival_time,
+                    transportation=transportation,
+                    range=search_range
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+            unions=[
+                time_map.Union(
+                    id='Union search',
+                    search_ids=[f'Search {ind}' for ind, _ in enumerate(coordinates)]
+                )
+            ],
+            intersections=[]
+        )
+    elif departure_time is not None:
+        return TimeMapRequest(
+            departure_searches=[
+                time_map.DepartureSearch(
+                    id=f'Search {ind}',
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=departure_time,
+                    transportation=transportation,
+                    range=search_range
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+            unions=[
+                time_map.Union(
+                    id='Union search',
+                    search_ids=[f'Search {ind}' for ind, _ in enumerate(coordinates)]
+                )
+            ],
             intersections=[]
         )
     else:

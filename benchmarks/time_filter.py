@@ -1,22 +1,8 @@
 import time
-import random
 from datetime import datetime
-from typing import List
 
-from traveltimepy import Coordinates, Location, TravelTimeSdk, Driving
-
-
-def generate_float(value: float, radius: float) -> float:
-    return random.uniform(value - radius, value + radius)
-
-
-def generate_locations(lat: float, lng: float, radius: float, name: str, amount: int) -> List[Location]:
-    return [
-        Location(
-            id='{} {}'.format(name, i),
-            coords=Coordinates(lat=generate_float(lat, radius), lng=generate_float(lng, radius))
-        ) for i in range(amount)
-    ]
+from benchmarks.common import generate_locations
+from traveltimepy import TravelTimeSdk, Driving
 
 
 def generate_matrix(size: int):

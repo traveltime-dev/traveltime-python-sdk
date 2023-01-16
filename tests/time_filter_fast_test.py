@@ -3,7 +3,7 @@ from traveltimepy.dto.requests.time_filter_fast import Transportation
 
 
 def test_one_to_many(sdk, locations):
-    response = sdk.time_filter_fast(
+    results = sdk.time_filter_fast(
         locations=locations,
         searches={
             LocationId('London center'): [LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
@@ -12,11 +12,11 @@ def test_one_to_many(sdk, locations):
         transportation=Transportation(type='public_transport'),
     )
 
-    assert len(response.results) > 0
+    assert len(results) > 0
 
 
 def test_many_to_one(sdk, locations):
-    response = sdk.time_filter_fast(
+    results = sdk.time_filter_fast(
         locations=locations,
         searches={
             LocationId('London center'): [LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
@@ -26,4 +26,4 @@ def test_many_to_one(sdk, locations):
         one_to_many=False
     )
 
-    assert len(response.results) > 0
+    assert len(results) > 0

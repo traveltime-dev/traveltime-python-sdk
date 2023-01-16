@@ -24,11 +24,11 @@ class Location(BaseModel):
     properties: Properties
 
 
-class Result(BaseModel):
+class TimeFilterFastResult(BaseModel):
     search_id: SearchId
     locations: List[Location]
     unreachable: List[LocationId]
 
 
 class TimeFilterFastResponse(BaseModel):
-    results: List[Result]
+    results: List[TimeFilterFastResult]
