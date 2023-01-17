@@ -46,6 +46,22 @@ sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 ### Concurrent calls 
 Each method below has its own asynchronous version.
 
+#### Example:
+```python
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
+res = await sdk.time_map_async(
+    coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+    arrival_time=datetime.now(),
+    transportation=Driving()
+)
+```
+
+
 ### [Isochrones (Time Map)](https://docs.traveltime.com/api/reference/isochrones)
 
 Given origin coordinates, find shapes of zones reachable within corresponding travel time.
@@ -61,6 +77,7 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 #### Returns:
 * results: List[TimeMapResult] - The list of isochrone shapes.
 
+#### Example:
 ```python
 from datetime import datetime
 
@@ -92,6 +109,7 @@ Given origin coordinates, find intersections of specified shapes.
 #### Returns:
 * results: List[TimeMapResult] - The list of isochrone shapes.
 
+#### Example:
 ```python
 from datetime import datetime
 
@@ -125,6 +143,7 @@ Finds the union of specified shapes.
 #### Returns:
 * results: List[TimeMapResult] - The list of isochrone shapes.
 
+#### Example:
 ```python
 from datetime import datetime
 
