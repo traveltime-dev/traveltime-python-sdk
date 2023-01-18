@@ -41,6 +41,9 @@ def create_time_filter(
 ) -> TimeFilterRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
+    if arrival_time is not None and departure_time is not None:
+        raise ApiError('arrival_time and departure_time cannot be both specified')
+
     if arrival_time is not None:
         return TimeFilterRequest(
             locations=locations,
@@ -143,6 +146,9 @@ def create_postcodes(
     if properties is None:
         properties = [Property.TRAVEL_TIME]
 
+    if arrival_time is not None and departure_time is not None:
+        raise ApiError('arrival_time and departure_time cannot be both specified')
+
     if departure_time is not None:
         return PostcodesRequest(
             departure_searches=[
@@ -191,6 +197,10 @@ def create_districts(
 ) -> DistrictsRequest:
     if properties is None:
         properties = ZonesProperty.TRAVEL_TIME_ALL
+
+    if arrival_time is not None and departure_time is not None:
+        raise ApiError('arrival_time and departure_time cannot be both specified')
+
     if arrival_time is not None:
         return DistrictsRequest(
             arrival_searches=[
@@ -241,6 +251,10 @@ def create_sectors(
 ) -> SectorsRequest:
     if properties is None:
         properties = ZonesProperty.TRAVEL_TIME_ALL
+
+    if arrival_time is not None and departure_time is not None:
+        raise ApiError('arrival_time and departure_time cannot be both specified')
+
     if arrival_time is not None:
         return SectorsRequest(
             arrival_searches=[
@@ -287,6 +301,9 @@ def create_time_map(
     arrival_time: Optional[datetime],
     search_range: Optional[Range]
 ) -> TimeMapRequest:
+    if arrival_time is not None and departure_time is not None:
+        raise ApiError('arrival_time and departure_time cannot be both specified')
+
     if arrival_time is not None:
         return TimeMapRequest(
             arrival_searches=[
@@ -333,6 +350,9 @@ def create_intersection(
     arrival_time: Optional[datetime],
     search_range: Optional[Range]
 ) -> TimeMapRequest:
+    if arrival_time is not None and departure_time is not None:
+        raise ApiError('arrival_time and departure_time cannot be both specified')
+
     if arrival_time is not None:
         return TimeMapRequest(
             arrival_searches=[
@@ -389,6 +409,9 @@ def create_union(
     arrival_time: Optional[datetime],
     search_range: Optional[Range]
 ) -> TimeMapRequest:
+    if arrival_time is not None and departure_time is not None:
+        raise ApiError('arrival_time and departure_time cannot be both specified')
+
     if arrival_time is not None:
         return TimeMapRequest(
             arrival_searches=[
@@ -446,6 +469,9 @@ def create_routes(
     properties: Optional[List[Property]],
     full_range: Optional[FullRange]
 ) -> RoutesRequest:
+    if arrival_time is not None and departure_time is not None:
+        raise ApiError('arrival_time and departure_time cannot be both specified')
+
     if properties is None:
         properties = [Property.TRAVEL_TIME]
     if arrival_time is not None:
