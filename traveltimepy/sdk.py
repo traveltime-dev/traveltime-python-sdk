@@ -679,14 +679,14 @@ class TravelTimeSdk:
     def __proto_headers() -> Dict[str, str]:
         return {
             'Content-Type': AcceptType.OCTET_STREAM.value,
-            'User-Agent': 'Travel Time Python SDK'
+            'User-Agent': 'Travel Time Python Beta SDK'
         }
 
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {
             'X-Application-Id': self.__app_id,
             'X-Api-Key': self.__api_key,
-            'User-Agent': 'Travel Time Python SDK',
+            'User-Agent': 'Travel Time Beta Python SDK',
             'Content-Type': 'application/json',
             'Accept': accept_type.value
         }
