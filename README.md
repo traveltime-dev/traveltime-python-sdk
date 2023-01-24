@@ -4,29 +4,6 @@
 [Travel Time](https://docs.traveltime.com/api/overview/introduction) Python SDK helps users find locations by journey time rather than using ‘as the crow flies’ distance.  
 Time-based searching gives users more opportunities for personalisation and delivers a more relevant search.
 
-## Installation
-
-Install Travel Time Python SDK in a `virtualenv` using `pip`. `virtualenv` is a tool to create isolated Python environments.
-
-`virtualenv` allows to install Travel Time Python SDK without needing system install permissions,
-and without clashing with the installed system dependencies.
-
-### Linux/Mac
-```
-pip3 install virtualenv
-virtualenv <your-env>
-source <your-env>/bin/activate
-<your-env>/bin/pip install traveltimepy
-```
-
-### Windows
-```
-pip install virtualenv
-virtualenv <your-env>
-<your-env>\Scripts\activate
-<your-env>\Scripts\pip.exe install traveltimepy
-```
-
 ## Usage
 
 ### Installation
