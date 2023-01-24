@@ -7,8 +7,9 @@ Time-based searching gives users more opportunities for personalisation and deli
 ## Usage
 
 ### Installation
+To install this pre-release version you need to run:
 
-`pip install traveltimepy`
+`pip install traveltimepy==3.0.0rc1`
 
 ### Authentication
 
