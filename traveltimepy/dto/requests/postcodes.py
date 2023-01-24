@@ -3,7 +3,7 @@ from typing import List, Union, Optional
 
 from pydantic import BaseModel
 
-from traveltimepy.dto.common import SearchId, Coordinates, Property, FullRange
+from traveltimepy.dto.common import Coordinates, Property, FullRange
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.postcodes import PostcodesResponse
 from traveltimepy.itertools import split, flatten
@@ -11,7 +11,7 @@ from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Wal
 
 
 class ArrivalSearch(BaseModel):
-    id: SearchId
+    id: str
     coords: Coordinates
     travel_time: int
     arrival_time: datetime
@@ -21,7 +21,7 @@ class ArrivalSearch(BaseModel):
 
 
 class DepartureSearch(BaseModel):
-    id: SearchId
+    id: str
     coords: Coordinates
     travel_time: int
     departure_time: datetime

@@ -1,16 +1,7 @@
 from datetime import datetime
 from typing import List, Optional, Dict, Union
 
-from traveltimepy.dto.common import (
-    Location,
-    Coordinates,
-    LocationId,
-    Rectangle,
-    Property,
-    FullRange,
-    Range
-)
-
+from traveltimepy.dto.common import Location, Coordinates, Rectangle,Property, FullRange, Range
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 from traveltimepy.dto.requests.zones import ZonesProperty
 from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
@@ -61,7 +52,7 @@ class TravelTimeSdk:
     async def time_filter_async(
         self,
         locations: List[Location],
-        searches: Dict[LocationId, List[LocationId]],
+        search_ids: Dict[str, List[str]],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
         properties: Optional[List[Property]] = None,
         departure_time: Optional[datetime] = None,
@@ -75,7 +66,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             create_time_filter(
                 locations,
-                searches,
+                search_ids,
                 transportation,
                 properties,
                 departure_time,
@@ -90,7 +81,7 @@ class TravelTimeSdk:
     def time_filter(
         self,
         locations: List[Location],
-        searches: Dict[LocationId, List[LocationId]],
+        search_ids: Dict[str, List[str]],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
@@ -104,7 +95,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             create_time_filter(
                 locations,
-                searches,
+                search_ids,
                 transportation,
                 properties,
                 departure_time,
@@ -212,7 +203,7 @@ class TravelTimeSdk:
     async def time_filter_fast_async(
         self,
         locations: List[Location],
-        searches: Dict[LocationId, List[LocationId]],
+        search_ids: Dict[str, List[str]],
         transportation: Transportation,
         travel_time: int = 3600,
         properties: Optional[List[Property]] = None,
@@ -224,7 +215,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             create_time_filter_fast(
                 locations,
-                searches,
+                search_ids,
                 transportation,
                 travel_time,
                 properties,
@@ -236,7 +227,7 @@ class TravelTimeSdk:
     def time_filter_fast(
         self,
         locations: List[Location],
-        searches: Dict[LocationId, List[LocationId]],
+        search_ids: Dict[str, List[str]],
         transportation: Transportation,
         travel_time: int = 3600,
         properties: Optional[List[Property]] = None,
@@ -248,7 +239,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             create_time_filter_fast(
                 locations,
-                searches,
+                search_ids,
                 transportation,
                 travel_time,
                 properties,
@@ -420,7 +411,7 @@ class TravelTimeSdk:
     def routes(
         self,
         locations: List[Location],
-        searches: Dict[LocationId, List[LocationId]],
+        search_ids: Dict[str, List[str]],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
@@ -433,7 +424,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             create_routes(
                 locations,
-                searches,
+                search_ids,
                 transportation,
                 departure_time,
                 arrival_time,
@@ -445,7 +436,7 @@ class TravelTimeSdk:
     async def routes_async(
         self,
         locations: List[Location],
-        searches: Dict[LocationId, List[LocationId]],
+        search_ids: Dict[str, List[str]],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
@@ -458,7 +449,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             create_routes(
                 locations,
-                searches,
+                search_ids,
                 transportation,
                 departure_time,
                 arrival_time,

@@ -4,7 +4,7 @@ from typing import List, Union, Optional
 
 from pydantic import BaseModel
 
-from traveltimepy.dto.common import SearchId, Coordinates, FullRange
+from traveltimepy.dto.common import Coordinates, FullRange
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
 from traveltimepy.itertools import split, flatten
@@ -18,7 +18,7 @@ class ZonesProperty(str, Enum):
 
 
 class ArrivalSearch(BaseModel):
-    id: SearchId
+    id: str
     coords: Coordinates
     travel_time: int
     arrival_time: datetime
@@ -29,7 +29,7 @@ class ArrivalSearch(BaseModel):
 
 
 class DepartureSearch(BaseModel):
-    id: SearchId
+    id: str
     coords: Coordinates
     travel_time: int
     departure_time: datetime

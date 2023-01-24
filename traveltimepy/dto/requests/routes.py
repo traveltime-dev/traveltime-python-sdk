@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import SearchId, Location, LocationId, Property, FullRange
+from traveltimepy.dto.common import Location, Property, FullRange
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.routes import RoutesResponse
@@ -11,9 +11,9 @@ from traveltimepy.itertools import split, flatten
 
 
 class ArrivalSearch(BaseModel):
-    id: SearchId
-    departure_location_ids: List[LocationId]
-    arrival_location_id: LocationId
+    id: str
+    departure_location_ids: List[str]
+    arrival_location_id: str
     arrival_time: datetime
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     properties: List[Property]
@@ -21,9 +21,9 @@ class ArrivalSearch(BaseModel):
 
 
 class DepartureSearch(BaseModel):
-    id: SearchId
-    arrival_location_ids: List[LocationId]
-    departure_location_id: LocationId
+    id: str
+    arrival_location_ids: List[str]
+    departure_location_id: str
     departure_time: datetime
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     properties: List[Property]

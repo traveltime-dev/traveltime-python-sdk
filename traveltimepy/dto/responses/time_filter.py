@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import Route, Fares, SearchId, LocationId
+from traveltimepy.dto.common import Route, Fares
 
 
 class DistanceBreakdown(BaseModel):
@@ -19,14 +19,14 @@ class Property(BaseModel):
 
 
 class Location(BaseModel):
-    id: LocationId
+    id: str
     properties: List[Property]
 
 
 class TimeFilterResult(BaseModel):
-    search_id: SearchId
+    search_id: str
     locations: List[Location]
-    unreachable: List[LocationId]
+    unreachable: List[str]
 
 
 class TimeFilterResponse(BaseModel):

@@ -151,7 +151,7 @@ from traveltimepy import Driving, Coordinates, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 
-results = sdk.intersection(
+results = sdk.union(
     coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
     arrival_time=datetime.now(),
     transportation=Driving()
@@ -166,8 +166,8 @@ Given origin and destination points filter out points that cannot be reached wit
 
 #### Takes:
 * locations: List[Locations] - All locations. Location ids must be unique.
-* searches: Dict[LocationId, List[LocationId]] - Searches from a target location to destinations.
-  You can define a maximum of 2000 destinations
+* search_ids: Dict[str, List[str]] - Search ids from a target location to destinations.
+  You can define up to 2000 destinations
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
 * departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
 * transportation: Union - Transportation mode and related parameters.
@@ -180,10 +180,11 @@ Given origin and destination points filter out points that cannot be reached wit
 * results: List[TimeFilterResult] - The results list of reachable and unreachable locations.
 
 #### Example:
+
 ```python
 from datetime import datetime
 
-from traveltimepy import Location, LocationId, Coordinates, PublicTransport, Property, FullRange, TravelTimeSdk
+from traveltimepy import Location, Coordinates, PublicTransport, Property, FullRange, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 locations = [
@@ -193,9 +194,10 @@ locations = [
 ]
 
 results = sdk.time_filter(
-    searches={
-        LocationId('London center'): [LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
-        LocationId('ZSL London Zoo'): [LocationId('Hyde Park'), LocationId('London center')],
+    locations=locations,
+    search_ids={
+        'London center': ['Hyde Park', 'ZSL London Zoo'],
+        'ZSL London Zoo': ['Hyde Park', 'London center'],
     },
     departure_time=datetime.now(),
     travel_time=3600,
@@ -215,8 +217,8 @@ A very fast version of ```time_filter()```. However, the request parameters are 
 
 #### Takes:
 * locations: List[Locations] - All locations. Location ids must be unique.
-* searches: Dict[LocationId, List[LocationId]] - Searches from a target location to destinations.
-  You can define a maximum of 100,000 destinations
+* search_ids: Dict[str, List[str]] - Searches from a target location to destinations.
+  You can define up to 100,000 destinations
 * transportation: Union - Transportation mode and related parameters.
 * travel_time: int - Maximum journey time (in seconds). Maximum value is 10800. Default value is 3600.
 * properties: List[Property] - Properties to be returned about the postcodes. Default value is travel_time.
@@ -227,8 +229,9 @@ A very fast version of ```time_filter()```. However, the request parameters are 
 * results: List[TimeFilterFastResult] - The results list of reachable and unreachable locations.
 
 #### Example:
+
 ```python
-from traveltimepy import Location, LocationId, Coordinates, Transportation, TravelTimeSdk
+from traveltimepy import Location, Coordinates, Transportation, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 locations = [
@@ -239,9 +242,9 @@ locations = [
 
 results = sdk.time_filter_fast(
     locations=locations,
-    searches={
-        LocationId('London center'): [LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
-        LocationId('ZSL London Zoo'): [LocationId('Hyde Park'), LocationId('London center')],
+    search_ids={
+        'London center': ['Hyde Park', 'ZSL London Zoo'],
+        'ZSL London Zoo': ['Hyde Park', 'London center'],
     },
     transportation=Transportation(type='public_transport'),
     one_to_many=False
@@ -296,7 +299,7 @@ Returns routing information between source and destinations.
 
 #### Takes:
 * locations: List[Locations] - All locations. Location ids must be unique.
-* searches: Dict[LocationId, List[LocationId]] - Searches from a target location to destinations.
+* searches: Dict[str, List[str]] - Searches from a target location to destinations.
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
 * departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
 * transportation: Union - Transportation mode and related parameters.
@@ -307,26 +310,27 @@ Returns routing information between source and destinations.
 * results: List[RoutesResult] - The results list of routes.
 
 #### Example:
+
 ```python
 from datetime import datetime
 
-from traveltimepy import Location, LocationId, Coordinates, PublicTransport, TravelTimeSdk
+from traveltimepy import Location, Coordinates, PublicTransport, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 locations = [
-    Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
-    Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
-    Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
+  Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
+  Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
+  Location(id='ZSL London Zoo', coords=Coordinates(lat=51.536067, lng=-0.153596))
 ]
 
 results = sdk.routes(
-    locations=locations,
-    searches={
-        LocationId('London center'): [LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
-        LocationId('ZSL London Zoo'): [LocationId('Hyde Park'), LocationId('London center')],
-    },
-    transportation=PublicTransport(),
-    departure_time=datetime.now()
+  locations=locations,
+  search_ids={
+    'London center': ['Hyde Park', 'ZSL London Zoo'],
+    'ZSL London Zoo': ['Hyde Park', 'London center'],
+  },
+  transportation=PublicTransport(),
+  departure_time=datetime.now()
 )
 print(results)
 ```
@@ -505,7 +509,7 @@ Find out what points are supported by our api. The returned map name for a point
   * id - Location id that you specified in the request.
   * map_name - An internal map id. The first two characters usually correspond to the ISO 3166-2 standard (e.g th, ie) sometimes followed by additional characters (e.g ca_pst, us_pst). To get features of a specific map, use the map info endpoint.
   * additional_map_names - In case the location is in more than one map, other map ids are listed here.
-* unsupported_locations: List[LocationId] - List that contains ids of locations that are unsupported.
+* unsupported_locations: List[str] - List that contains ids of locations that are unsupported.
 
 #### Example:
 ```python

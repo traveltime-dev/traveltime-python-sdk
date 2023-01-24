@@ -1,8 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel
 
-from traveltimepy.dto.common import SearchId, LocationId
-
 
 class Ticket(BaseModel):
     type: str
@@ -20,14 +18,14 @@ class Properties(BaseModel):
 
 
 class Location(BaseModel):
-    id: LocationId
+    id: str
     properties: Properties
 
 
 class TimeFilterFastResult(BaseModel):
-    search_id: SearchId
+    search_id: str
     locations: List[Location]
-    unreachable: List[LocationId]
+    unreachable: List[str]
 
 
 class TimeFilterFastResponse(BaseModel):

@@ -5,14 +5,14 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy import Coordinates, SearchId, Range, PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy import Coordinates, Range, PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
 
 
 class DepartureSearch(BaseModel):
-    id: SearchId
+    id: str
     coords: Coordinates
     departure_time: datetime
     travel_time: int
@@ -21,7 +21,7 @@ class DepartureSearch(BaseModel):
 
 
 class ArrivalSearch(BaseModel):
-    id: SearchId
+    id: str
     coords: Coordinates
     arrival_time: datetime
     travel_time: int
@@ -30,13 +30,13 @@ class ArrivalSearch(BaseModel):
 
 
 class Intersection(BaseModel):
-    id: SearchId
-    search_ids: List[SearchId]
+    id: str
+    search_ids: List[str]
 
 
 class Union(BaseModel):
-    id: SearchId
-    search_ids: List[SearchId]
+    id: str
+    search_ids: List[str]
 
 
 class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):

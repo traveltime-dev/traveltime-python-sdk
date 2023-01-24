@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import SearchId, Coordinates
+from traveltimepy.dto.common import Coordinates
 
 
 class Shape(BaseModel):
@@ -11,7 +11,7 @@ class Shape(BaseModel):
 
 
 class TimeMapResult(BaseModel):
-    search_id: SearchId
+    search_id: str
     shapes: List[Shape]
 
 

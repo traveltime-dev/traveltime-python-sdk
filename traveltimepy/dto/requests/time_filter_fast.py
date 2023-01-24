@@ -3,7 +3,7 @@ from typing_extensions import Literal
 
 from pydantic import BaseModel
 
-from traveltimepy.dto.common import LocationId, Location, Property
+from traveltimepy.dto.common import Location, Property
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.itertools import split, flatten
@@ -24,8 +24,8 @@ class Transportation(BaseModel):
 
 class OneToMany(BaseModel):
     id: str
-    departure_location_id: LocationId
-    arrival_location_ids: List[LocationId]
+    departure_location_id: str
+    arrival_location_ids: List[str]
     transportation: Transportation
     travel_time: int
     arrival_time_period: str
@@ -34,8 +34,8 @@ class OneToMany(BaseModel):
 
 class ManyToOne(BaseModel):
     id: str
-    arrival_location_id: LocationId
-    departure_location_ids: List[LocationId]
+    arrival_location_id: str
+    departure_location_ids: List[str]
     transportation: Transportation
     travel_time: int
     arrival_time_period: str

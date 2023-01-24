@@ -1,14 +1,14 @@
 from datetime import datetime
 
-from traveltimepy import LocationId, PublicTransport
+from traveltimepy import PublicTransport
 
 
 def test_departures(sdk, locations):
     results = sdk.time_filter(
         locations=locations,
-        searches={
-            LocationId('London center'): [LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
-            LocationId('ZSL London Zoo'): [LocationId('Hyde Park'), LocationId('London center')],
+        search_ids={
+            'London center': ['Hyde Park', 'ZSL London Zoo'],
+            'ZSL London Zoo': ['Hyde Park', 'London center'],
         },
         transportation=PublicTransport(),
         departure_time=datetime.now()
@@ -19,9 +19,9 @@ def test_departures(sdk, locations):
 def test_arrivals(sdk, locations):
     results = sdk.time_filter(
         locations=locations,
-        searches={
-            LocationId('London center'): [LocationId('Hyde Park'), LocationId('ZSL London Zoo')],
-            LocationId('ZSL London Zoo'): [LocationId('Hyde Park'), LocationId('London center')],
+        search_ids={
+            'London center': ['Hyde Park', 'ZSL London Zoo'],
+            'ZSL London Zoo': ['Hyde Park', 'London center'],
         },
         transportation=PublicTransport(),
         departure_time=datetime.now()

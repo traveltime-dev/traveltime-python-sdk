@@ -5,7 +5,7 @@ from typing import Dict, Union, List, Optional
 from traveltimepy.errors import ApiError
 from traveltimepy import TimeFilterFastRequest_pb2
 
-from traveltimepy.dto.common import Location, LocationId, Coordinates, FullRange, Property, Range
+from traveltimepy.dto.common import Location, Coordinates, FullRange, Property, Range
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 from traveltimepy.dto.requests.zones import ZonesProperty
@@ -31,7 +31,7 @@ from traveltimepy.dto.requests import (
 
 def create_time_filter(
     locations: List[Location],
-    searches: Dict[LocationId, List[LocationId]],
+    search_ids: Dict[str, List[str]],
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
     properties: Optional[List[Property]],
     departure_time: Optional[datetime],
@@ -58,7 +58,7 @@ def create_time_filter(
                     properties=properties,
                     full_range=full_range
                 )
-                for arrival_id, departure_ids in searches.items()
+                for arrival_id, departure_ids in search_ids.items()
             ],
             departure_searches=[]
         )
@@ -76,7 +76,7 @@ def create_time_filter(
                     properties=properties,
                     full_range=full_range
                 )
-                for departure_id, arrival_ids in searches.items()
+                for departure_id, arrival_ids in search_ids.items()
             ],
             arrival_searches=[]
         )
@@ -86,7 +86,7 @@ def create_time_filter(
 
 def create_time_filter_fast(
     locations: List[Location],
-    searches: Dict[LocationId, List[LocationId]],
+    search_ids: Dict[str, List[str]],
     transportation: Transportation,
     travel_time: int = 3600,
     properties: Optional[List[Property]] = None,
@@ -108,7 +108,7 @@ def create_time_filter_fast(
                         arrival_time_period='weekday_morning',
                         properties=properties
                     )
-                    for departure_id, arrival_ids in searches.items()
+                    for departure_id, arrival_ids in search_ids.items()
                 ],
                 many_to_one=[]
             )
@@ -127,7 +127,7 @@ def create_time_filter_fast(
                         arrival_time_period='weekday_morning',
                         properties=properties
                     )
-                    for arrival_id, departure_ids in searches.items()
+                    for arrival_id, departure_ids in search_ids.items()
                 ],
                 one_to_many=[]
             )
@@ -462,7 +462,7 @@ def create_union(
 
 def create_routes(
     locations: List[Location],
-    searches: Dict[LocationId, List[LocationId]],
+    search_ids: Dict[str, List[str]],
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
@@ -487,7 +487,7 @@ def create_routes(
                     properties=properties,
                     full_range=full_range
                 )
-                for arrival_id, departure_ids in searches.items()
+                for arrival_id, departure_ids in search_ids.items()
             ],
             departure_searches=[]
         )
@@ -504,7 +504,7 @@ def create_routes(
                     properties=properties,
                     full_range=full_range
                 )
-                for departure_id, arrival_ids in searches.items()
+                for departure_id, arrival_ids in search_ids.items()
             ],
             arrival_searches=[]
         )

@@ -1,12 +1,8 @@
 from datetime import datetime, time
 from enum import Enum
-from typing import NewType, List, Union, Optional
+from typing import List, Union, Optional
 from typing_extensions import Literal
 from pydantic.main import BaseModel
-
-SearchId = NewType('SearchId', str)
-LocationId = NewType('LocationId', str)
-PartId = NewType('PartId', str)
 
 
 class Coordinates(BaseModel):
@@ -15,7 +11,7 @@ class Coordinates(BaseModel):
 
 
 class Location(BaseModel):
-    id: LocationId
+    id: str
     coords: Coordinates
 
     def __hash__(self):
@@ -23,7 +19,7 @@ class Location(BaseModel):
 
 
 class BasicPart(BaseModel):
-    id: PartId
+    id: str
     mode: str
     directions: str
     distance: int
@@ -33,7 +29,7 @@ class BasicPart(BaseModel):
 
 
 class RoadPart(BaseModel):
-    id: PartId
+    id: str
     mode: str
     directions: str
     distance: int
@@ -45,7 +41,7 @@ class RoadPart(BaseModel):
 
 
 class StartEndPart(BaseModel):
-    id: PartId
+    id: str
     mode: str
     directions: str
     distance: int
@@ -56,7 +52,7 @@ class StartEndPart(BaseModel):
 
 
 class PublicTransportPart(BaseModel):
-    id: PartId
+    id: str
     mode: str
     directions: str
     distance: int
