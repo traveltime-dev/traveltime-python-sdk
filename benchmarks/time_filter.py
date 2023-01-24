@@ -9,13 +9,13 @@ def generate_matrix(size: int):
     sdk = TravelTimeSdk('APP_ID', 'API_KEY')
     locations = generate_locations(51.507609, -0.128315, 0.05, 'Location', size)
     location_ids = [location.id for location in locations]
-    searches = [
+    search_ids = [
         (location_id, list(filter(lambda cur_id: cur_id != location_id, location_ids)))
         for location_id in location_ids
     ]
     return sdk.time_filter(
         locations=locations,
-        searches=dict(searches),
+        search_ids=dict(search_ids),
         transportation=Driving(),
         arrival_time=datetime.now(),
     )
