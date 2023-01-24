@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional, Dict, Union
 
-from traveltimepy.dto.common import Location, Coordinates, Rectangle,Property, FullRange, Range
+from traveltimepy.dto.common import Location, Coordinates, Rectangle, Property, FullRange, Range
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 from traveltimepy.dto.requests.zones import ZonesProperty
 from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
