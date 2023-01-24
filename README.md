@@ -276,7 +276,7 @@ Returns routing information between source and destinations.
 
 #### Takes:
 * locations: List[Locations] - All locations. Location ids must be unique.
-* searches: Dict[str, List[str]] - Searches from a target location to destinations.
+* search_ids: Dict[str, List[str]] - Searches from a target location to destinations.
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
 * departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
 * transportation: Union - Transportation mode and related parameters.
