@@ -45,7 +45,7 @@ from geojson_pydantic import FeatureCollection
 
 class TravelTimeSdk:
 
-    def __init__(self, app_id: str, api_key: str, limit_per_host=2) -> None:
+    def __init__(self, app_id: str, api_key: str, limit_per_host: int = 2) -> None:
         self.__app_id = app_id
         self.__api_key = api_key
         self.__limit_per_host = limit_per_host
