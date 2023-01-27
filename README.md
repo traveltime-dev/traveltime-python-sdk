@@ -9,16 +9,17 @@ Time-based searching gives users more opportunities for personalisation and deli
 ### Installation
 To install this pre-release version you need to run:
 
-`pip install traveltimepy==3.0.0rc1`
+`pip install traveltimepy==3.0.0rc2`
 
-### Authentication
+### Sdk set up
 
-In order to authenticate with Travel Time API, you will have to supply the Application Id and Api Key.
+In order to authenticate with Travel Time API, you will have to supply the Application Id and Api Key. 
+If you want to speed up requests, you can also specify limit_per_host, this parameter specifies how may requests can be processed at the same time.
 
 ```python
 from traveltimepy import TravelTimeSdk
 
-sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+sdk = TravelTimeSdk(app_id='YOUR_APP_ID', api_key='YOUR_APP_KEY', limit_per_host=4)
 ```
 
 ### Concurrent calls 

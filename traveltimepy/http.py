@@ -8,42 +8,37 @@ from traveltimepy.dto.requests.request import TravelTimeRequest
 
 from traveltimepy.dto.responses.error import ResponseError
 from traveltimepy.errors import ApiError
+from aiohttp_retry import RetryClient, ExponentialRetry
 
 T = TypeVar('T')
 R = TypeVar('R')
 
 
 async def send_post_request_async(
-    session: ClientSession,
+    client: RetryClient,
     response_class: Type[T],
     path: str,
     headers: Dict[str, str],
     request: TravelTimeRequest
 ) -> T:
     url = f'https://api.traveltimeapp.com/v4/{path}'
-    async with session.post(url=url, headers=headers, data=request.json()) as resp:
+    async with client.post(url=url, headers=headers, data=request.json()) as resp:
         return await __process_response(response_class, resp)
-
-
-async def __gather_with_concurrency(n, *tasks):
-    semaphore = asyncio.Semaphore(n)
-
-    async def sem(coro):
-        async with semaphore:
-            return await coro
-
-    return await asyncio.gather(*(sem(task) for task in tasks))
 
 
 async def send_post_async(
     response_class: Type[T],
     path: str,
     headers: Dict[str, str],
-    request: TravelTimeRequest
+    request: TravelTimeRequest,
+    limit_per_host: int
 ) -> T:
-    async with ClientSession() as session:
-        tasks = [send_post_request_async(session, response_class, path, headers, part) for part in request.split_searches()]
-        responses = await __gather_with_concurrency(5, *tasks)
+    connector = aiohttp.TCPConnector(limit_per_host=limit_per_host)
+    async with ClientSession(connector=connector, timeout=aiohttp.ClientTimeout(total=60 * 60 * 30)) as session:
+        client = RetryClient(client_session=session, retry_options=ExponentialRetry(attempts=3))
+        tasks = [send_post_request_async(client, response_class, path, headers, part) for part in request.split_searches()]
+        responses = await asyncio.gather(*tasks)
+        await client.close()
         return request.merge(responses)
 
 
@@ -51,9 +46,10 @@ def send_post(
     response_class: Type[T],
     path: str,
     headers: Dict[str, str],
-    request: TravelTimeRequest
+    request: TravelTimeRequest,
+    limit_per_host: int
 ) -> T:
-    return asyncio.run(send_post_async(response_class, path, headers, request))
+    return asyncio.run(send_post_async(response_class, path, headers, request, limit_per_host))
 
 
 async def send_get_async(
