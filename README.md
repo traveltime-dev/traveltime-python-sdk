@@ -7,9 +7,9 @@ Time-based searching gives users more opportunities for personalisation and deli
 ## Usage
 
 ### Installation
-To install this pre-release version you need to run:
+To install sdk you need to run:
 
-`pip install traveltimepy==3.0.0rc2`
+`pip install traveltimepy`
 
 ### Sdk set up
 
@@ -264,7 +264,7 @@ travel_times = sdk.time_filter_proto(
         Coordinates(lat=51.348605, lng=-0.314783),
         Coordinates(lat=51.337205, lng=-0.315793)
     ],
-    transportation=ProtoTransportation.DRIVING,
+    transportation=ProtoTransportation.DRIVING_FERRY,
     travel_time=7200,
     country=ProtoCountry.UNITED_KINGDOM
 )

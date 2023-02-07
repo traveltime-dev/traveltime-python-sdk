@@ -483,7 +483,7 @@ class TravelTimeSdk:
         travel_time: int,
     ) -> List[int]:
         return send_proto(
-            f'https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.name}',
+            f'https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.value.name}',
             self.__proto_headers(),
             create_proto_request(origin, destinations, transportation, travel_time),
             self.__app_id,
