@@ -9,7 +9,7 @@ def test_proto(proto_sdk):
             Coordinates(lat=51.348605, lng=-0.314783),
             Coordinates(lat=51.337205, lng=-0.315793)
         ],
-        transportation=ProtoTransportation.DRIVING,
+        transportation=ProtoTransportation.DRIVING_FERRY,
         travel_time=7200,
         country=ProtoCountry.UNITED_KINGDOM
     )
