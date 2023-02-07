@@ -1,41 +1,43 @@
-from typing import List, Optional, Dict
+from datetime import datetime
+from typing import List, Optional, Dict, Union
 
-from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
-from traveltimepy.dto.requests.time_filter_proto import TimeFilterProtoRequest
+from traveltimepy.dto.common import Location, Coordinates, Rectangle, Property, FullRange, Range
+from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy.dto.requests.zones import ZonesProperty
+from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
+from traveltimepy.dto.requests.time_filter_fast import Transportation
 
-from traveltimepy import AcceptType
-from traveltimepy.dto import Location
-from traveltimepy.dto.requests import (
-    time_map as time_map_package,
-    time_filter as time_filter_package,
-    time_filter_proto as time_filter_proto_package,
-    routes as routes_package,
-    postcodes as postcodes_package,
-    zones,
-    Rectangle
-)
-from traveltimepy.dto.requests.postcodes import PostcodesRequest
-from traveltimepy.dto.requests.routes import RoutesRequest
+from traveltimepy.accept_type import AcceptType
+from traveltimepy.itertools import join_opt
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
-from traveltimepy.dto.requests.time_filter import TimeFilterRequest
-from traveltimepy.dto.requests.time_filter_fast import ArrivalSearches, TimeFilterFastRequest, ManyToOne, OneToMany
 
-from traveltimepy.dto.requests.time_map import Union, Intersection, TimeMapRequest
-from traveltimepy.dto.requests.zones import DistrictsRequest, SectorsRequest
-from traveltimepy.dto.responses.map_info import MapInfoResponse
-from traveltimepy.dto.responses.postcodes import PostcodesResponse
-from traveltimepy.dto.responses.routes import RoutesResponse
+from traveltimepy.dto.responses.map_info import MapInfoResponse, Map
+from traveltimepy.dto.responses.postcodes import PostcodesResponse, PostcodesResult
+from traveltimepy.dto.responses.routes import RoutesResponse, RoutesResult
 from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
-from traveltimepy.dto.responses.time_filter import TimeFilterResponse
-from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
-from traveltimepy.dto.responses.time_map import TimeMapResponse
-from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
-from traveltimepy.utils import (
-    send_get_request,
-    send_post_request,
-    send_post_request_async,
-    send_get_request_async,
-    send_proto_request
+from traveltimepy.dto.responses.time_filter import TimeFilterResponse, TimeFilterResult
+from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse, TimeFilterFastResult
+from traveltimepy.dto.responses.time_map import TimeMapResponse, TimeMapResult
+from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse, DistrictsResult, SectorsResult
+
+from traveltimepy.mapper import (
+    create_time_filter,
+    create_time_filter_fast,
+    create_postcodes,
+    create_districts,
+    create_sectors,
+    create_routes,
+    create_proto_request,
+    create_time_map,
+    create_intersection, create_union
+)
+
+from traveltimepy.proto_http import send_proto, send_proto_async
+from traveltimepy.http import (
+    send_get,
+    send_get_async,
+    send_post,
+    send_post_async
 )
 
 from geojson_pydantic import FeatureCollection
@@ -43,203 +45,96 @@ from geojson_pydantic import FeatureCollection
 
 class TravelTimeSdk:
 
-    def __init__(self, app_id: str, api_key: str) -> None:
+    def __init__(self, app_id: str, api_key: str, limit_per_host: int = 2) -> None:
         self.__app_id = app_id
         self.__api_key = api_key
-
-    def time_filter_proto(self, one_to_many: time_filter_proto_package.OneToMany) -> TimeFilterProtoResponse:
-        return send_proto_request(
-            TimeFilterProtoRequest(one_to_many=one_to_many),
-            self.__app_id,
-            self.__api_key
-        )
-
-    def map_info(self) -> MapInfoResponse:
-        return send_get_request(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
-
-    async def map_info_async(self) -> MapInfoResponse:
-        return await send_get_request_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
-
-    def time_map(
-        self,
-        arrival_searches: List[time_map_package.ArrivalSearch],
-        departure_searches: List[time_map_package.DepartureSearch],
-        unions: List[Union] = [],
-        intersections: List[Intersection] = []
-    ) -> TimeMapResponse:
-        return send_post_request(
-            TimeMapResponse,
-            'time-map',
-            self.__headers(AcceptType.JSON),
-            TimeMapRequest(
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches,
-                unions=unions,
-                intersections=intersections
-            )
-        )
-
-    async def time_map_async(
-        self,
-        arrival_searches: List[time_map_package.ArrivalSearch],
-        departure_searches: List[time_map_package.DepartureSearch],
-        unions: List[Union] = [],
-        intersections: List[Intersection] = []
-    ) -> TimeMapResponse:
-        return await send_post_request_async(
-            TimeMapResponse,
-            'time-map',
-            self.__headers(AcceptType.JSON),
-            TimeMapRequest(
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches,
-                unions=unions,
-                intersections=intersections
-            )
-        )
-
-    def time_filter(
-        self,
-        locations: List[Location],
-        departure_searches: List[time_filter_package.DepartureSearch],
-        arrival_searches: List[time_filter_package.ArrivalSearch]
-    ) -> TimeFilterResponse:
-        return send_post_request(
-            TimeFilterResponse,
-            'time-filter',
-            self.__headers(AcceptType.JSON),
-            TimeFilterRequest(
-                locations=locations,
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
-            )
-        )
+        self.__limit_per_host = limit_per_host
 
     async def time_filter_async(
         self,
         locations: List[Location],
-        departure_searches: List[time_filter_package.DepartureSearch],
-        arrival_searches: List[time_filter_package.ArrivalSearch]
-    ) -> TimeFilterResponse:
-        return await send_post_request_async(
+        search_ids: Dict[str, List[str]],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        properties: Optional[List[Property]] = None,
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        full_range: Optional[FullRange] = None
+    ) -> List[TimeFilterResult]:
+        resp = await send_post_async(
             TimeFilterResponse,
             'time-filter',
             self.__headers(AcceptType.JSON),
-            TimeFilterRequest(
-                locations=locations,
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
-            )
+            create_time_filter(
+                locations,
+                search_ids,
+                transportation,
+                properties,
+                departure_time,
+                arrival_time,
+                travel_time,
+                full_range
+            ),
+            self.__limit_per_host
         )
 
-    def time_filter_fast(
+        return resp.results
+
+    def time_filter(
         self,
         locations: List[Location],
-        many_to_one: List[ManyToOne],
-        one_to_many: List[OneToMany]
-    ) -> TimeFilterFastResponse:
-        return send_post_request(
-            TimeFilterFastResponse,
-            'time-filter/fast',
+        search_ids: Dict[str, List[str]],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        properties: Optional[List[Property]] = None,
+        travel_time: int = 3600,
+        full_range: Optional[FullRange] = None
+    ) -> List[TimeFilterResult]:
+        return send_post(
+            TimeFilterResponse,
+            'time-filter',
             self.__headers(AcceptType.JSON),
-            TimeFilterFastRequest(
-                locations=locations,
-                arrival_searches=ArrivalSearches(many_to_one=many_to_one, one_to_many=one_to_many)
-            )
-        )
+            create_time_filter(
+                locations,
+                search_ids,
+                transportation,
+                properties,
+                departure_time,
+                arrival_time,
+                travel_time,
+                full_range
+            ),
+            self.__limit_per_host
+        ).results
 
-    async def time_filter_fast_async(
-        self,
-        locations: List[Location],
-        many_to_one: List[ManyToOne],
-        one_to_many: List[OneToMany]
-    ) -> TimeFilterFastResponse:
-        return await send_post_request_async(
-            TimeFilterFastResponse,
-            'time-filter/fast',
-            self.__headers(AcceptType.JSON),
-            TimeFilterFastRequest(
-                locations=locations,
-                arrival_searches=ArrivalSearches(many_to_one=many_to_one, one_to_many=one_to_many)
-            )
-        )
+    async def map_info_async(self) -> List[Map]:
+        res = await send_get_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+        return res.maps
 
-    def postcodes(
-        self,
-        departure_searches: List[postcodes_package.DepartureSearch],
-        arrival_searches: List[postcodes_package.ArrivalSearch]
-    ) -> PostcodesResponse:
-        return send_post_request(
-            PostcodesResponse,
-            'time-filter/postcodes',
-            self.__headers(AcceptType.JSON),
-            PostcodesRequest(
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
-            )
-        )
+    def map_info(self) -> List[Map]:
+        return send_get(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON)).maps
 
-    def districts(
+    async def geocoding_async(
         self,
-        departure_searches: List[zones.DepartureSearch],
-        arrival_searches: List[zones.ArrivalSearch]
-    ) -> DistrictsResponse:
-        return send_post_request(
-            DistrictsResponse,
-            'time-filter/postcode-districts',
+        query: str,
+        limit: Optional[int] = None,
+        within_countries: Optional[List[str]] = None,
+        format_name: Optional[bool] = None,
+        format_exclude_country: Optional[bool] = None,
+        rectangle: Optional[Rectangle] = None
+    ) -> FeatureCollection:
+        return await send_get_async(
+            FeatureCollection,
+            'geocoding/search',
             self.__headers(AcceptType.JSON),
-            DistrictsRequest(
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
-            )
-        )
-
-    def sectors(
-        self,
-        departure_searches: List[zones.DepartureSearch],
-        arrival_searches: List[zones.ArrivalSearch]
-    ) -> SectorsResponse:
-        return send_post_request(
-            SectorsResponse,
-            'time-filter/postcode-sectors',
-            self.__headers(AcceptType.JSON),
-            SectorsRequest(
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
-            )
-        )
-
-    def routes(
-        self,
-        locations: List[Location],
-        departure_searches: List[routes_package.DepartureSearch],
-        arrival_searches: List[routes_package.ArrivalSearch]
-    ) -> RoutesResponse:
-        return send_post_request(
-            RoutesResponse,
-            'routes',
-            self.__headers(AcceptType.JSON),
-            RoutesRequest(
-                locations=locations,
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
-            )
-        )
-
-    async def routes_async(
-        self,
-        locations: List[Location],
-        departure_searches: List[time_filter_package.DepartureSearch],
-        arrival_searches: List[time_filter_package.ArrivalSearch]
-    ) -> RoutesResponse:
-        return await send_post_request_async(
-            RoutesResponse,
-            'routes',
-            self.__headers(AcceptType.JSON),
-            RoutesRequest(
-                locations=locations,
-                departure_searches=departure_searches,
-                arrival_searches=arrival_searches
+            self.__geocoding_params(
+                query,
+                limit,
+                within_countries,
+                format_name,
+                format_exclude_country,
+                rectangle
             )
         )
 
@@ -252,16 +147,32 @@ class TravelTimeSdk:
         format_exclude_country: Optional[bool] = None,
         rectangle: Optional[Rectangle] = None
     ) -> FeatureCollection:
-        full_query = {
-            'query': query,
-            'limit': limit,
-            'within.country': self.__combine_countries(within_countries),
-            'format.name': format_name,
-            'format.exclude.country': format_exclude_country,
-            'bounds': self.__bounds(rectangle)
-        }
-        params = {key: str(value) for (key, value) in full_query.items() if value is not None}
-        return send_get_request(FeatureCollection, 'geocoding/search', self.__headers(AcceptType.JSON), params)
+        return send_get(
+            FeatureCollection,
+            'geocoding/search',
+            self.__headers(AcceptType.JSON),
+            self.__geocoding_params(
+                query,
+                limit,
+                within_countries,
+                format_name,
+                format_exclude_country,
+                rectangle
+            )
+        )
+
+    async def geocoding_reverse_async(
+        self,
+        lat: float,
+        lng: float,
+        within_countries: Optional[List[str]] = None
+    ) -> FeatureCollection:
+        return await send_get_async(
+            FeatureCollection,
+            'geocoding/reverse',
+            self.__headers(AcceptType.JSON),
+            self.__geocoding_reverse_params(lat, lng, within_countries)
+        )
 
     def geocoding_reverse(
         self,
@@ -269,38 +180,525 @@ class TravelTimeSdk:
         lng: float,
         within_countries: Optional[List[str]] = None
     ) -> FeatureCollection:
-        full_query = {
-            'lat': lat,
-            'lng': lng,
-            'within.country': self.__combine_countries(within_countries)
-        }
-        params = {key: str(value) for (key, value) in full_query.items() if value is not None}
-        return send_get_request(FeatureCollection, 'geocoding/reverse', self.__headers(AcceptType.JSON), params)
+        return send_get(
+            FeatureCollection,
+            'geocoding/reverse',
+            self.__headers(AcceptType.JSON),
+            self.__geocoding_reverse_params(lat, lng, within_countries)
+        )
 
-    def supported_locations(self, locations: List[Location]) -> SupportedLocationsResponse:
-        return send_post_request(
+    async def supported_locations_async(self, locations: List[Location]) -> SupportedLocationsResponse:
+        return await send_post_async(
             SupportedLocationsResponse,
             'supported-locations',
             self.__headers(AcceptType.JSON),
-            SupportedLocationsRequest(locations=locations)
+            SupportedLocationsRequest(locations=locations),
+            self.__limit_per_host
         )
 
-    @staticmethod
-    def __bounds(rectangle: Optional[Rectangle]) -> Optional[str]:
-        if rectangle is not None:
-            return f'{rectangle.min_lat},{rectangle.min_lng},{rectangle.max_lat},{rectangle.max_lng}'
-        else:
-            return None
+    def supported_locations(self, locations: List[Location]) -> SupportedLocationsResponse:
+        return send_post(
+            SupportedLocationsResponse,
+            'supported-locations',
+            self.__headers(AcceptType.JSON),
+            SupportedLocationsRequest(locations=locations),
+            self.__limit_per_host
+        )
+
+    async def time_filter_fast_async(
+        self,
+        locations: List[Location],
+        search_ids: Dict[str, List[str]],
+        transportation: Transportation,
+        travel_time: int = 3600,
+        properties: Optional[List[Property]] = None,
+        one_to_many: bool = False
+    ) -> List[TimeFilterFastResult]:
+        resp = await send_post_async(
+            TimeFilterFastResponse,
+            'time-filter/fast',
+            self.__headers(AcceptType.JSON),
+            create_time_filter_fast(
+                locations,
+                search_ids,
+                transportation,
+                travel_time,
+                properties,
+                one_to_many
+            ),
+            self.__limit_per_host
+        )
+        return resp.results
+
+    def time_filter_fast(
+        self,
+        locations: List[Location],
+        search_ids: Dict[str, List[str]],
+        transportation: Transportation,
+        travel_time: int = 3600,
+        properties: Optional[List[Property]] = None,
+        one_to_many: bool = False
+    ) -> List[TimeFilterFastResult]:
+        return send_post(
+            TimeFilterFastResponse,
+            'time-filter/fast',
+            self.__headers(AcceptType.JSON),
+            create_time_filter_fast(
+                locations,
+                search_ids,
+                transportation,
+                travel_time,
+                properties,
+                one_to_many
+            ),
+            self.__limit_per_host
+        ).results
+
+    async def postcodes_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 1800,
+        properties: Optional[List[Property]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> List[PostcodesResult]:
+        resp = await send_post_async(
+            PostcodesResponse,
+            'time-filter/postcodes',
+            self.__headers(AcceptType.JSON),
+            create_postcodes(
+                coordinates,
+                departure_time,
+                arrival_time,
+                transportation,
+                travel_time,
+                properties,
+                full_range
+            ),
+            self.__limit_per_host
+        )
+        return resp.results
+
+    def postcodes(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 1800,
+        properties: Optional[List[Property]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> List[PostcodesResult]:
+        return send_post(
+            PostcodesResponse,
+            'time-filter/postcodes',
+            self.__headers(AcceptType.JSON),
+            create_postcodes(
+                coordinates,
+                departure_time,
+                arrival_time,
+                transportation,
+                travel_time,
+                properties,
+                full_range
+            ),
+            self.__limit_per_host
+        ).results
+
+    async def districts_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        travel_time: int = 1800,
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        reachable_postcodes_threshold=0.1,
+        properties: Optional[List[ZonesProperty]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> List[DistrictsResult]:
+        res = await send_post_async(
+            DistrictsResponse,
+            'time-filter/postcode-districts',
+            self.__headers(AcceptType.JSON),
+            create_districts(
+                coordinates,
+                transportation,
+                travel_time,
+                departure_time,
+                arrival_time,
+                reachable_postcodes_threshold,
+                properties,
+                full_range
+            ),
+            self.__limit_per_host
+        )
+        return res.results
+
+    def districts(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        travel_time: int = 1800,
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        reachable_postcodes_threshold=0.1,
+        properties: Optional[List[ZonesProperty]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> List[DistrictsResult]:
+        return send_post(
+            DistrictsResponse,
+            'time-filter/postcode-districts',
+            self.__headers(AcceptType.JSON),
+            create_districts(
+                coordinates,
+                transportation,
+                travel_time,
+                departure_time,
+                arrival_time,
+                reachable_postcodes_threshold,
+                properties,
+                full_range
+            ),
+            self.__limit_per_host
+        ).results
+
+    async def sectors_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        travel_time: int = 1800,
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        reachable_postcodes_threshold=0.1,
+        properties: Optional[List[ZonesProperty]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> List[SectorsResult]:
+        resp = await send_post_async(
+            SectorsResponse,
+            'time-filter/postcode-sectors',
+            self.__headers(AcceptType.JSON),
+            create_sectors(
+                coordinates,
+                transportation,
+                travel_time,
+                departure_time,
+                arrival_time,
+                reachable_postcodes_threshold,
+                properties,
+                full_range
+            ),
+            self.__limit_per_host
+        )
+        return resp.results
+
+    def sectors(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        travel_time: int = 1800,
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        reachable_postcodes_threshold=0.1,
+        properties: Optional[List[ZonesProperty]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> List[SectorsResult]:
+        return send_post(
+            SectorsResponse,
+            'time-filter/postcode-sectors',
+            self.__headers(AcceptType.JSON),
+            create_sectors(
+                coordinates,
+                transportation,
+                travel_time,
+                departure_time,
+                arrival_time,
+                reachable_postcodes_threshold,
+                properties,
+                full_range
+            ),
+            self.__limit_per_host
+        ).results
+
+    def routes(
+        self,
+        locations: List[Location],
+        search_ids: Dict[str, List[str]],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        properties: Optional[List[Property]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> List[RoutesResult]:
+        return send_post(
+            RoutesResponse,
+            'routes',
+            self.__headers(AcceptType.JSON),
+            create_routes(
+                locations,
+                search_ids,
+                transportation,
+                departure_time,
+                arrival_time,
+                properties,
+                full_range
+            ),
+            self.__limit_per_host
+        ).results
+
+    async def routes_async(
+        self,
+        locations: List[Location],
+        search_ids: Dict[str, List[str]],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        properties: Optional[List[Property]] = None,
+        full_range: Optional[FullRange] = None
+    ) -> List[RoutesResult]:
+        resp = await send_post_async(
+            RoutesResponse,
+            'routes',
+            self.__headers(AcceptType.JSON),
+            create_routes(
+                locations,
+                search_ids,
+                transportation,
+                departure_time,
+                arrival_time,
+                properties,
+                full_range
+            ),
+            self.__limit_per_host
+        )
+        return resp.results
+
+    def time_filter_proto(
+        self,
+        origin: Coordinates,
+        destinations: List[Coordinates],
+        country: ProtoCountry,
+        transportation: ProtoTransportation,
+        travel_time: int,
+    ) -> List[int]:
+        return send_proto(
+            f'https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.name}',
+            self.__proto_headers(),
+            create_proto_request(origin, destinations, transportation, travel_time),
+            self.__app_id,
+            self.__api_key
+        ).travel_times
+
+    async def time_filter_proto_async(
+        self,
+        origin: Coordinates,
+        destinations: List[Coordinates],
+        country: ProtoCountry,
+        transportation: ProtoTransportation,
+        travel_time: int,
+    ) -> List[int]:
+        resp = await send_proto_async(
+            f'https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.name}',
+            self.__proto_headers(),
+            create_proto_request(origin, destinations, transportation, travel_time),
+            self.__app_id,
+            self.__api_key
+        )
+        return resp.travel_times
+
+    def time_map(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> List[TimeMapResult]:
+        return send_post(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_time_map(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            ),
+            self.__limit_per_host
+        ).results
+
+    def intersection(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResult:
+        return send_post(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_intersection(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            ),
+            self.__limit_per_host
+        ).results[0]
+
+    async def intersection_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResult:
+        resp = await send_post_async(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_intersection(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            ),
+            self.__limit_per_host
+        )
+        return resp.results[0]
+
+    def union(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResult:
+        return send_post(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_union(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            ),
+            self.__limit_per_host
+        ).results[0]
+
+    async def union_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> TimeMapResult:
+        resp = await send_post_async(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_union(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            ),
+            self.__limit_per_host
+        )
+
+        return resp.results[0]
+
+    async def time_map_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None
+    ) -> List[TimeMapResult]:
+        resp = await send_post_async(
+            TimeMapResponse,
+            'time-map',
+            self.__headers(AcceptType.JSON),
+            create_time_map(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range
+            ),
+            self.__limit_per_host
+        )
+        return resp.results
 
     @staticmethod
-    def __combine_countries(within_countries: Optional[List[str]]) -> Optional[str]:
-        return ','.join(within_countries) if within_countries is not None and len(within_countries) != 0 else None
+    def __geocoding_reverse_params(
+        lat: float,
+        lng: float,
+        within_countries: Optional[List[str]] = None
+    ) -> Dict[str, str]:
+        full_query = {
+            'lat': lat,
+            'lng': lng,
+            'within.country': join_opt(within_countries, ',')
+        }
+        return {key: str(value) for (key, value) in full_query.items() if value is not None}
+
+    @staticmethod
+    def __geocoding_params(
+        query: str,
+        limit: Optional[int] = None,
+        within_countries: Optional[List[str]] = None,
+        format_name: Optional[bool] = None,
+        format_exclude_country: Optional[bool] = None,
+        rectangle: Optional[Rectangle] = None
+    ) -> Dict[str, str]:
+        full_query = {
+            'query': query,
+            'limit': limit,
+            'within.country': join_opt(within_countries, ','),
+            'format.name': format_name,
+            'format.exclude.country': format_exclude_country,
+            'bounds': rectangle.to_str() if rectangle is not None else rectangle
+        }
+        return {key: str(value) for (key, value) in full_query.items() if value is not None}
+
+    @staticmethod
+    def __proto_headers() -> Dict[str, str]:
+        return {
+            'Content-Type': AcceptType.OCTET_STREAM.value,
+            'User-Agent': 'Travel Time Python Beta SDK'
+        }
 
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {
             'X-Application-Id': self.__app_id,
             'X-Api-Key': self.__api_key,
-            'User-Agent': 'Travel Time Python SDK',
+            'User-Agent': 'Travel Time Beta Python SDK',
             'Content-Type': 'application/json',
             'Accept': accept_type.value
         }

@@ -2,8 +2,7 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto import SearchId, LocationId
-from traveltimepy.dto.responses import Fares
+from traveltimepy.dto.common import Fares
 
 
 class Property(BaseModel):
@@ -12,15 +11,15 @@ class Property(BaseModel):
 
 
 class Location(BaseModel):
-    id: LocationId
+    id: str
     properties: List[Property]
 
 
-class Result(BaseModel):
-    search_id: SearchId
+class RoutesResult(BaseModel):
+    search_id: str
     locations: List[Location]
-    unreachable: List[LocationId]
+    unreachable: List[str]
 
 
 class RoutesResponse(BaseModel):
-    results: List[Result]
+    results: List[RoutesResult]

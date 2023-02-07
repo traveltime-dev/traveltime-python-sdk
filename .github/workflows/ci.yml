@@ -7,7 +7,7 @@ on:
   push:
     branches: [master]
   pull_request:
-    branches: [master]
+    branches: [master, new_sdk_version]
 
 jobs:
   build:
@@ -39,6 +39,7 @@ jobs:
 
       - name: Install Package with dependencies
         run: |
+          pip install -U setuptools
           pip install -e .
           pip install flake8 pytest
       - name: Lint with flake8
@@ -50,3 +51,5 @@ jobs:
         env:
           PROTO_APP_ID: ${{ secrets.PROTO_APP_ID }}
           PROTO_API_KEY: ${{ secrets.PROTO_API_KEY }}
+          APP_ID: ${{ secrets.APP_ID }}
+          API_KEY: ${{ secrets.API_KEY }}

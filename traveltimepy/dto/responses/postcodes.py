@@ -1,11 +1,11 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
 
 class Property(BaseModel):
-    travel_time: int
-    distance: int
+    travel_time: Optional[int]
+    distance: Optional[int]
 
 
 class Postcode(BaseModel):
@@ -13,10 +13,10 @@ class Postcode(BaseModel):
     properties: List[Property]
 
 
-class Result(BaseModel):
+class PostcodesResult(BaseModel):
     search_id: str
     postcodes: List[Postcode]
 
 
 class PostcodesResponse(BaseModel):
-    results: List[Result]
+    results: List[PostcodesResult]

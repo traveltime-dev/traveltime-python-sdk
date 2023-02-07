@@ -2,8 +2,6 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
-from traveltimepy.dto import SearchId
-
 
 class TravelTime(BaseModel):
     min: int
@@ -24,12 +22,12 @@ class Zone(BaseModel):
 
 
 class SectorsResult(BaseModel):
-    search_id: SearchId
+    search_id: str
     sectors: List[Zone]
 
 
 class DistrictsResult(BaseModel):
-    search_id: SearchId
+    search_id: str
     districts: List[Zone]
 
 
