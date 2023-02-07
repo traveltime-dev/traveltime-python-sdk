@@ -6,10 +6,29 @@ Time-based searching gives users more opportunities for personalisation and deli
 
 ## Usage
 
-### Installation
-To install sdk you need to run:
+## Installation
 
-`pip install traveltimepy`
+Install Travel Time Python SDK in a `virtualenv` using `pip`. `virtualenv` is a tool to create isolated Python environments.
+
+`virtualenv` allows to install Travel Time Python SDK without needing system install permissions,
+and without clashing with the installed system dependencies.
+
+### Linux/Mac
+```
+pip3 install virtualenv
+virtualenv <your-env>
+source <your-env>/bin/activate
+<your-env>/bin/pip install traveltimepy
+```
+
+### Windows
+```
+pip install virtualenv
+virtualenv <your-env>
+<your-env>\Scripts\activate
+<your-env>\Scripts\pip.exe install traveltimepy
+```
+
 
 ### Sdk set up
 
