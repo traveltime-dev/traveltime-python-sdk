@@ -33,7 +33,7 @@ async def send_post_async(
     request: TravelTimeRequest,
     limit_per_host: int
 ) -> T:
-    connector = aiohttp.TCPConnector(limit_per_host=limit_per_host)
+    connector = aiohttp.TCPConnector(verify_ssl=False, limit_per_host=limit_per_host)
     async with ClientSession(connector=connector, timeout=aiohttp.ClientTimeout(total=60 * 60 * 30)) as session:
         client = RetryClient(client_session=session, retry_options=ExponentialRetry(attempts=3))
         tasks = [send_post_request_async(client, response_class, path, headers, part) for part in request.split_searches()]
