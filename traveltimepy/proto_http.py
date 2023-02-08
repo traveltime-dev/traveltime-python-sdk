@@ -16,7 +16,7 @@ async def send_proto_async(
     app_id: str,
     api_key: str
 ) -> TimeFilterFastResponse:
-    async with ClientSession() as session:
+    async with ClientSession(trust_env=True) as session:
         async with session.post(
             url=url,
             headers=headers,
