@@ -60,7 +60,7 @@ async def send_get_async(
 ) -> T:
     connector = aiohttp.TCPConnector(verify_ssl=False)
     url = f'https://api.traveltimeapp.com/v4/{path}'
-    async with aiohttp.ClientSession(connector) as session:
+    async with aiohttp.ClientSession(connector=connector) as session:
         async with session.get(url=url, headers=headers, params=params) as resp:
             return await __process_response(response_class, resp)
 
