@@ -1,7 +1,7 @@
 import asyncio
 from typing import Dict
 
-from aiohttp import ClientSession, ClientResponse, BasicAuth
+from aiohttp import ClientSession, ClientResponse, BasicAuth, TCPConnector
 
 from traveltimepy.TimeFilterFastResponse_pb2 import TimeFilterFastResponse
 from traveltimepy.TimeFilterFastRequest_pb2 import TimeFilterFastRequest
@@ -16,7 +16,8 @@ async def send_proto_async(
     app_id: str,
     api_key: str
 ) -> TimeFilterFastResponse:
-    async with ClientSession() as session:
+    connector = TCPConnector(verify_ssl=False)
+    async with ClientSession(connector=connector) as session:
         async with session.post(
             url=url,
             headers=headers,
