@@ -58,7 +58,6 @@ class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
 
     def merge(self, responses: List[TimeMapResponse]) -> TimeMapResponse:
         if len(self.unions) != 0:
-            print(responses)
             return TimeMapResponse(
                 results=list(filter(
                     lambda res: res.search_id == 'Union search',

@@ -10,10 +10,7 @@ class TransportationInfo:
 
 class ProtoTransportation(Enum):
     PUBLIC_TRANSPORT = TransportationInfo(0, 'pt')
-    DRIVING = TransportationInfo(1, 'driving')
     DRIVING_FERRY = TransportationInfo(3, 'driving+ferry')
-    WALKING = TransportationInfo(4, 'walking')
-    CYCLING = TransportationInfo(5, 'cycling')
     CYCLING_FERRY = TransportationInfo(6, 'cycling+ferry')
     WALKING_FERRY = TransportationInfo(7, 'walking+ferry')
 

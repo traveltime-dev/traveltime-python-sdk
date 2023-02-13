@@ -220,8 +220,8 @@ def create_districts(
         )
     elif departure_time is not None:
         return DistrictsRequest(
-            arrival_searches=[
-                zones.ArrivalSearch(
+            departure_searches=[
+                zones.DepartureSearch(
                     id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -233,7 +233,7 @@ def create_districts(
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
-            departure_searches=[]
+            arrival_searches=[]
         )
     else:
         raise ApiError('arrival_time or departure_time should be specified')

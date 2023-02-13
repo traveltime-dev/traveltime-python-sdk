@@ -374,9 +374,9 @@ Find sectors that have a certain coverage from origin (or to destination) and ge
 * travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
 * transportation: Union - Transportation mode and related parameters.
 * reachable_postcodes_threshold: float - A number between 0.0 and 1.0. Default value is 0.1. 
-  For example, if 0.5 is used, only districts that have at least 50% postcodes that can be reached within the given travel_time will be included in the response.
-  0 will return districts that have at least a single reachable postcode. 
-* properties: List[Property] - Properties to be returned about the districts. Default value is travel_time_all.
+  For example, if 0.5 is used, only sectors that have at least 50% postcodes that can be reached within the given travel_time will be included in the response.
+  0 will return sectors that have at least a single reachable postcode. 
+* properties: List[Property] - Properties to be returned about the sectors. Default value is travel_time_all.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any journeys that arrive during this window.
 
 #### Returns:
@@ -401,7 +401,7 @@ print(results)
 Find districts that have a certain coverage from origin (or to destination) and get statistics about postcodes within such districts. Currently only supports United Kingdom.
 
 #### Takes:
-* coordinates: List[Coordinates] -  Location coordinates.
+* coordinates: List[Coordinates] - Location coordinates.
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
 * departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
 * travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
@@ -440,10 +440,10 @@ Match a query string to geographic coordinates.
 * limit: int - Expected integer between 1 and 50. Limits amount of results returned to specified number.
 * format_name: bool - Format the name field of the geocoding search response to a well formatted, human-readable address of the location.
 * format_exclude_country: bool - Exclude the country from the formatted name field.
-* rectangle: Rectangle - Used to limit the results to a bounding box.
+* bounds: Rectangle - Used to limit the results to a bounding box.
 
 #### Returns:
-* Matched locations in a geojson format
+* Matched locations in geojson format
 
 #### Example:
 ```python
