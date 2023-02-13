@@ -461,7 +461,6 @@ Match a latitude, longitude pair to an address.
 #### Takes:
 * lat: float - Latitude
 * lng: float - Longitude
-* within_countries: List[str] - Only return the results that are within the specified country.
 
 #### Returns:
 * Matched locations in a geojson format
