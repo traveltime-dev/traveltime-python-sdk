@@ -122,7 +122,7 @@ class TravelTimeSdk:
         within_countries: Optional[List[str]] = None,
         format_name: Optional[bool] = None,
         format_exclude_country: Optional[bool] = None,
-        rectangle: Optional[Rectangle] = None
+        bounds: Optional[Rectangle] = None
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
@@ -134,7 +134,7 @@ class TravelTimeSdk:
                 within_countries,
                 format_name,
                 format_exclude_country,
-                rectangle
+                bounds
             )
         )
 
@@ -145,7 +145,7 @@ class TravelTimeSdk:
         within_countries: Optional[List[str]] = None,
         format_name: Optional[bool] = None,
         format_exclude_country: Optional[bool] = None,
-        rectangle: Optional[Rectangle] = None
+        bounds: Optional[Rectangle] = None
     ) -> FeatureCollection:
         return send_get(
             FeatureCollection,
@@ -157,7 +157,7 @@ class TravelTimeSdk:
                 within_countries,
                 format_name,
                 format_exclude_country,
-                rectangle
+                bounds
             )
         )
 
@@ -177,14 +177,13 @@ class TravelTimeSdk:
     def geocoding_reverse(
         self,
         lat: float,
-        lng: float,
-        within_countries: Optional[List[str]] = None
+        lng: float
     ) -> FeatureCollection:
         return send_get(
             FeatureCollection,
             'geocoding/reverse',
             self.__headers(AcceptType.JSON),
-            self.__geocoding_reverse_params(lat, lng, within_countries)
+            self.__geocoding_reverse_params(lat, lng)
         )
 
     async def supported_locations_async(self, locations: List[Location]) -> SupportedLocationsResponse:
@@ -658,13 +657,11 @@ class TravelTimeSdk:
     @staticmethod
     def __geocoding_reverse_params(
         lat: float,
-        lng: float,
-        within_countries: Optional[List[str]] = None
+        lng: float
     ) -> Dict[str, str]:
         full_query = {
             'lat': lat,
-            'lng': lng,
-            'within.country': join_opt(within_countries, ',')
+            'lng': lng
         }
         return {key: str(value) for (key, value) in full_query.items() if value is not None}
 
@@ -675,7 +672,7 @@ class TravelTimeSdk:
         within_countries: Optional[List[str]] = None,
         format_name: Optional[bool] = None,
         format_exclude_country: Optional[bool] = None,
-        rectangle: Optional[Rectangle] = None
+        bounds: Optional[Rectangle] = None
     ) -> Dict[str, str]:
         full_query = {
             'query': query,
@@ -683,7 +680,7 @@ class TravelTimeSdk:
             'within.country': join_opt(within_countries, ','),
             'format.name': format_name,
             'format.exclude.country': format_exclude_country,
-            'bounds': rectangle.to_str() if rectangle is not None else rectangle
+            'bounds': bounds.to_str() if bounds is not None else bounds
         }
         return {key: str(value) for (key, value) in full_query.items() if value is not None}
 
