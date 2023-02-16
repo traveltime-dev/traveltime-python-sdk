@@ -41,7 +41,7 @@ from traveltimepy import TravelTimeSdk
 sdk = TravelTimeSdk(app_id='YOUR_APP_ID', api_key='YOUR_APP_KEY', limit_per_host=4)
 ```
 
-### Concurrent calls 
+### Asynchronous calls 
 Each method below has its own asynchronous version.
 
 #### Example:
