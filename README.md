@@ -185,6 +185,7 @@ from datetime import datetime
 from traveltimepy import Location, Coordinates, PublicTransport, Property, FullRange, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
 locations = [
     Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
     Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
@@ -232,6 +233,7 @@ A very fast version of ```time_filter()```. However, the request parameters are 
 from traveltimepy import Location, Coordinates, Transportation, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
 locations = [
     Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
     Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
@@ -247,6 +249,7 @@ results = sdk.time_filter_fast(
     transportation=Transportation(type='public_transport'),
     one_to_many=False
 )
+
 print(results)
 ```
 
@@ -287,9 +290,9 @@ travel_times = sdk.time_filter_proto(
     travel_time=7200,
     country=ProtoCountry.UNITED_KINGDOM
 )
+
 print(travel_times)
 ```
-
 
 ### [Routes](https://docs.traveltime.com/api/reference/routes)
 
@@ -315,6 +318,7 @@ from datetime import datetime
 from traveltimepy import Location, Coordinates, PublicTransport, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
 locations = [
   Location(id='London center', coords=Coordinates(lat=51.508930, lng=-0.131387)),
   Location(id='Hyde Park', coords=Coordinates(lat=51.508824, lng=-0.167093)),
@@ -330,7 +334,56 @@ results = sdk.routes(
   transportation=PublicTransport(),
   departure_time=datetime.now()
 )
+
 print(results)
+```
+
+### [Geocoding (Search)](https://docs.traveltime.com/api/reference/geocoding-search)
+
+Match a query string to geographic coordinates.
+
+#### Takes:
+* query: str - A query to geocode. Can be an address, a postcode or a venue.
+* within_countries: List[str] - Only return the results that are within the specified country.
+* limit: int - Expected integer between 1 and 50. Limits amount of results returned to specified number.
+* format_name: bool - Format the name field of the geocoding search response to a well formatted, human-readable address of the location.
+* format_exclude_country: bool - Exclude the country from the formatted name field.
+* bounds: Rectangle - Used to limit the results to a bounding box.
+
+#### Returns:
+* Matched locations in geojson format
+
+#### Example:
+```python
+from traveltimepy import TravelTimeSdk
+
+sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
+results = sdk.geocoding(query='Parliament square', limit=30)
+
+print(results.features)
+```
+
+### [Reverse Geocoding](https://docs.traveltime.com/api/reference/geocoding-reverse)
+
+Match a latitude, longitude pair to an address.
+
+#### Takes:
+* lat: float - Latitude
+* lng: float - Longitude
+
+#### Returns:
+* Matched locations in a geojson format
+
+#### Example:
+```python
+from traveltimepy import TravelTimeSdk
+
+sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
+results = sdk.geocoding_reverse(lat=51.507281, lng=-0.132120)
+
+print(results.features)
 ```
 
 ### [Time Filter (Postcodes)](https://docs.traveltime.com/api/reference/postcode-search)
@@ -361,39 +414,7 @@ results = sdk.postcodes(
     departure_time=datetime.now(),
     transportation=PublicTransport()
 )
-print(results)
-```
 
-### [Time Filter (Postcode Sectors)](https://docs.traveltime.com/api/reference/postcode-sector-filter)
-Find sectors that have a certain coverage from origin (or to destination) and get statistics about postcodes within such sectors. Currently only supports United Kingdom.
-
-#### Takes:
-* coordinates: List[Coordinates] - Location coordinates.
-* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
-* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
-* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
-* transportation: Union - Transportation mode and related parameters.
-* reachable_postcodes_threshold: float - A number between 0.0 and 1.0. Default value is 0.1. 
-  For example, if 0.5 is used, only sectors that have at least 50% postcodes that can be reached within the given travel_time will be included in the response.
-  0 will return sectors that have at least a single reachable postcode. 
-* properties: List[Property] - Properties to be returned about the sectors. Default value is travel_time_all.
-* range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any journeys that arrive during this window.
-
-#### Returns:
-* results: List[SectorsResult] - The results list of postcode sectors.
-
-#### Example:
-```python
-from datetime import datetime
-
-from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
-
-sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
-results = sdk.sectors(
-    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
-    departure_time=datetime.now(),
-    transportation=PublicTransport()
-)
 print(results)
 ```
 
@@ -422,56 +443,49 @@ from datetime import datetime
 from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
 results = sdk.districts(
     coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
     departure_time=datetime.now(),
     transportation=PublicTransport()
 )
+
 print(results)
 ```
 
-### [Geocoding (Search)](https://docs.traveltime.com/api/reference/geocoding-search)
-
-Match a query string to geographic coordinates.
+### [Time Filter (Postcode Sectors)](https://docs.traveltime.com/api/reference/postcode-sector-filter)
+Find sectors that have a certain coverage from origin (or to destination) and get statistics about postcodes within such sectors. Currently only supports United Kingdom.
 
 #### Takes:
-* query: str - A query to geocode. Can be an address, a postcode or a venue.
-* within_countries: List[str] - Only return the results that are within the specified country.
-* limit: int - Expected integer between 1 and 50. Limits amount of results returned to specified number.
-* format_name: bool - Format the name field of the geocoding search response to a well formatted, human-readable address of the location.
-* format_exclude_country: bool - Exclude the country from the formatted name field.
-* bounds: Rectangle - Used to limit the results to a bounding box.
+* coordinates: List[Coordinates] - Location coordinates.
+* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
+* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
+* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
+* transportation: Union - Transportation mode and related parameters.
+* reachable_postcodes_threshold: float - A number between 0.0 and 1.0. Default value is 0.1. 
+  For example, if 0.5 is used, only sectors that have at least 50% postcodes that can be reached within the given travel_time will be included in the response.
+  0 will return sectors that have at least a single reachable postcode. 
+* properties: List[Property] - Properties to be returned about the sectors. Default value is travel_time_all.
+* range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any journeys that arrive during this window.
 
 #### Returns:
-* Matched locations in geojson format
+* results: List[SectorsResult] - The results list of postcode sectors.
 
 #### Example:
 ```python
-from traveltimepy import TravelTimeSdk
+from datetime import datetime
+
+from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
-response = sdk.geocoding(query='Parliament square', limit=30)
-print(response.features)
-```
 
-### [Reverse Geocoding](https://docs.traveltime.com/api/reference/geocoding-reverse)
+results = sdk.sectors(
+    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
+    departure_time=datetime.now(),
+    transportation=PublicTransport()
+)
 
-Match a latitude, longitude pair to an address.
-
-#### Takes:
-* lat: float - Latitude
-* lng: float - Longitude
-
-#### Returns:
-* Matched locations in a geojson format
-
-#### Example:
-```python
-from traveltimepy import TravelTimeSdk
-
-sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
-response = sdk.geocoding_reverse(lat=51.507281, lng=-0.132120)
-print(response.features)
+print(results)
 ```
 
 ### [Map Info](https://docs.traveltime.com/api/reference/map-info)
@@ -490,8 +504,10 @@ It is useful when you have an application that can do searches in any country th
 from traveltimepy import TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
-maps = sdk.map_info()
-print(maps)
+
+results = sdk.map_info()
+
+print(results)
 ```
 
 ### [Supported Locations](https://docs.traveltime.com/api/reference/supported-locations)
@@ -513,15 +529,18 @@ Find out what points are supported by our api. The returned map name for a point
 from traveltimepy import Location, Coordinates, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
 locations = [
     Location(id='Kaunas', coords=Coordinates(lat=54.900008, lng=23.957734)),
     Location(id='London', coords=Coordinates(lat=51.506756, lng=-0.12805)),
     Location(id='Bangkok', coords=Coordinates(lat=13.761866, lng=100.544818)),
     Location(id='Lisbon', coords=Coordinates(lat=38.721869, lng=-9.138549)),
 ]
-response = sdk.supported_locations(locations)
-print(response.locations)
-print(response.unsupported_locations)
+
+results = sdk.supported_locations(locations)
+
+print(results.locations)
+print(results.unsupported_locations)
 ```
 
 
