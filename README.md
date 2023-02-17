@@ -294,108 +294,6 @@ travel_times = sdk.time_filter_proto(
 print(travel_times)
 ```
 
-### [Time Filter (Postcodes)](https://docs.traveltime.com/api/reference/postcode-search)
-Find reachable postcodes from origin (or to destination) and get statistics about such postcodes. Currently only supports United Kingdom.
-
-#### Takes:
-* coordinates: List[Coordinates] - Location coordinates.
-* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
-* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
-* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
-* transportation: Union - Transportation mode and related parameters.
-* properties: List[Property] - Properties to be returned about the postcodes. Default value is travel_time.
-* range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any journeys that arrive during this window.
-
-#### Returns:
-* results: List[PostcodesResult] - The results list of postcodes.
-
-#### Example:
-```python
-from datetime import datetime
-
-from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
-
-sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
-
-results = sdk.postcodes(
-    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
-    departure_time=datetime.now(),
-    transportation=PublicTransport()
-)
-
-print(results)
-```
-
-### [Time Filter (Postcode Sectors)](https://docs.traveltime.com/api/reference/postcode-sector-filter)
-Find sectors that have a certain coverage from origin (or to destination) and get statistics about postcodes within such sectors. Currently only supports United Kingdom.
-
-#### Takes:
-* coordinates: List[Coordinates] - Location coordinates.
-* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
-* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
-* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
-* transportation: Union - Transportation mode and related parameters.
-* reachable_postcodes_threshold: float - A number between 0.0 and 1.0. Default value is 0.1. 
-  For example, if 0.5 is used, only sectors that have at least 50% postcodes that can be reached within the given travel_time will be included in the response.
-  0 will return sectors that have at least a single reachable postcode. 
-* properties: List[Property] - Properties to be returned about the sectors. Default value is travel_time_all.
-* range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any journeys that arrive during this window.
-
-#### Returns:
-* results: List[SectorsResult] - The results list of postcode sectors.
-
-#### Example:
-```python
-from datetime import datetime
-
-from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
-
-sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
-
-results = sdk.sectors(
-    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
-    departure_time=datetime.now(),
-    transportation=PublicTransport()
-)
-
-print(results)
-```
-
-### [Time Filter (Postcode Districts)](https://docs.traveltime.com/api/reference/postcode-district-filter)
-Find districts that have a certain coverage from origin (or to destination) and get statistics about postcodes within such districts. Currently only supports United Kingdom.
-
-#### Takes:
-* coordinates: List[Coordinates] - Location coordinates.
-* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
-* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
-* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
-* transportation: Union - Transportation mode and related parameters.
-* reachable_postcodes_threshold: float - A number between 0.0 and 1.0. Default value is 0.1. 
-  For example, if 0.5 is used, only districts that have at least 50% postcodes that can be reached within the given travel_time will be included in the response.
-  0 will return districts that have at least a single reachable postcode. 
-* properties: List[Property] - Properties to be returned about the districts. Default value is travel_time_all.
-* range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any journeys that arrive during this window.
-
-#### Returns:
-* results: List[DistrictsResult] - The results list of districts.
-
-#### Example:
-```python
-from datetime import datetime
-
-from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
-
-sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
-
-results = sdk.districts(
-    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
-    departure_time=datetime.now(),
-    transportation=PublicTransport()
-)
-
-print(results)
-```
-
 ### [Routes](https://docs.traveltime.com/api/reference/routes)
 
 Returns routing information between source and destinations.
@@ -486,6 +384,108 @@ sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 results = sdk.geocoding_reverse(lat=51.507281, lng=-0.132120)
 
 print(results.features)
+```
+
+### [Time Filter (Postcodes)](https://docs.traveltime.com/api/reference/postcode-search)
+Find reachable postcodes from origin (or to destination) and get statistics about such postcodes. Currently only supports United Kingdom.
+
+#### Takes:
+* coordinates: List[Coordinates] - Location coordinates.
+* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
+* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
+* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
+* transportation: Union - Transportation mode and related parameters.
+* properties: List[Property] - Properties to be returned about the postcodes. Default value is travel_time.
+* range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any journeys that arrive during this window.
+
+#### Returns:
+* results: List[PostcodesResult] - The results list of postcodes.
+
+#### Example:
+```python
+from datetime import datetime
+
+from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
+
+sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
+results = sdk.postcodes(
+    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
+    departure_time=datetime.now(),
+    transportation=PublicTransport()
+)
+
+print(results)
+```
+
+### [Time Filter (Postcode Districts)](https://docs.traveltime.com/api/reference/postcode-district-filter)
+Find districts that have a certain coverage from origin (or to destination) and get statistics about postcodes within such districts. Currently only supports United Kingdom.
+
+#### Takes:
+* coordinates: List[Coordinates] - Location coordinates.
+* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
+* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
+* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
+* transportation: Union - Transportation mode and related parameters.
+* reachable_postcodes_threshold: float - A number between 0.0 and 1.0. Default value is 0.1. 
+  For example, if 0.5 is used, only districts that have at least 50% postcodes that can be reached within the given travel_time will be included in the response.
+  0 will return districts that have at least a single reachable postcode. 
+* properties: List[Property] - Properties to be returned about the districts. Default value is travel_time_all.
+* range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any journeys that arrive during this window.
+
+#### Returns:
+* results: List[DistrictsResult] - The results list of districts.
+
+#### Example:
+```python
+from datetime import datetime
+
+from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
+
+sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
+results = sdk.districts(
+    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
+    departure_time=datetime.now(),
+    transportation=PublicTransport()
+)
+
+print(results)
+```
+
+### [Time Filter (Postcode Sectors)](https://docs.traveltime.com/api/reference/postcode-sector-filter)
+Find sectors that have a certain coverage from origin (or to destination) and get statistics about postcodes within such sectors. Currently only supports United Kingdom.
+
+#### Takes:
+* coordinates: List[Coordinates] - Location coordinates.
+* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
+* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with arrival_time.
+* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 1800
+* transportation: Union - Transportation mode and related parameters.
+* reachable_postcodes_threshold: float - A number between 0.0 and 1.0. Default value is 0.1. 
+  For example, if 0.5 is used, only sectors that have at least 50% postcodes that can be reached within the given travel_time will be included in the response.
+  0 will return sectors that have at least a single reachable postcode. 
+* properties: List[Property] - Properties to be returned about the sectors. Default value is travel_time_all.
+* range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any journeys that arrive during this window.
+
+#### Returns:
+* results: List[SectorsResult] - The results list of postcode sectors.
+
+#### Example:
+```python
+from datetime import datetime
+
+from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
+
+sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
+
+results = sdk.sectors(
+    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
+    departure_time=datetime.now(),
+    transportation=PublicTransport()
+)
+
+print(results)
 ```
 
 ### [Map Info](https://docs.traveltime.com/api/reference/map-info)
