@@ -1,54 +1,45 @@
 from datetime import datetime
-from typing import List, Optional, Dict, Union
+from typing import Dict, List, Optional, Union
 
-from traveltimepy.dto.common import Location, Coordinates, Rectangle, Property, FullRange, Range
-from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
-from traveltimepy.dto.requests.zones import ZonesProperty
-from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
-from traveltimepy.dto.requests.time_filter_fast import Transportation
+from geojson_pydantic import FeatureCollection
 
 from traveltimepy.accept_type import AcceptType
-from traveltimepy.itertools import join_opt
+from traveltimepy.dto.common import Coordinates, FullRange, Location, Property, Range, Rectangle
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
-
-from traveltimepy.dto.responses.map_info import MapInfoResponse, Map
+from traveltimepy.dto.requests.time_filter_fast import Transportation
+from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
+from traveltimepy.dto.requests.zones import ZonesProperty
+from traveltimepy.dto.responses.map_info import Map, MapInfoResponse
 from traveltimepy.dto.responses.postcodes import PostcodesResponse, PostcodesResult
 from traveltimepy.dto.responses.routes import RoutesResponse, RoutesResult
 from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
 from traveltimepy.dto.responses.time_filter import TimeFilterResponse, TimeFilterResult
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse, TimeFilterFastResult
 from traveltimepy.dto.responses.time_map import TimeMapResponse, TimeMapResult
-from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse, DistrictsResult, SectorsResult
-
-from traveltimepy.mapper import (
-    create_time_filter,
-    create_time_filter_fast,
-    create_postcodes,
-    create_districts,
-    create_sectors,
-    create_routes,
-    create_proto_request,
-    create_time_map,
-    create_intersection, create_union
-)
-
-from traveltimepy.proto_http import send_proto, send_proto_async
+from traveltimepy.dto.responses.zones import DistrictsResponse, DistrictsResult, SectorsResponse, SectorsResult
+from traveltimepy.dto.transportation import Cycling, Driving, DrivingTrain, Ferry, PublicTransport, Walking
 from traveltimepy.http import (
     send_get,
     send_get_async,
     send_post,
     send_post_async
 )
-
-from geojson_pydantic import FeatureCollection
+from traveltimepy.itertools import join_opt
+from traveltimepy.mapper import (create_districts, create_intersection, create_postcodes, create_proto_request,
+                                 create_routes, create_sectors, create_time_filter, create_time_filter_fast,
+                                 create_time_map, create_union)
+from traveltimepy.proto_http import send_proto, send_proto_async
+from traveltimepy.utils.throttler import Throttler
 
 
 class TravelTimeSdk:
 
-    def __init__(self, app_id: str, api_key: str, limit_per_host: int = 2) -> None:
+    def __init__(self, app_id: str, api_key: str, limit_per_host: int = 2,
+                 throttler: Optional[Throttler] = None) -> None:
         self.__app_id = app_id
         self.__api_key = api_key
         self.__limit_per_host = limit_per_host
+        self._throttler = throttler
 
     async def time_filter_async(
         self,
@@ -75,7 +66,8 @@ class TravelTimeSdk:
                 travel_time,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
 
         return resp.results
@@ -105,7 +97,8 @@ class TravelTimeSdk:
                 travel_time,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         ).results
 
     async def map_info_async(self) -> List[Map]:
@@ -192,7 +185,8 @@ class TravelTimeSdk:
             'supported-locations',
             self.__headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
 
     def supported_locations(self, locations: List[Location]) -> SupportedLocationsResponse:
@@ -201,7 +195,8 @@ class TravelTimeSdk:
             'supported-locations',
             self.__headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
 
     async def time_filter_fast_async(
@@ -225,7 +220,8 @@ class TravelTimeSdk:
                 properties,
                 one_to_many
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
         return resp.results
 
@@ -250,7 +246,8 @@ class TravelTimeSdk:
                 properties,
                 one_to_many
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         ).results
 
     async def postcodes_async(
@@ -276,7 +273,8 @@ class TravelTimeSdk:
                 properties,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
         return resp.results
 
@@ -303,7 +301,8 @@ class TravelTimeSdk:
                 properties,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         ).results
 
     async def districts_async(
@@ -331,7 +330,8 @@ class TravelTimeSdk:
                 properties,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
         return res.results
 
@@ -360,7 +360,8 @@ class TravelTimeSdk:
                 properties,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         ).results
 
     async def sectors_async(
@@ -388,7 +389,8 @@ class TravelTimeSdk:
                 properties,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
         return resp.results
 
@@ -417,7 +419,8 @@ class TravelTimeSdk:
                 properties,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         ).results
 
     def routes(
@@ -443,7 +446,8 @@ class TravelTimeSdk:
                 properties,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         ).results
 
     async def routes_async(
@@ -469,7 +473,8 @@ class TravelTimeSdk:
                 properties,
                 full_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
         return resp.results
 
@@ -527,7 +532,8 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         ).results
 
     def intersection(
@@ -551,7 +557,8 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         ).results[0]
 
     async def intersection_async(
@@ -575,7 +582,8 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
         return resp.results[0]
 
@@ -600,7 +608,8 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         ).results[0]
 
     async def union_async(
@@ -624,7 +633,8 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
 
         return resp.results[0]
@@ -650,7 +660,8 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__limit_per_host,
+            self._throttler
         )
         return resp.results
 
