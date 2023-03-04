@@ -10,7 +10,6 @@ from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.error import ResponseError
 from traveltimepy.errors import ApiError
 from traveltimepy.utils.throttler import Throttler
-from traveltimepy.utils.utils import count_api_hits
 
 T = TypeVar('T')
 R = TypeVar('R')
@@ -35,7 +34,6 @@ async def _execute_post_request_async(
     # Construct the URL for the API endpoint
     url = f"https://api.traveltimeapp.com/v4/{path}"
     # Send a POST request to the API with the given headers and data
-    print(request.json())
     try:
         async with client.post(url=url, headers=headers, data=request.json()) as resp:
             # Process the response and return it as an instance of the given response class
@@ -59,7 +57,7 @@ async def send_post_request_async(
         return await _execute_post_request_async(client, response_class, path, headers, request)
     else:
         # Otherwise, use the throttler to enforce the request rate limit before sending the POST request
-        async with throttler.use(count_api_hits(request)):
+        async with throttler.use(num_requests=request.api_hits_count):
             return await _execute_post_request_async(
                 client, response_class, path, headers, request
             )

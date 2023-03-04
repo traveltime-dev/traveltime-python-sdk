@@ -3,11 +3,11 @@ from typing import List, Optional, Union
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import Location, FullRange, Property
+from traveltimepy.dto.common import FullRange, Location, Property
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_filter import TimeFilterResponse
-from traveltimepy.itertools import split, flatten
-from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy.dto.transportation import Cycling, Driving, DrivingTrain, Ferry, PublicTransport, Walking
+from traveltimepy.itertools import flatten, split
 
 
 class ArrivalSearch(BaseModel):
@@ -45,3 +45,6 @@ class TimeFilterRequest(TravelTimeRequest[TimeFilterResponse]):
 
     def merge(self, responses: List[TimeFilterResponse]) -> TimeFilterResponse:
         return TimeFilterResponse(results=flatten([response.results for response in responses]))
+
+    def api_hits_count(self) -> int:
+        return len(self.departure_searches) + len(self.arrival_searches)
