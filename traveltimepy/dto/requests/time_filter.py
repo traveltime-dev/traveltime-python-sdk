@@ -46,5 +46,6 @@ class TimeFilterRequest(TravelTimeRequest[TimeFilterResponse]):
     def merge(self, responses: List[TimeFilterResponse]) -> TimeFilterResponse:
         return TimeFilterResponse(results=flatten([response.results for response in responses]))
 
+    @property
     def api_hits_count(self) -> int:
         return len(self.departure_searches) + len(self.arrival_searches)
