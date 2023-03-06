@@ -25,7 +25,7 @@ class ArrivalSearch(BaseModel):
     reachable_postcodes_threshold: float
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     properties: List[ZonesProperty]
-    full_range: Optional[FullRange] = None
+    range: Optional[FullRange] = None
 
 
 class DepartureSearch(BaseModel):
@@ -36,7 +36,7 @@ class DepartureSearch(BaseModel):
     reachable_postcodes_threshold: float
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     properties: List[ZonesProperty]
-    full_range: Optional[FullRange] = None
+    range: Optional[FullRange] = None
 
 
 class SectorsRequest(TravelTimeRequest[SectorsResponse]):

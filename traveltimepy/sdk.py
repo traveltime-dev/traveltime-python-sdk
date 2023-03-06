@@ -59,7 +59,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
         travel_time: int = 3600,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[TimeFilterResult]:
         resp = await send_post_async(
             TimeFilterResponse,
@@ -73,7 +73,7 @@ class TravelTimeSdk:
                 departure_time,
                 arrival_time,
                 travel_time,
-                full_range
+                range
             ),
             self.__limit_per_host
         )
@@ -89,7 +89,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         properties: Optional[List[Property]] = None,
         travel_time: int = 3600,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[TimeFilterResult]:
         return send_post(
             TimeFilterResponse,
@@ -103,7 +103,7 @@ class TravelTimeSdk:
                 departure_time,
                 arrival_time,
                 travel_time,
-                full_range
+                range
             ),
             self.__limit_per_host
         ).results
@@ -261,7 +261,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_time: int = 1800,
         properties: Optional[List[Property]] = None,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[PostcodesResult]:
         resp = await send_post_async(
             PostcodesResponse,
@@ -274,7 +274,7 @@ class TravelTimeSdk:
                 transportation,
                 travel_time,
                 properties,
-                full_range
+                range
             ),
             self.__limit_per_host
         )
@@ -288,7 +288,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_time: int = 1800,
         properties: Optional[List[Property]] = None,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[PostcodesResult]:
         return send_post(
             PostcodesResponse,
@@ -301,7 +301,7 @@ class TravelTimeSdk:
                 transportation,
                 travel_time,
                 properties,
-                full_range
+                range
             ),
             self.__limit_per_host
         ).results
@@ -315,7 +315,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[DistrictsResult]:
         res = await send_post_async(
             DistrictsResponse,
@@ -329,7 +329,7 @@ class TravelTimeSdk:
                 arrival_time,
                 reachable_postcodes_threshold,
                 properties,
-                full_range
+                range
             ),
             self.__limit_per_host
         )
@@ -344,7 +344,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[DistrictsResult]:
         return send_post(
             DistrictsResponse,
@@ -358,7 +358,7 @@ class TravelTimeSdk:
                 arrival_time,
                 reachable_postcodes_threshold,
                 properties,
-                full_range
+                range
             ),
             self.__limit_per_host
         ).results
@@ -372,7 +372,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[SectorsResult]:
         resp = await send_post_async(
             SectorsResponse,
@@ -386,7 +386,7 @@ class TravelTimeSdk:
                 arrival_time,
                 reachable_postcodes_threshold,
                 properties,
-                full_range
+                range
             ),
             self.__limit_per_host
         )
@@ -401,7 +401,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[SectorsResult]:
         return send_post(
             SectorsResponse,
@@ -415,7 +415,7 @@ class TravelTimeSdk:
                 arrival_time,
                 reachable_postcodes_threshold,
                 properties,
-                full_range
+                range
             ),
             self.__limit_per_host
         ).results
@@ -428,7 +428,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
         properties: Optional[List[Property]] = None,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[RoutesResult]:
         return send_post(
             RoutesResponse,
@@ -441,7 +441,7 @@ class TravelTimeSdk:
                 departure_time,
                 arrival_time,
                 properties,
-                full_range
+                range
             ),
             self.__limit_per_host
         ).results
@@ -454,7 +454,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
         properties: Optional[List[Property]] = None,
-        full_range: Optional[FullRange] = None
+        range: Optional[FullRange] = None
     ) -> List[RoutesResult]:
         resp = await send_post_async(
             RoutesResponse,
@@ -467,7 +467,7 @@ class TravelTimeSdk:
                 departure_time,
                 arrival_time,
                 properties,
-                full_range
+                range
             ),
             self.__limit_per_host
         )
