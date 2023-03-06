@@ -18,7 +18,7 @@ class ArrivalSearch(BaseModel):
     travel_time: int
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     properties: List[Property]
-    full_range: Optional[FullRange] = None
+    range: Optional[FullRange] = None
 
 
 class DepartureSearch(BaseModel):
@@ -29,7 +29,7 @@ class DepartureSearch(BaseModel):
     travel_time: int
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     properties: List[Property]
-    full_range: Optional[FullRange] = None
+    range: Optional[FullRange] = None
 
 
 class TimeFilterRequest(TravelTimeRequest[TimeFilterResponse]):

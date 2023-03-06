@@ -37,7 +37,7 @@ def create_time_filter(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     travel_time: int,
-    full_range: Optional[FullRange]
+    range: Optional[FullRange]
 ) -> TimeFilterRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -56,7 +56,7 @@ def create_time_filter(
                     travel_time=travel_time,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for arrival_id, departure_ids in search_ids.items()
             ],
@@ -74,7 +74,7 @@ def create_time_filter(
                     travel_time=travel_time,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for departure_id, arrival_ids in search_ids.items()
             ],
@@ -141,7 +141,7 @@ def create_postcodes(
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
     travel_time: int,
     properties: Optional[List[Property]],
-    full_range: Optional[FullRange]
+    range: Optional[FullRange]
 ) -> PostcodesRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -159,7 +159,7 @@ def create_postcodes(
                     departure_time=departure_time,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -175,7 +175,7 @@ def create_postcodes(
                     arrival_time=arrival_time,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -193,7 +193,7 @@ def create_districts(
     arrival_time: Optional[datetime],
     reachable_postcodes_threshold,
     properties: Optional[List[ZonesProperty]],
-    full_range: Optional[FullRange]
+    range: Optional[FullRange]
 ) -> DistrictsRequest:
     if properties is None:
         properties = ZonesProperty.TRAVEL_TIME_ALL
@@ -212,7 +212,7 @@ def create_districts(
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -229,7 +229,7 @@ def create_districts(
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -247,7 +247,7 @@ def create_sectors(
     arrival_time: Optional[datetime],
     reachable_postcodes_threshold,
     properties: Optional[List[ZonesProperty]],
-    full_range: Optional[FullRange]
+    range: Optional[FullRange]
 ) -> SectorsRequest:
     if properties is None:
         properties = ZonesProperty.TRAVEL_TIME_ALL
@@ -266,7 +266,7 @@ def create_sectors(
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -283,7 +283,7 @@ def create_sectors(
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -467,7 +467,7 @@ def create_routes(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     properties: Optional[List[Property]],
-    full_range: Optional[FullRange]
+    range: Optional[FullRange]
 ) -> RoutesRequest:
     if arrival_time is not None and departure_time is not None:
         raise ApiError('arrival_time and departure_time cannot be both specified')
@@ -485,7 +485,7 @@ def create_routes(
                     arrival_time=arrival_time,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for arrival_id, departure_ids in search_ids.items()
             ],
@@ -502,7 +502,7 @@ def create_routes(
                     departure_time=departure_time,
                     transportation=transportation,
                     properties=properties,
-                    full_range=full_range
+                    range=range
                 )
                 for departure_id, arrival_ids in search_ids.items()
             ],

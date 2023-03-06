@@ -17,7 +17,7 @@ class ArrivalSearch(BaseModel):
     arrival_time: datetime
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     properties: List[Property]
-    full_range: Optional[FullRange] = None
+    range: Optional[FullRange] = None
 
 
 class DepartureSearch(BaseModel):
@@ -27,7 +27,7 @@ class DepartureSearch(BaseModel):
     departure_time: datetime
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
     properties: List[Property]
-    full_range: Optional[FullRange] = None
+    range: Optional[FullRange] = None
 
 
 class PostcodesRequest(TravelTimeRequest[PostcodesResponse]):
