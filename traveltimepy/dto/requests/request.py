@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import List, TypeVar, Generic
+from typing import Generic, List, TypeVar
 
 from pydantic import BaseModel
 
@@ -16,3 +16,8 @@ class TravelTimeRequest(ABC, BaseModel, Generic[T]):
     @abstractmethod
     def merge(self, responses: List[T]) -> T:
         pass
+
+    @property
+    def api_hits_count(self) -> int:
+        """Return the number of hits the API will count when sending this request."""
+        return 1  # default value to avoid breaking existing code
