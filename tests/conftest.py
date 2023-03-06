@@ -9,7 +9,7 @@ from traveltimepy.sdk import TravelTimeSdk
 
 @pytest.fixture
 def sdk() -> TravelTimeSdk:
-    return TravelTimeSdk(os.environ['APP_ID'], os.environ['API_KEY'])
+    return TravelTimeSdk('4da26ce0', '79478c02d1bc6fd9eb9733f184cfcabd')
 
 
 @pytest.fixture
