@@ -1,13 +1,10 @@
 import asyncio
+import sys
 from collections import deque
 from contextlib import asynccontextmanager
+from loguru import logger
 
-try:
-    from loguru import logger
-except ImportError:
-    from logging import getLogger
-
-    logger = getLogger(__name__)
+logger.add(sys.stderr, level="DEBUG")
 
 
 class Throttler:
@@ -16,15 +13,16 @@ class Throttler:
     def __init__(
         self,
         rate_limit: int,
-        time_window: int,
+        time_window_seconds: int,
         retry_interval=0.001
     ):
-        self.time_window = time_window
+        self.time_window = time_window_seconds
         self.rate_limit = rate_limit
         self.retry_interval = retry_interval
 
         # Set the event loop to the one passed in, or the default asyncio event loop if none is passed.
-        self.loop = asyncio.get_event_loop()
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
 
         # Create a new deque object to store task start times.
         self._task_logs = deque()
@@ -53,21 +51,22 @@ class Throttler:
         # nothing to do here
         pass
 
-    async def wait_for_availability(self, num_requests: int = 1):
+    async def wait_for_availability(self, window_size: int):
         # Start an infinite loop
         while True:
             # get rid of items that don't have to be tracked anymore
+
             self.remove_expired_tasks()
 
             # Exit the infinite loop when new task can be processed
             # Check if the task log can accommodate the new task.
-            if len(self._task_logs) + num_requests <= self.rate_limit:
+
+            if len(self._task_logs) * window_size + window_size <= self.rate_limit:
                 break  # If the rate limit hasn't been reached yet, break out of the infinite loop.
 
             # calculate the time we have to wait until the task can be processed
-            space_available = self.rate_limit - len(self._task_logs)
-            space_missing = num_requests - space_available
-            last_task_that_has_to_be_removed = self._task_logs[space_missing - 1]
+            space_available = self.rate_limit - len(self._task_logs) * window_size
+            last_task_that_has_to_be_removed = self._task_logs[space_available - 1]
             time_to_wait = max(
                 self.retry_interval,
                 last_task_that_has_to_be_removed + self.time_window - self.loop.time(),
@@ -75,7 +74,6 @@ class Throttler:
 
             logger.debug(
                 f"{space_available} available\t"
-                f"{space_missing} more needed\t"
                 f"Waiting {int(time_to_wait)} s..."
             )
 
@@ -86,18 +84,18 @@ class Throttler:
         # Push new task's start time
         # If the rate limit hasn't been reached, add the current time as a new start time to the deque.
         time = self.loop.time()
-        self._task_logs.extend([time for _ in range(num_requests)])
+        self._task_logs.append(time)
 
         logger.debug(
             f"Current Rate: "
-            f"{len(self._task_logs)} / {self.rate_limit} per {self.time_window} s"
+            f"{len(self._task_logs) * window_size} / {self.rate_limit} per {self.time_window} s"
         )
 
     # Define the async context manager enter method
     @asynccontextmanager
-    async def use(self, num_requests: int = 1):
+    async def use(self, window_size: int):
         """Implementation as context manager method to allow for passing of num_requests parameter"""
 
-        await self.wait_for_availability(num_requests)
+        await self.wait_for_availability(window_size)
 
         yield self  # Return the Throttler object itself as the result of the async context manager enter method.

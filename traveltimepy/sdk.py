@@ -25,11 +25,20 @@ from traveltimepy.http import (
     send_post_async
 )
 from traveltimepy.itertools import join_opt
-from traveltimepy.mapper import (create_districts, create_intersection, create_postcodes, create_proto_request,
-                                 create_routes, create_sectors, create_time_filter, create_time_filter_fast,
-                                 create_time_map, create_union)
+from traveltimepy.mapper import (
+    create_districts,
+    create_intersection,
+    create_postcodes,
+    create_proto_request,
+    create_routes,
+    create_sectors,
+    create_time_filter,
+    create_time_filter_fast,
+    create_time_map,
+    create_union
+)
 from traveltimepy.proto_http import send_proto, send_proto_async
-from traveltimepy.utils.throttler import Throttler
+from traveltimepy.throttler import Throttler
 
 
 class TravelTimeSdk:
@@ -38,13 +47,17 @@ class TravelTimeSdk:
         self,
         app_id: str,
         api_key: str,
-        limit_per_host: int = 2,
-        throttler: Optional[Throttler] = None
+        limit_per_host: int = 5,
+        rate_limit: int = 10,
+        time_window_seconds: int = 60,
+        retry_attempts: int = 2,
+        retry_interval=0.001
     ) -> None:
         self.__app_id = app_id
         self.__api_key = api_key
+        self.__retry_attempts = retry_attempts
         self.__limit_per_host = limit_per_host
-        self.__throttler = throttler
+        self.__throttler = Throttler(rate_limit, time_window_seconds, retry_interval)
 
     async def time_filter_async(
         self,
@@ -72,6 +85,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
 
@@ -103,6 +117,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         ).results
 
@@ -162,14 +177,13 @@ class TravelTimeSdk:
     async def geocoding_reverse_async(
         self,
         lat: float,
-        lng: float,
-        within_countries: Optional[List[str]] = None
+        lng: float
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
             'geocoding/reverse',
             self.__headers(AcceptType.JSON),
-            self.__geocoding_reverse_params(lat, lng, within_countries)
+            self.__geocoding_reverse_params(lat, lng)
         )
 
     def geocoding_reverse(
@@ -191,6 +205,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
 
@@ -201,6 +216,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
 
@@ -226,6 +242,7 @@ class TravelTimeSdk:
                 one_to_many
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
         return resp.results
@@ -252,6 +269,7 @@ class TravelTimeSdk:
                 one_to_many
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         ).results
 
@@ -279,6 +297,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
         return resp.results
@@ -307,6 +326,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         ).results
 
@@ -336,6 +356,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
         return res.results
@@ -366,6 +387,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         ).results
 
@@ -395,6 +417,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
         return resp.results
@@ -425,6 +448,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         ).results
 
@@ -452,6 +476,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         ).results
 
@@ -479,6 +504,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
         return resp.results
@@ -538,6 +564,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         ).results
 
@@ -563,6 +590,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         ).results[0]
 
@@ -588,6 +616,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
         return resp.results[0]
@@ -614,6 +643,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         ).results[0]
 
@@ -639,6 +669,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
 
@@ -666,6 +697,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
+            self.__retry_attempts,
             self.__throttler
         )
         return resp.results
@@ -704,14 +736,14 @@ class TravelTimeSdk:
     def __proto_headers() -> Dict[str, str]:
         return {
             'Content-Type': AcceptType.OCTET_STREAM.value,
-            'User-Agent': 'Travel Time Python Beta SDK'
+            'User-Agent': 'Travel Time Python SDK'
         }
 
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {
             'X-Application-Id': self.__app_id,
             'X-Api-Key': self.__api_key,
-            'User-Agent': 'Travel Time Beta Python SDK',
+            'User-Agent': 'Travel Time Python SDK',
             'Content-Type': 'application/json',
             'Accept': accept_type.value
         }

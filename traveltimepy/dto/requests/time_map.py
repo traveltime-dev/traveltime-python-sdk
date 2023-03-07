@@ -45,7 +45,7 @@ class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
     unions: List[Union]
     intersections: List[Intersection]
 
-    def split_searches(self) -> List[TravelTimeRequest]:
+    def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
             TimeMapRequest(
                 departure_searches=departures,
@@ -53,7 +53,7 @@ class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
                 unions=self.unions,
                 intersections=self.intersections
             )
-            for departures, arrivals in split(self.departure_searches, self.arrival_searches, 10)
+            for departures, arrivals in split(self.departure_searches, self.arrival_searches, window_size)
         ]
 
     def merge(self, responses: List[TimeMapResponse]) -> TimeMapResponse:
