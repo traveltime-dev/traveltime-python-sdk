@@ -34,12 +34,17 @@ from traveltimepy.utils.throttler import Throttler
 
 class TravelTimeSdk:
 
-    def __init__(self, app_id: str, api_key: str, limit_per_host: int = 2,
-                 throttler: Optional[Throttler] = None) -> None:
+    def __init__(
+        self,
+        app_id: str,
+        api_key: str,
+        limit_per_host: int = 2,
+        throttler: Optional[Throttler] = None
+    ) -> None:
         self.__app_id = app_id
         self.__api_key = api_key
         self.__limit_per_host = limit_per_host
-        self._throttler = throttler
+        self.__throttler = throttler
 
     async def time_filter_async(
         self,
@@ -67,7 +72,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
 
         return resp.results
@@ -98,7 +103,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         ).results
 
     async def map_info_async(self) -> List[Map]:
@@ -186,7 +191,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
 
     def supported_locations(self, locations: List[Location]) -> SupportedLocationsResponse:
@@ -196,7 +201,7 @@ class TravelTimeSdk:
             self.__headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
 
     async def time_filter_fast_async(
@@ -221,7 +226,7 @@ class TravelTimeSdk:
                 one_to_many
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
         return resp.results
 
@@ -247,7 +252,7 @@ class TravelTimeSdk:
                 one_to_many
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         ).results
 
     async def postcodes_async(
@@ -274,7 +279,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
         return resp.results
 
@@ -302,7 +307,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         ).results
 
     async def districts_async(
@@ -331,7 +336,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
         return res.results
 
@@ -361,7 +366,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         ).results
 
     async def sectors_async(
@@ -390,7 +395,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
         return resp.results
 
@@ -420,7 +425,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         ).results
 
     def routes(
@@ -447,7 +452,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         ).results
 
     async def routes_async(
@@ -474,7 +479,7 @@ class TravelTimeSdk:
                 range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
         return resp.results
 
@@ -533,7 +538,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         ).results
 
     def intersection(
@@ -558,7 +563,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         ).results[0]
 
     async def intersection_async(
@@ -583,7 +588,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
         return resp.results[0]
 
@@ -609,7 +614,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         ).results[0]
 
     async def union_async(
@@ -634,7 +639,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
 
         return resp.results[0]
@@ -661,7 +666,7 @@ class TravelTimeSdk:
                 search_range
             ),
             self.__limit_per_host,
-            self._throttler
+            self.__throttler
         )
         return resp.results
 

@@ -17,15 +17,14 @@ class Throttler:
         self,
         rate_limit: int,
         time_window: int,
-        retry_interval=0.001,
-        loop=None,
+        retry_interval=0.001
     ):
         self.time_window = time_window
         self.rate_limit = rate_limit
         self.retry_interval = retry_interval
 
         # Set the event loop to the one passed in, or the default asyncio event loop if none is passed.
-        self.loop = loop or asyncio.get_event_loop()
+        self.loop = asyncio.get_event_loop()
 
         # Create a new deque object to store task start times.
         self._task_logs = deque()
