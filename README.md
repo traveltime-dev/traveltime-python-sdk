@@ -33,7 +33,14 @@ virtualenv <your-env>
 ### Sdk set up
 
 In order to authenticate with Travel Time API, you will have to supply the Application Id and Api Key. 
-If you want to speed up requests, you can also specify limit_per_host, this parameter specifies how may requests can be processed at the same time.
+
+#### Takes:
+* app_id: str - Application Id
+* api_key: str - Api Key
+* limit_per_host: int - amount of requests which can be processed at the same time
+* rate_limit: int -
+* time_window_seconds -
+* retry_attempts - 
 
 ```python
 from traveltimepy import TravelTimeSdk
