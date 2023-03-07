@@ -6,7 +6,7 @@ from traveltimepy import TravelTimeSdk, Driving
 
 
 def generate_matrix(size: int):
-    sdk = TravelTimeSdk('4da26ce0', '732ae9bb0657378de6ebc582ad58ae68')
+    sdk = TravelTimeSdk('APP_ID', 'API_KEY')
     locations = generate_locations(51.507609, -0.128315, 0.05, 'Location', size)
     location_ids = [location.id for location in locations]
     search_ids = [
