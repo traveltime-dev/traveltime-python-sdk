@@ -37,10 +37,10 @@ In order to authenticate with Travel Time API, you will have to supply the Appli
 #### Takes:
 * app_id: str - Application Id
 * api_key: str - Api Key
-* limit_per_host: int - amount of requests which can be processed at the same time
-* rate_limit: int -
-* time_window_seconds -
-* retry_attempts - 
+* limit_per_host: int - Amount of requests which can be processed at the same time
+* rate_limit: int - Amount of searches which can be made in a time window
+* time_window_seconds - Time window for search limits 
+* retry_attempts - Amount of retries for failed requests 
 
 ```python
 from traveltimepy import TravelTimeSdk

@@ -48,7 +48,7 @@ class TravelTimeSdk:
         app_id: str,
         api_key: str,
         limit_per_host: int = 5,
-        rate_limit: int = 10,
+        rate_limit: int = 30,
         time_window_seconds: int = 60,
         retry_attempts: int = 2,
         retry_interval=0.001
