@@ -1,10 +1,7 @@
 import asyncio
-import sys
 from collections import deque
 from contextlib import asynccontextmanager
 from loguru import logger
-
-logger.add(sys.stderr, level="DEBUG")
 
 
 class Throttler:
