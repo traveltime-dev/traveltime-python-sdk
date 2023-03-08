@@ -100,39 +100,37 @@ class PublicTransportPart(BasePart):
     num_stops: int
     type: Literal["public_transport"]
 
+    def __hash__(self):
+        return hash(
+            (
+                super().__hash__(),
+                self.line,
+                self.departure_station,
+                self.arrival_station,
+                self.departs_at,
+                self.arrives_at,
+                self.num_stops,
+            )
+        )
 
-def __hash__(self):
-    return hash(
-        (
-            super().__hash__(),
+    def __eq__(self, other):
+        if not isinstance(other, PublicTransportPart):
+            return NotImplemented
+        return super().__eq__(other) and (
             self.line,
             self.departure_station,
             self.arrival_station,
             self.departs_at,
             self.arrives_at,
             self.num_stops,
+        ) == (
+            other.line,
+            other.departure_station,
+            other.arrival_station,
+            other.departs_at,
+            other.arrives_at,
+            other.num_stops,
         )
-    )
-
-
-def __eq__(self, other):
-    if not isinstance(other, PublicTransportPart):
-        return NotImplemented
-    return super().__eq__(other) and (
-        self.line,
-        self.departure_station,
-        self.arrival_station,
-        self.departs_at,
-        self.arrives_at,
-        self.num_stops,
-    ) == (
-        other.line,
-        other.departure_station,
-        other.arrival_station,
-        other.departs_at,
-        other.arrives_at,
-        other.num_stops,
-    )
 
 
 class Route(BaseModel):
