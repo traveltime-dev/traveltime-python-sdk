@@ -56,7 +56,6 @@ async def send_post_async(
 
 
 def __window_size(rate_limit: int):
-    print(rate_limit)
     if rate_limit >= DEFAULT_SPLIT_SIZE:
         return DEFAULT_SPLIT_SIZE
     else:
