@@ -48,7 +48,7 @@ class Throttler:
         # nothing to do here
         pass
 
-    async def wait_for_availability(self, window_size: int):
+    async def wait_for_availability(self, window_size: int = 10):
         # Start an infinite loop
         while True:
             # get rid of items that don't have to be tracked anymore
