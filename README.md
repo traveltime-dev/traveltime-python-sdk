@@ -475,14 +475,15 @@ Find sectors that have a certain coverage from origin (or to destination) and ge
 ```python
 from datetime import datetime
 
-from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
+from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk, ZonesProperty
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 
 results = sdk.sectors(
     coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
     departure_time=datetime.now(),
-    transportation=PublicTransport()
+    transportation=PublicTransport(),
+    properties=[ZonesProperty.TRAVEL_TIME_REACHABLE, ZonesProperty.TRAVEL_TIME_ALL]
 )
 
 print(results)
