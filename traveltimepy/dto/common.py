@@ -141,15 +141,6 @@ class Route(BaseModel):
     def __hash__(self):
         return hash((self.departure_time, self.arrival_time, *self.parts))
 
-    def __eq__(self, other):
-        if not isinstance(other, Route):
-            return NotImplemented
-        return (self.departure_time, self.arrival_time, self.parts) == (
-            other.departure_time,
-            other.arrival_time,
-            other.parts,
-        )
-
 
 class Ticket(BaseModel):
     type: str
@@ -158,11 +149,6 @@ class Ticket(BaseModel):
 
     def __hash__(self):
         return hash((self.type, self.price, self.currency))
-
-    def __eq__(self, other):
-        if not isinstance(other, Ticket):
-            return NotImplemented
-        return (self.type, self.price, self.currency) == (other.type, other.price, other.currency)
 
 
 class FareBreakdown(BaseModel):
@@ -173,11 +159,6 @@ class FareBreakdown(BaseModel):
     def __hash__(self):
         return hash((*self.modes, *self.route_part_ids, *self.tickets))
 
-    def __eq__(self, other):
-        if not isinstance(other, FareBreakdown):
-            return NotImplemented
-        return (self.modes, self.route_part_ids, self.tickets) == (other.modes, other.route_part_ids, other.tickets)
-
 
 class Fares(BaseModel):
     breakdown: List[FareBreakdown]
@@ -185,11 +166,6 @@ class Fares(BaseModel):
 
     def __hash__(self):
         return hash((*self.breakdown, *self.tickets_total))
-
-    def __eq__(self, other):
-        if not isinstance(other, Fares):
-            return NotImplemented
-        return (self.breakdown, self.tickets_total) == (other.breakdown, other.tickets_total)
 
 
 class Rectangle(BaseModel):
@@ -203,16 +179,6 @@ class Rectangle(BaseModel):
 
     def __hash__(self):
         return hash((self.min_lat, self.max_lat, self.min_lng, self.max_lng))
-
-    def __eq__(self, other):
-        if not isinstance(other, Rectangle):
-            return NotImplemented
-        return (self.min_lat, self.max_lat, self.min_lng, self.max_lng) == (
-            other.min_lat,
-            other.max_lat,
-            other.min_lng,
-            other.max_lng,
-        )
 
 
 class Property(str, Enum):
@@ -230,11 +196,6 @@ class FullRange(BaseModel):
     def __hash__(self):
         return hash((self.enabled, self.max_results, self.width))
 
-    def __eq__(self, other):
-        if not isinstance(other, FullRange):
-            return NotImplemented
-        return (self.enabled, self.max_results, self.width) == (other.enabled, other.max_results, other.width)
-
 
 class Range(BaseModel):
     enabled: bool
@@ -242,8 +203,3 @@ class Range(BaseModel):
 
     def __hash__(self):
         return hash((self.enabled, self.width))
-
-    def __eq__(self, other):
-        if not isinstance(other, Range):
-            return NotImplemented
-        return (self.enabled, self.width) == (other.enabled, other.width)
