@@ -33,7 +33,7 @@ class BasePart(BaseModel, abc.ABC):
     type: str
 
     def __hash__(self):
-        return hash((self.mode, self.directions, self.distance, self.travel_time, self.coords, self.type))
+        return hash((self.mode, self.directions, self.distance, self.travel_time, *self.coords, self.type))
 
     def __eq__(self, other):
         """
