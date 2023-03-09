@@ -19,7 +19,7 @@ class BaseTimeFilterSearch(BaseModel, abc.ABC):
     range: Optional[FullRange] = None
 
     def __hash__(self):
-        return hash((self.id, self.travel_time, self.transportation, self.properties, self.range))
+        return hash((self.id, self.travel_time, self.transportation, *self.properties, self.range))
 
 
 class ArrivalSearch(BaseTimeFilterSearch):
@@ -34,7 +34,7 @@ class ArrivalSearch(BaseTimeFilterSearch):
             (
                 'ArrivalSearch',
                 super().__hash__(),
-                self.departure_location_ids,
+                *self.departure_location_ids,
                 self.arrival_location_id,
                 self.arrival_time,
             )
@@ -54,7 +54,7 @@ class DepartureSearch(BaseTimeFilterSearch):
                 'DepartureSearch',
                 super().__hash__(),
                 self.departure_location_id,
-                self.arrival_location_ids,
+                *self.arrival_location_ids,
                 self.departure_time,
             )
         )
