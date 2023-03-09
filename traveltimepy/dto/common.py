@@ -56,11 +56,11 @@ class BasePart(BaseModel, abc.ABC):
 
 
 class BasicPart(BasePart):
-    type: Literal["basic"]
+    type: Literal['basic']
 
 
 class RoadPart(BasePart):
-    type: Literal["road"]
+    type: Literal['road']
     road: Optional[str]
     turn: Optional[str]
 
@@ -84,7 +84,7 @@ class RoadPart(BasePart):
 
 
 class StartEndPart(BasePart):
-    type: Literal["start_end"]
+    type: Literal['start_end']
     direction: str
 
     def __hash__(self):
@@ -106,7 +106,7 @@ class PublicTransportPart(BasePart):
     departs_at: time
     arrives_at: time
     num_stops: int
-    type: Literal["public_transport"]
+    type: Literal['public_transport']
 
     def __hash__(self):
         return hash(
@@ -186,17 +186,17 @@ class Rectangle(BaseModel):
     max_lng: float
 
     def to_str(self):
-        return f"{self.min_lat},{self.min_lng},{self.max_lat},{self.max_lng}"
+        return f'{self.min_lat},{self.min_lng},{self.max_lat},{self.max_lng}'
 
     def __hash__(self):
         return hash((self.min_lat, self.max_lat, self.min_lng, self.max_lng))
 
 
 class Property(str, Enum):
-    TRAVEL_TIME = "travel_time"
-    DISTANCE = "distance"
-    ROUTE = "route"
-    FARES = "fares"
+    TRAVEL_TIME = 'travel_time'
+    DISTANCE = 'distance'
+    ROUTE = 'route'
+    FARES = 'fares'
 
 
 class FullRange(BaseModel):

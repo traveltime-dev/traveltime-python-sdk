@@ -32,7 +32,7 @@ class ArrivalSearch(BaseTimeFilterSearch):
 
         return hash(
             (
-                "ArrivalSearch",
+                'ArrivalSearch',
                 super().__hash__(),
                 self.departure_location_ids,
                 self.arrival_location_id,
@@ -51,7 +51,7 @@ class DepartureSearch(BaseTimeFilterSearch):
 
         return hash(
             (
-                "DepartureSearch",
+                'DepartureSearch',
                 super().__hash__(),
                 self.departure_location_id,
                 self.arrival_location_ids,
