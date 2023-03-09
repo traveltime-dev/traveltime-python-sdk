@@ -202,7 +202,7 @@ results = sdk.time_filter(
     travel_time=3600,
     transportation=PublicTransport(type='bus'),
     properties=[Property.TRAVEL_TIME],
-    full_range=FullRange(enabled=True, max_results=3, width=600)
+    range=FullRange(enabled=True, max_results=3, width=600)
 )
 
 print(results)
