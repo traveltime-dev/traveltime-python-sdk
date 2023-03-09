@@ -37,8 +37,9 @@ class BasePart(BaseModel, abc.ABC):
 
     def __eq__(self, other):
         """
-        Equality comparison excludes id field which is
-         an information about the instance relationship with other part instances
+        Equality comparison excludes id field
+
+         ID is an information about the instance relationship with other part instances
          and not an information about the part itself (i.e. otherwise identical parts could
          have different IDs in different routes).
         """
@@ -73,6 +74,10 @@ class RoadPart(BasePart):
         )
 
     def __eq__(self, other):
+        """
+        Equality comparison excludes id field
+        """
+
         if not isinstance(other, RoadPart):
             return NotImplemented
         return super().__eq__(other) and (self.road, self.turn) == (other.road, other.turn)
@@ -86,6 +91,9 @@ class StartEndPart(BasePart):
         return hash((super().__hash__(), self.direction))
 
     def __eq__(self, other):
+        """
+        Equality comparison excludes id field
+        """
         if not isinstance(other, StartEndPart):
             return NotImplemented
         return super().__eq__(other) and self.direction == other.direction
@@ -114,6 +122,9 @@ class PublicTransportPart(BasePart):
         )
 
     def __eq__(self, other):
+        """
+        Equality comparison excludes id field
+        """
         if not isinstance(other, PublicTransportPart):
             return NotImplemented
         return super().__eq__(other) and (
