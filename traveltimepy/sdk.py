@@ -111,11 +111,11 @@ class TravelTimeSdk:
         ).results
 
     async def map_info_async(self) -> List[Map]:
-        res = await send_get_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON))
+        res = await send_get_async(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON), self.__sdk_params)
         return res.maps
 
     def map_info(self) -> List[Map]:
-        return send_get(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON)).maps
+        return send_get(MapInfoResponse, 'map-info', self.__headers(AcceptType.JSON), self.__sdk_params).maps
 
     async def geocoding_async(
         self,
