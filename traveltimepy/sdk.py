@@ -7,6 +7,7 @@ from traveltimepy.dto.requests.zones import ZonesProperty
 from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 
+from traveltimepy.version import __version__
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.itertools import join_opt
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
@@ -688,14 +689,14 @@ class TravelTimeSdk:
     def __proto_headers() -> Dict[str, str]:
         return {
             'Content-Type': AcceptType.OCTET_STREAM.value,
-            'User-Agent': 'Travel Time Python Beta SDK'
+            'User-Agent': f'Travel Time Python SDK {__version__}'
         }
 
     def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {
             'X-Application-Id': self.__app_id,
             'X-Api-Key': self.__api_key,
-            'User-Agent': 'Travel Time Beta Python SDK',
+            'User-Agent': f'Travel Time Python SDK {__version__}',
             'Content-Type': 'application/json',
             'Accept': accept_type.value
         }
