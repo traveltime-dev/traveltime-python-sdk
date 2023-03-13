@@ -38,7 +38,8 @@ from traveltimepy.http import (
     send_get,
     send_get_async,
     send_post,
-    send_post_async
+    send_post_async,
+    SdkParams
 )
 
 from geojson_pydantic import FeatureCollection
@@ -46,10 +47,10 @@ from geojson_pydantic import FeatureCollection
 
 class TravelTimeSdk:
 
-    def __init__(self, app_id: str, api_key: str, limit_per_host: int = 2) -> None:
+    def __init__(self, app_id: str, api_key: str, limit_per_host: int = 2, host: str = 'api.traveltimeapp.com') -> None:
         self.__app_id = app_id
         self.__api_key = api_key
-        self.__limit_per_host = limit_per_host
+        self.__sdk_params = SdkParams(host, limit_per_host)
 
     async def time_filter_async(
         self,
@@ -76,7 +77,7 @@ class TravelTimeSdk:
                 travel_time,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         )
 
         return resp.results
@@ -106,7 +107,7 @@ class TravelTimeSdk:
                 travel_time,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         ).results
 
     async def map_info_async(self) -> List[Map]:
@@ -129,6 +130,7 @@ class TravelTimeSdk:
             FeatureCollection,
             'geocoding/search',
             self.__headers(AcceptType.JSON),
+            self.__sdk_params,
             self.__geocoding_params(
                 query,
                 limit,
@@ -152,6 +154,7 @@ class TravelTimeSdk:
             FeatureCollection,
             'geocoding/search',
             self.__headers(AcceptType.JSON),
+            self.__sdk_params,
             self.__geocoding_params(
                 query,
                 limit,
@@ -172,6 +175,7 @@ class TravelTimeSdk:
             FeatureCollection,
             'geocoding/reverse',
             self.__headers(AcceptType.JSON),
+            self.__sdk_params,
             self.__geocoding_reverse_params(lat, lng, within_countries)
         )
 
@@ -184,6 +188,7 @@ class TravelTimeSdk:
             FeatureCollection,
             'geocoding/reverse',
             self.__headers(AcceptType.JSON),
+            self.__sdk_params,
             self.__geocoding_reverse_params(lat, lng)
         )
 
@@ -193,7 +198,7 @@ class TravelTimeSdk:
             'supported-locations',
             self.__headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
-            self.__limit_per_host
+            self.__sdk_params
         )
 
     def supported_locations(self, locations: List[Location]) -> SupportedLocationsResponse:
@@ -202,7 +207,7 @@ class TravelTimeSdk:
             'supported-locations',
             self.__headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
-            self.__limit_per_host
+            self.__sdk_params
         )
 
     async def time_filter_fast_async(
@@ -226,7 +231,7 @@ class TravelTimeSdk:
                 properties,
                 one_to_many
             ),
-            self.__limit_per_host
+            self.__sdk_params
         )
         return resp.results
 
@@ -251,7 +256,7 @@ class TravelTimeSdk:
                 properties,
                 one_to_many
             ),
-            self.__limit_per_host
+            self.__sdk_params
         ).results
 
     async def postcodes_async(
@@ -277,7 +282,7 @@ class TravelTimeSdk:
                 properties,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         )
         return resp.results
 
@@ -304,7 +309,7 @@ class TravelTimeSdk:
                 properties,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         ).results
 
     async def districts_async(
@@ -332,7 +337,7 @@ class TravelTimeSdk:
                 properties,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         )
         return res.results
 
@@ -361,7 +366,7 @@ class TravelTimeSdk:
                 properties,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         ).results
 
     async def sectors_async(
@@ -389,7 +394,7 @@ class TravelTimeSdk:
                 properties,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         )
         return resp.results
 
@@ -418,7 +423,7 @@ class TravelTimeSdk:
                 properties,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         ).results
 
     def routes(
@@ -444,7 +449,7 @@ class TravelTimeSdk:
                 properties,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         ).results
 
     async def routes_async(
@@ -470,7 +475,7 @@ class TravelTimeSdk:
                 properties,
                 range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         )
         return resp.results
 
@@ -528,7 +533,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         ).results
 
     def intersection(
@@ -552,7 +557,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         ).results[0]
 
     async def intersection_async(
@@ -576,7 +581,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         )
         return resp.results[0]
 
@@ -601,7 +606,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         ).results[0]
 
     async def union_async(
@@ -625,7 +630,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         )
 
         return resp.results[0]
@@ -651,7 +656,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range
             ),
-            self.__limit_per_host
+            self.__sdk_params
         )
         return resp.results
 

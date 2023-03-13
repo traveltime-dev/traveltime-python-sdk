@@ -1,4 +1,5 @@
 import asyncio
+from dataclasses import dataclass
 from typing import TypeVar, Type, Dict
 
 import aiohttp
@@ -14,14 +15,19 @@ T = TypeVar('T')
 R = TypeVar('R')
 
 
+@dataclass
+class SdkParams:
+    host: str
+    limit_per_host: int
+
+
 async def send_post_request_async(
     client: RetryClient,
     response_class: Type[T],
-    path: str,
+    url: str,
     headers: Dict[str, str],
     request: TravelTimeRequest
 ) -> T:
-    url = f'https://api.traveltimeapp.com/v4/{path}'
     async with client.post(url=url, headers=headers, data=request.json()) as resp:
         return await __process_response(response_class, resp)
 
@@ -31,12 +37,15 @@ async def send_post_async(
     path: str,
     headers: Dict[str, str],
     request: TravelTimeRequest,
-    limit_per_host: int
+    sdk_params: SdkParams
 ) -> T:
-    connector = aiohttp.TCPConnector(ssl=False, limit_per_host=limit_per_host)
+    connector = aiohttp.TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)
     async with ClientSession(connector=connector, timeout=aiohttp.ClientTimeout(total=60 * 60 * 30)) as session:
         client = RetryClient(client_session=session, retry_options=ExponentialRetry(attempts=3))
-        tasks = [send_post_request_async(client, response_class, path, headers, part) for part in request.split_searches()]
+        tasks = [
+            send_post_request_async(client, response_class, f'https://{sdk_params.host}/v4/{path}', headers, part)
+            for part in request.split_searches()
+        ]
         responses = await asyncio.gather(*tasks)
         await client.close()
         return request.merge(responses)
@@ -47,21 +56,21 @@ def send_post(
     path: str,
     headers: Dict[str, str],
     request: TravelTimeRequest,
-    limit_per_host: int
+    sdk_params: SdkParams
 ) -> T:
-    return asyncio.run(send_post_async(response_class, path, headers, request, limit_per_host))
+    return asyncio.run(send_post_async(response_class, path, headers, request, sdk_params))
 
 
 async def send_get_async(
     response_class: Type[T],
     path: str,
     headers: Dict[str, str],
+    sdk_params: SdkParams,
     params: Dict[str, str] = None
 ) -> T:
     connector = aiohttp.TCPConnector(ssl=False)
-    url = f'https://api.traveltimeapp.com/v4/{path}'
     async with aiohttp.ClientSession(connector=connector) as session:
-        async with session.get(url=url, headers=headers, params=params) as resp:
+        async with session.get(url=f'https://{sdk_params.host}/v4/{path}', headers=headers, params=params) as resp:
             return await __process_response(response_class, resp)
 
 
@@ -69,9 +78,10 @@ def send_get(
     response_class: Type[T],
     path: str,
     headers: Dict[str, str],
+    sdk_params: SdkParams,
     params: Dict[str, str] = None
 ) -> T:
-    return asyncio.run(send_get_async(response_class, path, headers, params))
+    return asyncio.run(send_get_async(response_class, path, headers, sdk_params, params))
 
 
 async def __process_response(response_class: Type[T], response: ClientResponse) -> T:
