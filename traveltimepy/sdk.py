@@ -267,7 +267,8 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_time: int = 1800,
         properties: Optional[List[Property]] = None,
-        range: Optional[FullRange] = None
+        range: Optional[FullRange] = None,
+        reachable_postcodes_threshold: float = 0.1
     ) -> List[PostcodesResult]:
         resp = await send_post_async(
             PostcodesResponse,
@@ -280,7 +281,8 @@ class TravelTimeSdk:
                 transportation,
                 travel_time,
                 properties,
-                range
+                range,
+                reachable_postcodes_threshold
             ),
             self.__sdk_params
         )
@@ -294,7 +296,8 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_time: int = 1800,
         properties: Optional[List[Property]] = None,
-        range: Optional[FullRange] = None
+        range: Optional[FullRange] = None,
+        reachable_postcodes_threshold: float = 0.1
     ) -> List[PostcodesResult]:
         return send_post(
             PostcodesResponse,
@@ -307,7 +310,8 @@ class TravelTimeSdk:
                 transportation,
                 travel_time,
                 properties,
-                range
+                range,
+                reachable_postcodes_threshold
             ),
             self.__sdk_params
         ).results
@@ -319,7 +323,7 @@ class TravelTimeSdk:
         travel_time: int = 1800,
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
-        reachable_postcodes_threshold=0.1,
+        reachable_postcodes_threshold=0.0,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
     ) -> List[DistrictsResult]:
@@ -348,7 +352,7 @@ class TravelTimeSdk:
         travel_time: int = 1800,
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
-        reachable_postcodes_threshold=0.1,
+        reachable_postcodes_threshold=0.0,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
     ) -> List[DistrictsResult]:

@@ -141,7 +141,8 @@ def create_postcodes(
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
     travel_time: int,
     properties: Optional[List[Property]],
-    range: Optional[FullRange]
+    range: Optional[FullRange],
+    reachable_postcodes_threshold: float
 ) -> PostcodesRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -159,7 +160,8 @@ def create_postcodes(
                     departure_time=departure_time,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
+                    reachable_postcodes_threshold=reachable_postcodes_threshold
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -175,7 +177,8 @@ def create_postcodes(
                     arrival_time=arrival_time,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
+                    reachable_postcodes_threshold=reachable_postcodes_threshold
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
