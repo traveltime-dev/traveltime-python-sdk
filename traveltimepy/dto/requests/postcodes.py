@@ -11,7 +11,7 @@ from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Wal
 from enum import Enum
 
 
-class Property(str, Enum):
+class PostcodesProperty(str, Enum):
     TRAVEL_TIME_REACHABLE = 'travel_time_reachable'
     TRAVEL_TIME_ALL = 'travel_time_all'
     COVERAGE = 'coverage'
@@ -23,7 +23,7 @@ class ArrivalSearch(BaseModel):
     travel_time: int
     arrival_time: datetime
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
-    properties: List[Property]
+    properties: List[PostcodesProperty]
     range: Optional[FullRange] = None
     reachable_postcodes_threshold: float
 
@@ -34,7 +34,7 @@ class DepartureSearch(BaseModel):
     travel_time: int
     departure_time: datetime
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
-    properties: List[Property]
+    properties: List[PostcodesProperty]
     range: Optional[FullRange] = None
     reachable_postcodes_threshold: float
 

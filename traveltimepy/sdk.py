@@ -6,7 +6,7 @@ from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Wal
 from traveltimepy.dto.requests.zones import ZonesProperty
 from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
 from traveltimepy.dto.requests.time_filter_fast import Transportation
-from traveltimepy.dto.requests.postcodes import Property as PostcodesProperty
+from traveltimepy.dto.requests.postcodes import PostcodesProperty
 
 from traveltimepy.version import __version__
 from traveltimepy.accept_type import AcceptType
