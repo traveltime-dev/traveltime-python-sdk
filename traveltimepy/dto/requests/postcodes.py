@@ -3,11 +3,18 @@ from typing import List, Union, Optional
 
 from pydantic import BaseModel
 
-from traveltimepy.dto.common import Coordinates, Property, FullRange
+from traveltimepy.dto.common import Coordinates, FullRange
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.postcodes import PostcodesResponse
 from traveltimepy.itertools import split, flatten
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from enum import Enum
+
+
+class Property(str, Enum):
+    TRAVEL_TIME_REACHABLE = 'travel_time_reachable'
+    TRAVEL_TIME_ALL = 'travel_time_all'
+    COVERAGE = 'coverage'
 
 
 class ArrivalSearch(BaseModel):
