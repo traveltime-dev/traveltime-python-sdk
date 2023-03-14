@@ -10,7 +10,7 @@ from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Wal
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 from traveltimepy.dto.requests.zones import ZonesProperty
 
-from traveltimepy.dto.requests.postcodes import PostcodesRequest
+from traveltimepy.dto.requests.postcodes import PostcodesRequest, PostcodesProperty
 from traveltimepy.dto.requests.routes import RoutesRequest
 from traveltimepy.dto.requests.time_filter import TimeFilterRequest
 from traveltimepy.dto.requests.time_filter_fast import TimeFilterFastRequest
@@ -140,12 +140,12 @@ def create_postcodes(
     arrival_time: Optional[datetime],
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
     travel_time: int,
-    properties: Optional[List[Property]],
+    properties: Optional[List[PostcodesProperty]],
     range: Optional[FullRange],
     reachable_postcodes_threshold: float
 ) -> PostcodesRequest:
     if properties is None:
-        properties = [Property.TRAVEL_TIME]
+        properties = [PostcodesProperty.COVERAGE]
 
     if arrival_time is not None and departure_time is not None:
         raise ApiError('arrival_time and departure_time cannot be both specified')
