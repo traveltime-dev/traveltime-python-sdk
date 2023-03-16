@@ -196,7 +196,7 @@ def create_districts(
     range: Optional[FullRange]
 ) -> PostcodesDistrictsRequest:
     if properties is None:
-        properties = PostcodesProperty.TRAVEL_TIME_ALL
+        properties = [PostcodesProperty.TRAVEL_TIME_ALL]
 
     if arrival_time is not None and departure_time is not None:
         raise ApiError('arrival_time and departure_time cannot be both specified')
@@ -250,7 +250,7 @@ def create_sectors(
     range: Optional[FullRange]
 ) -> PostcodesSectorsRequest:
     if properties is None:
-        properties = PostcodesProperty.TRAVEL_TIME_ALL
+        properties = [PostcodesProperty.TRAVEL_TIME_ALL]
 
     if arrival_time is not None and departure_time is not None:
         raise ApiError('arrival_time and departure_time cannot be both specified')
