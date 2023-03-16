@@ -22,7 +22,7 @@ def test_arrivals(sdk):
 
 
 def test_districts_departure(sdk):
-    results = sdk.postcodes_districts(
+    results = sdk.postcode_districts(
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
         departure_time=datetime.now(),
         transportation=PublicTransport()
@@ -31,7 +31,7 @@ def test_districts_departure(sdk):
 
 
 def test_districts_arrival(sdk):
-    results = sdk.postcodes_districts(
+    results = sdk.postcode_districts(
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
         arrival_time=datetime.now(),
         transportation=PublicTransport()
@@ -40,7 +40,7 @@ def test_districts_arrival(sdk):
 
 
 def test_sectors_departure(sdk):
-    results = sdk.postcodes_sectors(
+    results = sdk.postcode_sectors(
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
         departure_time=datetime.now(),
         transportation=PublicTransport()
@@ -49,7 +49,7 @@ def test_sectors_departure(sdk):
 
 
 def test_sectors_arrival(sdk):
-    results = sdk.postcodes_sectors(
+    results = sdk.postcode_sectors(
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
         arrival_time=datetime.now(),
         transportation=PublicTransport()

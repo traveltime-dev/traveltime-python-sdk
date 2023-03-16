@@ -8,7 +8,7 @@ from traveltimepy import TimeFilterFastRequest_pb2
 from traveltimepy.dto.common import Location, Coordinates, FullRange, Property, Range
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 from traveltimepy.dto.requests.time_filter_fast import Transportation
-from traveltimepy.dto.requests.postcodes_zones import PostcodesProperty
+from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 
 from traveltimepy.dto.requests.postcodes import PostcodesRequest
 from traveltimepy.dto.requests.routes import RoutesRequest
@@ -192,11 +192,11 @@ def create_districts(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     reachable_postcodes_threshold,
-    properties: Optional[List[PostcodesProperty]],
+    properties: Optional[List[ZonesProperty]],
     range: Optional[FullRange]
 ) -> PostcodesDistrictsRequest:
     if properties is None:
-        properties = [PostcodesProperty.TRAVEL_TIME_ALL]
+        properties = [ZonesProperty.TRAVEL_TIME_ALL]
 
     if arrival_time is not None and departure_time is not None:
         raise ApiError('arrival_time and departure_time cannot be both specified')
@@ -246,11 +246,11 @@ def create_sectors(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     reachable_postcodes_threshold,
-    properties: Optional[List[PostcodesProperty]],
+    properties: Optional[List[ZonesProperty]],
     range: Optional[FullRange]
 ) -> PostcodesSectorsRequest:
     if properties is None:
-        properties = [PostcodesProperty.TRAVEL_TIME_ALL]
+        properties = [ZonesProperty.TRAVEL_TIME_ALL]
 
     if arrival_time is not None and departure_time is not None:
         raise ApiError('arrival_time and departure_time cannot be both specified')

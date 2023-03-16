@@ -449,7 +449,7 @@ from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 
-results = sdk.postcodes_districts(
+results = sdk.postcode_districts(
   coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
   departure_time=datetime.now(),
   transportation=PublicTransport()
@@ -481,15 +481,15 @@ Find sectors that have a certain coverage from origin (or to destination) and ge
 ```python
 from datetime import datetime
 
-from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk, PostcodesProperty
+from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk, ZonesProperty
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 
-results = sdk.postcodes_sectors(
+results = sdk.postcode_sectors(
   coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
   departure_time=datetime.now(),
   transportation=PublicTransport(),
-  properties=[PostcodesProperty.TRAVEL_TIME_REACHABLE, PostcodesProperty.TRAVEL_TIME_ALL]
+  properties=[ZonesProperty.TRAVEL_TIME_REACHABLE, ZonesProperty.TRAVEL_TIME_ALL]
 )
 
 print(results)

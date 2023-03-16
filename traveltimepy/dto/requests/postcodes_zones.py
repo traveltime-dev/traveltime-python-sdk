@@ -11,7 +11,7 @@ from traveltimepy.itertools import split, flatten
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 
-class PostcodesProperty(str, Enum):
+class ZonesProperty(str, Enum):
     TRAVEL_TIME_REACHABLE = 'travel_time_reachable'
     TRAVEL_TIME_ALL = 'travel_time_all'
     COVERAGE = 'coverage'
@@ -24,7 +24,7 @@ class ArrivalSearch(BaseModel):
     arrival_time: datetime
     reachable_postcodes_threshold: float
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
-    properties: List[PostcodesProperty]
+    properties: List[ZonesProperty]
     range: Optional[FullRange] = None
 
 
@@ -35,7 +35,7 @@ class DepartureSearch(BaseModel):
     departure_time: datetime
     reachable_postcodes_threshold: float
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
-    properties: List[PostcodesProperty]
+    properties: List[ZonesProperty]
     range: Optional[FullRange] = None
 
 

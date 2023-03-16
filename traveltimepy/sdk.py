@@ -3,7 +3,7 @@ from typing import List, Optional, Dict, Union
 
 from traveltimepy.dto.common import Location, Coordinates, Rectangle, Property, FullRange, Range
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
-from traveltimepy.dto.requests.postcodes_zones import PostcodesProperty
+from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 
@@ -321,7 +321,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
         reachable_postcodes_threshold=0.1,
-        properties: Optional[List[PostcodesProperty]] = None,
+        properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
     ) -> List[PostcodesDistrictsResult]:
         res = await send_post_async(
@@ -342,7 +342,7 @@ class TravelTimeSdk:
         )
         return res.results
 
-    def postcodes_districts(
+    def postcode_districts(
         self,
         coordinates: List[Coordinates],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
@@ -350,7 +350,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
         reachable_postcodes_threshold=0.1,
-        properties: Optional[List[PostcodesProperty]] = None,
+        properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
     ) -> List[PostcodesDistrictsResult]:
         return send_post(
@@ -378,7 +378,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
         reachable_postcodes_threshold=0.1,
-        properties: Optional[List[PostcodesProperty]] = None,
+        properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
     ) -> List[PostcodesSectorsResult]:
         resp = await send_post_async(
@@ -399,7 +399,7 @@ class TravelTimeSdk:
         )
         return resp.results
 
-    def postcodes_sectors(
+    def postcode_sectors(
         self,
         coordinates: List[Coordinates],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
@@ -407,7 +407,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
         reachable_postcodes_threshold=0.1,
-        properties: Optional[List[PostcodesProperty]] = None,
+        properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
     ) -> List[PostcodesSectorsResult]:
         return send_post(
