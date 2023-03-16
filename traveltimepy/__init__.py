@@ -6,7 +6,7 @@ from traveltimepy.dto.common import Coordinates, Location, Property, FullRange, 
 
 from traveltimepy.sdk import TravelTimeSdk
 from traveltimepy.dto.requests.time_filter_fast import Transportation
-from traveltimepy.dto.requests.zones import ZonesProperty
+from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 from traveltimepy.version import __version__
 
 __all__ = [

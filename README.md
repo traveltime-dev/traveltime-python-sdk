@@ -441,6 +441,7 @@ Find districts that have a certain coverage from origin (or to destination) and 
 * results: List[DistrictsResult] - The results list of districts.
 
 #### Example:
+
 ```python
 from datetime import datetime
 
@@ -448,10 +449,10 @@ from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 
-results = sdk.districts(
-    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
-    departure_time=datetime.now(),
-    transportation=PublicTransport()
+results = sdk.postcode_districts(
+  coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
+  departure_time=datetime.now(),
+  transportation=PublicTransport()
 )
 
 print(results)
@@ -476,6 +477,7 @@ Find sectors that have a certain coverage from origin (or to destination) and ge
 * results: List[SectorsResult] - The results list of postcode sectors.
 
 #### Example:
+
 ```python
 from datetime import datetime
 
@@ -483,11 +485,11 @@ from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk, ZonesPrope
 
 sdk = TravelTimeSdk('YOUR_APP_ID', 'YOUR_APP_KEY')
 
-results = sdk.sectors(
-    coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
-    departure_time=datetime.now(),
-    transportation=PublicTransport(),
-    properties=[ZonesProperty.TRAVEL_TIME_REACHABLE, ZonesProperty.TRAVEL_TIME_ALL]
+results = sdk.postcode_sectors(
+  coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
+  departure_time=datetime.now(),
+  transportation=PublicTransport(),
+  properties=[ZonesProperty.TRAVEL_TIME_REACHABLE, ZonesProperty.TRAVEL_TIME_ALL]
 )
 
 print(results)
@@ -547,6 +549,3 @@ results = sdk.supported_locations(locations)
 print(results.locations)
 print(results.unsupported_locations)
 ```
-
-
-

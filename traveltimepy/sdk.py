@@ -3,7 +3,7 @@ from typing import List, Optional, Dict, Union
 
 from traveltimepy.dto.common import Location, Coordinates, Rectangle, Property, FullRange, Range
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
-from traveltimepy.dto.requests.zones import ZonesProperty
+from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 from traveltimepy.dto.requests.time_filter_proto import ProtoCountry, ProtoTransportation
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 
@@ -19,7 +19,8 @@ from traveltimepy.dto.responses.supported_locations import SupportedLocationsRes
 from traveltimepy.dto.responses.time_filter import TimeFilterResponse, TimeFilterResult
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse, TimeFilterFastResult
 from traveltimepy.dto.responses.time_map import TimeMapResponse, TimeMapResult
-from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse, DistrictsResult, SectorsResult
+from traveltimepy.dto.responses.zones import PostcodesDistrictsResponse, PostcodesSectorsResponse,\
+    PostcodesDistrictsResult, PostcodesSectorsResult
 
 from traveltimepy.mapper import (
     create_time_filter,
@@ -312,7 +313,7 @@ class TravelTimeSdk:
             self.__sdk_params
         ).results
 
-    async def districts_async(
+    async def postcodes_districts_async(
         self,
         coordinates: List[Coordinates],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
@@ -322,9 +323,9 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
-    ) -> List[DistrictsResult]:
+    ) -> List[PostcodesDistrictsResult]:
         res = await send_post_async(
-            DistrictsResponse,
+            PostcodesDistrictsResponse,
             'time-filter/postcode-districts',
             self.__headers(AcceptType.JSON),
             create_districts(
@@ -341,7 +342,7 @@ class TravelTimeSdk:
         )
         return res.results
 
-    def districts(
+    def postcode_districts(
         self,
         coordinates: List[Coordinates],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
@@ -351,9 +352,9 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
-    ) -> List[DistrictsResult]:
+    ) -> List[PostcodesDistrictsResult]:
         return send_post(
-            DistrictsResponse,
+            PostcodesDistrictsResponse,
             'time-filter/postcode-districts',
             self.__headers(AcceptType.JSON),
             create_districts(
@@ -369,7 +370,7 @@ class TravelTimeSdk:
             self.__sdk_params
         ).results
 
-    async def sectors_async(
+    async def postcodes_sectors_async(
         self,
         coordinates: List[Coordinates],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
@@ -379,9 +380,9 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
-    ) -> List[SectorsResult]:
+    ) -> List[PostcodesSectorsResult]:
         resp = await send_post_async(
-            SectorsResponse,
+            PostcodesSectorsResponse,
             'time-filter/postcode-sectors',
             self.__headers(AcceptType.JSON),
             create_sectors(
@@ -398,7 +399,7 @@ class TravelTimeSdk:
         )
         return resp.results
 
-    def sectors(
+    def postcode_sectors(
         self,
         coordinates: List[Coordinates],
         transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
@@ -408,9 +409,9 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None
-    ) -> List[SectorsResult]:
+    ) -> List[PostcodesSectorsResult]:
         return send_post(
-            SectorsResponse,
+            PostcodesSectorsResponse,
             'time-filter/postcode-sectors',
             self.__headers(AcceptType.JSON),
             create_sectors(
