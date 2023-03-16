@@ -204,7 +204,7 @@ def create_districts(
     if arrival_time is not None:
         return PostcodesDistrictsRequest(
             arrival_searches=[
-                zones.ArrivalSearch(
+                postcodes_zones.ArrivalSearch(
                     id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -221,7 +221,7 @@ def create_districts(
     elif departure_time is not None:
         return PostcodesDistrictsRequest(
             departure_searches=[
-                zones.DepartureSearch(
+                postcodes_zones.DepartureSearch(
                     id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -258,7 +258,7 @@ def create_sectors(
     if arrival_time is not None:
         return PostcodesSectorsRequest(
             arrival_searches=[
-                zones.ArrivalSearch(
+                postcodes_zones.ArrivalSearch(
                     id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
@@ -275,7 +275,7 @@ def create_sectors(
     elif departure_time is not None:
         return PostcodesSectorsRequest(
             departure_searches=[
-                zones.DepartureSearch(
+                postcodes_zones.DepartureSearch(
                     id=f'Search {ind}',
                     coords=cur_coordinates,
                     travel_time=travel_time,
