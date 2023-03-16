@@ -19,7 +19,8 @@ from traveltimepy.dto.responses.supported_locations import SupportedLocationsRes
 from traveltimepy.dto.responses.time_filter import TimeFilterResponse, TimeFilterResult
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse, TimeFilterFastResult
 from traveltimepy.dto.responses.time_map import TimeMapResponse, TimeMapResult
-from traveltimepy.dto.responses.zones import PostcodesDistrictsResponse, PostcodesSectorsResponse, PostcodesDistrictsResult, PostcodesSectorsResult
+from traveltimepy.dto.responses.zones import PostcodesDistrictsResponse, PostcodesSectorsResponse,\
+    PostcodesDistrictsResult, PostcodesSectorsResult
 
 from traveltimepy.mapper import (
     create_time_filter,
