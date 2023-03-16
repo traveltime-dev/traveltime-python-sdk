@@ -21,19 +21,19 @@ class Zone(BaseModel):
     properties: Properties
 
 
-class SectorsResult(BaseModel):
+class PostcodesSectorsResult(BaseModel):
     search_id: str
     sectors: List[Zone]
 
 
-class DistrictsResult(BaseModel):
+class PostcodesDistrictsResult(BaseModel):
     search_id: str
     districts: List[Zone]
 
 
-class SectorsResponse(BaseModel):
-    results: List[SectorsResult]
+class PostcodesSectorsResponse(BaseModel):
+    results: List[PostcodesSectorsResult]
 
 
-class DistrictsResponse(BaseModel):
-    results: List[DistrictsResult]
+class PostcodesDistrictsResponse(BaseModel):
+    results: List[PostcodesDistrictsResult]

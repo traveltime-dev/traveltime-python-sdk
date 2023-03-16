@@ -6,12 +6,12 @@ from pydantic import BaseModel
 
 from traveltimepy.dto.common import Coordinates, FullRange
 from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.zones import DistrictsResponse, SectorsResponse
+from traveltimepy.dto.responses.zones import PostcodesDistrictsResponse, PostcodesSectorsResponse
 from traveltimepy.itertools import split, flatten
 from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
 
 
-class ZonesProperty(str, Enum):
+class PostcodesProperty(str, Enum):
     TRAVEL_TIME_REACHABLE = 'travel_time_reachable'
     TRAVEL_TIME_ALL = 'travel_time_all'
     COVERAGE = 'coverage'
@@ -24,7 +24,7 @@ class ArrivalSearch(BaseModel):
     arrival_time: datetime
     reachable_postcodes_threshold: float
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
-    properties: List[ZonesProperty]
+    properties: List[PostcodesProperty]
     range: Optional[FullRange] = None
 
 
@@ -35,37 +35,37 @@ class DepartureSearch(BaseModel):
     departure_time: datetime
     reachable_postcodes_threshold: float
     transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
-    properties: List[ZonesProperty]
+    properties: List[PostcodesProperty]
     range: Optional[FullRange] = None
 
 
-class SectorsRequest(TravelTimeRequest[SectorsResponse]):
+class PostcodesSectorsRequest(TravelTimeRequest[PostcodesSectorsResponse]):
     departure_searches: List[DepartureSearch]
     arrival_searches: List[ArrivalSearch]
 
     def split_searches(self) -> List[TravelTimeRequest]:
         return [
-            SectorsRequest(departure_searches=departures, arrival_searches=arrivals)
+            PostcodesSectorsRequest(departure_searches=departures, arrival_searches=arrivals)
             for departures, arrivals in split(self.departure_searches, self.arrival_searches, 10)
         ]
 
-    def merge(self, responses: List[SectorsResponse]) -> SectorsResponse:
-        return SectorsResponse(
+    def merge(self, responses: List[PostcodesSectorsResponse]) -> PostcodesSectorsResponse:
+        return PostcodesSectorsResponse(
             results=sorted(flatten([response.results for response in responses]), key=lambda res: res.search_id)
         )
 
 
-class DistrictsRequest(TravelTimeRequest[DistrictsResponse]):
+class PostcodesDistrictsRequest(TravelTimeRequest[PostcodesDistrictsResponse]):
     departure_searches: List[DepartureSearch]
     arrival_searches: List[ArrivalSearch]
 
     def split_searches(self) -> List[TravelTimeRequest]:
         return [
-            DistrictsRequest(departure_searches=departures, arrival_searches=arrivals)
+            PostcodesDistrictsRequest(departure_searches=departures, arrival_searches=arrivals)
             for departures, arrivals in split(self.departure_searches, self.arrival_searches, 10)
         ]
 
-    def merge(self, responses: List[DistrictsResponse]) -> DistrictsResponse:
-        return DistrictsResponse(
+    def merge(self, responses: List[PostcodesDistrictsResponse]) -> PostcodesDistrictsResponse:
+        return PostcodesDistrictsResponse(
             results=sorted(flatten([response.results for response in responses]), key=lambda res: res.search_id)
         )
