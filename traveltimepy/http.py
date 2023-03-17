@@ -44,13 +44,14 @@ async def send_post_async(
     request: TravelTimeRequest,
     sdk_params: SdkParams
 ) -> T:
-    async with AsyncLimiter(sdk_params.rate_limit, sdk_params.time_window):
+    window_size = __window_size(sdk_params.rate_limit)
+    async with AsyncLimiter(sdk_params.rate_limit // window_size, sdk_params.time_window):
         async with ClientSession(connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)) as session:
             retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
             async with RetryClient(client_session=session, retry_options=retry_options) as client:
                 tasks = [
                     send_post_request_async(client, response_class, f'https://{sdk_params.host}/v4/{path}', headers, part)
-                    for part in request.split_searches(__window_size(sdk_params.rate_limit))
+                    for part in request.split_searches(window_size)
                 ]
                 responses = await asyncio.gather(*tasks)
                 return request.merge(responses)
