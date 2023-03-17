@@ -51,7 +51,7 @@ class TimeFilterFastRequest(TravelTimeRequest[TimeFilterFastResponse]):
     locations: List[Location]
     arrival_searches: ArrivalSearches
 
-    def split_searches(self) -> List[TravelTimeRequest]:
+    def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
             TimeFilterFastRequest(
                 locations=self.locations,

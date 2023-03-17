@@ -9,7 +9,7 @@ from traveltimepy.itertools import flatten
 class SupportedLocationsRequest(TravelTimeRequest[SupportedLocationsResponse]):
     locations: List[Location]
 
-    def split_searches(self) -> List[TravelTimeRequest]:
+    def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [SupportedLocationsRequest(locations=self.locations)]
 
     def merge(self, responses: List[SupportedLocationsResponse]) -> SupportedLocationsResponse:
