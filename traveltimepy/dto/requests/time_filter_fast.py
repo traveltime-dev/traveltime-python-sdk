@@ -60,7 +60,11 @@ class TimeFilterFastRequest(TravelTimeRequest[TimeFilterFastResponse]):
                     many_to_one=many_to_one
                 )
             )
-            for one_to_many, many_to_one in split(self.arrival_searches.one_to_many, self.arrival_searches.many_to_one, window_size)
+            for one_to_many, many_to_one in split(
+                self.arrival_searches.one_to_many,
+                self.arrival_searches.many_to_one,
+                window_size
+            )
         ]
 
     def merge(self, responses: List[TimeFilterFastResponse]) -> TimeFilterFastResponse:
