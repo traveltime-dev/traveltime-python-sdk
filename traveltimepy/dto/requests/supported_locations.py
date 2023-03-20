@@ -12,8 +12,12 @@ class SupportedLocationsRequest(TravelTimeRequest[SupportedLocationsResponse]):
     def split_searches(self) -> List[TravelTimeRequest]:
         return [SupportedLocationsRequest(locations=self.locations)]
 
-    def merge(self, responses: List[SupportedLocationsResponse]) -> SupportedLocationsResponse:
+    def merge(
+        self, responses: List[SupportedLocationsResponse]
+    ) -> SupportedLocationsResponse:
         return SupportedLocationsResponse(
             locations=flatten([response.locations for response in responses]),
-            unsupported_locations=flatten([response.unsupported_locations for response in responses])
+            unsupported_locations=flatten(
+                [response.unsupported_locations for response in responses]
+            ),
         )

@@ -1,3 +1,2 @@
-
 class ApiError(Exception):
     pass

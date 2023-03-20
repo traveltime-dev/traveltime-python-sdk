@@ -11,8 +11,8 @@ from traveltimepy.dto.responses.error import ResponseError
 from traveltimepy.errors import ApiError
 from aiohttp_retry import RetryClient, ExponentialRetry
 
-T = TypeVar('T')
-R = TypeVar('R')
+T = TypeVar("T")
+R = TypeVar("R")
 
 
 @dataclass
@@ -26,7 +26,7 @@ async def send_post_request_async(
     response_class: Type[T],
     url: str,
     headers: Dict[str, str],
-    request: TravelTimeRequest
+    request: TravelTimeRequest,
 ) -> T:
     async with client.post(url=url, headers=headers, data=request.json()) as resp:
         return await __process_response(response_class, resp)
@@ -37,13 +37,25 @@ async def send_post_async(
     path: str,
     headers: Dict[str, str],
     request: TravelTimeRequest,
-    sdk_params: SdkParams
+    sdk_params: SdkParams,
 ) -> T:
-    connector = aiohttp.TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)
-    async with ClientSession(connector=connector, timeout=aiohttp.ClientTimeout(total=60 * 60 * 30)) as session:
-        client = RetryClient(client_session=session, retry_options=ExponentialRetry(attempts=3))
+    connector = aiohttp.TCPConnector(
+        ssl=False, limit_per_host=sdk_params.limit_per_host
+    )
+    async with ClientSession(
+        connector=connector, timeout=aiohttp.ClientTimeout(total=60 * 60 * 30)
+    ) as session:
+        client = RetryClient(
+            client_session=session, retry_options=ExponentialRetry(attempts=3)
+        )
         tasks = [
-            send_post_request_async(client, response_class, f'https://{sdk_params.host}/v4/{path}', headers, part)
+            send_post_request_async(
+                client,
+                response_class,
+                f"https://{sdk_params.host}/v4/{path}",
+                headers,
+                part,
+            )
             for part in request.split_searches()
         ]
         responses = await asyncio.gather(*tasks)
@@ -56,9 +68,11 @@ def send_post(
     path: str,
     headers: Dict[str, str],
     request: TravelTimeRequest,
-    sdk_params: SdkParams
+    sdk_params: SdkParams,
 ) -> T:
-    return asyncio.run(send_post_async(response_class, path, headers, request, sdk_params))
+    return asyncio.run(
+        send_post_async(response_class, path, headers, request, sdk_params)
+    )
 
 
 async def send_get_async(
@@ -66,11 +80,13 @@ async def send_get_async(
     path: str,
     headers: Dict[str, str],
     sdk_params: SdkParams,
-    params: Dict[str, str] = None
+    params: Dict[str, str] = None,
 ) -> T:
     connector = aiohttp.TCPConnector(ssl=False)
     async with aiohttp.ClientSession(connector=connector) as session:
-        async with session.get(url=f'https://{sdk_params.host}/v4/{path}', headers=headers, params=params) as resp:
+        async with session.get(
+            url=f"https://{sdk_params.host}/v4/{path}", headers=headers, params=params
+        ) as resp:
             return await __process_response(response_class, resp)
 
 
@@ -79,20 +95,22 @@ def send_get(
     path: str,
     headers: Dict[str, str],
     sdk_params: SdkParams,
-    params: Dict[str, str] = None
+    params: Dict[str, str] = None,
 ) -> T:
-    return asyncio.run(send_get_async(response_class, path, headers, sdk_params, params))
+    return asyncio.run(
+        send_get_async(response_class, path, headers, sdk_params, params)
+    )
 
 
 async def __process_response(response_class: Type[T], response: ClientResponse) -> T:
     text = await response.text()
     if response.status != 200:
         parsed = parse_raw_as(ResponseError, text)
-        msg = 'Travel Time API request failed \n{}\nError code: {}\nAdditional info: {}\n<{}>\n'.format(
+        msg = "Travel Time API request failed \n{}\nError code: {}\nAdditional info: {}\n<{}>\n".format(
             parsed.description,
             parsed.error_code,
             parsed.additional_info,
-            parsed.documentation_link
+            parsed.documentation_link,
         )
 
         raise ApiError(msg)
