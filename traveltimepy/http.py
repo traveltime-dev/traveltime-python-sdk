@@ -2,23 +2,26 @@ import asyncio
 from dataclasses import dataclass
 from typing import TypeVar, Type, Dict
 
-import aiohttp
-from aiohttp import ClientSession, ClientResponse
+from aiohttp import ClientSession, ClientResponse, TCPConnector
 from pydantic.tools import parse_raw_as
 from traveltimepy.dto.requests.request import TravelTimeRequest
 
 from traveltimepy.dto.responses.error import ResponseError
 from traveltimepy.errors import ApiError
 from aiohttp_retry import RetryClient, ExponentialRetry
+from aiolimiter import AsyncLimiter
 
 T = TypeVar('T')
-R = TypeVar('R')
+DEFAULT_SPLIT_SIZE = 10
 
 
 @dataclass
 class SdkParams:
     host: str
     limit_per_host: int
+    rate_limit: int
+    time_window: int
+    retry_attempts: int
 
 
 async def send_post_request_async(
@@ -26,10 +29,12 @@ async def send_post_request_async(
     response_class: Type[T],
     url: str,
     headers: Dict[str, str],
-    request: TravelTimeRequest
+    request: TravelTimeRequest,
+    rate_limit: AsyncLimiter
 ) -> T:
-    async with client.post(url=url, headers=headers, data=request.json()) as resp:
-        return await __process_response(response_class, resp)
+    async with rate_limit:
+        async with client.post(url=url, headers=headers, data=request.json()) as resp:
+            return await __process_response(response_class, resp)
 
 
 async def send_post_async(
@@ -39,16 +44,31 @@ async def send_post_async(
     request: TravelTimeRequest,
     sdk_params: SdkParams
 ) -> T:
-    connector = aiohttp.TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)
-    async with ClientSession(connector=connector, timeout=aiohttp.ClientTimeout(total=60 * 60 * 30)) as session:
-        client = RetryClient(client_session=session, retry_options=ExponentialRetry(attempts=3))
-        tasks = [
-            send_post_request_async(client, response_class, f'https://{sdk_params.host}/v4/{path}', headers, part)
-            for part in request.split_searches()
-        ]
-        responses = await asyncio.gather(*tasks)
-        await client.close()
-        return request.merge(responses)
+    window_size = __window_size(sdk_params.rate_limit)
+    async with ClientSession(connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)) as session:
+        retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
+        async with RetryClient(client_session=session, retry_options=retry_options) as client:
+            rate_limit = AsyncLimiter(sdk_params.rate_limit // window_size, sdk_params.time_window)
+            tasks = [
+                send_post_request_async(
+                    client,
+                    response_class,
+                    f'https://{sdk_params.host}/v4/{path}',
+                    headers,
+                    part,
+                    rate_limit
+                )
+                for part in request.split_searches(window_size)
+            ]
+            responses = await asyncio.gather(*tasks)
+            return request.merge(responses)
+
+
+def __window_size(rate_limit: int):
+    if rate_limit >= DEFAULT_SPLIT_SIZE:
+        return DEFAULT_SPLIT_SIZE
+    else:
+        return rate_limit
 
 
 def send_post(
@@ -68,10 +88,11 @@ async def send_get_async(
     sdk_params: SdkParams,
     params: Dict[str, str] = None
 ) -> T:
-    connector = aiohttp.TCPConnector(ssl=False)
-    async with aiohttp.ClientSession(connector=connector) as session:
-        async with session.get(url=f'https://{sdk_params.host}/v4/{path}', headers=headers, params=params) as resp:
-            return await __process_response(response_class, resp)
+    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
+        retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
+        async with RetryClient(client_session=session, retry_options=retry_options) as client:
+            async with client.get(url=f'https://{sdk_params.host}/v4/{path}', headers=headers, params=params) as resp:
+                return await __process_response(response_class, resp)
 
 
 def send_get(

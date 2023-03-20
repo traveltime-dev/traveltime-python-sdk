@@ -37,12 +37,15 @@ In order to authenticate with Travel Time API, you will have to supply the Appli
 #### Takes:
  * app_id: str - Application Id
  * api_key: str - Api Key
- * limit_per_host: int - Amount of requests which can be processed at the same time
- * host: str - TravelTime host, default value is api.traveltimeapp.com
+ * limit_per_host: int - Number of simultaneous connections to one host.
+ * rate_limit: int - Number of searches which can be made in a time window.
+ * time_window - Duration, in seconds, of the time period in which to limit the rate.
+ * retry_attempts - Number of retries for failed requests.
+ * host: str - TravelTime host, default value is api.traveltimeapp.com.
 ```python
 from traveltimepy import TravelTimeSdk
 
-sdk = TravelTimeSdk(app_id='YOUR_APP_ID', api_key='YOUR_APP_KEY', limit_per_host=4)
+sdk = TravelTimeSdk(app_id='YOUR_APP_ID', api_key='YOUR_APP_KEY')
 ```
 
 ### Asynchronous calls 
