@@ -6,7 +6,14 @@ from traveltimepy.errors import ApiError
 from traveltimepy import TimeFilterFastRequest_pb2
 
 from traveltimepy.dto.common import Location, Coordinates, FullRange, Property, Range
-from traveltimepy.dto.transportation import PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy.dto.transportation import (
+    PublicTransport,
+    Driving,
+    Ferry,
+    Walking,
+    Cycling,
+    DrivingTrain,
+)
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 
@@ -15,7 +22,10 @@ from traveltimepy.dto.requests.routes import RoutesRequest
 from traveltimepy.dto.requests.time_filter import TimeFilterRequest
 from traveltimepy.dto.requests.time_filter_fast import TimeFilterFastRequest
 from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
-from traveltimepy.dto.requests.postcodes_zones import PostcodesDistrictsRequest, PostcodesSectorsRequest
+from traveltimepy.dto.requests.postcodes_zones import (
+    PostcodesDistrictsRequest,
+    PostcodesSectorsRequest,
+)
 from traveltimepy.dto.requests.time_map import TimeMapRequest
 
 
@@ -25,24 +35,26 @@ from traveltimepy.dto.requests import (
     postcodes,
     postcodes_zones,
     routes,
-    time_map
+    time_map,
 )
 
 
 def create_time_filter(
     locations: List[Location],
     search_ids: Dict[str, List[str]],
-    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    transportation: Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ],
     properties: Optional[List[Property]],
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     travel_time: int,
-    range: Optional[FullRange]
+    range: Optional[FullRange],
 ) -> TimeFilterRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
     if arrival_time is not None and departure_time is not None:
-        raise ApiError('arrival_time and departure_time cannot be both specified')
+        raise ApiError("arrival_time and departure_time cannot be both specified")
 
     if arrival_time is not None:
         return TimeFilterRequest(
@@ -51,16 +63,18 @@ def create_time_filter(
                 time_filter.ArrivalSearch(
                     id=arrival_id,
                     arrival_location_id=arrival_id,
-                    departure_location_ids=[departure_id for departure_id in departure_ids],
+                    departure_location_ids=[
+                        departure_id for departure_id in departure_ids
+                    ],
                     arrival_time=arrival_time,
                     travel_time=travel_time,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for arrival_id, departure_ids in search_ids.items()
             ],
-            departure_searches=[]
+            departure_searches=[],
         )
     elif departure_time is not None:
         return TimeFilterRequest(
@@ -74,14 +88,14 @@ def create_time_filter(
                     travel_time=travel_time,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for departure_id, arrival_ids in search_ids.items()
             ],
-            arrival_searches=[]
+            arrival_searches=[],
         )
     else:
-        raise ApiError('arrival_time or departure_time should be specified')
+        raise ApiError("arrival_time or departure_time should be specified")
 
 
 def create_time_filter_fast(
@@ -90,7 +104,7 @@ def create_time_filter_fast(
     transportation: Transportation,
     travel_time: int = 3600,
     properties: Optional[List[Property]] = None,
-    one_to_many: bool = False
+    one_to_many: bool = False,
 ) -> TimeFilterFastRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -105,13 +119,13 @@ def create_time_filter_fast(
                         arrival_location_ids=arrival_ids,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period='weekday_morning',
-                        properties=properties
+                        arrival_time_period="weekday_morning",
+                        properties=properties,
                     )
                     for departure_id, arrival_ids in search_ids.items()
                 ],
-                many_to_one=[]
-            )
+                many_to_one=[],
+            ),
         )
     else:
         return TimeFilterFastRequest(
@@ -124,13 +138,13 @@ def create_time_filter_fast(
                         departure_location_ids=departure_ids,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period='weekday_morning',
-                        properties=properties
+                        arrival_time_period="weekday_morning",
+                        properties=properties,
                     )
                     for arrival_id, departure_ids in search_ids.items()
                 ],
-                one_to_many=[]
-            )
+                one_to_many=[],
+            ),
         )
 
 
@@ -138,231 +152,241 @@ def create_postcodes(
     coordinates: List[Coordinates],
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
-    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    transportation: Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ],
     travel_time: int,
     properties: Optional[List[Property]],
-    range: Optional[FullRange]
+    range: Optional[FullRange],
 ) -> PostcodesRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
 
     if arrival_time is not None and departure_time is not None:
-        raise ApiError('arrival_time and departure_time cannot be both specified')
+        raise ApiError("arrival_time and departure_time cannot be both specified")
 
     if departure_time is not None:
         return PostcodesRequest(
             departure_searches=[
                 postcodes.DepartureSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
-            arrival_searches=[]
+            arrival_searches=[],
         )
     elif arrival_time is not None:
         return PostcodesRequest(
             arrival_searches=[
                 postcodes.ArrivalSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
-            departure_searches=[]
+            departure_searches=[],
         )
     else:
-        raise ApiError('arrival_time or departure_time should be specified')
+        raise ApiError("arrival_time or departure_time should be specified")
 
 
 def create_districts(
     coordinates: List[Coordinates],
-    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    transportation: Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ],
     travel_time: int,
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     reachable_postcodes_threshold,
     properties: Optional[List[ZonesProperty]],
-    range: Optional[FullRange]
+    range: Optional[FullRange],
 ) -> PostcodesDistrictsRequest:
     if properties is None:
         properties = [ZonesProperty.TRAVEL_TIME_ALL]
 
     if arrival_time is not None and departure_time is not None:
-        raise ApiError('arrival_time and departure_time cannot be both specified')
+        raise ApiError("arrival_time and departure_time cannot be both specified")
 
     if arrival_time is not None:
         return PostcodesDistrictsRequest(
             arrival_searches=[
                 postcodes_zones.ArrivalSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
-            departure_searches=[]
+            departure_searches=[],
         )
     elif departure_time is not None:
         return PostcodesDistrictsRequest(
             departure_searches=[
                 postcodes_zones.DepartureSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
-            arrival_searches=[]
+            arrival_searches=[],
         )
     else:
-        raise ApiError('arrival_time or departure_time should be specified')
+        raise ApiError("arrival_time or departure_time should be specified")
 
 
 def create_sectors(
     coordinates: List[Coordinates],
-    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    transportation: Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ],
     travel_time: int,
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     reachable_postcodes_threshold,
     properties: Optional[List[ZonesProperty]],
-    range: Optional[FullRange]
+    range: Optional[FullRange],
 ) -> PostcodesSectorsRequest:
     if properties is None:
         properties = [ZonesProperty.TRAVEL_TIME_ALL]
 
     if arrival_time is not None and departure_time is not None:
-        raise ApiError('arrival_time and departure_time cannot be both specified')
+        raise ApiError("arrival_time and departure_time cannot be both specified")
 
     if arrival_time is not None:
         return PostcodesSectorsRequest(
             arrival_searches=[
                 postcodes_zones.ArrivalSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
-            departure_searches=[]
+            departure_searches=[],
         )
     elif departure_time is not None:
         return PostcodesSectorsRequest(
             departure_searches=[
                 postcodes_zones.DepartureSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
-            arrival_searches=[]
+            arrival_searches=[],
         )
     else:
-        raise ApiError('arrival_time or departure_time should be specified')
+        raise ApiError("arrival_time or departure_time should be specified")
 
 
 def create_time_map(
     coordinates: List[Coordinates],
-    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    transportation: Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ],
     travel_time: int,
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
-    search_range: Optional[Range]
+    search_range: Optional[Range],
 ) -> TimeMapRequest:
     if arrival_time is not None and departure_time is not None:
-        raise ApiError('arrival_time and departure_time cannot be both specified')
+        raise ApiError("arrival_time and departure_time cannot be both specified")
 
     if arrival_time is not None:
         return TimeMapRequest(
             arrival_searches=[
                 time_map.ArrivalSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
                     transportation=transportation,
-                    range=search_range
+                    range=search_range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
             departure_searches=[],
             unions=[],
-            intersections=[]
+            intersections=[],
         )
     elif departure_time is not None:
         return TimeMapRequest(
             departure_searches=[
                 time_map.DepartureSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
                     transportation=transportation,
-                    range=search_range
+                    range=search_range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
             arrival_searches=[],
             unions=[],
-            intersections=[]
+            intersections=[],
         )
     else:
-        raise ApiError('arrival_time or departure_time should be specified')
+        raise ApiError("arrival_time or departure_time should be specified")
 
 
 def create_intersection(
     coordinates: List[Coordinates],
-    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    transportation: Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ],
     travel_time: int,
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
-    search_range: Optional[Range]
+    search_range: Optional[Range],
 ) -> TimeMapRequest:
     if arrival_time is not None and departure_time is not None:
-        raise ApiError('arrival_time and departure_time cannot be both specified')
+        raise ApiError("arrival_time and departure_time cannot be both specified")
 
     if arrival_time is not None:
         return TimeMapRequest(
             arrival_searches=[
                 time_map.ArrivalSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
                     transportation=transportation,
-                    range=search_range
+                    range=search_range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -370,21 +394,21 @@ def create_intersection(
             unions=[],
             intersections=[
                 time_map.Intersection(
-                    id='Intersection search',
-                    search_ids=[f'Search {ind}' for ind, _ in enumerate(coordinates)]
+                    id="Intersection search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
                 )
-            ]
+            ],
         )
     elif departure_time is not None:
         return TimeMapRequest(
             departure_searches=[
                 time_map.DepartureSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
                     transportation=transportation,
-                    range=search_range
+                    range=search_range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -392,85 +416,89 @@ def create_intersection(
             unions=[],
             intersections=[
                 time_map.Intersection(
-                    id='Intersection search',
-                    search_ids=[f'Search {ind}' for ind, _ in enumerate(coordinates)]
+                    id="Intersection search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
                 )
-            ]
+            ],
         )
     else:
-        raise ApiError('arrival_time or departure_time should be specified')
+        raise ApiError("arrival_time or departure_time should be specified")
 
 
 def create_union(
     coordinates: List[Coordinates],
-    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    transportation: Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ],
     travel_time: int,
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
-    search_range: Optional[Range]
+    search_range: Optional[Range],
 ) -> TimeMapRequest:
     if arrival_time is not None and departure_time is not None:
-        raise ApiError('arrival_time and departure_time cannot be both specified')
+        raise ApiError("arrival_time and departure_time cannot be both specified")
 
     if arrival_time is not None:
         return TimeMapRequest(
             arrival_searches=[
                 time_map.ArrivalSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     arrival_time=arrival_time,
                     transportation=transportation,
-                    range=search_range
+                    range=search_range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
             departure_searches=[],
             unions=[
                 time_map.Union(
-                    id='Union search',
-                    search_ids=[f'Search {ind}' for ind, _ in enumerate(coordinates)]
+                    id="Union search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
                 )
             ],
-            intersections=[]
+            intersections=[],
         )
     elif departure_time is not None:
         return TimeMapRequest(
             departure_searches=[
                 time_map.DepartureSearch(
-                    id=f'Search {ind}',
+                    id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
                     departure_time=departure_time,
                     transportation=transportation,
-                    range=search_range
+                    range=search_range,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
             arrival_searches=[],
             unions=[
                 time_map.Union(
-                    id='Union search',
-                    search_ids=[f'Search {ind}' for ind, _ in enumerate(coordinates)]
+                    id="Union search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
                 )
             ],
-            intersections=[]
+            intersections=[],
         )
     else:
-        raise ApiError('arrival_time or departure_time should be specified')
+        raise ApiError("arrival_time or departure_time should be specified")
 
 
 def create_routes(
     locations: List[Location],
     search_ids: Dict[str, List[str]],
-    transportation: Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain],
+    transportation: Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ],
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     properties: Optional[List[Property]],
-    range: Optional[FullRange]
+    range: Optional[FullRange],
 ) -> RoutesRequest:
     if arrival_time is not None and departure_time is not None:
-        raise ApiError('arrival_time and departure_time cannot be both specified')
+        raise ApiError("arrival_time and departure_time cannot be both specified")
 
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -481,15 +509,17 @@ def create_routes(
                 routes.ArrivalSearch(
                     id=arrival_id,
                     arrival_location_id=arrival_id,
-                    departure_location_ids=[departure_id for departure_id in departure_ids],
+                    departure_location_ids=[
+                        departure_id for departure_id in departure_ids
+                    ],
                     arrival_time=arrival_time,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for arrival_id, departure_ids in search_ids.items()
             ],
-            departure_searches=[]
+            departure_searches=[],
         )
     elif departure_time is not None:
         return RoutesRequest(
@@ -502,21 +532,21 @@ def create_routes(
                     departure_time=departure_time,
                     transportation=transportation,
                     properties=properties,
-                    range=range
+                    range=range,
                 )
                 for departure_id, arrival_ids in search_ids.items()
             ],
-            arrival_searches=[]
+            arrival_searches=[],
         )
     else:
-        raise ApiError('arrival_time or departure_time should be specified')
+        raise ApiError("arrival_time or departure_time should be specified")
 
 
 def create_proto_request(
     origin: Coordinates,
     destinations: List[Coordinates],
     transportation: ProtoTransportation,
-    travel_time: int
+    travel_time: int,
 ) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:
     request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()
 
@@ -525,7 +555,9 @@ def create_proto_request(
 
     request.oneToManyRequest.transportation.type = transportation.value.code
     request.oneToManyRequest.travelTime = travel_time
-    request.oneToManyRequest.arrivalTimePeriod = TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
+    request.oneToManyRequest.arrivalTimePeriod = (
+        TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
+    )
 
     mult = math.pow(10, 5)
     for destination in destinations:

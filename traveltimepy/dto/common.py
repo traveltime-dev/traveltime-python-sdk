@@ -25,7 +25,7 @@ class BasicPart(BaseModel):
     distance: int
     travel_time: int
     coords: List[Coordinates]
-    type: Literal['basic']
+    type: Literal["basic"]
 
 
 class RoadPart(BaseModel):
@@ -35,7 +35,7 @@ class RoadPart(BaseModel):
     distance: int
     travel_time: int
     coords: List[Coordinates]
-    type: Literal['road']
+    type: Literal["road"]
     road: Optional[str]
     turn: Optional[str]
 
@@ -47,7 +47,7 @@ class StartEndPart(BaseModel):
     distance: int
     travel_time: int
     coords: List[Coordinates]
-    type: Literal['start_end']
+    type: Literal["start_end"]
     direction: str
 
 
@@ -64,7 +64,7 @@ class PublicTransportPart(BaseModel):
     departs_at: time
     arrives_at: time
     num_stops: int
-    type: Literal['public_transport']
+    type: Literal["public_transport"]
 
 
 class Route(BaseModel):
@@ -97,14 +97,14 @@ class Rectangle(BaseModel):
     max_lng: float
 
     def to_str(self):
-        return f'{self.min_lat},{self.min_lng},{self.max_lat},{self.max_lng}'
+        return f"{self.min_lat},{self.min_lng},{self.max_lat},{self.max_lng}"
 
 
 class Property(str, Enum):
-    TRAVEL_TIME = 'travel_time'
-    DISTANCE = 'distance'
-    ROUTE = 'route'
-    FARES = 'fares'
+    TRAVEL_TIME = "travel_time"
+    DISTANCE = "distance"
+    ROUTE = "route"
+    FARES = "fares"
 
 
 class FullRange(BaseModel):
