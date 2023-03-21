@@ -216,14 +216,14 @@ class TravelTimeSdk:
         )
 
     async def geocoding_reverse_async(
-        self, lat: float, lng: float, within_countries: Optional[List[str]] = None
+        self, lat: float, lng: float
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
             "geocoding/reverse",
             self.__headers(AcceptType.JSON),
             self.__sdk_params,
-            self.__geocoding_reverse_params(lat, lng, within_countries),
+            self.__geocoding_reverse_params(lat, lng),
         )
 
     def geocoding_reverse(self, lat: float, lng: float) -> FeatureCollection:
