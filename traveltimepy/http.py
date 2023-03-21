@@ -125,7 +125,12 @@ async def __process_response(response_class: Type[T], response: ClientResponse) 
     text = await response.text()
     if response.status != 200:
         parsed = parse_raw_as(ResponseError, text)
-        msg = f"Travel Time API request failed: {parsed.description}\nError code: {parsed.error_code}\nAdditional info: {parsed.additional_info}\n<{parsed.documentation_link}>\n"
+        msg = (
+            f"Travel Time API request failed: {parsed.description}\n"
+            f"Error code: {parsed.error_code}\n"
+            f"Additional info: {parsed.additional_info}\n"
+            f"<{parsed.documentation_link}>\n"
+        )
         raise ApiError(msg)
     else:
         return parse_raw_as(response_class, text)

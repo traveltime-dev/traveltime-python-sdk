@@ -16,8 +16,7 @@ async def send_proto_async(
     app_id: str,
     api_key: str,
 ) -> TimeFilterFastResponse:
-    connector = TCPConnector(ssl=False)
-    async with ClientSession(connector=connector) as session:
+    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
         async with session.post(
             url=url,
             headers=headers,
