@@ -11,7 +11,7 @@ from traveltimepy.errors import ApiError
 from aiohttp_retry import RetryClient, ExponentialRetry
 from aiolimiter import AsyncLimiter
 
-T = TypeVar('T')
+T = TypeVar("T")
 DEFAULT_SPLIT_SIZE = 10
 
 
@@ -30,7 +30,7 @@ async def send_post_request_async(
     url: str,
     headers: Dict[str, str],
     request: TravelTimeRequest,
-    rate_limit: AsyncLimiter
+    rate_limit: AsyncLimiter,
 ) -> T:
     async with rate_limit:
         async with client.post(url=url, headers=headers, data=request.json()) as resp:
@@ -42,21 +42,27 @@ async def send_post_async(
     path: str,
     headers: Dict[str, str],
     request: TravelTimeRequest,
-    sdk_params: SdkParams
+    sdk_params: SdkParams,
 ) -> T:
     window_size = __window_size(sdk_params.rate_limit)
-    async with ClientSession(connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)) as session:
+    async with ClientSession(
+        connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)
+    ) as session:
         retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
-        async with RetryClient(client_session=session, retry_options=retry_options) as client:
-            rate_limit = AsyncLimiter(sdk_params.rate_limit // window_size, sdk_params.time_window)
+        async with RetryClient(
+            client_session=session, retry_options=retry_options
+        ) as client:
+            rate_limit = AsyncLimiter(
+                sdk_params.rate_limit // window_size, sdk_params.time_window
+            )
             tasks = [
                 send_post_request_async(
                     client,
                     response_class,
-                    f'https://{sdk_params.host}/v4/{path}',
+                    f"https://{sdk_params.host}/v4/{path}",
                     headers,
                     part,
-                    rate_limit
+                    rate_limit,
                 )
                 for part in request.split_searches(window_size)
             ]
@@ -76,9 +82,11 @@ def send_post(
     path: str,
     headers: Dict[str, str],
     request: TravelTimeRequest,
-    sdk_params: SdkParams
+    sdk_params: SdkParams,
 ) -> T:
-    return asyncio.run(send_post_async(response_class, path, headers, request, sdk_params))
+    return asyncio.run(
+        send_post_async(response_class, path, headers, request, sdk_params)
+    )
 
 
 async def send_get_async(
@@ -86,12 +94,18 @@ async def send_get_async(
     path: str,
     headers: Dict[str, str],
     sdk_params: SdkParams,
-    params: Dict[str, str] = None
+    params: Dict[str, str] = None,
 ) -> T:
     async with ClientSession(connector=TCPConnector(ssl=False)) as session:
         retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
-        async with RetryClient(client_session=session, retry_options=retry_options) as client:
-            async with client.get(url=f'https://{sdk_params.host}/v4/{path}', headers=headers, params=params) as resp:
+        async with RetryClient(
+            client_session=session, retry_options=retry_options
+        ) as client:
+            async with client.get(
+                url=f"https://{sdk_params.host}/v4/{path}",
+                headers=headers,
+                params=params,
+            ) as resp:
                 return await __process_response(response_class, resp)
 
 
@@ -100,22 +114,23 @@ def send_get(
     path: str,
     headers: Dict[str, str],
     sdk_params: SdkParams,
-    params: Dict[str, str] = None
+    params: Dict[str, str] = None,
 ) -> T:
-    return asyncio.run(send_get_async(response_class, path, headers, sdk_params, params))
+    return asyncio.run(
+        send_get_async(response_class, path, headers, sdk_params, params)
+    )
 
 
 async def __process_response(response_class: Type[T], response: ClientResponse) -> T:
     text = await response.text()
     if response.status != 200:
         parsed = parse_raw_as(ResponseError, text)
-        msg = 'Travel Time API request failed \n{}\nError code: {}\nAdditional info: {}\n<{}>\n'.format(
-            parsed.description,
-            parsed.error_code,
-            parsed.additional_info,
-            parsed.documentation_link
+        msg = (
+            f"Travel Time API request failed: {parsed.description}\n"
+            f"Error code: {parsed.error_code}\n"
+            f"Additional info: {parsed.additional_info}\n"
+            f"<{parsed.documentation_link}>\n"
         )
-
         raise ApiError(msg)
     else:
         return parse_raw_as(response_class, text)

@@ -11,25 +11,25 @@ class MaxChanges(BaseModel):
 
 
 class Driving(BaseModel):
-    type: Literal['driving'] = 'driving'
+    type: Literal["driving"] = "driving"
     disable_border_crossing: Optional[bool] = None
 
 
 class Walking(BaseModel):
-    type: Literal['walking'] = 'walking'
+    type: Literal["walking"] = "walking"
 
 
 class Cycling(BaseModel):
-    type: Literal['cycling'] = 'cycling'
+    type: Literal["cycling"] = "cycling"
 
 
 class Ferry(BaseModel):
-    type: Literal['ferry', 'cycling+ferry', 'driving+ferry'] = 'ferry'
+    type: Literal["ferry", "cycling+ferry", "driving+ferry"] = "ferry"
     boarding_time: Optional[int] = None
 
 
 class DrivingTrain(BaseModel):
-    type: Literal['driving+train'] = 'driving+train'
+    type: Literal["driving+train"] = "driving+train"
     pt_change_delay: Optional[int] = None
     driving_time_to_station: Optional[int] = None
     parking_time: Optional[int] = None
@@ -38,12 +38,7 @@ class DrivingTrain(BaseModel):
 
 
 class PublicTransport(BaseModel):
-    type: Literal[
-        'public_transport',
-        'train',
-        'bus',
-        'coach'
-    ] = 'public_transport'
+    type: Literal["public_transport", "train", "bus", "coach"] = "public_transport"
     pt_change_delay: Optional[int] = None
     walking_time: Optional[int] = None
     max_changes: Optional[int] = None

@@ -1,6 +1,7 @@
-
 def test_geocoding_search(sdk):
-    response = sdk.geocoding(query='Parliament square', limit=30, within_countries=['gb', 'de'])
+    response = sdk.geocoding(
+        query="Parliament square", limit=30, within_countries=["gb", "de"]
+    )
     assert len(response.features) > 0
     assert len(response.features) < 31
 

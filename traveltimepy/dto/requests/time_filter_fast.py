@@ -11,14 +11,14 @@ from traveltimepy.itertools import split, flatten
 
 class Transportation(BaseModel):
     type: Literal[
-        'public_transport',
-        'driving',
-        'cycling',
-        'walking',
-        'walking+ferry',
-        'cycling+ferry',
-        'driving+ferry',
-        'driving+public_transport'
+        "public_transport",
+        "driving",
+        "cycling",
+        "walking",
+        "walking+ferry",
+        "cycling+ferry",
+        "driving+ferry",
+        "driving+public_transport",
     ]
 
 
@@ -56,16 +56,17 @@ class TimeFilterFastRequest(TravelTimeRequest[TimeFilterFastResponse]):
             TimeFilterFastRequest(
                 locations=self.locations,
                 arrival_searches=ArrivalSearches(
-                    one_to_many=one_to_many,
-                    many_to_one=many_to_one
-                )
+                    one_to_many=one_to_many, many_to_one=many_to_one
+                ),
             )
             for one_to_many, many_to_one in split(
                 self.arrival_searches.one_to_many,
                 self.arrival_searches.many_to_one,
-                window_size
+                window_size,
             )
         ]
 
     def merge(self, responses: List[TimeFilterFastResponse]) -> TimeFilterFastResponse:
-        return TimeFilterFastResponse(results=flatten([response.results for response in responses]))
+        return TimeFilterFastResponse(
+            results=flatten([response.results for response in responses])
+        )

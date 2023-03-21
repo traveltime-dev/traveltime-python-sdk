@@ -5,7 +5,16 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy import Coordinates, Range, PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+from traveltimepy import (
+    Coordinates,
+    Range,
+    PublicTransport,
+    Driving,
+    Ferry,
+    Walking,
+    Cycling,
+    DrivingTrain,
+)
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
@@ -16,7 +25,9 @@ class DepartureSearch(BaseModel):
     coords: Coordinates
     departure_time: datetime
     travel_time: int
-    transportation: typing.Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
+    transportation: typing.Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ]
     range: Optional[Range] = None
 
 
@@ -25,7 +36,9 @@ class ArrivalSearch(BaseModel):
     coords: Coordinates
     arrival_time: datetime
     travel_time: int
-    transportation: typing.Union[PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain]
+    transportation: typing.Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ]
     range: Optional[Range] = None
 
 
@@ -51,27 +64,36 @@ class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
                 departure_searches=departures,
                 arrival_searches=arrivals,
                 unions=self.unions,
-                intersections=self.intersections
+                intersections=self.intersections,
             )
-            for departures, arrivals in split(self.departure_searches, self.arrival_searches, window_size)
+            for departures, arrivals in split(
+                self.departure_searches, self.arrival_searches, window_size
+            )
         ]
 
     def merge(self, responses: List[TimeMapResponse]) -> TimeMapResponse:
         if len(self.unions) != 0:
             return TimeMapResponse(
-                results=list(filter(
-                    lambda res: res.search_id == 'Union search',
-                    flatten([response.results for response in responses])
-                ))
+                results=list(
+                    filter(
+                        lambda res: res.search_id == "Union search",
+                        flatten([response.results for response in responses]),
+                    )
+                )
             )
         elif len(self.intersections) != 0:
             return TimeMapResponse(
-                results=list(filter(
-                    lambda res: res.search_id == 'Intersection search',
-                    flatten([response.results for response in responses])
-                ))
+                results=list(
+                    filter(
+                        lambda res: res.search_id == "Intersection search",
+                        flatten([response.results for response in responses]),
+                    )
+                )
             )
         else:
             return TimeMapResponse(
-                results=sorted(flatten([response.results for response in responses]), key=lambda res: res.search_id)
+                results=sorted(
+                    flatten([response.results for response in responses]),
+                    key=lambda res: res.search_id,
+                )
             )
