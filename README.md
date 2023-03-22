@@ -44,8 +44,8 @@ In order to authenticate with Travel Time API, you will have to supply the Appli
 * api_key: str - Api Key
 * limit_per_host: int - Number of simultaneous connections to one host.
 * rate_limit: int - Number of searches which can be made in a time window.
-* time_window - Duration, in seconds, of the time period in which to limit the rate.
-* retry_attempts - Number of retries for failed requests.
+* time_window: int - Duration, in seconds, of the time period in which to limit the rate.
+* retry_attempts: int - Number of retries for failed requests.
 * host: str - TravelTime host, default value is api.traveltimeapp.com.
 
 ```python
