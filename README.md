@@ -613,10 +613,10 @@ that map. That way you could show fares for routes in the maps that support it.
 #### Returns:
 
 * maps: List[Map]
-    * name - An internal map id. The first two characters usually correspond to the ISO 3166-2 standard (e.g th, ie)
-      sometimes followed by additional characters (e.g ca_pst, us_pst). To get features of a specific map, use the map
-      info endpoint.
-    * features - Features that are supported in the specified map
+* name - An internal map id. The first two characters usually correspond to the ISO 3166-2 standard (e.g th, ie)
+  sometimes followed by additional characters (e.g ca_pst, us_pst). To get features of a specific map, use the map
+  info endpoint.
+* features - Features that are supported in the specified map
 
 #### Example:
 
@@ -644,11 +644,11 @@ are supported.
 #### Returns:
 
 * locations: List[SupportedLocation]
-    * id - Location id that you specified in the request.
-    * map_name - An internal map id. The first two characters usually correspond to the ISO 3166-2 standard (e.g th, ie)
-      sometimes followed by additional characters (e.g ca_pst, us_pst). To get features of a specific map, use the map
-      info endpoint.
-    * additional_map_names - In case the location is in more than one map, other map ids are listed here.
+* id - Location id that you specified in the request.
+* map_name - An internal map id. The first two characters usually correspond to the ISO 3166-2 standard (e.g th, ie)
+  sometimes followed by additional characters (e.g ca_pst, us_pst). To get features of a specific map, use the map
+  info endpoint.
+* additional_map_names - In case the location is in more than one map, other map ids are listed here.
 * unsupported_locations: List[str] - List that contains ids of locations that are unsupported.
 
 #### Example:
