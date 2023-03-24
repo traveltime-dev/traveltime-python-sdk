@@ -82,9 +82,9 @@ class TravelTimeSdk:
         retry_attempts: int = 2,
         host: str = "api.traveltimeapp.com",
     ) -> None:
-        self.__app_id = app_id
-        self.__api_key = api_key
-        self.__sdk_params = SdkParams(
+        self._app_id = app_id
+        self._api_key = api_key
+        self._sdk_params = SdkParams(
             host, limit_per_host, rate_limit, time_window, retry_attempts
         )
 
@@ -104,7 +104,7 @@ class TravelTimeSdk:
         resp = await send_post_async(
             TimeFilterResponse,
             "time-filter",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_time_filter(
                 locations,
                 search_ids,
@@ -115,7 +115,7 @@ class TravelTimeSdk:
                 travel_time,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         )
 
         return resp.results
@@ -136,7 +136,7 @@ class TravelTimeSdk:
         return send_post(
             TimeFilterResponse,
             "time-filter",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_time_filter(
                 locations,
                 search_ids,
@@ -147,15 +147,15 @@ class TravelTimeSdk:
                 travel_time,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         ).results
 
     async def map_info_async(self) -> List[Map]:
         res = await send_get_async(
             MapInfoResponse,
             "map-info",
-            self.__headers(AcceptType.JSON),
-            self.__sdk_params,
+            self._headers(AcceptType.JSON),
+            self._sdk_params,
         )
         return res.maps
 
@@ -163,8 +163,8 @@ class TravelTimeSdk:
         return send_get(
             MapInfoResponse,
             "map-info",
-            self.__headers(AcceptType.JSON),
-            self.__sdk_params,
+            self._headers(AcceptType.JSON),
+            self._sdk_params,
         ).maps
 
     async def geocoding_async(
@@ -179,9 +179,9 @@ class TravelTimeSdk:
         return await send_get_async(
             FeatureCollection,
             "geocoding/search",
-            self.__headers(AcceptType.JSON),
-            self.__sdk_params,
-            self.__geocoding_params(
+            self._headers(AcceptType.JSON),
+            self._sdk_params,
+            self._geocoding_params(
                 query,
                 limit,
                 within_countries,
@@ -203,9 +203,9 @@ class TravelTimeSdk:
         return send_get(
             FeatureCollection,
             "geocoding/search",
-            self.__headers(AcceptType.JSON),
-            self.__sdk_params,
-            self.__geocoding_params(
+            self._headers(AcceptType.JSON),
+            self._sdk_params,
+            self._geocoding_params(
                 query,
                 limit,
                 within_countries,
@@ -221,18 +221,18 @@ class TravelTimeSdk:
         return await send_get_async(
             FeatureCollection,
             "geocoding/reverse",
-            self.__headers(AcceptType.JSON),
-            self.__sdk_params,
-            self.__geocoding_reverse_params(lat, lng),
+            self._headers(AcceptType.JSON),
+            self._sdk_params,
+            self._geocoding_reverse_params(lat, lng),
         )
 
     def geocoding_reverse(self, lat: float, lng: float) -> FeatureCollection:
         return send_get(
             FeatureCollection,
             "geocoding/reverse",
-            self.__headers(AcceptType.JSON),
-            self.__sdk_params,
-            self.__geocoding_reverse_params(lat, lng),
+            self._headers(AcceptType.JSON),
+            self._sdk_params,
+            self._geocoding_reverse_params(lat, lng),
         )
 
     async def supported_locations_async(
@@ -241,9 +241,9 @@ class TravelTimeSdk:
         return await send_post_async(
             SupportedLocationsResponse,
             "supported-locations",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
-            self.__sdk_params,
+            self._sdk_params,
         )
 
     def supported_locations(
@@ -252,9 +252,9 @@ class TravelTimeSdk:
         return send_post(
             SupportedLocationsResponse,
             "supported-locations",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
-            self.__sdk_params,
+            self._sdk_params,
         )
 
     async def time_filter_fast_async(
@@ -269,7 +269,7 @@ class TravelTimeSdk:
         resp = await send_post_async(
             TimeFilterFastResponse,
             "time-filter/fast",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_time_filter_fast(
                 locations,
                 search_ids,
@@ -278,7 +278,7 @@ class TravelTimeSdk:
                 properties,
                 one_to_many,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         )
         return resp.results
 
@@ -294,7 +294,7 @@ class TravelTimeSdk:
         return send_post(
             TimeFilterFastResponse,
             "time-filter/fast",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_time_filter_fast(
                 locations,
                 search_ids,
@@ -303,7 +303,7 @@ class TravelTimeSdk:
                 properties,
                 one_to_many,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         ).results
 
     async def postcodes_async(
@@ -321,7 +321,7 @@ class TravelTimeSdk:
         resp = await send_post_async(
             PostcodesResponse,
             "time-filter/postcodes",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_postcodes(
                 coordinates,
                 departure_time,
@@ -331,7 +331,7 @@ class TravelTimeSdk:
                 properties,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         )
         return resp.results
 
@@ -350,7 +350,7 @@ class TravelTimeSdk:
         return send_post(
             PostcodesResponse,
             "time-filter/postcodes",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_postcodes(
                 coordinates,
                 departure_time,
@@ -360,7 +360,7 @@ class TravelTimeSdk:
                 properties,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         ).results
 
     async def postcodes_districts_async(
@@ -379,7 +379,7 @@ class TravelTimeSdk:
         res = await send_post_async(
             PostcodesDistrictsResponse,
             "time-filter/postcode-districts",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_districts(
                 coordinates,
                 transportation,
@@ -390,7 +390,7 @@ class TravelTimeSdk:
                 properties,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         )
         return res.results
 
@@ -410,7 +410,7 @@ class TravelTimeSdk:
         return send_post(
             PostcodesDistrictsResponse,
             "time-filter/postcode-districts",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_districts(
                 coordinates,
                 transportation,
@@ -421,7 +421,7 @@ class TravelTimeSdk:
                 properties,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         ).results
 
     async def postcodes_sectors_async(
@@ -440,7 +440,7 @@ class TravelTimeSdk:
         resp = await send_post_async(
             PostcodesSectorsResponse,
             "time-filter/postcode-sectors",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_sectors(
                 coordinates,
                 transportation,
@@ -451,7 +451,7 @@ class TravelTimeSdk:
                 properties,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         )
         return resp.results
 
@@ -471,7 +471,7 @@ class TravelTimeSdk:
         return send_post(
             PostcodesSectorsResponse,
             "time-filter/postcode-sectors",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_sectors(
                 coordinates,
                 transportation,
@@ -482,7 +482,7 @@ class TravelTimeSdk:
                 properties,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         ).results
 
     def routes(
@@ -500,7 +500,7 @@ class TravelTimeSdk:
         return send_post(
             RoutesResponse,
             "routes",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_routes(
                 locations,
                 search_ids,
@@ -510,7 +510,7 @@ class TravelTimeSdk:
                 properties,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         ).results
 
     async def routes_async(
@@ -528,7 +528,7 @@ class TravelTimeSdk:
         resp = await send_post_async(
             RoutesResponse,
             "routes",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_routes(
                 locations,
                 search_ids,
@@ -538,7 +538,7 @@ class TravelTimeSdk:
                 properties,
                 range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         )
         return resp.results
 
@@ -552,10 +552,10 @@ class TravelTimeSdk:
     ) -> List[int]:
         return send_proto(
             f"https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
-            self.__proto_headers(),
+            self._proto_headers(),
             create_proto_request(origin, destinations, transportation, travel_time),
-            self.__app_id,
-            self.__api_key,
+            self._app_id,
+            self._api_key,
         ).travel_times
 
     async def time_filter_proto_async(
@@ -568,10 +568,10 @@ class TravelTimeSdk:
     ) -> List[int]:
         resp = await send_proto_async(
             f"https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.name}",  # noqa
-            self.__proto_headers(),
+            self._proto_headers(),
             create_proto_request(origin, destinations, transportation, travel_time),
-            self.__app_id,
-            self.__api_key,
+            self._app_id,
+            self._api_key,
         )
         return resp.travel_times
 
@@ -589,7 +589,7 @@ class TravelTimeSdk:
         return send_post(
             TimeMapResponse,
             "time-map",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_time_map(
                 coordinates,
                 transportation,
@@ -598,7 +598,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         ).results
 
     def intersection(
@@ -615,7 +615,7 @@ class TravelTimeSdk:
         return send_post(
             TimeMapResponse,
             "time-map",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_intersection(
                 coordinates,
                 transportation,
@@ -624,7 +624,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         ).results[0]
 
     async def intersection_async(
@@ -641,7 +641,7 @@ class TravelTimeSdk:
         resp = await send_post_async(
             TimeMapResponse,
             "time-map",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_intersection(
                 coordinates,
                 transportation,
@@ -650,7 +650,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         )
         return resp.results[0]
 
@@ -668,7 +668,7 @@ class TravelTimeSdk:
         return send_post(
             TimeMapResponse,
             "time-map",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_union(
                 coordinates,
                 transportation,
@@ -677,7 +677,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         ).results[0]
 
     async def union_async(
@@ -694,7 +694,7 @@ class TravelTimeSdk:
         resp = await send_post_async(
             TimeMapResponse,
             "time-map",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_union(
                 coordinates,
                 transportation,
@@ -703,7 +703,7 @@ class TravelTimeSdk:
                 departure_time,
                 search_range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         )
 
         return resp.results[0]
@@ -722,7 +722,7 @@ class TravelTimeSdk:
         resp = await send_post_async(
             TimeMapResponse,
             "time-map",
-            self.__headers(AcceptType.JSON),
+            self._headers(AcceptType.JSON),
             create_time_map(
                 coordinates,
                 transportation,
@@ -731,19 +731,19 @@ class TravelTimeSdk:
                 departure_time,
                 search_range,
             ),
-            self.__sdk_params,
+            self._sdk_params,
         )
         return resp.results
 
     @staticmethod
-    def __geocoding_reverse_params(lat: float, lng: float) -> Dict[str, str]:
+    def _geocoding_reverse_params(lat: float, lng: float) -> Dict[str, str]:
         full_query = {"lat": lat, "lng": lng}
         return {
             key: str(value) for (key, value) in full_query.items() if value is not None
         }
 
     @staticmethod
-    def __geocoding_params(
+    def _geocoding_params(
         query: str,
         limit: Optional[int] = None,
         within_countries: Optional[List[str]] = None,
@@ -764,16 +764,16 @@ class TravelTimeSdk:
         }
 
     @staticmethod
-    def __proto_headers() -> Dict[str, str]:
+    def _proto_headers() -> Dict[str, str]:
         return {
             "Content-Type": AcceptType.OCTET_STREAM.value,
             "User-Agent": f"Travel Time Python SDK {__version__}",
         }
 
-    def __headers(self, accept_type: AcceptType) -> Dict[str, str]:
+    def _headers(self, accept_type: AcceptType) -> Dict[str, str]:
         return {
-            "X-Application-Id": self.__app_id,
-            "X-Api-Key": self.__api_key,
+            "X-Application-Id": self._app_id,
+            "X-Api-Key": self._api_key,
             "User-Agent": f"Travel Time Python SDK {__version__}",
             "Content-Type": "application/json",
             "Accept": accept_type.value,
