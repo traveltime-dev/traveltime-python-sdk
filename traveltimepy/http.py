@@ -34,7 +34,7 @@ async def send_post_request_async(
 ) -> T:
     async with rate_limit:
         async with client.post(url=url, headers=headers, data=request.json()) as resp:
-            return await __process_response(response_class, resp)
+            return await _process_response(response_class, resp)
 
 
 async def send_post_async(
@@ -44,7 +44,7 @@ async def send_post_async(
     request: TravelTimeRequest,
     sdk_params: SdkParams,
 ) -> T:
-    window_size = __window_size(sdk_params.rate_limit)
+    window_size = _window_size(sdk_params.rate_limit)
     async with ClientSession(
         connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)
     ) as session:
@@ -70,7 +70,7 @@ async def send_post_async(
             return request.merge(responses)
 
 
-def __window_size(rate_limit: int):
+def _window_size(rate_limit: int):
     if rate_limit >= DEFAULT_SPLIT_SIZE:
         return DEFAULT_SPLIT_SIZE
     else:
@@ -106,7 +106,7 @@ async def send_get_async(
                 headers=headers,
                 params=params,
             ) as resp:
-                return await __process_response(response_class, resp)
+                return await _process_response(response_class, resp)
 
 
 def send_get(
@@ -121,7 +121,7 @@ def send_get(
     )
 
 
-async def __process_response(response_class: Type[T], response: ClientResponse) -> T:
+async def _process_response(response_class: Type[T], response: ClientResponse) -> T:
     text = await response.text()
     if response.status != 200:
         parsed = parse_raw_as(ResponseError, text)

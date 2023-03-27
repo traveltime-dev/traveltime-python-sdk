@@ -23,7 +23,7 @@ async def send_proto_async(
             data=data.SerializeToString(),
             auth=BasicAuth(app_id, api_key),
         ) as resp:
-            return await __process_response(resp)
+            return await _process_response(resp)
 
 
 def send_proto(
@@ -36,7 +36,7 @@ def send_proto(
     return asyncio.run(send_proto_async(url, headers, data, app_id, api_key))
 
 
-async def __process_response(response: ClientResponse) -> TimeFilterProtoResponse:
+async def _process_response(response: ClientResponse) -> TimeFilterProtoResponse:
     content = await response.read()
     if response.status != 200:
         msg = (
