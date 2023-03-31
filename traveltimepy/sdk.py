@@ -567,7 +567,7 @@ class TravelTimeSdk:
         travel_time: int,
     ) -> List[int]:
         resp = await send_proto_async(
-            f"https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.name}",  # noqa
+            f"https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
             self._proto_headers(),
             create_proto_request(origin, destinations, transportation, travel_time),
             self._app_id,
