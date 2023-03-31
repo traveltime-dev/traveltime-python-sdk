@@ -343,7 +343,7 @@ from traveltimepy import ProtoCountry, Coordinates, ProtoTransportation, TravelT
 
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-    travel_times = sdk.time_filter_proto_async(
+    travel_times = await sdk.time_filter_proto_async(
         origin=Coordinates(lat=51.425709, lng=-0.122061),
         destinations=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -463,7 +463,7 @@ from traveltimepy import TravelTimeSdk
 
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-    results = sdk.geocoding_reverse_async(lat=51.507281, lng=-0.132120)
+    results = await sdk.geocoding_reverse_async(lat=51.507281, lng=-0.132120)
     print(results.features)
 
 asyncio.run(main())
@@ -500,7 +500,7 @@ from traveltimepy import Coordinates, PublicTransport, TravelTimeSdk
 
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-    results = sdk.postcodes_async(
+    results = await sdk.postcodes_async(
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315)],
         departure_time=datetime.now(),
         transportation=PublicTransport()
