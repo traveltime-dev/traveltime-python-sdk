@@ -6,7 +6,7 @@ from traveltimepy.dto.common import Fares, Route
 
 
 class Property(BaseModel):
-    travel_time: int
+    travel_time: Optional[int]
     fares: Optional[Fares]
     distance: Optional[int]
     route: Optional[Route]
