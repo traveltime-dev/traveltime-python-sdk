@@ -2,12 +2,14 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import Fares
+from traveltimepy.dto.common import Fares, Route
 
 
 class Property(BaseModel):
     travel_time: int
     fares: Optional[Fares]
+    distance: Optional[int]
+    route: Route
 
 
 class Location(BaseModel):
