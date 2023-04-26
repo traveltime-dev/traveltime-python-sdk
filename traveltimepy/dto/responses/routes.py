@@ -9,7 +9,7 @@ class Property(BaseModel):
     travel_time: int
     fares: Optional[Fares]
     distance: Optional[int]
-    route: Route
+    route: Optional[Route]
 
 
 class Location(BaseModel):
