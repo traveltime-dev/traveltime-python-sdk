@@ -1,1 +1,1 @@
-__version__ = "3.3.0-lyft"
+__version__ = "3.3.0lyft"
