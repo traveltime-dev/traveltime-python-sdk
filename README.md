@@ -54,26 +54,6 @@ from traveltimepy import TravelTimeSdk
 sdk = TravelTimeSdk(app_id="YOUR_APP_ID", api_key="YOUR_APP_KEY")
 ```
 
-### Synchronous calls
-
-Each method below has its own synchronous version.
-
-#### Example:
-
-```python
-from datetime import datetime
-
-from traveltimepy import Driving, Coordinates, TravelTimeSdk
-
-sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-
-res = sdk.time_map(
-    coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
-    arrival_time=datetime.now(),
-    transportation=Driving()
-)
-```
-
 ### [Isochrones (Time Map)](https://docs.traveltime.com/api/reference/isochrones)
 
 Given origin coordinates, find shapes of zones reachable within corresponding travel time.
