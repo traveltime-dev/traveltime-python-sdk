@@ -61,7 +61,6 @@ from traveltimepy.mapper import (
 
 from traveltimepy.proto_http import send_proto, send_proto_async
 from traveltimepy.http import (
-    send_get,
     send_get_async,
     send_post_async,
     SdkParams,
@@ -128,14 +127,6 @@ class TravelTimeSdk:
         )
         return res.maps
 
-    def map_info(self) -> List[Map]:
-        return send_get(
-            MapInfoResponse,
-            "map-info",
-            self._headers(AcceptType.JSON),
-            self._sdk_params,
-        ).maps
-
     async def geocoding_async(
         self,
         query: str,
@@ -160,43 +151,10 @@ class TravelTimeSdk:
             ),
         )
 
-    def geocoding(
-        self,
-        query: str,
-        limit: Optional[int] = None,
-        within_countries: Optional[List[str]] = None,
-        format_name: Optional[bool] = None,
-        format_exclude_country: Optional[bool] = None,
-        bounds: Optional[Rectangle] = None,
-    ) -> FeatureCollection:
-        return send_get(
-            FeatureCollection,
-            "geocoding/search",
-            self._headers(AcceptType.JSON),
-            self._sdk_params,
-            self._geocoding_params(
-                query,
-                limit,
-                within_countries,
-                format_name,
-                format_exclude_country,
-                bounds,
-            ),
-        )
-
     async def geocoding_reverse_async(
         self, lat: float, lng: float
     ) -> FeatureCollection:
         return await send_get_async(
-            FeatureCollection,
-            "geocoding/reverse",
-            self._headers(AcceptType.JSON),
-            self._sdk_params,
-            self._geocoding_reverse_params(lat, lng),
-        )
-
-    def geocoding_reverse(self, lat: float, lng: float) -> FeatureCollection:
-        return send_get(
             FeatureCollection,
             "geocoding/reverse",
             self._headers(AcceptType.JSON),

@@ -1,3 +1,5 @@
+import asyncio
+
 from traveltimepy import Location, Coordinates
 
 
@@ -9,6 +11,6 @@ def test_supported_locations(sdk):
         Location(id="Lisbon", coords=Coordinates(lat=38.721869, lng=-9.138549)),
         Location(id="Unsupported", coords=Coordinates(lat=68.721869, lng=-9.138549)),
     ]
-    response = sdk.supported_locations(locations)
+    response = asyncio.run(sdk.supported_locations_async(locations))
     assert len(response.locations) == 4
     assert len(response.unsupported_locations) == 1

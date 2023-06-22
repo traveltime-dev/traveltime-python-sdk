@@ -97,18 +97,6 @@ async def send_get_async(
                 return await _process_response(response_class, resp)
 
 
-def send_get(
-    response_class: Type[T],
-    path: str,
-    headers: Dict[str, str],
-    sdk_params: SdkParams,
-    params: Dict[str, str] = None,
-) -> T:
-    return asyncio.run(
-        send_get_async(response_class, path, headers, sdk_params, params)
-    )
-
-
 async def _process_response(response_class: Type[T], response: ClientResponse) -> T:
     text = await response.text()
     if response.status != 200:

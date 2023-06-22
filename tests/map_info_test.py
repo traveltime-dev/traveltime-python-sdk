@@ -1,3 +1,6 @@
+import asyncio
+
+
 def test_map_info(sdk):
-    maps = sdk.map_info()
+    maps = asyncio.run(sdk.map_info_async())
     assert len(maps) > 0
