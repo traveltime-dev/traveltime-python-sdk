@@ -1,11 +1,12 @@
-import asyncio
+import pytest
 from datetime import datetime
 
 from traveltimepy import PublicTransport
 
 
+@pytest.mark.asyncio
 def test_departures(sdk, locations):
-    results = asyncio.run(sdk.routes_async(
+    results = sdk.routes_async(
         locations=locations,
         search_ids={
             "London center": ["Hyde Park", "ZSL London Zoo"],
@@ -13,12 +14,13 @@ def test_departures(sdk, locations):
         },
         transportation=PublicTransport(),
         departure_time=datetime.now(),
-    ))
+    )
     assert len(results) == 2
 
 
+@pytest.mark.asyncio
 def test_arrivals(sdk, locations):
-    results = asyncio.run(sdk.routes_async(
+    results = sdk.routes_async(
         locations=locations,
         search_ids={
             "London center": ["Hyde Park", "ZSL London Zoo"],
@@ -26,5 +28,5 @@ def test_arrivals(sdk, locations):
         },
         transportation=PublicTransport(),
         departure_time=datetime.now(),
-    ))
+    )
     assert len(results) == 2
