@@ -1,10 +1,12 @@
+import pytest
 from datetime import datetime
 
 from traveltimepy import Coordinates, Driving
 
 
-def test_departures(sdk):
-    results = sdk.time_map(
+@pytest.mark.asyncio
+async def test_departures(sdk):
+    results = await sdk.time_map_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),
@@ -16,8 +18,9 @@ def test_departures(sdk):
     assert len(results) == 2
 
 
-def test_arrivals(sdk):
-    results = sdk.time_map(
+@pytest.mark.asyncio
+async def test_arrivals(sdk):
+    results = await sdk.time_map_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),
@@ -29,8 +32,9 @@ def test_arrivals(sdk):
     assert len(results) == 2
 
 
-def test_union_departures(sdk):
-    result = sdk.union(
+@pytest.mark.asyncio
+async def test_union_departures(sdk):
+    result = await sdk.union_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),
@@ -42,8 +46,9 @@ def test_union_departures(sdk):
     assert len(result.shapes) > 0
 
 
-def test_intersection_arrivals(sdk):
-    result = sdk.intersection(
+@pytest.mark.asyncio
+async def test_intersection_arrivals(sdk):
+    result = await sdk.intersection_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),

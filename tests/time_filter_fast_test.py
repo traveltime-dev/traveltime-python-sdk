@@ -1,8 +1,11 @@
+import pytest
+
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 
 
-def test_one_to_many(sdk, locations):
-    results = sdk.time_filter_fast(
+@pytest.mark.asyncio
+async def test_one_to_many(sdk, locations):
+    results = await sdk.time_filter_fast_async(
         locations=locations,
         search_ids={
             "London center": ["Hyde Park", "ZSL London Zoo"],
@@ -14,8 +17,9 @@ def test_one_to_many(sdk, locations):
     assert len(results) > 0
 
 
-def test_many_to_one(sdk, locations):
-    results = sdk.time_filter_fast(
+@pytest.mark.asyncio
+async def test_many_to_one(sdk, locations):
+    results = await sdk.time_filter_fast_async(
         locations=locations,
         search_ids={
             "London center": ["Hyde Park", "ZSL London Zoo"],

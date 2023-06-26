@@ -1,10 +1,12 @@
+import pytest
 from datetime import datetime
 
 from traveltimepy import PublicTransport
 
 
-def test_departures(sdk, locations):
-    results = sdk.time_filter(
+@pytest.mark.asyncio
+async def test_departures(sdk, locations):
+    results = await sdk.time_filter_async(
         locations=locations,
         search_ids={
             "London center": ["Hyde Park", "ZSL London Zoo"],
@@ -16,8 +18,9 @@ def test_departures(sdk, locations):
     assert len(results) == 2
 
 
-def test_arrivals(sdk, locations):
-    results = sdk.time_filter(
+@pytest.mark.asyncio
+async def test_arrivals(sdk, locations):
+    results = await sdk.time_filter_async(
         locations=locations,
         search_ids={
             "London center": ["Hyde Park", "ZSL London Zoo"],

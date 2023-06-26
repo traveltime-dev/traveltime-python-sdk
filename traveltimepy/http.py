@@ -77,18 +77,6 @@ def _window_size(rate_limit: int):
         return rate_limit
 
 
-def send_post(
-    response_class: Type[T],
-    path: str,
-    headers: Dict[str, str],
-    request: TravelTimeRequest,
-    sdk_params: SdkParams,
-) -> T:
-    return asyncio.run(
-        send_post_async(response_class, path, headers, request, sdk_params)
-    )
-
-
 async def send_get_async(
     response_class: Type[T],
     path: str,
@@ -107,18 +95,6 @@ async def send_get_async(
                 params=params,
             ) as resp:
                 return await _process_response(response_class, resp)
-
-
-def send_get(
-    response_class: Type[T],
-    path: str,
-    headers: Dict[str, str],
-    sdk_params: SdkParams,
-    params: Dict[str, str] = None,
-) -> T:
-    return asyncio.run(
-        send_get_async(response_class, path, headers, sdk_params, params)
-    )
 
 
 async def _process_response(response_class: Type[T], response: ClientResponse) -> T:
