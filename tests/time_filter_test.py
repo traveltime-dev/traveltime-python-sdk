@@ -6,7 +6,7 @@ from traveltimepy import PublicTransport
 
 @pytest.mark.asyncio
 def test_departures(sdk, locations):
-    results = sdk.time_filter_async(
+    results = await sdk.time_filter_async(
         locations=locations,
         search_ids={
             "London center": ["Hyde Park", "ZSL London Zoo"],
@@ -20,7 +20,7 @@ def test_departures(sdk, locations):
 
 @pytest.mark.asyncio
 def test_arrivals(sdk, locations):
-    results = sdk.time_filter_async(
+    results = await sdk.time_filter_async(
         locations=locations,
         search_ids={
             "London center": ["Hyde Park", "ZSL London Zoo"],
