@@ -5,7 +5,7 @@ from traveltimepy import PublicTransport
 
 
 @pytest.mark.asyncio
-def test_departures(sdk, locations):
+async def test_departures(sdk, locations):
     results = await sdk.routes_async(
         locations=locations,
         search_ids={
@@ -19,7 +19,7 @@ def test_departures(sdk, locations):
 
 
 @pytest.mark.asyncio
-def test_arrivals(sdk, locations):
+async def test_arrivals(sdk, locations):
     results = await sdk.routes_async(
         locations=locations,
         search_ids={

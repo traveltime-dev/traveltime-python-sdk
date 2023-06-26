@@ -4,7 +4,7 @@ from traveltimepy.dto.requests.time_filter_fast import Transportation
 
 
 @pytest.mark.asyncio
-def test_one_to_many(sdk, locations):
+async def test_one_to_many(sdk, locations):
     results = await sdk.time_filter_fast_async(
         locations=locations,
         search_ids={
@@ -18,7 +18,7 @@ def test_one_to_many(sdk, locations):
 
 
 @pytest.mark.asyncio
-def test_many_to_one(sdk, locations):
+async def test_many_to_one(sdk, locations):
     results = await sdk.time_filter_fast_async(
         locations=locations,
         search_ids={

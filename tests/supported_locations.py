@@ -4,7 +4,7 @@ from traveltimepy import Location, Coordinates
 
 
 @pytest.mark.asyncio
-def test_supported_locations(sdk):
+async def test_supported_locations(sdk):
     locations = [
         Location(id="Kaunas", coords=Coordinates(lat=54.900008, lng=23.957734)),
         Location(id="London", coords=Coordinates(lat=51.506756, lng=-0.12805)),

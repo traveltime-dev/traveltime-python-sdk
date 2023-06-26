@@ -5,7 +5,7 @@ from traveltimepy import Coordinates, Driving
 
 
 @pytest.mark.asyncio
-def test_departures(sdk):
+async def test_departures(sdk):
     results = await sdk.time_map_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -19,7 +19,7 @@ def test_departures(sdk):
 
 
 @pytest.mark.asyncio
-def test_arrivals(sdk):
+async def test_arrivals(sdk):
     results = await sdk.time_map_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -33,7 +33,7 @@ def test_arrivals(sdk):
 
 
 @pytest.mark.asyncio
-def test_union_departures(sdk):
+async def test_union_departures(sdk):
     result = await sdk.union_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -47,7 +47,7 @@ def test_union_departures(sdk):
 
 
 @pytest.mark.asyncio
-def test_intersection_arrivals(sdk):
+async def test_intersection_arrivals(sdk):
     result = await sdk.intersection_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
