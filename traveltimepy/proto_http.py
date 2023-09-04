@@ -1,4 +1,3 @@
-import asyncio
 from typing import Dict
 
 from aiohttp import ClientSession, ClientResponse, BasicAuth, TCPConnector

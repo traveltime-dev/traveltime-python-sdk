@@ -6,6 +6,7 @@ from traveltimepy.dto.requests.time_filter_proto import (
     ProtoCountry,
 )
 
+
 @pytest.mark.asyncio
 async def test_proto(proto_sdk):
     travel_times = await proto_sdk.time_filter_proto_async(

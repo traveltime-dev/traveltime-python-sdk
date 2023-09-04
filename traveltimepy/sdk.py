@@ -59,7 +59,7 @@ from traveltimepy.mapper import (
     create_union,
 )
 
-from traveltimepy.proto_http import send_proto, send_proto_async
+from traveltimepy.proto_http import send_proto_async
 from traveltimepy.http import (
     send_get_async,
     send_post_async,
