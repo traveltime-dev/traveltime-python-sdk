@@ -1,12 +1,14 @@
+import pytest
+
 from traveltimepy import Coordinates
 from traveltimepy.dto.requests.time_filter_proto import (
     ProtoTransportation,
     ProtoCountry,
 )
 
-
-def test_proto(proto_sdk):
-    travel_times = proto_sdk.time_filter_proto(
+@pytest.mark.asyncio
+async def test_proto(proto_sdk):
+    travel_times = await proto_sdk.time_filter_proto_async(
         origin=Coordinates(lat=51.425709, lng=-0.122061),
         destinations=[
             Coordinates(lat=51.348605, lng=-0.314783),

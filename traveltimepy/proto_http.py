@@ -26,16 +26,6 @@ async def send_proto_async(
             return await _process_response(resp)
 
 
-def send_proto(
-    url: str,
-    headers: Dict[str, str],
-    data: TimeFilterFastRequest,
-    app_id: str,
-    api_key: str,
-) -> TimeFilterFastResponse:
-    return asyncio.run(send_proto_async(url, headers, data, app_id, api_key))
-
-
 async def _process_response(response: ClientResponse) -> TimeFilterProtoResponse:
     content = await response.read()
     if response.status != 200:

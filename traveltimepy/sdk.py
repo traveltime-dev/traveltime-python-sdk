@@ -180,7 +180,7 @@ class TravelTimeSdk:
         transportation: Transportation,
         travel_time: int = 3600,
         properties: Optional[List[Property]] = None,
-        one_to_many: bool = False,
+        one_to_many: bool = True,
     ) -> List[TimeFilterFastResult]:
         resp = await send_post_async(
             TimeFilterFastResponse,
@@ -318,22 +318,6 @@ class TravelTimeSdk:
         )
         return resp.results
 
-    def time_filter_proto(
-        self,
-        origin: Coordinates,
-        destinations: List[Coordinates],
-        country: ProtoCountry,
-        transportation: ProtoTransportation,
-        travel_time: int,
-    ) -> List[int]:
-        return send_proto(
-            f"https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
-            self._proto_headers(),
-            create_proto_request(origin, destinations, transportation, travel_time),
-            self._app_id,
-            self._api_key,
-        ).travel_times
-
     async def time_filter_proto_async(
         self,
         origin: Coordinates,
@@ -341,11 +325,12 @@ class TravelTimeSdk:
         country: ProtoCountry,
         transportation: ProtoTransportation,
         travel_time: int,
+        one_to_many: bool = True
     ) -> List[int]:
         resp = await send_proto_async(
-            f"https://proto.api.traveltimeapp.com/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
+            f"https://{host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
             self._proto_headers(),
-            create_proto_request(origin, destinations, transportation, travel_time),
+            create_proto_request(origin, destinations, transportation, travel_time, one_to_many),
             self._app_id,
             self._api_key,
         )
