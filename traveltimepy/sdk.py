@@ -79,11 +79,12 @@ class TravelTimeSdk:
         time_window: int = 60,
         retry_attempts: int = 2,
         host: str = "api.traveltimeapp.com",
+        proto_host: str = "proto.api.traveltimeapp.com"
     ) -> None:
         self._app_id = app_id
         self._api_key = api_key
         self._sdk_params = SdkParams(
-            host, limit_per_host, rate_limit, time_window, retry_attempts
+            host, proto_host, limit_per_host, rate_limit, time_window, retry_attempts
         )
 
     async def time_filter_async(
@@ -328,7 +329,7 @@ class TravelTimeSdk:
         one_to_many: bool = True
     ) -> List[int]:
         resp = await send_proto_async(
-            f"https://{host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
+            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
             self._proto_headers(),
             create_proto_request(origin, destinations, transportation, travel_time, one_to_many),
             self._app_id,
