@@ -197,7 +197,7 @@ travel times, distances and costs between an origin and up to 2,000 destination 
   arrival_time.
 * transportation: Union - Transportation mode and related parameters.
 * travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 3600.
-* properties: List[Property] - Properties to be returned about the postcodes. Default value is travel_time.
+* properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 
@@ -253,7 +253,7 @@ A very fast version of ```time_filter()```. However, the request parameters are 
   destinations
 * transportation: Union - Transportation mode and related parameters.
 * travel_time: int - Maximum journey time (in seconds). Maximum value is 10800. Default value is 3600.
-* properties: List[Property] - Properties to be returned about the postcodes. Default value is travel_time.
+* properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
   backward search (many to one matrix). Default value is False.
 
@@ -350,7 +350,7 @@ Returns routing information between source and destinations.
 * departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with
   arrival_time.
 * transportation: Union - Transportation mode and related parameters.
-* properties: List[Property] - Properties to be returned about the postcodes. Default value is travel_time.
+* properties: List[Property] - Properties to be returned about the locations. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 
