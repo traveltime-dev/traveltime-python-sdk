@@ -1,4 +1,3 @@
-import asyncio
 from typing import Dict
 
 from aiohttp import ClientSession, ClientResponse, BasicAuth, TCPConnector
@@ -24,16 +23,6 @@ async def send_proto_async(
             auth=BasicAuth(app_id, api_key),
         ) as resp:
             return await _process_response(resp)
-
-
-def send_proto(
-    url: str,
-    headers: Dict[str, str],
-    data: TimeFilterFastRequest,
-    app_id: str,
-    api_key: str,
-) -> TimeFilterFastResponse:
-    return asyncio.run(send_proto_async(url, headers, data, app_id, api_key))
 
 
 async def _process_response(response: ClientResponse) -> TimeFilterProtoResponse:

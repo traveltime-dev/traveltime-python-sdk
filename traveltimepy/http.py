@@ -18,6 +18,7 @@ DEFAULT_SPLIT_SIZE = 10
 @dataclass
 class SdkParams:
     host: str
+    proto_host: str
     limit_per_host: int
     rate_limit: int
     time_window: int

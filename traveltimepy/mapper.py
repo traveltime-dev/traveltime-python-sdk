@@ -547,22 +547,39 @@ def create_proto_request(
     destinations: List[Coordinates],
     transportation: ProtoTransportation,
     travel_time: int,
+    one_to_many: bool = True,
 ) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:
     request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()
 
-    request.oneToManyRequest.departureLocation.lat = origin.lat
-    request.oneToManyRequest.departureLocation.lng = origin.lng
+    if one_to_many:
+        request.oneToManyRequest.departureLocation.lat = origin.lat
+        request.oneToManyRequest.departureLocation.lng = origin.lng
 
-    request.oneToManyRequest.transportation.type = transportation.value.code
-    request.oneToManyRequest.travelTime = travel_time
-    request.oneToManyRequest.arrivalTimePeriod = (
-        TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
-    )
+        request.oneToManyRequest.transportation.type = transportation.value.code
+        request.oneToManyRequest.travelTime = travel_time
+        request.oneToManyRequest.arrivalTimePeriod = (
+            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
+        )
 
-    mult = math.pow(10, 5)
-    for destination in destinations:
-        lat_delta = round((destination.lat - origin.lat) * mult)
-        lng_delta = round((destination.lng - origin.lng) * mult)
-        request.oneToManyRequest.locationDeltas.extend([lat_delta, lng_delta])
+        mult = math.pow(10, 5)
+        for destination in destinations:
+            lat_delta = round((destination.lat - origin.lat) * mult)
+            lng_delta = round((destination.lng - origin.lng) * mult)
+            request.oneToManyRequest.locationDeltas.extend([lat_delta, lng_delta])
+    else:
+        request.manyToOneRequest.arrivalLocation.lat = origin.lat
+        request.manyToOneRequest.arrivalLocation.lng = origin.lng
+
+        request.manyToOneRequest.transportation.type = transportation.value.code
+        request.manyToOneRequest.travelTime = travel_time
+        request.manyToOneRequest.arrivalTimePeriod = (
+            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
+        )
+
+        mult = math.pow(10, 5)
+        for destination in destinations:
+            lat_delta = round((destination.lat - origin.lat) * mult)
+            lng_delta = round((destination.lng - origin.lng) * mult)
+            request.manyToOneRequest.locationDeltas.extend([lat_delta, lng_delta])
 
     return request

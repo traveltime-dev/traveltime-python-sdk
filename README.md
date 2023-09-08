@@ -255,7 +255,7 @@ A very fast version of ```time_filter()```. However, the request parameters are 
 * travel_time: int - Maximum journey time (in seconds). Maximum value is 10800. Default value is 3600.
 * properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
-  backward search (many to one matrix). Default value is False.
+  backward search (many to one matrix). Default value is True.
 
 #### Returns:
 
@@ -308,6 +308,8 @@ larger limits on the amount of destination points.
 * transportation: ProtoTransportation - Transportation type.
 * travel_time: int - Time limit. Maximum value is 7200.
 * country: ProtoCountry - Return the results that are within the specified country.
+* one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
+  backward search (many to one matrix). Default value is True.
 
 #### Returns:
 
