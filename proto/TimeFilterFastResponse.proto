@@ -79,14 +79,14 @@ message TimeFilterFastResponse {
      DISTANCE_PROPERTY_NOT_SUPPORTED = 12;
 
      /*
-      * ManyToOne And OneToMany cannot be sent at the same time
+      * ManyToOne and OneToMany cannot be sent at the same time
       */
-      BOTH_MANY_TO_ONE_AND_ONE_TO_MANY_CANNOT_BE_SENT = 13;
+     BOTH_MANY_TO_ONE_AND_ONE_TO_MANY_CANNOT_BE_SENT = 13;
 
      /*
-      * ManyToOne And OneToMany cannot be sent at the same time
+      * ManyToOne or OneToMany cannot be null
       */
-      ONE_TO_MANY_OR_MANY_TO_ONE_MUST_NOT_BE_NULL = 14;
+     ONE_TO_MANY_OR_MANY_TO_ONE_MUST_NOT_BE_NULL = 14;
   }
 
   Error error = 1;
