@@ -7,6 +7,7 @@ from traveltimepy.dto.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
+    MaxChanges
 )
 from traveltimepy.dto.requests.time_filter_proto import (
     ProtoTransportation,
