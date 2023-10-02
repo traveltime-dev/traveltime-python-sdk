@@ -29,7 +29,6 @@ async def test_departures_geojson(sdk):
         travel_time=900,
         transportation=Driving(),
     )
-    print(results)
     assert len(results) == 2
 
 
