@@ -69,6 +69,8 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 
+### JSON response
+
 #### Returns:
 
 * results: List[TimeMapResult] - The list of isochrone shapes.
@@ -86,6 +88,35 @@ async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
 
     results = await sdk.time_map_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        arrival_time=datetime.now(),
+        transportation=Driving()
+    )
+    print(results)
+
+
+asyncio.run(main())
+```
+
+### GEOJSON response
+
+#### Returns:
+
+* results: FeatureCollection - The list of Features.
+
+#### Example:
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.time_map_geojson_async(
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
         arrival_time=datetime.now(),
         transportation=Driving()
