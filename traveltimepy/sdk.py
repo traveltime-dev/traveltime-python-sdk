@@ -56,14 +56,14 @@ from traveltimepy.mapper import (
     create_proto_request,
     create_time_map,
     create_intersection,
-    create_union,
+    create_union, create_time_map_geojson,
 )
 
 from traveltimepy.proto_http import send_proto_async
 from traveltimepy.http import (
     send_get_async,
     send_post_async,
-    SdkParams,
+    SdkParams, send_post_geojson_async,
 )
 
 from geojson_pydantic import FeatureCollection
@@ -418,6 +418,33 @@ class TravelTimeSdk:
             self._sdk_params,
         )
         return resp.results
+
+    async def time_map_geojson_async(
+            self,
+            coordinates: List[Coordinates],
+            transportation: Union[
+                PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+            ],
+            arrival_time: Optional[datetime] = None,
+            departure_time: Optional[datetime] = None,
+            travel_time: int = 3600,
+            search_range: Optional[Range] = None,
+    ) -> FeatureCollection:
+        resp = await send_post_geojson_async(
+            FeatureCollection,
+            "time-map",
+            self._headers(AcceptType.GEO_JSON),
+            create_time_map_geojson(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range,
+            ),
+            self._sdk_params,
+        )
+        return resp
 
     @staticmethod
     def _geocoding_reverse_params(lat: float, lng: float) -> Dict[str, str]:

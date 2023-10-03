@@ -2,6 +2,7 @@ import math
 from datetime import datetime
 from typing import Dict, Union, List, Optional
 
+from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
 from traveltimepy.errors import ApiError
 from traveltimepy import TimeFilterFastRequest_pb2
 
@@ -27,7 +28,6 @@ from traveltimepy.dto.requests.postcodes_zones import (
     PostcodesSectorsRequest,
 )
 from traveltimepy.dto.requests.time_map import TimeMapRequest
-
 
 from traveltimepy.dto.requests import (
     time_filter,
@@ -359,6 +359,53 @@ def create_time_map(
             arrival_searches=[],
             unions=[],
             intersections=[],
+        )
+    else:
+        raise ApiError("arrival_time or departure_time should be specified")
+
+
+def create_time_map_geojson(
+    coordinates: List[Coordinates],
+    transportation: Union[
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+    ],
+    travel_time: int,
+    departure_time: Optional[datetime],
+    arrival_time: Optional[datetime],
+    search_range: Optional[Range],
+) -> TimeMapRequestGeojson:
+    if arrival_time is not None and departure_time is not None:
+        raise ApiError("arrival_time and departure_time cannot be both specified")
+
+    if arrival_time is not None:
+        return TimeMapRequestGeojson(
+            arrival_searches=[
+                time_map.ArrivalSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=arrival_time,
+                    transportation=transportation,
+                    range=search_range,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[]
+        )
+    elif departure_time is not None:
+        return TimeMapRequestGeojson(
+            departure_searches=[
+                time_map.DepartureSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=departure_time,
+                    transportation=transportation,
+                    range=search_range,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[]
         )
     else:
         raise ApiError("arrival_time or departure_time should be specified")
