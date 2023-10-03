@@ -9,6 +9,7 @@ from traveltimepy.dto.common import (
     FullRange,
     Range,
 )
+from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResult, TimeMapWKTResponse
 from traveltimepy.dto.transportation import (
     PublicTransport,
     Driving,
@@ -56,7 +57,7 @@ from traveltimepy.mapper import (
     create_proto_request,
     create_time_map,
     create_intersection,
-    create_union, create_time_map_geojson,
+    create_union, create_time_map_geojson, create_time_map_wkt,
 )
 
 from traveltimepy.proto_http import send_proto_async
@@ -445,6 +446,33 @@ class TravelTimeSdk:
             self._sdk_params,
         )
         return resp
+
+    async def time_map_wkt_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        ],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+    ) -> List[TimeMapWKTResult]:
+        resp = await send_post_async(
+            TimeMapWKTResponse,
+            "time-map",
+            self._headers(AcceptType.WKT),
+            create_time_map_wkt(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range,
+            ),
+            self._sdk_params,
+        )
+        return resp.results
 
     @staticmethod
     def _geocoding_reverse_params(lat: float, lng: float) -> Dict[str, str]:
