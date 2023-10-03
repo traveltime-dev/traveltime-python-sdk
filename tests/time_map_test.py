@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from datetime import datetime
 
@@ -37,6 +39,20 @@ async def test_departures_geojson(sdk):
 
 
 @pytest.mark.asyncio
+async def test_departures_wkt(sdk):
+    results = await sdk.time_map_wkt_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            Coordinates(lat=51.517609, lng=-0.138315),
+        ],
+        departure_time=datetime.now(),
+        travel_time=900,
+        transportation=Driving(),
+    )
+    assert len(results) == 2
+
+
+@pytest.mark.asyncio
 async def test_arrivals(sdk):
     results = await sdk.time_map_async(
         coordinates=[
@@ -64,6 +80,20 @@ async def test_arrivals_geojson(sdk):
         transportation=Driving(),
         search_range=Range(enabled=True, width=1800),
         level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+    )
+    assert len(results) == 2
+
+
+@pytest.mark.asyncio
+async def test_arrivals_wkt(sdk):
+    results = await sdk.time_map_wkt_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            Coordinates(lat=51.517609, lng=-0.138315),
+        ],
+        arrival_time=datetime.now(),
+        travel_time=900,
+        transportation=Driving(),
     )
     assert len(results) == 2
 
