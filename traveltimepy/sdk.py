@@ -9,7 +9,10 @@ from traveltimepy.dto.common import (
     FullRange,
     Range,
 )
-from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResult, WKTResponseCollection
+from traveltimepy.dto.responses.time_map_wkt import (
+    TimeMapWKTResult,
+    WKTResponseCollection
+)
 from traveltimepy.dto.transportation import (
     PublicTransport,
     Driving,
@@ -332,7 +335,13 @@ class TravelTimeSdk:
         resp = await send_proto_async(
             f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
             self._proto_headers(),
-            create_proto_request(origin, destinations, transportation, travel_time, one_to_many),
+            create_proto_request(
+                origin,
+                destinations,
+                transportation,
+                travel_time,
+                one_to_many
+            ),
             self._app_id,
             self._api_key,
         )

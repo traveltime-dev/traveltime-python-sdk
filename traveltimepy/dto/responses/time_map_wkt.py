@@ -21,8 +21,12 @@ class WKT(BaseModel):
 
     @validator("value", pre=True)
     def validate_wkt(cls, value: str) -> str:
-        if not any(value.startswith(keyword.value) for keyword in WKTKeywords):
-            raise ValueError(f"Invalid WKT: Must start with one of {', '.join([keyword.value for keyword in WKTKeywords])}")
+        valid_keywords = [keyword.value for keyword in WKTKeywords]
+        if not any(value.startswith(keyword) for keyword in valid_keywords):
+            raise ValueError(
+                f"Invalid WKT: Must start with one of "
+                f"{', '.join(valid_keywords)}"
+            )
         return value
 
 
@@ -34,6 +38,11 @@ class TimeMapWKTResult(GenericModel):
     @validator("shape", pre=True)
     def transform_shape(cls, shape: str) -> Dict[str, str]:
         return {"value": shape}
+
+    def dict(self, **kwargs):
+        original_dict = super().dict(**kwargs)
+        original_dict['shape'] = original_dict['shape']['value']
+        return original_dict
 
 
 class WKTResponseCollection(BaseModel):
