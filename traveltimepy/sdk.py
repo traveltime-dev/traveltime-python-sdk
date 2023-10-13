@@ -10,7 +10,10 @@ from traveltimepy.dto.common import (
     Range,
     LevelOfDetail,
 )
-from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResult, WKTResponseCollection
+from traveltimepy.dto.responses.time_map_wkt import (
+    TimeMapWKTResult,
+    WKTResponseCollection
+)
 from traveltimepy.dto.transportation import (
     PublicTransport,
     Driving,
