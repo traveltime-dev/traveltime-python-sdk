@@ -333,7 +333,8 @@ class TravelTimeSdk:
             one_to_many: bool = True
     ) -> List[int]:
         resp = await send_proto_async(
-            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",
+            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}"
+            f"/time-filter/fast/{transportation.value.name}",
             # noqa
             self._proto_headers(),
             create_proto_request(

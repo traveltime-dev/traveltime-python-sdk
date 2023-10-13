@@ -45,6 +45,7 @@ async def test_departures_wkt(sdk):
     )
     assert len(results) == 2
 
+
 @pytest.mark.asyncio
 async def test_departures_wkt_no_holes(sdk):
     results = await sdk.time_map_wkt_no_holes_async(
@@ -57,6 +58,7 @@ async def test_departures_wkt_no_holes(sdk):
         transportation=Driving(),
     )
     assert len(results) == 2
+
 
 @pytest.mark.asyncio
 async def test_arrivals(sdk):
