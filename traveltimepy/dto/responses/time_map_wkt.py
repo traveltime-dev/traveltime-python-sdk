@@ -39,6 +39,12 @@ class TimeMapWKTResult(GenericModel):
     def transform_shape(cls, shape: str) -> Dict[str, str]:
         return {"value": shape}
 
+    # Used for getting json format response
+    #
+    # Example:
+    # results_dicts = [result.dict() for result in results]
+    # results_json_str = json.dumps(results_dicts)
+    # print(results_json_str)
     def dict(self, **kwargs):
         original_dict = super().dict(**kwargs)
         original_dict['shape'] = original_dict['shape']['value']
