@@ -1,19 +1,9 @@
 from typing import List, Union, Dict, Any, TypeVar, Iterator, Optional
 from pydantic import BaseModel, Field, validator
 from pydantic.generics import GenericModel
-from enum import Enum
+from shapely import wkt
 
 Props = TypeVar("Props", bound=Union[Dict[str, Any], BaseModel])
-
-
-class WKTKeywords(Enum):
-    POINT = "POINT"
-    LINESTRING = "LINESTRING"
-    POLYGON = "POLYGON"
-    MULTIPOINT = "MULTIPOINT"
-    MULTILINESTRING = "MULTILINESTRING"
-    MULTIPOLYGON = "MULTIPOLYGON"
-    GEOMETRYCOLLECTION = "GEOMETRYCOLLECTION"
 
 
 class WKT(BaseModel):
@@ -21,13 +11,11 @@ class WKT(BaseModel):
 
     @validator("value", pre=True)
     def validate_wkt(cls, value: str) -> str:
-        valid_keywords = [keyword.value for keyword in WKTKeywords]
-        if not any(value.startswith(keyword) for keyword in valid_keywords):
-            raise ValueError(
-                f"Invalid WKT: Must start with one of "
-                f"{', '.join(valid_keywords)}"
-            )
-        return value
+        try:
+            wkt.loads(value)
+            return value
+        except:
+            raise ValueError("Invalid WKT string")
 
 
 class TimeMapWKTResult(GenericModel):
