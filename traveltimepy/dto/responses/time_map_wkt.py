@@ -2,6 +2,7 @@ from typing import List, Union, Dict, Any, TypeVar, Iterator, Optional
 from pydantic import BaseModel, Field, validator
 from pydantic.generics import GenericModel
 from shapely import wkt
+from shapely.errors import WKTReadingError
 
 Props = TypeVar("Props", bound=Union[Dict[str, Any], BaseModel])
 
@@ -14,7 +15,7 @@ class WKT(BaseModel):
         try:
             wkt.loads(value)
             return value
-        except:
+        except WKTReadingError:
             raise ValueError("Invalid WKT string")
 
 
