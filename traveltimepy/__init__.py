@@ -7,7 +7,8 @@ from traveltimepy.dto.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
-    MaxChanges
+    CyclingPublicTransport,
+    MaxChanges,
 )
 from traveltimepy.dto.requests.time_filter_proto import (
     ProtoTransportation,
@@ -35,6 +36,7 @@ __all__ = [
     "Walking",
     "Cycling",
     "DrivingTrain",
+    "CyclingPublicTransport",
     "ProtoTransportation",
     "ProtoCountry",
     "Coordinates",

@@ -14,6 +14,7 @@ from traveltimepy.dto.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
+    CyclingPublicTransport,
 )
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
@@ -43,7 +44,13 @@ def create_time_filter(
     locations: List[Location],
     search_ids: Dict[str, List[str]],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     properties: Optional[List[Property]],
     departure_time: Optional[datetime],
@@ -153,7 +160,13 @@ def create_postcodes(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     travel_time: int,
     properties: Optional[List[Property]],
@@ -204,7 +217,13 @@ def create_postcodes(
 def create_districts(
     coordinates: List[Coordinates],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     travel_time: int,
     departure_time: Optional[datetime],
@@ -260,7 +279,13 @@ def create_districts(
 def create_sectors(
     coordinates: List[Coordinates],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     travel_time: int,
     departure_time: Optional[datetime],
@@ -316,7 +341,13 @@ def create_sectors(
 def create_time_map(
     coordinates: List[Coordinates],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     travel_time: int,
     departure_time: Optional[datetime],
@@ -367,7 +398,13 @@ def create_time_map(
 def create_time_map_geojson(
     coordinates: List[Coordinates],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     travel_time: int,
     departure_time: Optional[datetime],
@@ -390,7 +427,7 @@ def create_time_map_geojson(
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
-            departure_searches=[]
+            departure_searches=[],
         )
     elif departure_time is not None:
         return TimeMapRequestGeojson(
@@ -405,7 +442,7 @@ def create_time_map_geojson(
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
-            arrival_searches=[]
+            arrival_searches=[],
         )
     else:
         raise ApiError("arrival_time or departure_time should be specified")
@@ -414,7 +451,13 @@ def create_time_map_geojson(
 def create_intersection(
     coordinates: List[Coordinates],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     travel_time: int,
     departure_time: Optional[datetime],
@@ -475,7 +518,13 @@ def create_intersection(
 def create_union(
     coordinates: List[Coordinates],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     travel_time: int,
     departure_time: Optional[datetime],
@@ -537,7 +586,13 @@ def create_routes(
     locations: List[Location],
     search_ids: Dict[str, List[str]],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
