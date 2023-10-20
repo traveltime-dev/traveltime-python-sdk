@@ -16,6 +16,9 @@ from traveltimepy.dto.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
+    DrivingFerry,
+    CyclingFerry,
+    CyclingPublicTransport,
 )
 from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 from traveltimepy.dto.requests.time_filter_proto import (
@@ -92,7 +95,8 @@ class TravelTimeSdk:
         locations: List[Location],
         search_ids: Dict[str, List[str]],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+            CyclingPublicTransport
         ],
         properties: Optional[List[Property]] = None,
         departure_time: Optional[datetime] = None,
@@ -203,7 +207,8 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+            CyclingPublicTransport
         ],
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
@@ -232,7 +237,8 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+            CyclingPublicTransport
         ],
         travel_time: int = 1800,
         departure_time: Optional[datetime] = None,
@@ -263,7 +269,8 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+            CyclingPublicTransport
         ],
         travel_time: int = 1800,
         departure_time: Optional[datetime] = None,
@@ -295,7 +302,8 @@ class TravelTimeSdk:
         locations: List[Location],
         search_ids: Dict[str, List[str]],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+            CyclingPublicTransport
         ],
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
@@ -341,7 +349,8 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+            CyclingPublicTransport
         ],
         arrival_time: Optional[datetime] = None,
         departure_time: Optional[datetime] = None,
@@ -368,7 +377,8 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+            CyclingPublicTransport
         ],
         arrival_time: Optional[datetime] = None,
         departure_time: Optional[datetime] = None,
@@ -396,7 +406,8 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+            CyclingPublicTransport
         ],
         arrival_time: Optional[datetime] = None,
         departure_time: Optional[datetime] = None,
@@ -423,7 +434,8 @@ class TravelTimeSdk:
             self,
             coordinates: List[Coordinates],
             transportation: Union[
-                PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+                PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+                CyclingPublicTransport
             ],
             arrival_time: Optional[datetime] = None,
             departure_time: Optional[datetime] = None,

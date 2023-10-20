@@ -11,6 +11,9 @@ from traveltimepy.dto.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
+    DrivingFerry,
+    CyclingFerry,
+    CyclingPublicTransport
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.routes import RoutesResponse
@@ -23,7 +26,8 @@ class ArrivalSearch(BaseModel):
     arrival_location_id: str
     arrival_time: datetime
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+        CyclingPublicTransport
     ]
     properties: List[Property]
     range: Optional[FullRange] = None
@@ -35,7 +39,8 @@ class DepartureSearch(BaseModel):
     departure_location_id: str
     departure_time: datetime
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+        CyclingPublicTransport
     ]
     properties: List[Property]
     range: Optional[FullRange] = None

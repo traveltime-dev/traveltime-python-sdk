@@ -14,6 +14,9 @@ from traveltimepy import (
     Walking,
     Cycling,
     DrivingTrain,
+    DrivingFerry,
+    CyclingFerry,
+    CyclingPublicTransport,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
@@ -26,7 +29,8 @@ class DepartureSearch(BaseModel):
     departure_time: datetime
     travel_time: int
     transportation: typing.Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+        CyclingPublicTransport
     ]
     range: Optional[Range] = None
 

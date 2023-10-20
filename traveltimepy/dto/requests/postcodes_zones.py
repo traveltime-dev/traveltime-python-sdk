@@ -18,6 +18,9 @@ from traveltimepy.dto.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
+    DrivingFerry,
+    CyclingPublicTransport,
+    CyclingFerry,
 )
 
 
@@ -34,7 +37,8 @@ class ArrivalSearch(BaseModel):
     arrival_time: datetime
     reachable_postcodes_threshold: float
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+        CyclingPublicTransport
     ]
     properties: List[ZonesProperty]
     range: Optional[FullRange] = None
@@ -47,7 +51,8 @@ class DepartureSearch(BaseModel):
     departure_time: datetime
     reachable_postcodes_threshold: float
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
+        CyclingPublicTransport
     ]
     properties: List[ZonesProperty]
     range: Optional[FullRange] = None
