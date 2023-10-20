@@ -44,16 +44,6 @@ class PublicTransport(BaseModel):
     max_changes: Optional[MaxChanges] = None
 
 
-class DrivingFerry(BaseModel):
-    type: Literal["driving+ferry"] = "driving+ferry"
-    boarding_time: Optional[int] = None
-
-
-class CyclingFerry(BaseModel):
-    type: Literal["cycling+ferry"] = "cycling+ferry"
-    boarding_time: Optional[int] = None
-
-
 class CyclingPublicTransport(BaseModel):
     type: Literal["cycling+public_transport"] = "cycling+public_transport"
     walking_time: Optional[int] = None

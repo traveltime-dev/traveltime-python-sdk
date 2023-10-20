@@ -15,8 +15,6 @@ from traveltimepy import (
     Walking,
     Cycling,
     DrivingTrain,
-    DrivingFerry,
-    CyclingFerry,
     CyclingPublicTransport,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
@@ -35,8 +33,6 @@ class DepartureSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
-        DrivingFerry,
-        CyclingFerry,
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None
@@ -54,8 +50,6 @@ class ArrivalSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
-        DrivingFerry,
-        CyclingFerry,
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None

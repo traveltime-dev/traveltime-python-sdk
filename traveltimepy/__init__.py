@@ -7,8 +7,6 @@ from traveltimepy.dto.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
-    DrivingFerry,
-    CyclingFerry,
     CyclingPublicTransport,
     MaxChanges,
 )
@@ -38,8 +36,6 @@ __all__ = [
     "Walking",
     "Cycling",
     "DrivingTrain",
-    "DrivingFerry",
-    "CyclingFerry",
     "CyclingPublicTransport",
     "ProtoTransportation",
     "ProtoCountry",

@@ -18,9 +18,7 @@ from traveltimepy.dto.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
-    DrivingFerry,
     CyclingPublicTransport,
-    CyclingFerry,
 )
 
 
@@ -43,8 +41,6 @@ class ArrivalSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
-        DrivingFerry,
-        CyclingFerry,
         CyclingPublicTransport,
     ]
     properties: List[ZonesProperty]
@@ -64,8 +60,6 @@ class DepartureSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
-        DrivingFerry,
-        CyclingFerry,
         CyclingPublicTransport,
     ]
     properties: List[ZonesProperty]
