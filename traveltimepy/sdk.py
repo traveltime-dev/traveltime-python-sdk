@@ -59,14 +59,16 @@ from traveltimepy.mapper import (
     create_proto_request,
     create_time_map,
     create_intersection,
-    create_union, create_time_map_geojson,
+    create_union,
+    create_time_map_geojson,
 )
 
 from traveltimepy.proto_http import send_proto_async
 from traveltimepy.http import (
     send_get_async,
     send_post_async,
-    SdkParams, send_post_geojson_async,
+    SdkParams,
+    send_post_geojson_async,
 )
 
 from geojson_pydantic import FeatureCollection
@@ -82,7 +84,7 @@ class TravelTimeSdk:
         time_window: int = 60,
         retry_attempts: int = 2,
         host: str = "api.traveltimeapp.com",
-        proto_host: str = "proto.api.traveltimeapp.com"
+        proto_host: str = "proto.api.traveltimeapp.com",
     ) -> None:
         self._app_id = app_id
         self._api_key = api_key
@@ -95,8 +97,15 @@ class TravelTimeSdk:
         locations: List[Location],
         search_ids: Dict[str, List[str]],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-            CyclingPublicTransport
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            DrivingFerry,
+            CyclingFerry,
+            CyclingPublicTransport,
         ],
         properties: Optional[List[Property]] = None,
         departure_time: Optional[datetime] = None,
@@ -207,8 +216,15 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-            CyclingPublicTransport
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            DrivingFerry,
+            CyclingFerry,
+            CyclingPublicTransport,
         ],
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
@@ -237,8 +253,15 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-            CyclingPublicTransport
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            DrivingFerry,
+            CyclingFerry,
+            CyclingPublicTransport,
         ],
         travel_time: int = 1800,
         departure_time: Optional[datetime] = None,
@@ -269,8 +292,15 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-            CyclingPublicTransport
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            DrivingFerry,
+            CyclingFerry,
+            CyclingPublicTransport,
         ],
         travel_time: int = 1800,
         departure_time: Optional[datetime] = None,
@@ -302,8 +332,15 @@ class TravelTimeSdk:
         locations: List[Location],
         search_ids: Dict[str, List[str]],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-            CyclingPublicTransport
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            DrivingFerry,
+            CyclingFerry,
+            CyclingPublicTransport,
         ],
         departure_time: Optional[datetime] = None,
         arrival_time: Optional[datetime] = None,
@@ -334,12 +371,14 @@ class TravelTimeSdk:
         country: ProtoCountry,
         transportation: ProtoTransportation,
         travel_time: int,
-        one_to_many: bool = True
+        one_to_many: bool = True,
     ) -> List[int]:
         resp = await send_proto_async(
             f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
             self._proto_headers(),
-            create_proto_request(origin, destinations, transportation, travel_time, one_to_many),
+            create_proto_request(
+                origin, destinations, transportation, travel_time, one_to_many
+            ),
             self._app_id,
             self._api_key,
         )
@@ -349,8 +388,15 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-            CyclingPublicTransport
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            DrivingFerry,
+            CyclingFerry,
+            CyclingPublicTransport,
         ],
         arrival_time: Optional[datetime] = None,
         departure_time: Optional[datetime] = None,
@@ -377,8 +423,15 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-            CyclingPublicTransport
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            DrivingFerry,
+            CyclingFerry,
+            CyclingPublicTransport,
         ],
         arrival_time: Optional[datetime] = None,
         departure_time: Optional[datetime] = None,
@@ -406,8 +459,15 @@ class TravelTimeSdk:
         self,
         coordinates: List[Coordinates],
         transportation: Union[
-            PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-            CyclingPublicTransport
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            DrivingFerry,
+            CyclingFerry,
+            CyclingPublicTransport,
         ],
         arrival_time: Optional[datetime] = None,
         departure_time: Optional[datetime] = None,
@@ -431,16 +491,23 @@ class TravelTimeSdk:
         return resp.results
 
     async def time_map_geojson_async(
-            self,
-            coordinates: List[Coordinates],
-            transportation: Union[
-                PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-                CyclingPublicTransport
-            ],
-            arrival_time: Optional[datetime] = None,
-            departure_time: Optional[datetime] = None,
-            travel_time: int = 3600,
-            search_range: Optional[Range] = None,
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            DrivingFerry,
+            CyclingFerry,
+            CyclingPublicTransport,
+        ],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
     ) -> FeatureCollection:
         resp = await send_post_geojson_async(
             FeatureCollection,

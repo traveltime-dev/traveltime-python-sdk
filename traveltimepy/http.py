@@ -72,19 +72,19 @@ async def send_post_async(
 
 
 async def send_post_geojson_async(
-        response_class: Type[T],
-        path: str,
-        headers: Dict[str, str],
-        request: TravelTimeRequest,
-        sdk_params: SdkParams,
+    response_class: Type[T],
+    path: str,
+    headers: Dict[str, str],
+    request: TravelTimeRequest,
+    sdk_params: SdkParams,
 ) -> T:
     window_size = _window_size(sdk_params.rate_limit)
     async with ClientSession(
-            connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)
+        connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)
     ) as session:
         retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
         async with RetryClient(
-                client_session=session, retry_options=retry_options
+            client_session=session, retry_options=retry_options
         ) as client:
             rate_limit = AsyncLimiter(
                 sdk_params.rate_limit // window_size, sdk_params.time_window

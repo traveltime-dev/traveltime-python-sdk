@@ -29,8 +29,15 @@ class DepartureSearch(BaseModel):
     departure_time: datetime
     travel_time: int
     transportation: typing.Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-        CyclingPublicTransport
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        DrivingFerry,
+        CyclingFerry,
+        CyclingPublicTransport,
     ]
     range: Optional[Range] = None
 

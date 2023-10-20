@@ -27,8 +27,15 @@ class ArrivalSearch(BaseModel):
     arrival_time: datetime
     travel_time: int
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-        CyclingPublicTransport
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        DrivingFerry,
+        CyclingFerry,
+        CyclingPublicTransport,
     ]
     properties: List[Property]
     range: Optional[FullRange] = None
@@ -41,8 +48,15 @@ class DepartureSearch(BaseModel):
     departure_time: datetime
     travel_time: int
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain, DrivingFerry, CyclingFerry,
-        CyclingPublicTransport
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        DrivingFerry,
+        CyclingFerry,
+        CyclingPublicTransport,
     ]
     properties: List[Property]
     range: Optional[FullRange] = None
