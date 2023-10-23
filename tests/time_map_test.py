@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 
-from traveltimepy import Coordinates, Driving
+from traveltimepy import Coordinates, Driving, LevelOfDetail, Range
 
 
 @pytest.mark.asyncio
@@ -14,6 +14,8 @@ async def test_departures(sdk):
         departure_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(results) == 2
 
@@ -28,6 +30,8 @@ async def test_departures_geojson(sdk):
         departure_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(results) == 2
 
@@ -42,6 +46,8 @@ async def test_arrivals(sdk):
         arrival_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(results) == 2
 
@@ -56,6 +62,8 @@ async def test_arrivals_geojson(sdk):
         arrival_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(results) == 2
 
@@ -70,6 +78,8 @@ async def test_union_departures(sdk):
         departure_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(result.shapes) > 0
 
@@ -84,5 +94,7 @@ async def test_intersection_arrivals(sdk):
         arrival_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(result.shapes) > 0

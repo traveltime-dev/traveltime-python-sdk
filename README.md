@@ -68,6 +68,7 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * transportation: Union - Transportation mode and related parameters.
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* level_of_detail: LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
 
 ### JSON response
 

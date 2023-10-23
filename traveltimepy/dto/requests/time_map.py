@@ -36,8 +36,8 @@ class DepartureSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range] = (None,)
-    level_of_detail: Optional[LevelOfDetail] = (None,)
+    range: Optional[Range] = None
+    level_of_detail: Optional[LevelOfDetail] = None
 
 
 class ArrivalSearch(BaseModel):
@@ -54,8 +54,8 @@ class ArrivalSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range] = (None,)
-    level_of_detail: Optional[LevelOfDetail] = (None,)
+    range: Optional[Range] = None
+    level_of_detail: Optional[LevelOfDetail] = None
 
 
 class Intersection(BaseModel):
