@@ -476,6 +476,7 @@ def create_intersection(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     search_range: Optional[Range],
+    level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapRequest:
     if arrival_time is not None and departure_time is not None:
         raise ApiError("arrival_time and departure_time cannot be both specified")
@@ -490,6 +491,7 @@ def create_intersection(
                     arrival_time=arrival_time,
                     transportation=transportation,
                     range=search_range,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -512,6 +514,7 @@ def create_intersection(
                     departure_time=departure_time,
                     transportation=transportation,
                     range=search_range,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -543,6 +546,7 @@ def create_union(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     search_range: Optional[Range],
+    level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapRequest:
     if arrival_time is not None and departure_time is not None:
         raise ApiError("arrival_time and departure_time cannot be both specified")
@@ -557,6 +561,7 @@ def create_union(
                     arrival_time=arrival_time,
                     transportation=transportation,
                     range=search_range,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -579,6 +584,7 @@ def create_union(
                     departure_time=departure_time,
                     transportation=transportation,
                     range=search_range,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
