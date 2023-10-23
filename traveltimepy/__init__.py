@@ -21,6 +21,7 @@ from traveltimepy.dto.common import (
     FullRange,
     Range,
     Rectangle,
+    LevelOfDetail,
 )
 
 from traveltimepy.sdk import TravelTimeSdk
@@ -45,6 +46,7 @@ __all__ = [
     "FullRange",
     "Range",
     "Rectangle",
+    "LevelOfDetail",
     "TravelTimeSdk",
     "Transportation",
     "ZonesProperty",

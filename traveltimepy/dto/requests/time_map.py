@@ -15,6 +15,7 @@ from traveltimepy import (
     Cycling,
     DrivingTrain,
     CyclingPublicTransport,
+    LevelOfDetail,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
@@ -36,6 +37,7 @@ class DepartureSearch(BaseModel):
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None
+    level_of_detail: Optional[LevelOfDetail] = None
 
 
 class ArrivalSearch(BaseModel):
@@ -53,6 +55,7 @@ class ArrivalSearch(BaseModel):
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None
+    level_of_detail: Optional[LevelOfDetail] = None
 
 
 class Intersection(BaseModel):

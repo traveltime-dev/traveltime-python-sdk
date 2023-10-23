@@ -16,6 +16,7 @@ from traveltimepy import (
     Cycling,
     DrivingTrain,
     CyclingPublicTransport,
+    LevelOfDetail,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.itertools import split, flatten
@@ -36,6 +37,7 @@ class DepartureSearch(BaseModel):
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None
+    level_of_detail: Optional[LevelOfDetail] = None
 
 
 class ArrivalSearch(BaseModel):
@@ -53,6 +55,7 @@ class ArrivalSearch(BaseModel):
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None
+    level_of_detail: Optional[LevelOfDetail] = None
 
 
 class TimeMapRequestGeojson(TravelTimeRequest[FeatureCollection]):
