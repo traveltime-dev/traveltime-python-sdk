@@ -6,7 +6,14 @@ from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
 from traveltimepy.errors import ApiError
 from traveltimepy import TimeFilterFastRequest_pb2
 
-from traveltimepy.dto.common import Location, Coordinates, FullRange, Property, Range
+from traveltimepy.dto.common import (
+    Location,
+    Coordinates,
+    FullRange,
+    Property,
+    Range,
+    LevelOfDetail,
+)
 from traveltimepy.dto.transportation import (
     PublicTransport,
     Driving,
@@ -353,6 +360,7 @@ def create_time_map(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     search_range: Optional[Range],
+    level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapRequest:
     if arrival_time is not None and departure_time is not None:
         raise ApiError("arrival_time and departure_time cannot be both specified")
@@ -367,6 +375,7 @@ def create_time_map(
                     arrival_time=arrival_time,
                     transportation=transportation,
                     range=search_range,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -384,6 +393,7 @@ def create_time_map(
                     departure_time=departure_time,
                     transportation=transportation,
                     range=search_range,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -410,6 +420,7 @@ def create_time_map_geojson(
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     search_range: Optional[Range],
+    level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapRequestGeojson:
     if arrival_time is not None and departure_time is not None:
         raise ApiError("arrival_time and departure_time cannot be both specified")
@@ -424,6 +435,7 @@ def create_time_map_geojson(
                     arrival_time=arrival_time,
                     transportation=transportation,
                     range=search_range,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -439,6 +451,7 @@ def create_time_map_geojson(
                     departure_time=departure_time,
                     transportation=transportation,
                     range=search_range,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],

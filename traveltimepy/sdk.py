@@ -8,6 +8,7 @@ from traveltimepy.dto.common import (
     Property,
     FullRange,
     Range,
+    LevelOfDetail,
 )
 from traveltimepy.dto.transportation import (
     PublicTransport,
@@ -455,6 +456,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
+        level_of_detail: Optional[LevelOfDetail] = None,
     ) -> List[TimeMapResult]:
         resp = await send_post_async(
             TimeMapResponse,
@@ -467,6 +469,7 @@ class TravelTimeSdk:
                 arrival_time,
                 departure_time,
                 search_range,
+                level_of_detail,
             ),
             self._sdk_params,
         )
@@ -488,6 +491,7 @@ class TravelTimeSdk:
         departure_time: Optional[datetime] = None,
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
+        level_of_detail: Optional[LevelOfDetail] = None,
     ) -> FeatureCollection:
         resp = await send_post_geojson_async(
             FeatureCollection,
@@ -500,6 +504,7 @@ class TravelTimeSdk:
                 arrival_time,
                 departure_time,
                 search_range,
+                level_of_detail,
             ),
             self._sdk_params,
         )

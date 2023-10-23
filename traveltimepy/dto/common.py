@@ -116,3 +116,9 @@ class FullRange(BaseModel):
 class Range(BaseModel):
     enabled: bool
     width: int
+
+
+class LevelOfDetail(BaseModel):
+    scale_type: Literal["simple", "simple_numeric", "coarse_grid"] = "simple"
+    level: Optional[Union[int, str]]
+    square_size: Optional[int]
