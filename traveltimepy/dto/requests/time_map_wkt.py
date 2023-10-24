@@ -14,6 +14,7 @@ from traveltimepy import (
     Walking,
     Cycling,
     DrivingTrain,
+    CyclingPublicTransport,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map_wkt import WKTResponseCollection
@@ -26,7 +27,13 @@ class DepartureSearch(BaseModel):
     departure_time: datetime
     travel_time: int
     transportation: typing.Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ]
     range: Optional[Range] = None
 
@@ -37,7 +44,13 @@ class ArrivalSearch(BaseModel):
     arrival_time: datetime
     travel_time: int
     transportation: typing.Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ]
     range: Optional[Range] = None
 
@@ -48,10 +61,7 @@ class TimeMapWKTRequest(TravelTimeRequest[WKTResponseCollection]):
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
-            TimeMapWKTRequest(
-                departure_searches=departures,
-                arrival_searches=arrivals
-            )
+            TimeMapWKTRequest(departure_searches=departures, arrival_searches=arrivals)
             for departures, arrivals in split(
                 self.departure_searches, self.arrival_searches, window_size
             )

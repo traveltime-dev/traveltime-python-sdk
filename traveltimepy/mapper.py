@@ -465,12 +465,19 @@ def create_time_map_geojson(
 def create_time_map_wkt(
     coordinates: List[Coordinates],
     transportation: Union[
-        PublicTransport, Driving, Ferry, Walking, Cycling, DrivingTrain
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
     ],
     travel_time: int,
     departure_time: Optional[datetime],
     arrival_time: Optional[datetime],
     search_range: Optional[Range],
+    level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapWKTRequest:
     if arrival_time is not None and departure_time is not None:
         raise ApiError("arrival_time and departure_time cannot be both specified")
@@ -485,6 +492,7 @@ def create_time_map_wkt(
                     arrival_time=arrival_time,
                     transportation=transportation,
                     range=search_range,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
