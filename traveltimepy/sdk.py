@@ -12,7 +12,7 @@ from traveltimepy.dto.common import (
 )
 from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResult,
-    WKTResponseCollection,
+    TimeMapWKTResponse,
 )
 from traveltimepy.dto.transportation import (
     PublicTransport,
@@ -538,7 +538,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> List[TimeMapWKTResult]:
         resp = await send_post_async(
-            WKTResponseCollection,
+            TimeMapWKTResponse,
             "time-map",
             self._headers(AcceptType.WKT),
             create_time_map_wkt(
@@ -573,7 +573,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> List[TimeMapWKTResult]:
         resp = await send_post_async(
-            WKTResponseCollection,
+            TimeMapWKTResponse,
             "time-map",
             self._headers(AcceptType.WKT_NO_HOLES),
             create_time_map_wkt(

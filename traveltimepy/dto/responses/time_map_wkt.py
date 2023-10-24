@@ -22,7 +22,7 @@ class TimeMapWKTResult(GenericModel):
             raise ValueError("Invalid WKT string")
 
 
-class WKTResponseCollection(BaseModel):
+class TimeMapWKTResponse(BaseModel):
     results: List[TimeMapWKTResult]
 
     def __iter__(self) -> Iterator[TimeMapWKTResult]:

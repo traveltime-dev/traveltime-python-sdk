@@ -17,7 +17,7 @@ from traveltimepy import (
     CyclingPublicTransport,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.time_map_wkt import WKTResponseCollection
+from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResponse
 from traveltimepy.itertools import split, flatten
 
 
@@ -55,7 +55,7 @@ class ArrivalSearch(BaseModel):
     range: Optional[Range] = None
 
 
-class TimeMapWKTRequest(TravelTimeRequest[WKTResponseCollection]):
+class TimeMapWKTRequest(TravelTimeRequest[TimeMapWKTResponse]):
     departure_searches: List[DepartureSearch]
     arrival_searches: List[ArrivalSearch]
 
@@ -67,8 +67,8 @@ class TimeMapWKTRequest(TravelTimeRequest[WKTResponseCollection]):
             )
         ]
 
-    def merge(self, responses: List[WKTResponseCollection]) -> WKTResponseCollection:
-        return WKTResponseCollection(
+    def merge(self, responses: List[TimeMapWKTResponse]) -> TimeMapWKTResponse:
+        return TimeMapWKTResponse(
             results=sorted(
                 flatten([response.results for response in responses]),
                 key=lambda res: res.search_id,

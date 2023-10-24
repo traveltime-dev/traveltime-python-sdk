@@ -46,6 +46,8 @@ async def test_departures_wkt(sdk):
         departure_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(results) == 2
 
@@ -60,6 +62,8 @@ async def test_departures_wkt_no_holes(sdk):
         departure_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(results) == 2
 
@@ -106,6 +110,8 @@ async def test_arrivals_wkt(sdk):
         arrival_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(results) == 2
 
@@ -120,6 +126,8 @@ async def test_arrivals_wkt_no_holes(sdk):
         arrival_time=datetime.now(),
         travel_time=900,
         transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
     assert len(results) == 2
 
