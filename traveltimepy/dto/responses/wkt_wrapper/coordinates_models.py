@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List
 from pydantic import BaseModel
 
 from traveltimepy import Coordinates
