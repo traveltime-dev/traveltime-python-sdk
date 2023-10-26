@@ -111,7 +111,7 @@ class PropertyProto(int, Enum):
     DISTANCE = 1
 
     def __int__(self):
-        return int(self.value)
+        return self.value
 
 
 class FullRange(BaseModel):
