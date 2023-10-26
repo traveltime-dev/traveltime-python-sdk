@@ -3,7 +3,7 @@ from pydantic import BaseModel, Field, validator
 from pydantic.generics import GenericModel
 from shapely.errors import WKTReadingError
 
-from simple_wkt import WKTObject, parse_wkt
+from traveltimepy.dto.responses.wkt_wrapper import WKTObject, parse_wkt
 
 Props = TypeVar("Props", bound=Union[Dict[str, Any], BaseModel])
 
