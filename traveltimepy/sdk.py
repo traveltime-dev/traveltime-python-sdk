@@ -9,7 +9,9 @@ from traveltimepy.dto.common import (
     FullRange,
     Range,
     LevelOfDetail,
+    PropertyProto,
 )
+from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.dto.transportation import (
     PublicTransport,
     Driving,
@@ -361,17 +363,23 @@ class TravelTimeSdk:
         transportation: ProtoTransportation,
         travel_time: int,
         one_to_many: bool = True,
-    ) -> List[int]:
+        properties: Optional[List[PropertyProto]] = None,
+    ) -> TimeFilterProtoResponse:
         resp = await send_proto_async(
             f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
             self._proto_headers(),
             create_proto_request(
-                origin, destinations, transportation, travel_time, one_to_many
+                origin,
+                destinations,
+                transportation,
+                properties,
+                travel_time,
+                one_to_many,
             ),
             self._app_id,
             self._api_key,
         )
-        return resp.travel_times
+        return resp
 
     async def intersection_async(
         self,
