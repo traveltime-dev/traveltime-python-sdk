@@ -110,9 +110,6 @@ class Property(str, Enum):
 class PropertyProto(int, Enum):
     DISTANCE = 1
 
-    def __int__(self):
-        return self.value
-
 
 class FullRange(BaseModel):
     enabled: bool
