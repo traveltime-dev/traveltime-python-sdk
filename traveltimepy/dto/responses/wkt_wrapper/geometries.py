@@ -10,46 +10,66 @@ from shapely.geometry import (
     MultiPolygon,
 )
 
+from traveltimepy import Coordinates
+from traveltimepy.dto.responses.wkt_wrapper.coordinates_models import (
+    LineStringCoordinates,
+    PolygonCoordinates,
+    MultiPointCoordinates,
+    MultiPolygonCoordinates,
+    MultiLineStringCoordinates,
+)
+
 
 class WKTObject(BaseModel, ABC):
     type: str
-    coordinates: list
 
     def to_shapely(self):
         raise NotImplementedError("This method should be overridden by subclass")
 
 
 class PointModel(WKTObject):
+    coordinates: Coordinates
+
     def to_shapely(self):
         assert self.type == "Point"
         return Point(self.coordinates)
 
 
 class LineStringModel(WKTObject):
+    coordinates: LineStringCoordinates
+
     def to_shapely(self):
         assert self.type == "LineString"
         return LineString(self.coordinates)
 
 
 class PolygonModel(WKTObject):
+    coordinates: PolygonCoordinates
+
     def to_shapely(self):
         assert self.type == "Polygon"
         return Polygon(self.coordinates[0], self.coordinates[1:])
 
 
 class MultiPointModel(WKTObject):
+    coordinates: MultiPointCoordinates
+
     def to_shapely(self):
         assert self.type == "MultiPoint"
         return MultiPoint(self.coordinates)
 
 
 class MultiLineStringModel(WKTObject):
+    coordinates: MultiLineStringCoordinates
+
     def to_shapely(self):
         assert self.type == "MultiLineString"
         return MultiLineString(self.coordinates)
 
 
 class MultiPolygonModel(WKTObject):
+    coordinates: MultiPolygonCoordinates
+
     def to_shapely(self):
         assert self.type == "MultiPolygon"
         return MultiPolygon([Polygon(p[0], p[1:]) for p in self.coordinates])

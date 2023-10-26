@@ -8,6 +8,7 @@ from shapely.geometry import (
     MultiPolygon,
 )
 
+from traveltimepy import Coordinates
 from traveltimepy.dto.responses.wkt_wrapper import (
     PointModel,
     LineStringModel,
@@ -17,42 +18,72 @@ from traveltimepy.dto.responses.wkt_wrapper import (
     MultiPolygonModel,
 )
 
+from traveltimepy.dto.responses.wkt_wrapper.coordinates_models import (
+    LineStringCoordinates,
+    PolygonCoordinates,
+    MultiPointCoordinates,
+    MultiLineStringCoordinates,
+    MultiPolygonCoordinates,
+)
+
 
 def parse_point(geometry):
-    return PointModel(type="Point", coordinates=geometry.coords[0])
+    coords = Coordinates(lat=geometry.coords[0][0], lng=geometry.coords[0][1])
+    return PointModel(type="Point", coordinates=coords)
 
 
 def parse_line_string(geometry):
-    return LineStringModel(type="LineString", coordinates=list(geometry.coords))
+    coords = LineStringCoordinates(
+        coords=[Coordinates(lat=x, lng=lng) for x, lng in geometry.coords]
+    )
+    return LineStringModel(type="LineString", coordinates=coords)
 
 
 def parse_polygon(geometry):
-    exterior = list(geometry.exterior.coords)
-    interiors = [list(interior.coords) for interior in geometry.interiors]
-    return PolygonModel(type="Polygon", coordinates=[exterior] + interiors)
+    exterior = PolygonCoordinates(
+        exterior=[
+            Coordinates(lat=lat, lng=lng) for lat, lng in geometry.exterior.coords
+        ],
+        interiors=[
+            [Coordinates(lat=lat, lng=lng) for lat, lng in interior.coords]
+            for interior in geometry.interiors
+        ],
+    )
+    return PolygonModel(type="Polygon", coordinates=exterior)
 
 
 def parse_multi_point(geometry):
-    return MultiPointModel(
-        type="MultiPoint",
-        coordinates=[tuple(coord.coords[0]) for coord in geometry.geoms],
+    coords = MultiPointCoordinates(
+        points=[Coordinates(lat=point.x, lng=point.y) for point in geometry.geoms]
     )
+    return MultiPointModel(type="MultiPoint", coordinates=coords)
 
 
 def parse_multi_line_string(geometry):
-    return MultiLineStringModel(
-        type="MultiLineString",
-        coordinates=[list(line.coords) for line in geometry.geoms],
+    coords = MultiLineStringCoordinates(
+        lines=[
+            LineStringCoordinates(
+                coords=[Coordinates(lat=lat, lng=lng) for lat, lng in line.coords]
+            )
+            for line in geometry.geoms
+        ]
     )
+    return MultiLineStringModel(type="MultiLineString", coordinates=coords)
 
 
 def parse_multi_polygon(geometry):
-    multi_polygon_coords = []
+    polygons = []
     for polygon in geometry.geoms:
-        exterior = list(polygon.exterior.coords)
-        interiors = [list(interior.coords) for interior in polygon.interiors]
-        multi_polygon_coords.append([exterior] + interiors)
-    return MultiPolygonModel(type="MultiPolygon", coordinates=multi_polygon_coords)
+        exterior = [
+            Coordinates(lat=lat, lng=lng) for lat, lng in polygon.exterior.coords
+        ]
+        interiors = [
+            [Coordinates(lat=lat, lng=lng) for lat, lng in interior.coords]
+            for interior in polygon.interiors
+        ]
+        polygons.append(PolygonCoordinates(exterior=exterior, interiors=interiors))
+    coords = MultiPolygonCoordinates(polygons=polygons)
+    return MultiPolygonModel(type="MultiPolygon", coordinates=coords)
 
 
 def parse_wkt(wkt_str):
