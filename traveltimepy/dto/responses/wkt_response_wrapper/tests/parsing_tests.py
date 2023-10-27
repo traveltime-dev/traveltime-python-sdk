@@ -29,7 +29,9 @@ mpoly_wkt = "MULTIPOLYGON(((0 0, 0 2, 2 2, 2 0, 0 0)))"
 
 def test_parse_point():
     parsed = parse_wkt(point_wkt)
-    assert parsed == PointModel(type=GeometryType.POINT, coordinates=Coordinates(lat=0, lng=0))
+    assert parsed == PointModel(
+        type=GeometryType.POINT, coordinates=Coordinates(lat=0, lng=0)
+    )
 
 
 def test_parse_line_string():

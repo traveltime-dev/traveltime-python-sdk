@@ -157,8 +157,6 @@ async def main():
 asyncio.run(main())
 ```
 
-Uses custom WKT library: https://github.com/traveltime-dev/simple-wkt
-
 ### WKT_NO_HOLES response
 
 #### Returns:
@@ -187,8 +185,6 @@ async def main():
 
 asyncio.run(main())
 ```
-
-Uses custom WKT library: https://github.com/traveltime-dev/simple-wkt
 
 ### [Isochrones (Intersection)](https://docs.traveltime.com/api/reference/isochrones)
 
