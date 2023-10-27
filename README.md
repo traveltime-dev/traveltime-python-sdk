@@ -346,10 +346,10 @@ larger limits on the amount of destination points.
 
 #### Returns:
 
-* results: TimeFilterProtoResponse - The response contains 2 lists, firstly travel times, where each position denotes either a travel time (in
-  seconds) of a journey, or if travel time is negative, that the journey from the origin to the destination point is impossible. Optionally, 
-  the response contains a distances list, where each position denotes distance (in meters) to the specified location.
-
+* results: TimeFilterProtoResponse - The response contains:
+  * list of travel times, where each position denotes either a travel time (in seconds)
+    of a journey, or if travel time is negative, that the journey from the origin to the destination point is impossible. 
+  * (optional) list of distances where each position denotes distance (in meters) to the specified location. 
 #### Example:
 
 ```python
