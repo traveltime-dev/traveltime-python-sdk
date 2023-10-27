@@ -1,9 +1,8 @@
 from typing import List, Union, Dict, Any, TypeVar, Iterator, Optional
 from pydantic import BaseModel, Field, validator
 from pydantic.generics import GenericModel
-from shapely.errors import WKTReadingError
 
-from traveltimepy.dto.responses.wkt_wrapper import WKTObject, parse_wkt
+from traveltimepy.dto.responses.wkt_response_wrapper.src import WKTObject, parse_wkt
 
 Props = TypeVar("Props", bound=Union[Dict[str, Any], BaseModel])
 
@@ -15,11 +14,7 @@ class TimeMapWKTResult(GenericModel):
 
     @validator("shape", pre=True)
     def transform_shape(cls, shape: str) -> WKTObject:
-        try:
-            # Assuming WKTObject's constructor can handle a WKT string
-            return parse_wkt(shape)
-        except WKTReadingError:
-            raise ValueError("Invalid WKT string")
+        return parse_wkt(shape)
 
 
 class TimeMapWKTResponse(BaseModel):

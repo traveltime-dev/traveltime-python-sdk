@@ -1,4 +1,4 @@
-from shapely import wkt
+from shapely import wkt, GEOSException
 from shapely.geometry import (
     Point,
     LineString,
@@ -9,7 +9,7 @@ from shapely.geometry import (
 )
 
 from traveltimepy import Coordinates
-from traveltimepy.dto.responses.wkt_wrapper import (
+from traveltimepy.dto.responses.wkt_response_wrapper.src import (
     PointModel,
     LineStringModel,
     PolygonModel,
@@ -18,25 +18,41 @@ from traveltimepy.dto.responses.wkt_wrapper import (
     MultiPolygonModel,
 )
 
-from traveltimepy.dto.responses.wkt_wrapper.coordinates_models import (
+from traveltimepy.dto.responses.wkt_response_wrapper.src.coordinates_models import (
     LineStringCoordinates,
     PolygonCoordinates,
     MultiPointCoordinates,
     MultiLineStringCoordinates,
     MultiPolygonCoordinates,
 )
+from traveltimepy.dto.responses.wkt_response_wrapper.src.error import (
+    InvalidWKTStringError,
+    NullGeometryError,
+    InvalidFunctionError,
+    InvalidGeometryTypeError,
+)
+from traveltimepy.dto.responses.wkt_response_wrapper.src.geometries import GeometryType
+
+SUPPORTED_GEOMETRY_TYPES = [
+    Point,
+    LineString,
+    Polygon,
+    MultiPoint,
+    MultiLineString,
+    MultiPolygon,
+]
 
 
 def parse_point(geometry):
     coords = Coordinates(lat=geometry.coords[0][0], lng=geometry.coords[0][1])
-    return PointModel(type="Point", coordinates=coords)
+    return PointModel(type=GeometryType.POINT, coordinates=coords)
 
 
 def parse_line_string(geometry):
     coords = LineStringCoordinates(
-        coords=[Coordinates(lat=x, lng=lng) for x, lng in geometry.coords]
+        coords=[Coordinates(lat=lat, lng=lng) for lat, lng in geometry.coords]
     )
-    return LineStringModel(type="LineString", coordinates=coords)
+    return LineStringModel(type=GeometryType.LINESTRING, coordinates=coords)
 
 
 def parse_polygon(geometry):
@@ -49,14 +65,14 @@ def parse_polygon(geometry):
             for interior in geometry.interiors
         ],
     )
-    return PolygonModel(type="Polygon", coordinates=exterior)
+    return PolygonModel(type=GeometryType.POLYGON, coordinates=exterior)
 
 
 def parse_multi_point(geometry):
     coords = MultiPointCoordinates(
         points=[Coordinates(lat=point.x, lng=point.y) for point in geometry.geoms]
     )
-    return MultiPointModel(type="MultiPoint", coordinates=coords)
+    return MultiPointModel(type=GeometryType.MULTIPOINT, coordinates=coords)
 
 
 def parse_multi_line_string(geometry):
@@ -68,7 +84,7 @@ def parse_multi_line_string(geometry):
             for line in geometry.geoms
         ]
     )
-    return MultiLineStringModel(type="MultiLineString", coordinates=coords)
+    return MultiLineStringModel(type=GeometryType.MULTILINESTRING, coordinates=coords)
 
 
 def parse_multi_polygon(geometry):
@@ -83,11 +99,21 @@ def parse_multi_polygon(geometry):
         ]
         polygons.append(PolygonCoordinates(exterior=exterior, interiors=interiors))
     coords = MultiPolygonCoordinates(polygons=polygons)
-    return MultiPolygonModel(type="MultiPolygon", coordinates=coords)
+    return MultiPolygonModel(type=GeometryType.MULTIPOLYGON, coordinates=coords)
 
 
 def parse_wkt(wkt_str):
-    geometry = wkt.loads(wkt_str)
+    try:
+        geometry = wkt.loads(wkt_str)
+    except GEOSException:
+        raise InvalidWKTStringError(wkt_str)
+
+    if geometry is None:
+        raise NullGeometryError()
+
+    if type(geometry) not in SUPPORTED_GEOMETRY_TYPES:
+        raise InvalidGeometryTypeError(geometry)
+
     type_to_function = {
         Point: parse_point,
         LineString: parse_line_string,
@@ -98,7 +124,8 @@ def parse_wkt(wkt_str):
     }
 
     func = type_to_function.get(type(geometry))
-    if func:
-        return func(geometry)
-    else:
-        raise ValueError(f"Unsupported geometry: {geometry}")
+
+    if func is None:
+        raise InvalidFunctionError(geometry)
+
+    return func(geometry)

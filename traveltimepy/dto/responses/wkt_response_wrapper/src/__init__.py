@@ -1,6 +1,6 @@
 """Module with WKT wrapper for shapely"""
 
-from .geometries import (  # noqa
+from traveltimepy.dto.responses.wkt_response_wrapper.src.geometries import (  # noqa
     WKTObject,
     PointModel,
     LineStringModel,
@@ -8,8 +8,9 @@ from .geometries import (  # noqa
     MultiPointModel,
     MultiLineStringModel,
     MultiPolygonModel,
+    GeometryType,
 )
-from .parsing import (  # noqa
+from traveltimepy.dto.responses.wkt_response_wrapper.src.parsing import (  # noqa
     parse_wkt,
     parse_point,
     parse_line_string,
@@ -27,6 +28,7 @@ __all__ = [
     "MultiPointModel",
     "MultiLineStringModel",
     "MultiPolygonModel",
+    "GeometryType",
     "parse_wkt",
     "parse_point",
     "parse_line_string",
