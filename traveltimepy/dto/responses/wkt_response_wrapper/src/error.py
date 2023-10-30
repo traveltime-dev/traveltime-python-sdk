@@ -15,4 +15,4 @@ class InvalidGeometryTypeError(Exception):
 
 class NullGeometryError(Exception):
     def __init__(self):
-        super().__init__("Null or undefined geometry returned")
+        super().__init__("Null, undefined or empty geometry returned")

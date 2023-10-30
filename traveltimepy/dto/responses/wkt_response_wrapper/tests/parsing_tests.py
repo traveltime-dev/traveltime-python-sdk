@@ -17,7 +17,16 @@ from traveltimepy.dto.responses.wkt_response_wrapper.src.coordinates_models impo
     MultiLineStringCoordinates,
     MultiPolygonCoordinates,
 )
+from traveltimepy.dto.responses.wkt_response_wrapper.src.error import (
+    InvalidWKTStringError,
+    NullGeometryError,
+    InvalidGeometryTypeError,
+    InvalidFunctionError,
+)
 from traveltimepy.dto.responses.wkt_response_wrapper.src.geometries import GeometryType
+from traveltimepy.dto.responses.wkt_response_wrapper.src.parsing import (
+    SUPPORTED_GEOMETRY_TYPES,
+)
 
 point_wkt = "POINT (0 0)"
 line_wkt = "LINESTRING(0 0, 1 1, 2 2)"
@@ -117,3 +126,22 @@ def test_parse_multi_polygon():
             ]
         ),
     )
+
+
+# Invalid WKT string
+def test_invalid_wkt_string():
+    with pytest.raises(InvalidWKTStringError):
+        parse_wkt("INVALIDWKTSTRING")
+
+
+# Null geometry
+def test_null_geometry():
+    with pytest.raises(NullGeometryError):
+        parse_wkt("POINT EMPTY")
+
+
+# Unsupported geometry type
+def test_unsupported_geometry_type():
+    unsupported_wkt = "GEOMETRYCOLLECTION(POINT(2 3),LINESTRING(2 3, 3 4))"
+    with pytest.raises(InvalidGeometryTypeError):
+        parse_wkt(unsupported_wkt)

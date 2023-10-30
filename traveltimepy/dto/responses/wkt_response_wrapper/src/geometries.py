@@ -25,9 +25,6 @@ class GeometryType(Enum):
 class WKTObject(BaseModel, ABC):
     type: GeometryType
 
-    def to_shapely(self):
-        raise NotImplementedError("This method should be overridden by subclass")
-
 
 class PointModel(WKTObject):
     coordinates: Coordinates
