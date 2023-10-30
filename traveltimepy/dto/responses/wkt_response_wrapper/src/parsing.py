@@ -21,7 +21,9 @@ from traveltimepy.dto.responses.wkt_response_wrapper.src import (
     MultiLineStringModel,
     MultiPolygonModel,
 )
-from traveltimepy.dto.responses.wkt_response_wrapper.src.constants import SUPPORTED_GEOMETRY_TYPES
+from traveltimepy.dto.responses.wkt_response_wrapper.src.constants import (
+    SUPPORTED_GEOMETRY_TYPES,
+)
 
 from traveltimepy.dto.responses.wkt_response_wrapper.src.coordinates_models import (
     LineStringCoordinates,
@@ -139,7 +141,7 @@ def _(geometry: MultiPolygon):
 
 
 def parse_wkt(
-        wkt_str: str,
+    wkt_str: str,
 ) -> Union[
     PointModel,
     LineStringModel,
