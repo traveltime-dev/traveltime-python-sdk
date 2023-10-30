@@ -13,6 +13,7 @@ from traveltimepy.dto.common import (
     Property,
     Range,
     LevelOfDetail,
+    PropertyProto,
 )
 from traveltimepy.dto.transportation import (
     PublicTransport,
@@ -667,6 +668,7 @@ def create_proto_request(
     origin: Coordinates,
     destinations: List[Coordinates],
     transportation: ProtoTransportation,
+    properties: Optional[List[PropertyProto]],
     travel_time: int,
     one_to_many: bool = True,
 ) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:
@@ -681,6 +683,8 @@ def create_proto_request(
         request.oneToManyRequest.arrivalTimePeriod = (
             TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
         )
+        if properties is not None:
+            request.oneToManyRequest.properties.extend(properties)
 
         mult = math.pow(10, 5)
         for destination in destinations:
@@ -696,6 +700,8 @@ def create_proto_request(
         request.manyToOneRequest.arrivalTimePeriod = (
             TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
         )
+        if properties is not None:
+            request.manyToOneRequest.properties.extend(properties)
 
         mult = math.pow(10, 5)
         for destination in destinations:

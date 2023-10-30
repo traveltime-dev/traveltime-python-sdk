@@ -342,17 +342,19 @@ larger limits on the amount of destination points.
 * country: ProtoCountry - Return the results that are within the specified country.
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
   backward search (many to one matrix). Default value is True.
+* properties: List[PropertyProto] - specifies which extra properties should be calculated in the response. 
 
 #### Returns:
 
-* travel_times: List[int] - The responses are in the form of a list where each position denotes either a travel time (in
-  seconds) of a journey, or if negative that the journey from the origin to the destination point is impossible.
-
+* results: TimeFilterProtoResponse - The response contains:
+  * list of travel times, where each position denotes either a travel time (in seconds)
+    of a journey, or if travel time is negative, that the journey from the origin to the destination point is impossible. 
+  * (optional) list of distances where each position denotes distance (in meters) to the specified location. 
 #### Example:
 
 ```python
 import asyncio
-from traveltimepy import ProtoCountry, Coordinates, ProtoTransportation, TravelTimeSdk
+from traveltimepy import ProtoCountry, Coordinates, ProtoTransportation, TravelTimeSdk, PropertyProto
 
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
@@ -364,7 +366,8 @@ async def main():
         ],
         transportation=ProtoTransportation.DRIVING_FERRY,
         travel_time=7200,
-        country=ProtoCountry.UNITED_KINGDOM
+        country=ProtoCountry.UNITED_KINGDOM,
+        properties=[PropertyProto.DISTANCE],
     )
     
     print(travel_times)

@@ -107,6 +107,10 @@ class Property(str, Enum):
     FARES = "fares"
 
 
+class PropertyProto(int, Enum):
+    DISTANCE = 1
+
+
 class FullRange(BaseModel):
     enabled: bool
     max_results: int

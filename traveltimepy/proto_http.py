@@ -14,7 +14,7 @@ async def send_proto_async(
     data: TimeFilterFastRequest,
     app_id: str,
     api_key: str,
-) -> TimeFilterFastResponse:
+) -> TimeFilterProtoResponse:
     async with ClientSession(connector=TCPConnector(ssl=False)) as session:
         async with session.post(
             url=url,
@@ -36,5 +36,6 @@ async def _process_response(response: ClientResponse) -> TimeFilterProtoResponse
         response_body = TimeFilterFastResponse()
         response_body.ParseFromString(content)
         return TimeFilterProtoResponse(
-            travel_times=response_body.properties.travelTimes[:]
+            travel_times=response_body.properties.travelTimes[:],
+            distances=response_body.properties.distances[:],
         )
