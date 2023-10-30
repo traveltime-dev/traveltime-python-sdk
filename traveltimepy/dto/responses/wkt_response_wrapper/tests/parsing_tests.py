@@ -21,12 +21,8 @@ from traveltimepy.dto.responses.wkt_response_wrapper.src.error import (
     InvalidWKTStringError,
     NullGeometryError,
     InvalidGeometryTypeError,
-    InvalidFunctionError,
 )
 from traveltimepy.dto.responses.wkt_response_wrapper.src.geometries import GeometryType
-from traveltimepy.dto.responses.wkt_response_wrapper.src.parsing import (
-    SUPPORTED_GEOMETRY_TYPES,
-)
 
 point_wkt = "POINT (0 0)"
 line_wkt = "LINESTRING(0 0, 1 1, 2 2)"
