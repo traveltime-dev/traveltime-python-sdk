@@ -53,6 +53,3 @@ jobs:
           PROTO_API_KEY: ${{ secrets.PROTO_API_KEY }}
           APP_ID: ${{ secrets.APP_ID }}
           API_KEY: ${{ secrets.API_KEY }}
-
-      - name: Test wkt_response_wrapper with pytest
-        run: pytest traveltimepy/dto/responses/wkt_response_wrapper/tests/parsing_tests.py

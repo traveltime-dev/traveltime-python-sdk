@@ -124,19 +124,16 @@ def test_parse_multi_polygon():
     )
 
 
-# Invalid WKT string
 def test_invalid_wkt_string():
     with pytest.raises(InvalidWKTStringError):
         parse_wkt("INVALIDWKTSTRING")
 
 
-# Null geometry
 def test_null_geometry():
     with pytest.raises(NullGeometryError):
         parse_wkt("POINT EMPTY")
 
 
-# Unsupported geometry type
 def test_unsupported_geometry_type():
     unsupported_wkt = "GEOMETRYCOLLECTION(POINT(2 3),LINESTRING(2 3, 3 4))"
     with pytest.raises(InvalidGeometryTypeError):
