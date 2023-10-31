@@ -19,12 +19,3 @@ class TimeMapWKTResult(GenericModel):
 
 class TimeMapWKTResponse(BaseModel):
     results: List[TimeMapWKTResult]
-
-    def __iter__(self) -> Iterator[TimeMapWKTResult]:
-        return iter(self.results)
-
-    def __len__(self) -> int:
-        return len(self.results)
-
-    def __getitem__(self, index: int) -> TimeMapWKTResult:
-        return self.results[index]
