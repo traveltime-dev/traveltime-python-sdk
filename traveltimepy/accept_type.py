@@ -8,3 +8,4 @@ class AcceptType(Enum):
     BOUNDING_BOXES_JSON = "application/vnd.bounding-boxes+json"
     GEO_JSON = "application/geo+json"
     OCTET_STREAM = "application/octet-stream"
+    KML_XML = "application/kml+xml"

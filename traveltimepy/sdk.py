@@ -15,6 +15,7 @@ from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResponse,
 )
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.dto.responses.time_map_kml import KMLResponse
 from traveltimepy.dto.transportation import (
     PublicTransport,
     Driving,
@@ -65,6 +66,7 @@ from traveltimepy.mapper import (
     create_intersection,
     create_union,
     create_time_map_geojson,
+    create_time_map_kml,
     create_time_map_wkt,
 )
 
@@ -369,7 +371,8 @@ class TravelTimeSdk:
         properties: Optional[List[PropertyProto]] = None,
     ) -> TimeFilterProtoResponse:
         resp = await send_proto_async(
-            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
+            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",
+            # noqa
             self._proto_headers(),
             create_proto_request(
                 origin,
@@ -588,6 +591,41 @@ class TravelTimeSdk:
                 travel_time,
                 departure_time,
                 arrival_time,
+                search_range,
+                level_of_detail,
+            ),
+            self._sdk_params,
+        )
+        return resp
+
+    async def time_map_kml_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        level_of_detail: Optional[LevelOfDetail] = None,
+    ) -> KMLResponse:
+        resp = await send_post_async(
+            KMLResponse,
+            "time-map",
+            self._headers(AcceptType.KML_XML),
+            create_time_map_kml(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
                 search_range,
                 level_of_detail,
             ),
