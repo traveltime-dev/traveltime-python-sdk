@@ -64,7 +64,7 @@ class TimeMapRequestKML(TravelTimeRequest[KML]):
     departure_searches: List[DepartureSearch]
     arrival_searches: List[ArrivalSearch]
 
-    def split_searches(self, window_size: int) -> list[TimeMapRequest]:
+    def split_searches(self, window_size: int) -> List[TimeMapRequest]:
         return [
             TimeMapRequest(
                 departure_searches=departures,
