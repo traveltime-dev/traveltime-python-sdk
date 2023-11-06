@@ -71,8 +71,8 @@ class Union(BaseModel):
 class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
     departure_searches: List[DepartureSearch]
     arrival_searches: List[ArrivalSearch]
-    unions: List[Union]
-    intersections: List[Intersection]
+    unions: List[Union] = None
+    intersections: List[Intersection] = None
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
