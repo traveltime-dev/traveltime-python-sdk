@@ -25,7 +25,7 @@ class PointModel(WKTObject):
 
 
 class LineStringModel(WKTObject):
-    coordinates: List[Coordinates]
+    coordinates: List[PointModel]
 
 
 class PolygonModel(WKTObject):

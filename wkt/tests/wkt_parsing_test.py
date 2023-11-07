@@ -37,9 +37,15 @@ def test_parse_line_string():
     assert parsed == LineStringModel(
         type=GeometryType.LINESTRING,
         coordinates=[
-            Coordinates(lat=0.0, lng=0.0),
-            Coordinates(lat=1.0, lng=1.0),
-            Coordinates(lat=2.0, lng=2.0),
+            PointModel(
+                type=GeometryType.POINT, coordinates=Coordinates(lat=0.0, lng=0.0)
+            ),
+            PointModel(
+                type=GeometryType.POINT, coordinates=Coordinates(lat=1.0, lng=1.0)
+            ),
+            PointModel(
+                type=GeometryType.POINT, coordinates=Coordinates(lat=2.0, lng=2.0)
+            ),
         ],
     )
 
@@ -51,11 +57,21 @@ def test_parse_polygon():
         exterior=LineStringModel(
             type=GeometryType.LINESTRING,
             coordinates=[
-                Coordinates(lat=0.0, lng=0.0),
-                Coordinates(lat=0.0, lng=2.0),
-                Coordinates(lat=2.0, lng=2.0),
-                Coordinates(lat=2.0, lng=0.0),
-                Coordinates(lat=0.0, lng=0.0),
+                PointModel(
+                    type=GeometryType.POINT, coordinates=Coordinates(lat=0.0, lng=0.0)
+                ),
+                PointModel(
+                    type=GeometryType.POINT, coordinates=Coordinates(lat=0.0, lng=2.0)
+                ),
+                PointModel(
+                    type=GeometryType.POINT, coordinates=Coordinates(lat=2.0, lng=2.0)
+                ),
+                PointModel(
+                    type=GeometryType.POINT, coordinates=Coordinates(lat=2.0, lng=0.0)
+                ),
+                PointModel(
+                    type=GeometryType.POINT, coordinates=Coordinates(lat=0.0, lng=0.0)
+                ),
             ],
         ),
         interiors=[],
@@ -85,15 +101,27 @@ def test_parse_multi_line_string():
             LineStringModel(
                 type=GeometryType.LINESTRING,
                 coordinates=[
-                    Coordinates(lat=0.0, lng=0.0),
-                    Coordinates(lat=1.0, lng=1.0),
+                    PointModel(
+                        type=GeometryType.POINT,
+                        coordinates=Coordinates(lat=0.0, lng=0.0),
+                    ),
+                    PointModel(
+                        type=GeometryType.POINT,
+                        coordinates=Coordinates(lat=1.0, lng=1.0),
+                    ),
                 ],
             ),
             LineStringModel(
                 type=GeometryType.LINESTRING,
                 coordinates=[
-                    Coordinates(lat=2.0, lng=2.0),
-                    Coordinates(lat=3.0, lng=3.0),
+                    PointModel(
+                        type=GeometryType.POINT,
+                        coordinates=Coordinates(lat=2.0, lng=2.0),
+                    ),
+                    PointModel(
+                        type=GeometryType.POINT,
+                        coordinates=Coordinates(lat=3.0, lng=3.0),
+                    ),
                 ],
             ),
         ],
@@ -110,11 +138,26 @@ def test_parse_multi_polygon():
                 exterior=LineStringModel(
                     type=GeometryType.LINESTRING,
                     coordinates=[
-                        Coordinates(lat=0.0, lng=0.0),
-                        Coordinates(lat=0.0, lng=2.0),
-                        Coordinates(lat=2.0, lng=2.0),
-                        Coordinates(lat=2.0, lng=0.0),
-                        Coordinates(lat=0.0, lng=0.0),
+                        PointModel(
+                            type=GeometryType.POINT,
+                            coordinates=Coordinates(lat=0.0, lng=0.0),
+                        ),
+                        PointModel(
+                            type=GeometryType.POINT,
+                            coordinates=Coordinates(lat=0.0, lng=2.0),
+                        ),
+                        PointModel(
+                            type=GeometryType.POINT,
+                            coordinates=Coordinates(lat=2.0, lng=2.0),
+                        ),
+                        PointModel(
+                            type=GeometryType.POINT,
+                            coordinates=Coordinates(lat=2.0, lng=0.0),
+                        ),
+                        PointModel(
+                            type=GeometryType.POINT,
+                            coordinates=Coordinates(lat=0.0, lng=0.0),
+                        ),
                     ],
                 ),
                 interiors=[],
