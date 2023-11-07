@@ -1,16 +1,10 @@
 from abc import ABC
 from enum import Enum
+from typing import List
 
 from pydantic import BaseModel
 
 from traveltimepy import Coordinates
-from wkt.src.coordinates_models import (
-    LineStringCoordinates,
-    PolygonCoordinates,
-    MultiPointCoordinates,
-    MultiPolygonCoordinates,
-    MultiLineStringCoordinates,
-)
 
 
 class GeometryType(Enum):
@@ -31,20 +25,21 @@ class PointModel(WKTObject):
 
 
 class LineStringModel(WKTObject):
-    coordinates: LineStringCoordinates
+    coordinates: List[Coordinates]
 
 
 class PolygonModel(WKTObject):
-    coordinates: PolygonCoordinates
+    exterior: LineStringModel
+    interiors: List[LineStringModel]
 
 
 class MultiPointModel(WKTObject):
-    coordinates: MultiPointCoordinates
+    coordinates: List[PointModel]
 
 
 class MultiLineStringModel(WKTObject):
-    coordinates: MultiLineStringCoordinates
+    coordinates: List[LineStringModel]
 
 
 class MultiPolygonModel(WKTObject):
-    coordinates: MultiPolygonCoordinates
+    coordinates: List[PolygonModel]

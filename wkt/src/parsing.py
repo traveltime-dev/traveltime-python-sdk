@@ -25,13 +25,6 @@ from wkt.src.constants import (
     SUPPORTED_GEOMETRY_TYPES,
 )
 
-from wkt.src.coordinates_models import (
-    LineStringCoordinates,
-    PolygonCoordinates,
-    MultiPointCoordinates,
-    MultiLineStringCoordinates,
-    MultiPolygonCoordinates,
-)
 from wkt.src.error import (
     InvalidWKTStringError,
     NullGeometryError,
@@ -52,70 +45,89 @@ def _parse_geometry(geometry: BaseGeometry):
 
 
 @_parse_geometry.register
-def _parse_point(geometry: Point):
-    coords = Coordinates(lat=geometry.coords[0][0], lng=geometry.coords[0][1])
-    return PointModel(type=GeometryType.POINT, coordinates=coords)
+def _parse_point(geometry: Point) -> PointModel:
+    return PointModel(
+        type=GeometryType.POINT, coordinates=Coordinates(lat=geometry.y, lng=geometry.x)
+    )
 
 
 @_parse_geometry.register
-def _parse_line_string(geometry: LineString):
-    coords = LineStringCoordinates(
-        coords=[Coordinates(lat=lat, lng=lng) for lat, lng in geometry.coords]
-    )
+def _parse_line_string(geometry: LineString) -> LineStringModel:
+    coords = [Coordinates(lat=lat, lng=lng) for lat, lng in geometry.coords]
     return LineStringModel(type=GeometryType.LINESTRING, coordinates=coords)
 
 
 @_parse_geometry.register
-def _parse_polygon(geometry: Polygon):
-    exterior = PolygonCoordinates(
-        exterior=[
-            Coordinates(lat=lat, lng=lng) for lat, lng in geometry.exterior.coords
-        ],
+def _parse_polygon(geometry: Polygon) -> PolygonModel:
+    exterior_coords = [
+        Coordinates(lat=lat, lng=lng) for lat, lng in geometry.exterior.coords
+    ]
+    interiors_coords = [
+        [Coordinates(lat=lat, lng=lng) for lat, lng in interior.coords]
+        for interior in geometry.interiors
+    ]
+    return PolygonModel(
+        type=GeometryType.POLYGON,
+        exterior=LineStringModel(
+            type=GeometryType.LINESTRING, coordinates=exterior_coords
+        ),
         interiors=[
-            [Coordinates(lat=lat, lng=lng) for lat, lng in interior.coords]
-            for interior in geometry.interiors
+            LineStringModel(type=GeometryType.LINESTRING, coordinates=interior)
+            for interior in interiors_coords
         ],
     )
-    return PolygonModel(type=GeometryType.POLYGON, coordinates=exterior)
 
 
 @_parse_geometry.register
-def _parse_multi_point(geometry: MultiPoint):
-    coords = MultiPointCoordinates(
-        points=[Coordinates(lat=point.x, lng=point.y) for point in geometry.geoms]
-    )
+def _parse_multi_point(geometry: MultiPoint) -> MultiPointModel:
+    coords = [
+        PointModel(
+            type=GeometryType.POINT, coordinates=Coordinates(lat=point.y, lng=point.x)
+        )
+        for point in geometry.geoms
+    ]
     return MultiPointModel(type=GeometryType.MULTIPOINT, coordinates=coords)
 
 
 @_parse_geometry.register
-def _parse_multi_line_string(geometry: MultiLineString):
-    coords = MultiLineStringCoordinates(
-        lines=[
-            LineStringCoordinates(
-                coords=[Coordinates(lat=lat, lng=lng) for lat, lng in line.coords]
-            )
-            for line in geometry.geoms
-        ]
-    )
+def _parse_multi_line_string(geometry: MultiLineString) -> MultiLineStringModel:
+    coords = [
+        LineStringModel(
+            type=GeometryType.LINESTRING,
+            coordinates=[
+                Coordinates(lat=lat, lng=lng) for lat, lng in linestring.coords
+            ],
+        )
+        for linestring in geometry.geoms
+    ]
     return MultiLineStringModel(type=GeometryType.MULTILINESTRING, coordinates=coords)
 
 
 @_parse_geometry.register
 def _parse_multi_polygon(geometry: MultiPolygon) -> MultiPolygonModel:
-    polygons = (
-        PolygonCoordinates(
-            exterior=[
-                Coordinates(lat=lat, lng=lng) for lat, lng in polygon.exterior.coords
-            ],
+    polygons = [
+        PolygonModel(
+            type=GeometryType.POLYGON,
+            exterior=LineStringModel(
+                type=GeometryType.LINESTRING,
+                coordinates=[
+                    Coordinates(lat=lat, lng=lng)
+                    for lat, lng in polygon.exterior.coords
+                ],
+            ),
             interiors=[
-                [Coordinates(lat=lat, lng=lng) for lat, lng in interior.coords]
+                LineStringModel(
+                    type=GeometryType.LINESTRING,
+                    coordinates=[
+                        Coordinates(lat=lat, lng=lng) for lat, lng in interior.coords
+                    ],
+                )
                 for interior in polygon.interiors
             ],
         )
         for polygon in geometry.geoms
-    )
-    coords = MultiPolygonCoordinates(polygons=list(polygons))
-    return MultiPolygonModel(type=GeometryType.MULTIPOLYGON, coordinates=coords)
+    ]
+    return MultiPolygonModel(type=GeometryType.MULTIPOLYGON, coordinates=polygons)
 
 
 def parse_wkt(
