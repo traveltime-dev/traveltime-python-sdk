@@ -101,18 +101,20 @@ def _parse_multi_line_string(geometry: MultiLineString):
 
 
 @_parse_geometry.register
-def _parse_multi_polygon(geometry: MultiPolygon):
-    polygons = []
-    for polygon in geometry.geoms:
-        exterior = [
-            Coordinates(lat=lat, lng=lng) for lat, lng in polygon.exterior.coords
-        ]
-        interiors = [
-            [Coordinates(lat=lat, lng=lng) for lat, lng in interior.coords]
-            for interior in polygon.interiors
-        ]
-        polygons.append(PolygonCoordinates(exterior=exterior, interiors=interiors))
-    coords = MultiPolygonCoordinates(polygons=polygons)
+def _parse_multi_polygon(geometry: MultiPolygon) -> MultiPolygonModel:
+    polygons = (
+        PolygonCoordinates(
+            exterior=[
+                Coordinates(lat=lat, lng=lng) for lat, lng in polygon.exterior.coords
+            ],
+            interiors=[
+                [Coordinates(lat=lat, lng=lng) for lat, lng in interior.coords]
+                for interior in polygon.interiors
+            ],
+        )
+        for polygon in geometry.geoms
+    )
+    coords = MultiPolygonCoordinates(polygons=list(polygons))
     return MultiPolygonModel(type=GeometryType.MULTIPOLYGON, coordinates=coords)
 
 
