@@ -2,7 +2,7 @@ from typing import List, Union, Dict, Any, TypeVar, Optional
 from pydantic import BaseModel, Field, validator
 from pydantic.generics import GenericModel
 
-from traveltimepy.dto.responses.wkt_response_wrapper.src import WKTObject, parse_wkt
+from wkt.src import WKTObject, parse_wkt
 
 Props = TypeVar("Props", bound=Union[Dict[str, Any], BaseModel])
 

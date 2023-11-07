@@ -1,7 +1,7 @@
 import pytest  # noqa
 
 from traveltimepy import Coordinates
-from traveltimepy.dto.responses.wkt_response_wrapper.src import (
+from wkt.src import (
     parse_wkt,
     PointModel,
     LineStringModel,
@@ -10,19 +10,19 @@ from traveltimepy.dto.responses.wkt_response_wrapper.src import (
     MultiLineStringModel,
     MultiPolygonModel,
 )
-from traveltimepy.dto.responses.wkt_response_wrapper.src.coordinates_models import (
+from wkt.src.coordinates_models import (
     LineStringCoordinates,
     PolygonCoordinates,
     MultiPointCoordinates,
     MultiLineStringCoordinates,
     MultiPolygonCoordinates,
 )
-from traveltimepy.dto.responses.wkt_response_wrapper.src.error import (
+from wkt.src.error import (
     InvalidWKTStringError,
     NullGeometryError,
     InvalidGeometryTypeError,
 )
-from traveltimepy.dto.responses.wkt_response_wrapper.src.geometries import GeometryType
+from wkt.src import GeometryType
 
 point_wkt = "POINT (0 0)"
 line_wkt = "LINESTRING(0 0, 1 1, 2 2)"

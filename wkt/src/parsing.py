@@ -13,7 +13,7 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseGeometry
 
 from traveltimepy import Coordinates
-from traveltimepy.dto.responses.wkt_response_wrapper.src import (
+from wkt.src import (
     PointModel,
     LineStringModel,
     PolygonModel,
@@ -21,24 +21,24 @@ from traveltimepy.dto.responses.wkt_response_wrapper.src import (
     MultiLineStringModel,
     MultiPolygonModel,
 )
-from traveltimepy.dto.responses.wkt_response_wrapper.src.constants import (
+from wkt.src.constants import (
     SUPPORTED_GEOMETRY_TYPES,
 )
 
-from traveltimepy.dto.responses.wkt_response_wrapper.src.coordinates_models import (
+from wkt.src.coordinates_models import (
     LineStringCoordinates,
     PolygonCoordinates,
     MultiPointCoordinates,
     MultiLineStringCoordinates,
     MultiPolygonCoordinates,
 )
-from traveltimepy.dto.responses.wkt_response_wrapper.src.error import (
+from wkt.src.error import (
     InvalidWKTStringError,
     NullGeometryError,
     InvalidFunctionError,
     InvalidGeometryTypeError,
 )
-from traveltimepy.dto.responses.wkt_response_wrapper.src.geometries import GeometryType
+from wkt.src.geometries import GeometryType
 
 
 def _check_empty(geometry):

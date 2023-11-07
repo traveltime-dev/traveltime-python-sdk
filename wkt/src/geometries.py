@@ -4,7 +4,7 @@ from enum import Enum
 from pydantic import BaseModel
 
 from traveltimepy import Coordinates
-from traveltimepy.dto.responses.wkt_response_wrapper.src.coordinates_models import (
+from wkt.src.coordinates_models import (
     LineStringCoordinates,
     PolygonCoordinates,
     MultiPointCoordinates,

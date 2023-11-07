@@ -1,58 +1,8 @@
-import typing
-from datetime import datetime
-
-from typing import List, Optional
-
-from pydantic.main import BaseModel
-
-from traveltimepy import (
-    Coordinates,
-    Range,
-    PublicTransport,
-    Driving,
-    Ferry,
-    Walking,
-    Cycling,
-    DrivingTrain,
-    CyclingPublicTransport,
-)
+from typing import List
 from traveltimepy.dto.requests.request import TravelTimeRequest
+from traveltimepy.dto.requests.time_map import DepartureSearch, ArrivalSearch
 from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResponse
 from traveltimepy.itertools import split, flatten
-
-
-class DepartureSearch(BaseModel):
-    id: str
-    coords: Coordinates
-    departure_time: datetime
-    travel_time: int
-    transportation: typing.Union[
-        PublicTransport,
-        Driving,
-        Ferry,
-        Walking,
-        Cycling,
-        DrivingTrain,
-        CyclingPublicTransport,
-    ]
-    range: Optional[Range] = None
-
-
-class ArrivalSearch(BaseModel):
-    id: str
-    coords: Coordinates
-    arrival_time: datetime
-    travel_time: int
-    transportation: typing.Union[
-        PublicTransport,
-        Driving,
-        Ferry,
-        Walking,
-        Cycling,
-        DrivingTrain,
-        CyclingPublicTransport,
-    ]
-    range: Optional[Range] = None
 
 
 class TimeMapWKTRequest(TravelTimeRequest[TimeMapWKTResponse]):
