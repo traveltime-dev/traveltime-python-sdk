@@ -46,19 +46,27 @@ def _check_empty(geometry):
         raise NullGeometryError()
 
 
-def _parse_point(geometry):
+@singledispatch
+def _parse_geometry(geometry: BaseGeometry):
+    raise InvalidFunctionError(geometry)
+
+
+@_parse_geometry.register
+def _parse_point(geometry: Point):
     coords = Coordinates(lat=geometry.coords[0][0], lng=geometry.coords[0][1])
     return PointModel(type=GeometryType.POINT, coordinates=coords)
 
 
-def _parse_line_string(geometry):
+@_parse_geometry.register
+def _parse_line_string(geometry: LineString):
     coords = LineStringCoordinates(
         coords=[Coordinates(lat=lat, lng=lng) for lat, lng in geometry.coords]
     )
     return LineStringModel(type=GeometryType.LINESTRING, coordinates=coords)
 
 
-def _parse_polygon(geometry):
+@_parse_geometry.register
+def _parse_polygon(geometry: Polygon):
     exterior = PolygonCoordinates(
         exterior=[
             Coordinates(lat=lat, lng=lng) for lat, lng in geometry.exterior.coords
@@ -71,14 +79,16 @@ def _parse_polygon(geometry):
     return PolygonModel(type=GeometryType.POLYGON, coordinates=exterior)
 
 
-def _parse_multi_point(geometry):
+@_parse_geometry.register
+def _parse_multi_point(geometry: MultiPoint):
     coords = MultiPointCoordinates(
         points=[Coordinates(lat=point.x, lng=point.y) for point in geometry.geoms]
     )
     return MultiPointModel(type=GeometryType.MULTIPOINT, coordinates=coords)
 
 
-def _parse_multi_line_string(geometry):
+@_parse_geometry.register
+def _parse_multi_line_string(geometry: MultiLineString):
     coords = MultiLineStringCoordinates(
         lines=[
             LineStringCoordinates(
@@ -90,7 +100,8 @@ def _parse_multi_line_string(geometry):
     return MultiLineStringModel(type=GeometryType.MULTILINESTRING, coordinates=coords)
 
 
-def _parse_multi_polygon(geometry):
+@_parse_geometry.register
+def _parse_multi_polygon(geometry: MultiPolygon):
     polygons = []
     for polygon in geometry.geoms:
         exterior = [
@@ -103,41 +114,6 @@ def _parse_multi_polygon(geometry):
         polygons.append(PolygonCoordinates(exterior=exterior, interiors=interiors))
     coords = MultiPolygonCoordinates(polygons=polygons)
     return MultiPolygonModel(type=GeometryType.MULTIPOLYGON, coordinates=coords)
-
-
-@singledispatch
-def _parse_geometry(geometry: BaseGeometry):
-    raise InvalidFunctionError(geometry)
-
-
-@_parse_geometry.register
-def _(geometry: Point):
-    return _parse_point(geometry)
-
-
-@_parse_geometry.register
-def _(geometry: LineString):
-    return _parse_line_string(geometry)
-
-
-@_parse_geometry.register
-def _(geometry: Polygon):
-    return _parse_polygon(geometry)
-
-
-@_parse_geometry.register
-def _(geometry: MultiPoint):
-    return _parse_multi_point(geometry)
-
-
-@_parse_geometry.register
-def _(geometry: MultiLineString):
-    return _parse_multi_line_string(geometry)
-
-
-@_parse_geometry.register
-def _(geometry: MultiPolygon):
-    return _parse_multi_polygon(geometry)
 
 
 def parse_wkt(
