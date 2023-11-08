@@ -15,7 +15,6 @@ from wkt.src.error import (
     NullGeometryError,
     InvalidGeometryTypeError,
 )
-from wkt.src import GeometryType
 
 point_wkt = "POINT (0 0)"
 line_wkt = "LINESTRING(0 0, 1 1, 2 2)"

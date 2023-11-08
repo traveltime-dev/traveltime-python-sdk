@@ -31,7 +31,6 @@ from wkt.src.error import (
     InvalidFunctionError,
     InvalidGeometryTypeError,
 )
-from wkt.src.geometries import GeometryType
 
 
 def _check_empty(geometry):
