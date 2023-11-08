@@ -146,14 +146,14 @@ from traveltimepy import Driving, Coordinates, TravelTimeSdk
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
 
-    results = await sdk.time_map_wkt_async(
+    response = await sdk.time_map_wkt_async(
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
         arrival_time=datetime.now(),
         transportation=Driving()
     )
-    results.pretty_print() # for a custom formatted response 
+    response.pretty_print() # for a custom formatted response 
     
-    print(results) # default Python print
+    print(response) # default Python print
 
     
 asyncio.run(main())
@@ -177,14 +177,14 @@ from traveltimepy import Driving, Coordinates, TravelTimeSdk
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
 
-    results = await sdk.time_map_wkt_no_holes_async(
+    response = await sdk.time_map_wkt_no_holes_async(
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
         arrival_time=datetime.now(),
         transportation=Driving()
     )
-    results.pretty_print() # for a custom formatted response 
+    response.pretty_print() # for a custom formatted response 
 
-    print(results) # default Python print
+    print(response) # default Python print
 
 
 asyncio.run(main())
