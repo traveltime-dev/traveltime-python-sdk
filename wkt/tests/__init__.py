@@ -1,1 +1,1 @@
-"""WKT parsing tests"""
+"""WKT tests"""

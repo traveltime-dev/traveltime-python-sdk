@@ -38,7 +38,7 @@ async def test_departures_geojson(sdk):
 
 @pytest.mark.asyncio
 async def test_departures_wkt(sdk):
-    results = await sdk.time_map_wkt_async(
+    response = await sdk.time_map_wkt_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),
@@ -49,12 +49,12 @@ async def test_departures_wkt(sdk):
         search_range=Range(enabled=True, width=1800),
         level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_departures_wkt_no_holes(sdk):
-    results = await sdk.time_map_wkt_no_holes_async(
+    response = await sdk.time_map_wkt_no_holes_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),
@@ -65,7 +65,7 @@ async def test_departures_wkt_no_holes(sdk):
         search_range=Range(enabled=True, width=1800),
         level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
@@ -102,7 +102,7 @@ async def test_arrivals_geojson(sdk):
 
 @pytest.mark.asyncio
 async def test_arrivals_wkt(sdk):
-    results = await sdk.time_map_wkt_async(
+    response = await sdk.time_map_wkt_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),
@@ -113,12 +113,12 @@ async def test_arrivals_wkt(sdk):
         search_range=Range(enabled=True, width=1800),
         level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_arrivals_wkt_no_holes(sdk):
-    results = await sdk.time_map_wkt_no_holes_async(
+    response = await sdk.time_map_wkt_no_holes_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),
@@ -129,7 +129,7 @@ async def test_arrivals_wkt_no_holes(sdk):
         search_range=Range(enabled=True, width=1800),
         level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio

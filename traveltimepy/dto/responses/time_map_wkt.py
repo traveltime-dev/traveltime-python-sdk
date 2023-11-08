@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field, validator
 from pydantic.generics import GenericModel
 
 from wkt.src import WKTObject, parse_wkt
+from wkt.src.helper import print_indented
 
 Props = TypeVar("Props", bound=Union[Dict[str, Any], BaseModel])
 
@@ -16,6 +17,17 @@ class TimeMapWKTResult(GenericModel):
     def transform_shape(cls, shape: str) -> WKTObject:
         return parse_wkt(shape)
 
+    def pretty_print(self, indent_level=0):
+        print_indented(f"SEARCH ID: {self.search_id}", indent_level)
+        self.shape.pretty_print(indent_level)
+        print_indented(f"PROPERTIES: {self.properties}", indent_level)
+
 
 class TimeMapWKTResponse(BaseModel):
     results: List[TimeMapWKTResult]
+
+    def pretty_print(self, indent_level=0):
+        print_indented("TIME-MAP WKT RESPONSE:", indent_level)
+        for result in self.results:
+            result.pretty_print(indent_level + 1)
+            print()

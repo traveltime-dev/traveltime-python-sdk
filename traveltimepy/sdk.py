@@ -12,7 +12,6 @@ from traveltimepy.dto.common import (
     PropertyProto,
 )
 from traveltimepy.dto.responses.time_map_wkt import (
-    TimeMapWKTResult,
     TimeMapWKTResponse,
 )
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
@@ -544,7 +543,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-    ) -> List[TimeMapWKTResult]:
+    ) -> TimeMapWKTResponse:
         resp = await send_post_async(
             TimeMapWKTResponse,
             "time-map",
@@ -560,7 +559,7 @@ class TravelTimeSdk:
             ),
             self._sdk_params,
         )
-        return resp.results
+        return resp
 
     async def time_map_wkt_no_holes_async(
         self,
@@ -579,7 +578,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-    ) -> List[TimeMapWKTResult]:
+    ) -> TimeMapWKTResponse:
         resp = await send_post_async(
             TimeMapWKTResponse,
             "time-map",
@@ -595,7 +594,7 @@ class TravelTimeSdk:
             ),
             self._sdk_params,
         )
-        return resp.results
+        return resp
 
     @staticmethod
     def _geocoding_reverse_params(lat: float, lng: float) -> Dict[str, str]:

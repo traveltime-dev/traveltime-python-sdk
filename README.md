@@ -132,7 +132,7 @@ asyncio.run(main())
 
 #### Returns:
 
-* results: List[TimeMapWKTResult] - The list of TimeMapWktResult with isochrone shapes.
+* results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes.
 
 #### Example:
 
@@ -151,9 +151,11 @@ async def main():
         arrival_time=datetime.now(),
         transportation=Driving()
     )
-    print(results)
+    results.pretty_print() # for a custom formatted response 
+    
+    print(results) # default Python print
 
-
+    
 asyncio.run(main())
 ```
 
@@ -161,7 +163,7 @@ asyncio.run(main())
 
 #### Returns:
 
-* results: List[TimeMapWKTResult] - The list of TimeMapWktResult with isochrone shapes (no holes).
+* results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes (no holes).
 
 #### Example:
 
@@ -180,7 +182,9 @@ async def main():
         arrival_time=datetime.now(),
         transportation=Driving()
     )
-    print(results)
+    results.pretty_print() # for a custom formatted response 
+
+    print(results) # default Python print
 
 
 asyncio.run(main())
