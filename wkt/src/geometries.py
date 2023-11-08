@@ -43,10 +43,10 @@ class LineStringModel(WKTObject):
     def __init__(self, **data):
         super().__init__(type=GeometryType.LINESTRING, **data)
 
-    @validator('coordinates')
+    @validator("coordinates")
     def check_minimum_coordinates(cls, coords):
         if len(coords) < 2:
-            raise ValueError('LineString must have at least 2 coordinates.')
+            raise ValueError("LineString must have at least 2 coordinates.")
         return coords
 
     def pretty_print(self, indent_level=0):
