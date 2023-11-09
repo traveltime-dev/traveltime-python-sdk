@@ -1,6 +1,6 @@
 """Module with WKT wrapper for shapely"""
 
-from wkt.src.geometries import (  # noqa
+from wkt.src.geometries import (
     WKTObject,
     PointModel,
     LineStringModel,
@@ -10,7 +10,7 @@ from wkt.src.geometries import (  # noqa
     MultiPolygonModel,
     GeometryType,
 )
-from wkt.src.parsing import (  # noqa
+from wkt.src.parsing import (
     parse_wkt,
 )
 
