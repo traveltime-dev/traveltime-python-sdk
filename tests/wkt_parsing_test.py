@@ -10,7 +10,7 @@ from traveltimepy.wkt import (
     MultiLineStringModel,
     MultiPolygonModel,
 )
-from traveltimepy.wkt import (
+from traveltimepy.wkt.error import (
     InvalidWKTStringError,
     NullGeometryError,
     InvalidGeometryTypeError,
