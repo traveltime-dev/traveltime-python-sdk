@@ -5,7 +5,7 @@ from typing import List
 from pydantic import BaseModel, validator
 
 from traveltimepy import Coordinates
-from wkt.src.helper import print_indented
+from traveltimepy.wkt.helper import print_indented
 
 
 class GeometryType(Enum):

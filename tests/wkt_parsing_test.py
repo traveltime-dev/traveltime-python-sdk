@@ -1,7 +1,7 @@
 import pytest  # noqa
 
 from traveltimepy import Coordinates
-from wkt.src import (
+from traveltimepy.wkt import (
     parse_wkt,
     PointModel,
     LineStringModel,
@@ -10,7 +10,7 @@ from wkt.src import (
     MultiLineStringModel,
     MultiPolygonModel,
 )
-from wkt.src.error import (
+from traveltimepy.wkt import (
     InvalidWKTStringError,
     NullGeometryError,
     InvalidGeometryTypeError,

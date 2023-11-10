@@ -1,7 +1,7 @@
 import pytest  # noqa
 
 from traveltimepy import Coordinates
-from wkt.src import (
+from traveltimepy.wkt import (
     PointModel,
     LineStringModel,
     PolygonModel,

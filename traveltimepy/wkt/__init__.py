@@ -1,17 +1,18 @@
 """Module with WKT wrapper for shapely"""
 
-from wkt.src.geometries import (
+from traveltimepy.wkt.parsing import (
+    parse_wkt,
+)
+
+from traveltimepy.wkt.geometries import (
     WKTObject,
     PointModel,
     LineStringModel,
     PolygonModel,
-    MultiPointModel,
     MultiLineStringModel,
+    MultiPointModel,
     MultiPolygonModel,
     GeometryType,
-)
-from wkt.src.parsing import (
-    parse_wkt,
 )
 
 __all__ = [

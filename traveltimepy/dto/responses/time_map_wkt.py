@@ -2,8 +2,8 @@ from typing import List, Union, Dict, Any, TypeVar, Optional
 from pydantic import BaseModel, Field, validator
 from pydantic.generics import GenericModel
 
-from wkt.src import WKTObject, parse_wkt
-from wkt.src.helper import print_indented
+from traveltimepy.wkt import WKTObject, parse_wkt
+from traveltimepy.wkt.helper import print_indented
 
 Props = TypeVar("Props", bound=Union[Dict[str, Any], BaseModel])
 

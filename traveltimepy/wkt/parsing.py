@@ -13,7 +13,7 @@ from shapely.geometry import (
 from shapely.geometry.base import BaseGeometry
 
 from traveltimepy import Coordinates
-from wkt.src import (
+from traveltimepy.wkt.geometries import (
     PointModel,
     LineStringModel,
     PolygonModel,
@@ -21,11 +21,11 @@ from wkt.src import (
     MultiLineStringModel,
     MultiPolygonModel,
 )
-from wkt.src.constants import (
+from traveltimepy.wkt.constants import (
     SUPPORTED_GEOMETRY_TYPES,
 )
 
-from wkt.src.error import (
+from traveltimepy.wkt.error import (
     InvalidWKTStringError,
     NullGeometryError,
     InvalidFunctionError,
