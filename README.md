@@ -752,3 +752,119 @@ async def main():
 
 asyncio.run(main())
 ```
+
+## Parameter usage examples
+
+### Transportation
+
+In [traveltime.py](https://github.com/traveltime-dev/traveltime-python-sdk/blob/master/traveltimepy/dto/transportation.py)
+you can find all implemented transportation types, their sub-parameters and their default values.
+
+These examples don't apply to proto / fast endpoints. For more examples you can always refer to [Unit Tests](https://github.com/traveltime-dev/traveltime-python-sdk/tree/master/tests)
+
+#### Driving 
+
+```python
+from traveltimepy import Driving
+
+transportation=Driving()
+transportation=Driving(disable_border_crossing = True)
+```
+
+#### Walking 
+
+```python
+from traveltimepy import Walking 
+
+transportation=Walking()
+```
+
+#### Cycling 
+
+```python
+from traveltimepy import Cycling 
+
+transportation=Cycling()
+``` 
+
+#### Ferry 
+
+```python
+from traveltimepy import Ferry 
+
+transportation=Ferry()
+transportation=Ferry(type="cycling+ferry")
+transportation=Ferry(type="driving+ferry")
+transportation=Ferry(type="cycling+ferry", boarding_time = 300)
+``` 
+
+#### DrivingTrain 
+
+```python
+from traveltimepy import DrivingTrain, MaxChanges
+
+transportation=DrivingTrain()
+
+transportation=DrivingTrain(
+  pt_change_delay = 300, 
+  driving_time_to_station=1800, 
+  parking_time=800,
+  walking_time=500,
+  max_changes=MaxChanges(enabled=True, limit=3)
+)
+``` 
+
+#### PublicTransport 
+
+```python
+from traveltimepy import PublicTransport, MaxChanges
+
+transportation=PublicTransport() # type="public_transport" - any public transport
+transportation=PublicTransport(type="train")
+transportation=PublicTransport(type="bus")
+transportation=PublicTransport(type="coach")
+
+transportation=PublicTransport(
+  pt_change_delay = 300, 
+  walking_time=500,
+  max_changes=MaxChanges(enabled=True, limit=3)
+)
+``` 
+
+#### CyclingPublicTransport 
+
+```python
+from traveltimepy import CyclingPublicTransport, MaxChanges
+
+transportation=CyclingPublicTransport()
+
+transportation=CyclingPublicTransport(
+  walking_time=500,
+  pt_change_delay = 300,
+  cycling_time_to_station=300,
+  parking_time=800,
+  boarding_time=300,
+  max_changes=MaxChanges(enabled=True, limit=3)
+)
+``` 
+
+### Level of Detail
+
+`level_of_detail` can be used to specify how detailed the isochrone result should be.
+
+For a more detailed description of how to use this parameter, you can refer to our [API Docs](https://docs.traveltime.com/api/reference/isochrones#arrival_searches-level_of_detail)
+
+#### Examples
+
+```python
+from traveltimepy import LevelOfDetail
+
+# scale_type "simple"
+level_of_detail=LevelOfDetail(scale_type="simple", level="lowest")
+
+# scale_type "simple_numeric"
+level_of_detail=LevelOfDetail(scale_type="simple_numeric", level=0)
+
+# scale_type "coarse_grid"
+level_of_detail=LevelOfDetail(scale_type="coarse_grid", square_size=600)
+```
