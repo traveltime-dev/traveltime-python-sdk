@@ -73,7 +73,6 @@ from traveltimepy.http import (
     send_get_async,
     send_post_async,
     SdkParams,
-    send_post_geojson_async,
 )
 
 from geojson_pydantic import FeatureCollection
@@ -509,7 +508,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> FeatureCollection:
-        resp = await send_post_geojson_async(
+        resp = await send_post_async(
             FeatureCollection,
             "time-map",
             self._headers(AcceptType.GEO_JSON),

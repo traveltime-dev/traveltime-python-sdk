@@ -19,6 +19,7 @@ from traveltimepy import (
     LevelOfDetail,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
+from traveltimepy.dto.requests.time_map import TimeMapRequest
 from traveltimepy.itertools import split, flatten
 
 
@@ -62,10 +63,9 @@ class TimeMapRequestGeojson(TravelTimeRequest[FeatureCollection]):
     departure_searches: List[DepartureSearch]
     arrival_searches: List[ArrivalSearch]
 
-    def split_searches(self, window_size: int) -> List[FeatureCollection]:
+    def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
-            FeatureCollection(
-                type="FeatureCollection",
+            TimeMapRequest(
                 departure_searches=departures,
                 arrival_searches=arrivals,
             )
