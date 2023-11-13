@@ -11,6 +11,9 @@ from traveltimepy.dto.common import (
     LevelOfDetail,
     PropertyProto,
 )
+from traveltimepy.dto.responses.time_map_wkt import (
+    TimeMapWKTResponse,
+)
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.dto.transportation import (
     PublicTransport,
@@ -62,6 +65,7 @@ from traveltimepy.mapper import (
     create_intersection,
     create_union,
     create_time_map_geojson,
+    create_time_map_wkt,
 )
 
 from traveltimepy.proto_http import send_proto_async
@@ -509,6 +513,76 @@ class TravelTimeSdk:
             "time-map",
             self._headers(AcceptType.GEO_JSON),
             create_time_map_geojson(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range,
+                level_of_detail,
+            ),
+            self._sdk_params,
+        )
+        return resp
+
+    async def time_map_wkt_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        level_of_detail: Optional[LevelOfDetail] = None,
+    ) -> TimeMapWKTResponse:
+        resp = await send_post_async(
+            TimeMapWKTResponse,
+            "time-map",
+            self._headers(AcceptType.WKT),
+            create_time_map_wkt(
+                coordinates,
+                transportation,
+                travel_time,
+                arrival_time,
+                departure_time,
+                search_range,
+                level_of_detail,
+            ),
+            self._sdk_params,
+        )
+        return resp
+
+    async def time_map_wkt_no_holes_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        arrival_time: Optional[datetime] = None,
+        departure_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        level_of_detail: Optional[LevelOfDetail] = None,
+    ) -> TimeMapWKTResponse:
+        resp = await send_post_async(
+            TimeMapWKTResponse,
+            "time-map",
+            self._headers(AcceptType.WKT_NO_HOLES),
+            create_time_map_wkt(
                 coordinates,
                 transportation,
                 travel_time,

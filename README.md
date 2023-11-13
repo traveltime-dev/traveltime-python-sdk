@@ -128,6 +128,68 @@ async def main():
 asyncio.run(main())
 ```
 
+### WKT response
+
+#### Returns:
+
+* results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes.
+
+#### Example:
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    response = await sdk.time_map_wkt_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        arrival_time=datetime.now(),
+        transportation=Driving()
+    )
+    response.pretty_print() # for a custom formatted response 
+    
+    print(response) # default Python print
+
+    
+asyncio.run(main())
+```
+
+### WKT_NO_HOLES response
+
+#### Returns:
+
+* results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes (no holes).
+
+#### Example:
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    response = await sdk.time_map_wkt_no_holes_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        arrival_time=datetime.now(),
+        transportation=Driving()
+    )
+    response.pretty_print() # for a custom formatted response 
+
+    print(response) # default Python print
+
+
+asyncio.run(main())
+```
+
 ### [Isochrones (Intersection)](https://docs.traveltime.com/api/reference/isochrones)
 
 Given origin coordinates, find intersections of specified shapes.
