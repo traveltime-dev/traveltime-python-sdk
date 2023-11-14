@@ -49,7 +49,7 @@ async def test_departures_kml(sdk):
         search_range=Range(enabled=True, width=1800),
         level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
-    assert len(results.placemarks) == 1
+    assert len(results.placemarks) == 2
 
 
 @pytest.mark.asyncio
@@ -161,7 +161,7 @@ async def test_arrivals_kml(sdk):
         search_range=Range(enabled=True, width=1800),
         level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
-    assert len(results.placemarks) == 1
+    assert len(results.placemarks) == 2
 
 
 @pytest.mark.asyncio
