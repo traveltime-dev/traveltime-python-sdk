@@ -19,7 +19,11 @@ from traveltimepy import (
     LevelOfDetail,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.requests.time_map import TimeMapRequest, DepartureSearch, ArrivalSearch
+from traveltimepy.dto.requests.time_map import (
+    TimeMapRequest,
+    DepartureSearch,
+    ArrivalSearch,
+)
 from traveltimepy.dto.responses.time_map_kml import KMLResponse
 from traveltimepy.itertools import split, flatten
 
