@@ -17,15 +17,12 @@ class KMLResponse(BaseModel):
 
 def parse_kml_as(kml_string: str) -> KMLResponse:
     k = kml.KML()
-
     kml_string_bytes = kml_string.encode("utf-8")
-
     k.from_string(kml_string_bytes)
 
-    placemarks = []
-    for placemark in k.features():
-        polygons = list(placemark.geometry.geoms)
-        placemarks.append(Placemark(name=placemark.name, polygons=polygons))
+    placemarks = (
+        Placemark(name=placemark.name, polygons=list(placemark.geometry.geoms))
+        for placemark in k.features()
+    )
 
-    # Create and return a KMLResponse instance
-    return KMLResponse(placemarks=placemarks)
+    return KMLResponse(placemarks=list(placemarks))
