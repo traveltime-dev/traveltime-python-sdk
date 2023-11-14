@@ -19,45 +19,9 @@ from traveltimepy import (
     LevelOfDetail,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.requests.time_map import TimeMapRequest
+from traveltimepy.dto.requests.time_map import TimeMapRequest, DepartureSearch, ArrivalSearch
 from traveltimepy.dto.responses.time_map_kml import KMLResponse
 from traveltimepy.itertools import split, flatten
-
-
-class DepartureSearch(BaseModel):
-    id: str
-    coords: Coordinates
-    departure_time: datetime
-    travel_time: int
-    transportation: typing.Union[
-        PublicTransport,
-        Driving,
-        Ferry,
-        Walking,
-        Cycling,
-        DrivingTrain,
-        CyclingPublicTransport,
-    ]
-    range: Optional[Range] = None
-    level_of_detail: Optional[LevelOfDetail] = None
-
-
-class ArrivalSearch(BaseModel):
-    id: str
-    coords: Coordinates
-    arrival_time: datetime
-    travel_time: int
-    transportation: typing.Union[
-        PublicTransport,
-        Driving,
-        Ferry,
-        Walking,
-        Cycling,
-        DrivingTrain,
-        CyclingPublicTransport,
-    ]
-    range: Optional[Range] = None
-    level_of_detail: Optional[LevelOfDetail] = None
 
 
 class TimeMapRequestKML(TravelTimeRequest[KML]):
