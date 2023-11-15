@@ -15,7 +15,7 @@ from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResponse,
 )
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
-from traveltimepy.dto.responses.time_map_kml import KMLResponse
+from traveltimepy.dto.responses.time_map_kml import TimeMapKmlResponse
 from traveltimepy.dto.transportation import (
     PublicTransport,
     Driving,
@@ -615,9 +615,9 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-    ) -> KMLResponse:
+    ) -> TimeMapKmlResponse:
         resp = await send_post_async(
-            KMLResponse,
+            TimeMapKmlResponse,
             "time-map",
             self._headers(AcceptType.KML_XML),
             create_time_map_kml(

@@ -9,7 +9,7 @@ from traveltimepy.dto.requests.request import TravelTimeRequest
 
 from traveltimepy.dto.responses.error import ResponseError
 from traveltimepy.dto.responses.time_map_kml import (
-    KMLResponse,
+    TimeMapKmlResponse,
     parse_kml_as,
 )
 from traveltimepy.errors import ApiError
@@ -115,7 +115,7 @@ async def _process_response(response_class: Type[T], response: ClientResponse) -
         )
         raise ApiError(msg)
     else:
-        if response_class == KMLResponse:
+        if response_class == TimeMapKmlResponse:
             return parse_kml_as(text)
         else:
             return parse_raw_as(response_class, text)

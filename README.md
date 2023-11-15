@@ -190,6 +190,40 @@ async def main():
 asyncio.run(main())
 ```
 
+### KML response
+
+#### Returns:
+
+* results: TimeMapKmlResponse - TimeMapKmlResponse with placemarks.
+
+#### Example:
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+
+async def main():
+  sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+  results = await sdk.time_map_kml_async(
+    coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+    arrival_time=datetime.now(),
+    transportation=Driving()
+  )
+  print(results) # default printing
+
+  k = results.to_fastkml()              # transforming TimeMapKmlResponse into KML object from the fastkml library
+  print(k.to_string())                  # printing the raw kml format text
+  print(k.to_string(prettyprint=True))  # pretty-printing raw kml text 
+
+asyncio.run(main())
+```
+
+This response uses the `fastkml` library to help with the implementation. Ducumentation: [fastkml docs](https://fastkml.readthedocs.io/en/latest/)
+
 ### [Isochrones (Intersection)](https://docs.traveltime.com/api/reference/isochrones)
 
 Given origin coordinates, find intersections of specified shapes.

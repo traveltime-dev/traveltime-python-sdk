@@ -8,7 +8,7 @@ from traveltimepy.dto.requests.time_map import (
     DepartureSearch,
     ArrivalSearch,
 )
-from traveltimepy.dto.responses.time_map_kml import KMLResponse
+from traveltimepy.dto.responses.time_map_kml import TimeMapKmlResponse
 from traveltimepy.itertools import split, flatten
 
 
@@ -27,6 +27,6 @@ class TimeMapRequestKML(TravelTimeRequest[KML]):
             )
         ]
 
-    def merge(self, responses: List[KMLResponse]) -> KMLResponse:
+    def merge(self, responses: List[TimeMapKmlResponse]) -> TimeMapKmlResponse:
         merged_features = flatten([response.placemarks for response in responses])
-        return KMLResponse(placemarks=merged_features)
+        return TimeMapKmlResponse(placemarks=merged_features)

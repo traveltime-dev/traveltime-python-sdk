@@ -11,11 +11,24 @@ class Placemark(BaseModel):
         arbitrary_types_allowed = True
 
 
-class KMLResponse(BaseModel):
+class TimeMapKmlResponse(BaseModel):
     placemarks: List[Placemark]
 
+    def to_fastkml(self) -> kml.KML:
+        k = kml.KML()
+        doc = kml.Document()
+        k.append(doc)
 
-def parse_kml_as(kml_string: str) -> KMLResponse:
+        for placemark_data in self.placemarks:
+            pm = kml.Placemark()
+            pm.name = placemark_data.name
+            pm.geometry = geometry.MultiPolygon(polygons=placemark_data.polygons)
+            doc.append(pm)
+
+        return k
+
+
+def parse_kml_as(kml_string: str) -> TimeMapKmlResponse:
     k = kml.KML()
     kml_string_bytes = kml_string.encode("utf-8")
     k.from_string(kml_string_bytes)
@@ -25,4 +38,4 @@ def parse_kml_as(kml_string: str) -> KMLResponse:
         for placemark in k.features()
     )
 
-    return KMLResponse(placemarks=list(placemarks))
+    return TimeMapKmlResponse(placemarks=list(placemarks))
