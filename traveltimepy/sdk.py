@@ -10,6 +10,8 @@ from traveltimepy.dto.common import (
     Range,
     LevelOfDetail,
     PropertyProto,
+    DepartureTime,
+    ArrivalTime,
 )
 from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResponse,
@@ -30,6 +32,7 @@ from traveltimepy.dto.requests.time_filter_proto import (
     ProtoTransportation,
 )
 from traveltimepy.dto.requests.time_filter_fast import Transportation
+from traveltimepy.errors import ApiError
 
 from traveltimepy.version import __version__
 from traveltimepy.accept_type import AcceptType
@@ -473,6 +476,17 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> List[TimeMapResult]:
+        if departure_time and arrival_time:
+            raise ApiError(
+                "Either departure_time or arrival_time should be specified, not both."
+            )
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             TimeMapResponse,
             "time-map",
@@ -481,8 +495,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),

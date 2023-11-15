@@ -15,6 +15,9 @@ from traveltimepy.dto.common import (
     Range,
     LevelOfDetail,
     PropertyProto,
+    TimeInfo,
+    ArrivalTime,
+    DepartureTime,
 )
 from traveltimepy.dto.transportation import (
     PublicTransport,
@@ -359,22 +362,18 @@ def create_time_map(
         CyclingPublicTransport,
     ],
     travel_time: int,
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapRequest:
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
-    if arrival_time is not None:
+    if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
             arrival_searches=[
                 time_map.ArrivalSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    arrival_time=arrival_time,
+                    arrival_time=time_info.time,
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
@@ -385,14 +384,14 @@ def create_time_map(
             unions=[],
             intersections=[],
         )
-    elif departure_time is not None:
+    elif isinstance(time_info, DepartureTime):
         return TimeMapRequest(
             departure_searches=[
                 time_map.DepartureSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    departure_time=departure_time,
+                    departure_time=time_info.time,
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
