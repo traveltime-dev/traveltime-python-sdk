@@ -118,6 +118,15 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         range: Optional[FullRange] = None,
     ) -> List[TimeFilterResult]:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             TimeFilterResponse,
             "time-filter",
@@ -127,8 +136,7 @@ class TravelTimeSdk:
                 search_ids,
                 transportation,
                 properties,
-                departure_time,
-                arrival_time,
+                time_info,
                 travel_time,
                 range,
             ),
@@ -477,9 +485,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> List[TimeMapResult]:
         if departure_time and arrival_time:
-            raise ApiError(
-                "Either departure_time or arrival_time should be specified, not both."
-            )
+            raise ApiError("arrival_time and departure_time cannot be both specified")
 
         time_info = None
         if departure_time:

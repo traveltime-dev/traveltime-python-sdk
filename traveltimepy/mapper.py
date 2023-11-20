@@ -65,17 +65,13 @@ def create_time_filter(
         CyclingPublicTransport,
     ],
     properties: Optional[List[Property]],
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     travel_time: int,
     range: Optional[FullRange],
 ) -> TimeFilterRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
-    if arrival_time is not None:
+    if isinstance(time_info, ArrivalTime):
         return TimeFilterRequest(
             locations=locations,
             arrival_searches=[
@@ -85,7 +81,7 @@ def create_time_filter(
                     departure_location_ids=[
                         departure_id for departure_id in departure_ids
                     ],
-                    arrival_time=arrival_time,
+                    arrival_time=time_info.time,
                     travel_time=travel_time,
                     transportation=transportation,
                     properties=properties,
@@ -95,7 +91,7 @@ def create_time_filter(
             ],
             departure_searches=[],
         )
-    elif departure_time is not None:
+    elif isinstance(time_info, DepartureTime):
         return TimeFilterRequest(
             locations=locations,
             departure_searches=[
@@ -103,7 +99,7 @@ def create_time_filter(
                     id=departure_id,
                     departure_location_id=departure_id,
                     arrival_location_ids=[arrival_id for arrival_id in arrival_ids],
-                    departure_time=departure_time,
+                    departure_time=time_info.time,
                     travel_time=travel_time,
                     transportation=transportation,
                     properties=properties,
@@ -169,8 +165,7 @@ def create_time_filter_fast(
 
 def create_postcodes(
     coordinates: List[Coordinates],
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     transportation: Union[
         PublicTransport,
         Driving,
@@ -187,17 +182,14 @@ def create_postcodes(
     if properties is None:
         properties = [Property.TRAVEL_TIME]
 
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
-    if departure_time is not None:
+    if isinstance(time_info, DepartureTime):
         return PostcodesRequest(
             departure_searches=[
                 postcodes.DepartureSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    departure_time=departure_time,
+                    departure_time=time_info.time,
                     transportation=transportation,
                     properties=properties,
                     range=range,
@@ -206,14 +198,14 @@ def create_postcodes(
             ],
             arrival_searches=[],
         )
-    elif arrival_time is not None:
+    elif isinstance(time_info, ArrivalTime):
         return PostcodesRequest(
             arrival_searches=[
                 postcodes.ArrivalSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    arrival_time=arrival_time,
+                    arrival_time=time_info.time,
                     transportation=transportation,
                     properties=properties,
                     range=range,
@@ -238,8 +230,7 @@ def create_districts(
         CyclingPublicTransport,
     ],
     travel_time: int,
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     reachable_postcodes_threshold,
     properties: Optional[List[ZonesProperty]],
     range: Optional[FullRange],
@@ -247,17 +238,14 @@ def create_districts(
     if properties is None:
         properties = [ZonesProperty.TRAVEL_TIME_ALL]
 
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
-    if arrival_time is not None:
+    if isinstance(time_info, ArrivalTime):
         return PostcodesDistrictsRequest(
             arrival_searches=[
                 postcodes_zones.ArrivalSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    arrival_time=arrival_time,
+                    arrival_time=time_info.time,
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
@@ -267,14 +255,14 @@ def create_districts(
             ],
             departure_searches=[],
         )
-    elif departure_time is not None:
+    elif isinstance(time_info, DepartureTime):
         return PostcodesDistrictsRequest(
             departure_searches=[
                 postcodes_zones.DepartureSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    departure_time=departure_time,
+                    departure_time=time_info.time,
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
@@ -300,8 +288,7 @@ def create_sectors(
         CyclingPublicTransport,
     ],
     travel_time: int,
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     reachable_postcodes_threshold,
     properties: Optional[List[ZonesProperty]],
     range: Optional[FullRange],
@@ -309,17 +296,14 @@ def create_sectors(
     if properties is None:
         properties = [ZonesProperty.TRAVEL_TIME_ALL]
 
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
-    if arrival_time is not None:
+    if isinstance(time_info, ArrivalTime):
         return PostcodesSectorsRequest(
             arrival_searches=[
                 postcodes_zones.ArrivalSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    arrival_time=arrival_time,
+                    arrival_time=time_info.time,
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
@@ -329,14 +313,14 @@ def create_sectors(
             ],
             departure_searches=[],
         )
-    elif departure_time is not None:
+    elif isinstance(time_info, DepartureTime):
         return PostcodesSectorsRequest(
             departure_searches=[
                 postcodes_zones.DepartureSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    departure_time=departure_time,
+                    departure_time=time_info.time,
                     reachable_postcodes_threshold=reachable_postcodes_threshold,
                     transportation=transportation,
                     properties=properties,
