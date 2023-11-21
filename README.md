@@ -757,7 +757,7 @@ asyncio.run(main())
 
 ### Transportation
 
-In [traveltime.py](https://github.com/traveltime-dev/traveltime-python-sdk/blob/master/traveltimepy/dto/transportation.py)
+In [transportation.py](https://github.com/traveltime-dev/traveltime-python-sdk/blob/master/traveltimepy/dto/transportation.py)
 you can find all implemented transportation types, their sub-parameters and their default values.
 
 These examples don't apply to proto / fast endpoints. For more examples you can always refer to [Unit Tests](https://github.com/traveltime-dev/traveltime-python-sdk/tree/master/tests)
