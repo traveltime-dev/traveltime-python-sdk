@@ -402,22 +402,18 @@ def create_time_map_geojson(
         CyclingPublicTransport,
     ],
     travel_time: int,
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapRequestGeojson:
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
-    if arrival_time is not None:
+    if isinstance(time_info, ArrivalTime):
         return TimeMapRequestGeojson(
             arrival_searches=[
                 time_map.ArrivalSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    arrival_time=arrival_time,
+                    arrival_time=time_info,
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
@@ -426,14 +422,14 @@ def create_time_map_geojson(
             ],
             departure_searches=[],
         )
-    elif departure_time is not None:
+    elif isinstance(time_info, DepartureTime):
         return TimeMapRequestGeojson(
             departure_searches=[
                 time_map.DepartureSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    departure_time=departure_time,
+                    departure_time=time_info,
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
@@ -458,22 +454,18 @@ def create_time_map_wkt(
         CyclingPublicTransport,
     ],
     travel_time: int,
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapWKTRequest:
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
-    if arrival_time is not None:
+    if isinstance(time_info, ArrivalTime):
         return TimeMapWKTRequest(
             arrival_searches=[
                 time_map.ArrivalSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    arrival_time=arrival_time,
+                    arrival_time=time_info,
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
@@ -484,14 +476,14 @@ def create_time_map_wkt(
             unions=[],
             intersections=[],
         )
-    elif departure_time is not None:
+    elif isinstance(time_info, DepartureTime):
         return TimeMapWKTRequest(
             departure_searches=[
                 time_map.DepartureSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    departure_time=departure_time,
+                    departure_time=time_info,
                     transportation=transportation,
                     range=search_range,
                 )
@@ -517,22 +509,18 @@ def create_intersection(
         CyclingPublicTransport,
     ],
     travel_time: int,
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapRequest:
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
-    if arrival_time is not None:
+    if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
             arrival_searches=[
                 time_map.ArrivalSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    arrival_time=arrival_time,
+                    arrival_time=time_info,
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
@@ -548,14 +536,14 @@ def create_intersection(
                 )
             ],
         )
-    elif departure_time is not None:
+    elif isinstance(time_info, DepartureTime):
         return TimeMapRequest(
             departure_searches=[
                 time_map.DepartureSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    departure_time=departure_time,
+                    departure_time=time_info,
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
@@ -587,22 +575,18 @@ def create_union(
         CyclingPublicTransport,
     ],
     travel_time: int,
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
 ) -> TimeMapRequest:
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
-    if arrival_time is not None:
+    if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
             arrival_searches=[
                 time_map.ArrivalSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    arrival_time=arrival_time,
+                    arrival_time=time_info,
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
@@ -618,14 +602,14 @@ def create_union(
             ],
             intersections=[],
         )
-    elif departure_time is not None:
+    elif isinstance(time_info, DepartureTime):
         return TimeMapRequest(
             departure_searches=[
                 time_map.DepartureSearch(
                     id=f"Search {ind}",
                     coords=cur_coordinates,
                     travel_time=travel_time,
-                    departure_time=departure_time,
+                    departure_time=time_info,
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
@@ -657,17 +641,13 @@ def create_routes(
         DrivingTrain,
         CyclingPublicTransport,
     ],
-    departure_time: Optional[datetime],
-    arrival_time: Optional[datetime],
+    time_info: TimeInfo,
     properties: Optional[List[Property]],
     range: Optional[FullRange],
 ) -> RoutesRequest:
-    if arrival_time is not None and departure_time is not None:
-        raise ApiError("arrival_time and departure_time cannot be both specified")
-
     if properties is None:
         properties = [Property.TRAVEL_TIME]
-    if arrival_time is not None:
+    if isinstance(time_info, ArrivalTime):
         return RoutesRequest(
             locations=locations,
             arrival_searches=[
@@ -677,7 +657,7 @@ def create_routes(
                     departure_location_ids=[
                         departure_id for departure_id in departure_ids
                     ],
-                    arrival_time=arrival_time,
+                    arrival_time=time_info,
                     transportation=transportation,
                     properties=properties,
                     range=range,
@@ -686,7 +666,7 @@ def create_routes(
             ],
             departure_searches=[],
         )
-    elif departure_time is not None:
+    elif isinstance(time_info, DepartureTime):
         return RoutesRequest(
             locations=locations,
             departure_searches=[
@@ -694,7 +674,7 @@ def create_routes(
                     id=departure_id,
                     departure_location_id=departure_id,
                     arrival_location_ids=[arrival_id for arrival_id in arrival_ids],
-                    departure_time=departure_time,
+                    departure_time=time_info,
                     transportation=transportation,
                     properties=properties,
                     range=range,

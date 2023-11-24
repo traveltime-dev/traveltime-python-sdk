@@ -243,14 +243,22 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesResult]:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             PostcodesResponse,
             "time-filter/postcodes",
             self._headers(AcceptType.JSON),
             create_postcodes(
                 coordinates,
-                departure_time,
-                arrival_time,
+                time_info,
                 transportation,
                 travel_time,
                 properties,
@@ -279,6 +287,15 @@ class TravelTimeSdk:
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesDistrictsResult]:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         res = await send_post_async(
             PostcodesDistrictsResponse,
             "time-filter/postcode-districts",
@@ -287,8 +304,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 reachable_postcodes_threshold,
                 properties,
                 range,
@@ -316,6 +332,15 @@ class TravelTimeSdk:
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesSectorsResult]:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             PostcodesSectorsResponse,
             "time-filter/postcode-sectors",
@@ -324,8 +349,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 reachable_postcodes_threshold,
                 properties,
                 range,
@@ -352,6 +376,15 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
     ) -> List[RoutesResult]:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             RoutesResponse,
             "routes",
@@ -360,8 +393,7 @@ class TravelTimeSdk:
                 locations,
                 search_ids,
                 transportation,
-                departure_time,
-                arrival_time,
+                time_info,
                 properties,
                 range,
             ),
@@ -413,6 +445,15 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapResult:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             TimeMapResponse,
             "time-map",
@@ -421,8 +462,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -448,6 +488,15 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapResult:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             TimeMapResponse,
             "time-map",
@@ -456,8 +505,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -527,6 +575,15 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> FeatureCollection:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             FeatureCollection,
             "time-map",
@@ -535,8 +592,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -562,6 +618,15 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapWKTResponse:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             TimeMapWKTResponse,
             "time-map",
@@ -570,8 +635,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -597,6 +661,15 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapWKTResponse:
+        if departure_time and arrival_time:
+            raise ApiError("arrival_time and departure_time cannot be both specified")
+
+        time_info = None
+        if departure_time:
+            time_info = DepartureTime(departure_time)
+        elif arrival_time:
+            time_info = ArrivalTime(arrival_time)
+
         resp = await send_post_async(
             TimeMapWKTResponse,
             "time-map",
@@ -605,8 +678,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
