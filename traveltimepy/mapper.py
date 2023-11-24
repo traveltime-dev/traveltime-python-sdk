@@ -1,5 +1,4 @@
 import math
-from datetime import datetime
 from typing import Dict, Union, List, Optional
 
 from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
