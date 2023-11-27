@@ -118,13 +118,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         range: Optional[FullRange] = None,
     ) -> List[TimeFilterResult]:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeFilterResponse,
@@ -242,13 +236,7 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesResult]:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             PostcodesResponse,
@@ -285,13 +273,7 @@ class TravelTimeSdk:
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesDistrictsResult]:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         res = await send_post_async(
             PostcodesDistrictsResponse,
@@ -329,13 +311,7 @@ class TravelTimeSdk:
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesSectorsResult]:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             PostcodesSectorsResponse,
@@ -372,13 +348,7 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
     ) -> List[RoutesResult]:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             RoutesResponse,
@@ -440,13 +410,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapResult:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapResponse,
@@ -482,13 +446,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapResult:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapResponse,
@@ -525,13 +483,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> List[TimeMapResult]:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapResponse,
@@ -567,13 +519,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> FeatureCollection:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             FeatureCollection,
@@ -609,13 +555,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapWKTResponse:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapWKTResponse,
@@ -651,13 +591,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapWKTResponse:
-        deny_enabling_both_searches(departure_time, arrival_time)
-
-        time_info = None
-        if departure_time:
-            time_info = DepartureTime(departure_time)
-        elif arrival_time:
-            time_info = ArrivalTime(arrival_time)
+        time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapWKTResponse,
@@ -720,8 +654,14 @@ class TravelTimeSdk:
         }
 
 
-def deny_enabling_both_searches(
-    departure_time: Optional[datetime], arrival_time: Optional[datetime]
-):
+def get_time_info(departure_time: Optional[datetime], arrival_time: Optional[datetime]):
     if departure_time and arrival_time:
         raise ApiError("arrival_time and departure_time cannot be both specified")
+
+    time_info = None
+    if departure_time:
+        time_info = DepartureTime(departure_time)
+    elif arrival_time:
+        time_info = ArrivalTime(arrival_time)
+
+    return time_info
