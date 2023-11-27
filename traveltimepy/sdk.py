@@ -118,8 +118,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         range: Optional[FullRange] = None,
     ) -> List[TimeFilterResult]:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -243,8 +242,7 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesResult]:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -287,8 +285,7 @@ class TravelTimeSdk:
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesDistrictsResult]:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -332,8 +329,7 @@ class TravelTimeSdk:
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesSectorsResult]:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -376,8 +372,7 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
     ) -> List[RoutesResult]:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -445,8 +440,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapResult:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -488,8 +482,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapResult:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -532,8 +525,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> List[TimeMapResult]:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -575,8 +567,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> FeatureCollection:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -618,8 +609,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapWKTResponse:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -661,8 +651,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapWKTResponse:
-        if departure_time and arrival_time:
-            raise ApiError("arrival_time and departure_time cannot be both specified")
+        deny_enabling_both_searches(departure_time, arrival_time)
 
         time_info = None
         if departure_time:
@@ -729,3 +718,10 @@ class TravelTimeSdk:
             "Content-Type": "application/json",
             "Accept": accept_type.value,
         }
+
+
+def deny_enabling_both_searches(
+    departure_time: Optional[datetime], arrival_time: Optional[datetime]
+):
+    if departure_time and arrival_time:
+        raise ApiError("arrival_time and departure_time cannot be both specified")

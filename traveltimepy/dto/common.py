@@ -146,8 +146,6 @@ class LevelOfDetail(BaseModel):
 
 class TimeInfo:
     def __init__(self, time_value: datetime):
-        if not isinstance(time_value, datetime):
-            raise ValueError("time must be a datetime object")
         self.time = time_value
 
 
