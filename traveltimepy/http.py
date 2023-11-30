@@ -1,9 +1,9 @@
 import asyncio
+import json
 from dataclasses import dataclass
 from typing import TypeVar, Type, Dict
 
 from aiohttp import ClientSession, ClientResponse, TCPConnector
-from pydantic.tools import parse_raw_as
 from traveltimepy.dto.requests.request import TravelTimeRequest
 
 from traveltimepy.dto.responses.error import ResponseError
@@ -100,8 +100,9 @@ async def send_get_async(
 
 async def _process_response(response_class: Type[T], response: ClientResponse) -> T:
     text = await response.text()
+    json_data = json.loads(text)
     if response.status != 200:
-        parsed = parse_raw_as(ResponseError, text)
+        parsed = ResponseError.model_validate_json(json_data)
         msg = (
             f"Travel Time API request failed: {parsed.description}\n"
             f"Error code: {parsed.error_code}\n"
@@ -110,4 +111,4 @@ async def _process_response(response_class: Type[T], response: ClientResponse) -
         )
         raise ApiError(msg)
     else:
-        return parse_raw_as(response_class, text)
+        return response_class.parse_obj(json_data)

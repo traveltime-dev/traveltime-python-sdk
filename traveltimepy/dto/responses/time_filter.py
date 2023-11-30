@@ -12,10 +12,10 @@ class DistanceBreakdown(BaseModel):
 
 class Property(BaseModel):
     travel_time: int
-    distance: Optional[int]
-    distance_breakdown: Optional[List[DistanceBreakdown]]
-    fares: Optional[Fares]
-    route: Optional[Route]
+    distance: Optional[int] = None
+    distance_breakdown: Optional[List[DistanceBreakdown]] = None
+    fares: Optional[Fares] = None
+    route: Optional[Route] = None
 
 
 class Location(BaseModel):

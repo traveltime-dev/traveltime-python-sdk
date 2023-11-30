@@ -14,7 +14,7 @@ class Fares(BaseModel):
 
 class Properties(BaseModel):
     travel_time: int
-    fares: Optional[Fares]
+    fares: Optional[Fares] = None
 
 
 class Location(BaseModel):

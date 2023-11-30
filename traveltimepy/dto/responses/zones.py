@@ -11,9 +11,9 @@ class TravelTime(BaseModel):
 
 
 class Properties(BaseModel):
-    travel_time_reachable: Optional[TravelTime]
-    travel_time_all: Optional[TravelTime]
-    coverage: Optional[float]
+    travel_time_reachable: Optional[TravelTime] = None
+    travel_time_all: Optional[TravelTime] = None
+    coverage: Optional[float] = None
 
 
 class Zone(BaseModel):

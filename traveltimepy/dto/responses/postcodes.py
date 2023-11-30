@@ -4,8 +4,8 @@ from pydantic import BaseModel
 
 
 class Property(BaseModel):
-    travel_time: Optional[int]
-    distance: Optional[int]
+    travel_time: Optional[int] = None
+    distance: Optional[int] = None
 
 
 class Postcode(BaseModel):

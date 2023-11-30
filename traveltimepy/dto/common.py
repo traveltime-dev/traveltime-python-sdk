@@ -2,7 +2,7 @@ from datetime import datetime, time
 from enum import Enum
 from typing import List, Union, Optional
 
-from pydantic import validator
+from pydantic import field_validator
 from typing_extensions import Literal
 from pydantic.main import BaseModel
 
@@ -11,13 +11,15 @@ class Coordinates(BaseModel):
     lat: float
     lng: float
 
-    @validator("lat")
+    @field_validator("lat")
+    @classmethod
     def validate_latitude(cls, v):
         if not -90 <= v <= 90:
             raise ValueError("Latitude must be between -90 and 90.")
         return v
 
-    @validator("lng")
+    @field_validator("lng")
+    @classmethod
     def validate_longitude(cls, v):
         if not -180 <= v <= 180:
             raise ValueError("Longitude must be between -180 and 180.")
@@ -50,8 +52,8 @@ class RoadPart(BaseModel):
     travel_time: int
     coords: List[Coordinates]
     type: Literal["road"]
-    road: Optional[str]
-    turn: Optional[str]
+    road: Optional[str] = None
+    turn: Optional[str] = None
 
 
 class StartEndPart(BaseModel):
@@ -138,5 +140,5 @@ class Range(BaseModel):
 
 class LevelOfDetail(BaseModel):
     scale_type: Literal["simple", "simple_numeric", "coarse_grid"] = "simple"
-    level: Optional[Union[int, str]]
-    square_size: Optional[int]
+    level: Optional[Union[int, str]] = None
+    square_size: Optional[int] = None
