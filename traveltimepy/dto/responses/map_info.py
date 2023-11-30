@@ -12,7 +12,7 @@ class PublicTransport(BaseModel):
 class Features(BaseModel):
     fares: bool
     postcodes: bool
-    public_transport: Optional[PublicTransport]
+    public_transport: Optional[PublicTransport] = None
 
 
 class Map(BaseModel):

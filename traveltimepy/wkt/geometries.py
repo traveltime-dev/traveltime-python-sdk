@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List
 
-from pydantic import BaseModel, validator
+from pydantic import field_validator, BaseModel
 
 from traveltimepy import Coordinates
 from traveltimepy.wkt.helper import print_indented
@@ -43,7 +43,8 @@ class LineStringModel(WKTObject):
     def __init__(self, **data):
         super().__init__(type=GeometryType.LINESTRING, **data)
 
-    @validator("coordinates")
+    @field_validator("coordinates")
+    @classmethod
     def check_minimum_coordinates(cls, coords):
         if len(coords) < 2:
             raise ValueError("LineString must have at least 2 coordinates.")
