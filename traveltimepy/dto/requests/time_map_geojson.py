@@ -1,23 +1,6 @@
-import typing
-from datetime import datetime
-
-from typing import List, Optional
+from typing import List
 
 from geojson_pydantic import FeatureCollection
-from pydantic.main import BaseModel
-
-from traveltimepy import (
-    Coordinates,
-    Range,
-    PublicTransport,
-    Driving,
-    Ferry,
-    Walking,
-    Cycling,
-    DrivingTrain,
-    CyclingPublicTransport,
-    LevelOfDetail,
-)
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.requests.time_map import (
     TimeMapRequest,
