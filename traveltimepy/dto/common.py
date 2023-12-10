@@ -146,7 +146,7 @@ class LevelOfDetail(BaseModel):
 
 class TimeInfo:
     def __init__(self, time_value: datetime):
-        self.time = time_value
+        self.value = time_value
 
 
 class DepartureTime(TimeInfo):
