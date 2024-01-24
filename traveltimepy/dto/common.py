@@ -142,3 +142,16 @@ class LevelOfDetail(BaseModel):
     scale_type: Literal["simple", "simple_numeric", "coarse_grid"] = "simple"
     level: Optional[Union[int, str]] = None
     square_size: Optional[int] = None
+
+
+class TimeInfo:
+    def __init__(self, time_value: datetime):
+        self.value = time_value
+
+
+class DepartureTime(TimeInfo):
+    pass
+
+
+class ArrivalTime(TimeInfo):
+    pass

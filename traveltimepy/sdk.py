@@ -10,6 +10,8 @@ from traveltimepy.dto.common import (
     Range,
     LevelOfDetail,
     PropertyProto,
+    DepartureTime,
+    ArrivalTime,
 )
 from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResponse,
@@ -30,6 +32,7 @@ from traveltimepy.dto.requests.time_filter_proto import (
     ProtoTransportation,
 )
 from traveltimepy.dto.requests.time_filter_fast import Transportation
+from traveltimepy.errors import ApiError
 
 from traveltimepy.version import __version__
 from traveltimepy.accept_type import AcceptType
@@ -115,6 +118,8 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         range: Optional[FullRange] = None,
     ) -> List[TimeFilterResult]:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             TimeFilterResponse,
             "time-filter",
@@ -124,8 +129,7 @@ class TravelTimeSdk:
                 search_ids,
                 transportation,
                 properties,
-                departure_time,
-                arrival_time,
+                time_info,
                 travel_time,
                 range,
             ),
@@ -232,14 +236,15 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesResult]:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             PostcodesResponse,
             "time-filter/postcodes",
             self._headers(AcceptType.JSON),
             create_postcodes(
                 coordinates,
-                departure_time,
-                arrival_time,
+                time_info,
                 transportation,
                 travel_time,
                 properties,
@@ -268,6 +273,8 @@ class TravelTimeSdk:
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesDistrictsResult]:
+        time_info = get_time_info(departure_time, arrival_time)
+
         res = await send_post_async(
             PostcodesDistrictsResponse,
             "time-filter/postcode-districts",
@@ -276,8 +283,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 reachable_postcodes_threshold,
                 properties,
                 range,
@@ -305,6 +311,8 @@ class TravelTimeSdk:
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
     ) -> List[PostcodesSectorsResult]:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             PostcodesSectorsResponse,
             "time-filter/postcode-sectors",
@@ -313,8 +321,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 reachable_postcodes_threshold,
                 properties,
                 range,
@@ -341,6 +348,8 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
     ) -> List[RoutesResult]:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             RoutesResponse,
             "routes",
@@ -349,8 +358,7 @@ class TravelTimeSdk:
                 locations,
                 search_ids,
                 transportation,
-                departure_time,
-                arrival_time,
+                time_info,
                 properties,
                 range,
             ),
@@ -402,6 +410,8 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapResult:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             TimeMapResponse,
             "time-map",
@@ -410,8 +420,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -437,6 +446,8 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapResult:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             TimeMapResponse,
             "time-map",
@@ -445,8 +456,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -473,6 +483,8 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> List[TimeMapResult]:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             TimeMapResponse,
             "time-map",
@@ -481,8 +493,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -508,6 +519,8 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> FeatureCollection:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             FeatureCollection,
             "time-map",
@@ -516,8 +529,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -543,6 +555,8 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapWKTResponse:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             TimeMapWKTResponse,
             "time-map",
@@ -551,8 +565,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -578,6 +591,8 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
     ) -> TimeMapWKTResponse:
+        time_info = get_time_info(departure_time, arrival_time)
+
         resp = await send_post_async(
             TimeMapWKTResponse,
             "time-map",
@@ -586,8 +601,7 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                departure_time,
-                arrival_time,
+                time_info,
                 search_range,
                 level_of_detail,
             ),
@@ -638,3 +652,16 @@ class TravelTimeSdk:
             "Content-Type": "application/json",
             "Accept": accept_type.value,
         }
+
+
+def get_time_info(departure_time: Optional[datetime], arrival_time: Optional[datetime]):
+    if departure_time and arrival_time:
+        raise ApiError("arrival_time and departure_time cannot be both specified")
+
+    time_info = None
+    if departure_time:
+        time_info = DepartureTime(departure_time)
+    elif arrival_time:
+        time_info = ArrivalTime(arrival_time)
+
+    return time_info
