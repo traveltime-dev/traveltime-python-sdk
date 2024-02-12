@@ -69,6 +69,7 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 * level_of_detail: LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 ### JSON response
 
@@ -204,6 +205,7 @@ Given origin coordinates, find intersections of specified shapes.
 * transportation: Union - Transportation mode and related parameters.
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -248,6 +250,7 @@ Finds the union of specified shapes.
 * transportation: Union - Transportation mode and related parameters.
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -294,6 +297,7 @@ travel times, distances and costs between an origin and up to 2,000 destination 
 * properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -350,6 +354,7 @@ A very fast version of ```time_filter()```. However, the request parameters are 
 * properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
   backward search (many to one matrix). Default value is True.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -405,6 +410,7 @@ larger limits on the amount of destination points.
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
   backward search (many to one matrix). Default value is True.
 * properties: List[PropertyProto] - specifies which extra properties should be calculated in the response. 
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -452,6 +458,7 @@ Returns routing information between source and destinations.
 * properties: List[Property] - Properties to be returned about the locations. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -501,6 +508,7 @@ Match a query string to geographic coordinates.
   of the location.
 * format_exclude_country: bool - Exclude the country from the formatted name field.
 * bounds: Rectangle - Used to limit the results to a bounding box.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -528,6 +536,7 @@ Match a latitude, longitude pair to an address.
 
 * lat: float - Latitude
 * lng: float - Longitude
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -563,6 +572,7 @@ supports United Kingdom.
 * properties: List[Property] - Properties to be returned about the postcodes. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -608,6 +618,7 @@ such districts. Currently only supports United Kingdom.
 * properties: List[Property] - Properties to be returned about the districts. Default value is travel_time_all.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -654,6 +665,7 @@ sectors. Currently only supports United Kingdom.
 * properties: List[Property] - Properties to be returned about the sectors. Default value is travel_time_all.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 
@@ -681,6 +693,10 @@ asyncio.run(main())
 ```
 
 ### [Map Info](https://docs.traveltime.com/api/reference/map-info)
+
+#### Takes:
+
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 Returns information about currently supported countries.
 
@@ -718,6 +734,7 @@ are supported.
 #### Takes:
 
 * locations: List[Location] - Each location requires an id and lat/lng values
+* timeout: int - Maximum session time until timeout. Default value is 1800 (30 minutes).
 
 #### Returns:
 

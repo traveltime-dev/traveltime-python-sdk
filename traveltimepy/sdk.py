@@ -117,6 +117,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_time: int = 3600,
         range: Optional[FullRange] = None,
+        timeout: int = 1800,
     ) -> List[TimeFilterResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -134,16 +135,18 @@ class TravelTimeSdk:
                 range,
             ),
             self._sdk_params,
+            timeout,
         )
 
         return resp.results
 
-    async def map_info_async(self) -> List[Map]:
+    async def map_info_async(self, timeout: int = 1800) -> List[Map]:
         res = await send_get_async(
             MapInfoResponse,
             "map-info",
             self._headers(AcceptType.JSON),
             self._sdk_params,
+            timeout,
         )
         return res.maps
 
@@ -155,12 +158,14 @@ class TravelTimeSdk:
         format_name: Optional[bool] = None,
         format_exclude_country: Optional[bool] = None,
         bounds: Optional[Rectangle] = None,
+        timeout: int = 1800,
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
             "geocoding/search",
             self._headers(AcceptType.JSON),
             self._sdk_params,
+            timeout,
             self._geocoding_params(
                 query,
                 limit,
@@ -172,18 +177,24 @@ class TravelTimeSdk:
         )
 
     async def geocoding_reverse_async(
-        self, lat: float, lng: float
+        self,
+        lat: float,
+        lng: float,
+        timeout: int = 1800,
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
             "geocoding/reverse",
             self._headers(AcceptType.JSON),
             self._sdk_params,
+            timeout,
             self._geocoding_reverse_params(lat, lng),
         )
 
     async def supported_locations_async(
-        self, locations: List[Location]
+        self,
+        locations: List[Location],
+        timeout: int = 1800,
     ) -> SupportedLocationsResponse:
         return await send_post_async(
             SupportedLocationsResponse,
@@ -191,6 +202,7 @@ class TravelTimeSdk:
             self._headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
             self._sdk_params,
+            timeout,
         )
 
     async def time_filter_fast_async(
@@ -201,6 +213,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         properties: Optional[List[Property]] = None,
         one_to_many: bool = True,
+        timeout: int = 1800,
     ) -> List[TimeFilterFastResult]:
         resp = await send_post_async(
             TimeFilterFastResponse,
@@ -215,6 +228,7 @@ class TravelTimeSdk:
                 one_to_many,
             ),
             self._sdk_params,
+            timeout,
         )
         return resp.results
 
@@ -235,6 +249,7 @@ class TravelTimeSdk:
         travel_time: int = 1800,
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
+        timeout: int = 1800,
     ) -> List[PostcodesResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -251,6 +266,7 @@ class TravelTimeSdk:
                 range,
             ),
             self._sdk_params,
+            timeout,
         )
         return resp.results
 
@@ -272,6 +288,7 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
+        timeout: int = 1800,
     ) -> List[PostcodesDistrictsResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -289,6 +306,7 @@ class TravelTimeSdk:
                 range,
             ),
             self._sdk_params,
+            timeout,
         )
         return res.results
 
@@ -310,6 +328,7 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
+        timeout: int = 1800,
     ) -> List[PostcodesSectorsResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -327,6 +346,7 @@ class TravelTimeSdk:
                 range,
             ),
             self._sdk_params,
+            timeout,
         )
         return resp.results
 
@@ -347,6 +367,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
+        timeout: int = 1800,
     ) -> List[RoutesResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -363,6 +384,7 @@ class TravelTimeSdk:
                 range,
             ),
             self._sdk_params,
+            timeout,
         )
         return resp.results
 
@@ -375,6 +397,7 @@ class TravelTimeSdk:
         travel_time: int,
         one_to_many: bool = True,
         properties: Optional[List[PropertyProto]] = None,
+        timeout: int = 1800,
     ) -> TimeFilterProtoResponse:
         resp = await send_proto_async(
             f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
@@ -389,6 +412,7 @@ class TravelTimeSdk:
             ),
             self._app_id,
             self._api_key,
+            timeout,
         )
         return resp
 
@@ -409,6 +433,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
+        timeout: int = 1800,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -425,6 +450,7 @@ class TravelTimeSdk:
                 level_of_detail,
             ),
             self._sdk_params,
+            timeout,
         )
         return resp.results[0]
 
@@ -445,6 +471,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
+        timeout: int = 1800,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -461,6 +488,7 @@ class TravelTimeSdk:
                 level_of_detail,
             ),
             self._sdk_params,
+            timeout,
         )
 
         return resp.results[0]
@@ -482,6 +510,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
+        timeout: int = 1800,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -498,6 +527,7 @@ class TravelTimeSdk:
                 level_of_detail,
             ),
             self._sdk_params,
+            timeout,
         )
         return resp.results
 
@@ -518,6 +548,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
+        timeout: int = 1800,
     ) -> FeatureCollection:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -534,6 +565,7 @@ class TravelTimeSdk:
                 level_of_detail,
             ),
             self._sdk_params,
+            timeout,
         )
         return resp
 
@@ -554,6 +586,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
+        timeout: int = 1800,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -570,6 +603,7 @@ class TravelTimeSdk:
                 level_of_detail,
             ),
             self._sdk_params,
+            timeout,
         )
         return resp
 
@@ -590,6 +624,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
+        timeout: int = 1800,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -606,6 +641,7 @@ class TravelTimeSdk:
                 level_of_detail,
             ),
             self._sdk_params,
+            timeout,
         )
         return resp
 

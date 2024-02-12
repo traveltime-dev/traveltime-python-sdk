@@ -3,7 +3,7 @@ import json
 from dataclasses import dataclass
 from typing import TypeVar, Type, Dict
 
-from aiohttp import ClientSession, ClientResponse, TCPConnector
+from aiohttp import ClientSession, ClientResponse, TCPConnector, ClientTimeout
 from traveltimepy.dto.requests.request import TravelTimeRequest
 
 from traveltimepy.dto.responses.error import ResponseError
@@ -44,10 +44,12 @@ async def send_post_async(
     headers: Dict[str, str],
     request: TravelTimeRequest,
     sdk_params: SdkParams,
+    timeout: int,
 ) -> T:
     window_size = _window_size(sdk_params.rate_limit)
     async with ClientSession(
-        connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host)
+        timeout=ClientTimeout(total=timeout),
+        connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host),
     ) as session:
         retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
         async with RetryClient(
@@ -83,9 +85,12 @@ async def send_get_async(
     path: str,
     headers: Dict[str, str],
     sdk_params: SdkParams,
+    timeout: int,
     params: Dict[str, str] = None,
 ) -> T:
-    async with ClientSession(connector=TCPConnector(ssl=False)) as session:
+    async with ClientSession(
+        timeout=ClientTimeout(total=timeout), connector=TCPConnector(ssl=False)
+    ) as session:
         retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
         async with RetryClient(
             client_session=session, retry_options=retry_options
