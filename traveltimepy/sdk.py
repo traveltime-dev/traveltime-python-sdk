@@ -81,6 +81,10 @@ from traveltimepy.http import (
 from geojson_pydantic import FeatureCollection
 
 
+def default_timeout() -> int:
+    return 1800
+
+
 class TravelTimeSdk:
     def __init__(
         self,
@@ -117,7 +121,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_time: int = 3600,
         range: Optional[FullRange] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> List[TimeFilterResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -140,7 +144,7 @@ class TravelTimeSdk:
 
         return resp.results
 
-    async def map_info_async(self, timeout: int = 1800) -> List[Map]:
+    async def map_info_async(self, timeout: int = default_timeout()) -> List[Map]:
         res = await send_get_async(
             MapInfoResponse,
             "map-info",
@@ -158,7 +162,7 @@ class TravelTimeSdk:
         format_name: Optional[bool] = None,
         format_exclude_country: Optional[bool] = None,
         bounds: Optional[Rectangle] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
@@ -180,7 +184,7 @@ class TravelTimeSdk:
         self,
         lat: float,
         lng: float,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
@@ -194,7 +198,7 @@ class TravelTimeSdk:
     async def supported_locations_async(
         self,
         locations: List[Location],
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> SupportedLocationsResponse:
         return await send_post_async(
             SupportedLocationsResponse,
@@ -213,7 +217,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         properties: Optional[List[Property]] = None,
         one_to_many: bool = True,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> List[TimeFilterFastResult]:
         resp = await send_post_async(
             TimeFilterFastResponse,
@@ -249,7 +253,7 @@ class TravelTimeSdk:
         travel_time: int = 1800,
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> List[PostcodesResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -288,7 +292,7 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> List[PostcodesDistrictsResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -328,7 +332,7 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> List[PostcodesSectorsResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -367,7 +371,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> List[RoutesResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -397,10 +401,11 @@ class TravelTimeSdk:
         travel_time: int,
         one_to_many: bool = True,
         properties: Optional[List[PropertyProto]] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> TimeFilterProtoResponse:
         resp = await send_proto_async(
-            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
+            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",
+            # noqa
             self._proto_headers(),
             create_proto_request(
                 origin,
@@ -433,7 +438,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -471,7 +476,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -510,7 +515,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -548,7 +553,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> FeatureCollection:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -586,7 +591,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -624,7 +629,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        timeout: int = 1800,
+        timeout: int = default_timeout(),
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
