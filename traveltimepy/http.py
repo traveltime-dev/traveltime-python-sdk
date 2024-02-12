@@ -23,6 +23,7 @@ class SdkParams:
     rate_limit: int
     time_window: int
     retry_attempts: int
+    timeout: int
 
 
 async def send_post_request_async(
@@ -44,11 +45,10 @@ async def send_post_async(
     headers: Dict[str, str],
     request: TravelTimeRequest,
     sdk_params: SdkParams,
-    timeout: int,
 ) -> T:
     window_size = _window_size(sdk_params.rate_limit)
     async with ClientSession(
-        timeout=ClientTimeout(total=timeout),
+        timeout=ClientTimeout(total=sdk_params.timeout),
         connector=TCPConnector(ssl=False, limit_per_host=sdk_params.limit_per_host),
     ) as session:
         retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
@@ -85,11 +85,11 @@ async def send_get_async(
     path: str,
     headers: Dict[str, str],
     sdk_params: SdkParams,
-    timeout: int,
     params: Dict[str, str] = None,
 ) -> T:
     async with ClientSession(
-        timeout=ClientTimeout(total=timeout), connector=TCPConnector(ssl=False)
+        timeout=ClientTimeout(total=sdk_params.timeout),
+        connector=TCPConnector(ssl=False),
     ) as session:
         retry_options = ExponentialRetry(attempts=sdk_params.retry_attempts)
         async with RetryClient(
