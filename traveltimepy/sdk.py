@@ -92,11 +92,18 @@ class TravelTimeSdk:
         retry_attempts: int = 2,
         host: str = "api.traveltimeapp.com",
         proto_host: str = "proto.api.traveltimeapp.com",
+        timeout: int = 300,
     ) -> None:
         self._app_id = app_id
         self._api_key = api_key
         self._sdk_params = SdkParams(
-            host, proto_host, limit_per_host, rate_limit, time_window, retry_attempts
+            host,
+            proto_host,
+            limit_per_host,
+            rate_limit,
+            time_window,
+            retry_attempts,
+            timeout,
         )
 
     async def time_filter_async(
@@ -172,7 +179,9 @@ class TravelTimeSdk:
         )
 
     async def geocoding_reverse_async(
-        self, lat: float, lng: float
+        self,
+        lat: float,
+        lng: float,
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
@@ -183,7 +192,8 @@ class TravelTimeSdk:
         )
 
     async def supported_locations_async(
-        self, locations: List[Location]
+        self,
+        locations: List[Location],
     ) -> SupportedLocationsResponse:
         return await send_post_async(
             SupportedLocationsResponse,
@@ -377,7 +387,8 @@ class TravelTimeSdk:
         properties: Optional[List[PropertyProto]] = None,
     ) -> TimeFilterProtoResponse:
         resp = await send_proto_async(
-            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",  # noqa
+            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",
+            # noqa
             self._proto_headers(),
             create_proto_request(
                 origin,
@@ -389,6 +400,7 @@ class TravelTimeSdk:
             ),
             self._app_id,
             self._api_key,
+            self._sdk_params.timeout,
         )
         return resp
 

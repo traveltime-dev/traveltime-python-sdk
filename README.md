@@ -47,6 +47,7 @@ In order to authenticate with Travel Time API, you will have to supply the Appli
 * time_window: int - Duration, in seconds, of the time period in which to limit the rate.
 * retry_attempts: int - Number of retries for failed requests.
 * host: str - TravelTime host, default value is api.traveltimeapp.com.
+* timeout: int - Maximum session time until timeout. Default value is 300 (5 minutes).
 
 ```python
 from traveltimepy import TravelTimeSdk
