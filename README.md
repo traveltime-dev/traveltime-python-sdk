@@ -683,9 +683,6 @@ asyncio.run(main())
 
 ### [Map Info](https://docs.traveltime.com/api/reference/map-info)
 
-#### Takes:
-
-
 Returns information about currently supported countries.
 
 It is useful when you have an application that can do searches in any country that we support, you can use Supported
