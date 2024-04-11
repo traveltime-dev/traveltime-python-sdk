@@ -107,7 +107,7 @@ async def _process_response(response_class: Type[T], response: ClientResponse) -
     text = await response.text()
     json_data = json.loads(text)
     if response.status != 200:
-        parsed = ResponseError.model_validate_json(json_data)
+        parsed = ResponseError.model_validate_json(json.dumps(json_data))
         msg = (
             f"Travel Time API request failed: {parsed.description}\n"
             f"Error code: {parsed.error_code}\n"
