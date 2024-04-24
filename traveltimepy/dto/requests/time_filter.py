@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import Location, FullRange, Property
+from traveltimepy.dto.common import Location, FullRange, Property, SnapPenalty
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_filter import TimeFilterResponse
 from traveltimepy.itertools import split, flatten
@@ -35,6 +35,7 @@ class ArrivalSearch(BaseModel):
     ]
     properties: List[Property]
     range: Optional[FullRange] = None
+    snap_penalty: Optional[SnapPenalty] = None
 
 
 class DepartureSearch(BaseModel):
@@ -54,6 +55,7 @@ class DepartureSearch(BaseModel):
     ]
     properties: List[Property]
     range: Optional[FullRange] = None
+    snap_penalty: Optional[SnapPenalty] = None
 
 
 class TimeFilterRequest(TravelTimeRequest[TimeFilterResponse]):

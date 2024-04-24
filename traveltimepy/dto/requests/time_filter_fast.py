@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Optional
 from typing_extensions import Literal
 
 from pydantic import BaseModel
 
-from traveltimepy.dto.common import Location, Property
+from traveltimepy.dto.common import Location, Property, SnapPenalty
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.itertools import split, flatten
@@ -30,6 +30,7 @@ class OneToMany(BaseModel):
     travel_time: int
     arrival_time_period: str
     properties: List[Property]
+    snap_penalty: Optional[SnapPenalty] = None,
 
 
 class ManyToOne(BaseModel):
@@ -40,6 +41,7 @@ class ManyToOne(BaseModel):
     travel_time: int
     arrival_time_period: str
     properties: List[Property]
+    snap_penalty: Optional[SnapPenalty] = None
 
 
 class ArrivalSearches(BaseModel):

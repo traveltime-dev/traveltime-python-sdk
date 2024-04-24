@@ -70,6 +70,9 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 * level_of_detail: LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
+* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
+  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
+  Enabled by default.
 
 ### JSON response
 
@@ -205,6 +208,9 @@ Given origin coordinates, find intersections of specified shapes.
 * transportation: Union - Transportation mode and related parameters.
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
+  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
+  Enabled by default.
 
 #### Returns:
 
@@ -249,6 +255,9 @@ Finds the union of specified shapes.
 * transportation: Union - Transportation mode and related parameters.
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
+  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
+  Enabled by default.
 
 #### Returns:
 
@@ -295,6 +304,9 @@ travel times, distances and costs between an origin and up to 2,000 destination 
 * properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
+  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
+  Enabled by default.
 
 #### Returns:
 
@@ -351,6 +363,9 @@ A very fast version of `time_filter()`. However, the request parameters are much
 * properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
   backward search (many to one matrix). Default value is True.
+* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
+  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
+  Enabled by default.
 
 #### Returns:
 
@@ -453,6 +468,9 @@ Returns routing information between source and destinations.
 * properties: List[Property] - Properties to be returned about the locations. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
+* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
+  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
+  Enabled by default.
 
 #### Returns:
 

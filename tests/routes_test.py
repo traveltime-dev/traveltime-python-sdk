@@ -1,7 +1,10 @@
+from typing import List
+
 import pytest
 from datetime import datetime
 
-from traveltimepy import PublicTransport
+from traveltimepy import PublicTransport, Driving, Location, Coordinates
+from traveltimepy.dto.common import SnapPenalty
 
 
 @pytest.mark.asyncio
@@ -30,3 +33,32 @@ async def test_arrivals(sdk, locations):
         departure_time=datetime.now(),
     )
     assert len(results) == 2
+
+
+@pytest.mark.asyncio
+async def test_snap_penalty(sdk):
+    locations: List[Location] = [
+            Location(id="A", coords=Coordinates(lat=53.806479, lng=-2.615711)),
+            Location(id="B", coords=Coordinates(lat=53.810129, lng=-2.601099)),
+        ]
+    result_with_penalty = await sdk.routes_async(
+        locations=locations,
+        search_ids={
+            "A": ["B"],
+        },
+        transportation=Driving(),
+        departure_time=datetime.now(),
+    )
+    traveltime_with_penalty = result_with_penalty[0].locations[0].properties[0].travel_time
+    result_without_penalty = await sdk.routes_async(
+        locations=locations,
+        search_ids={
+            "A": ["B"],
+        },
+        transportation=Driving(),
+        departure_time=datetime.now(),
+        snap_penalty=SnapPenalty.DISABLED
+    )
+    traveltime_without_penalty = result_without_penalty[0].locations[0].properties[0].travel_time
+
+    assert traveltime_with_penalty > traveltime_without_penalty

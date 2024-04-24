@@ -17,6 +17,7 @@ from traveltimepy import (
     CyclingPublicTransport,
     LevelOfDetail,
 )
+from traveltimepy.dto.common import SnapPenalty
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
@@ -38,6 +39,7 @@ class DepartureSearch(BaseModel):
     ]
     range: Optional[Range] = None
     level_of_detail: Optional[LevelOfDetail] = None
+    snap_penalty: Optional[SnapPenalty]
 
 
 class ArrivalSearch(BaseModel):
@@ -56,6 +58,7 @@ class ArrivalSearch(BaseModel):
     ]
     range: Optional[Range] = None
     level_of_detail: Optional[LevelOfDetail] = None
+    snap_penalty: Optional[SnapPenalty] = None
 
 
 class Intersection(BaseModel):
@@ -73,6 +76,7 @@ class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
     arrival_searches: List[ArrivalSearch]
     unions: List[Union] = None
     intersections: List[Intersection] = None
+    snap_penalty: Optional[SnapPenalty] = None
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
