@@ -57,6 +57,7 @@ from traveltimepy.dto.responses.zones import (
 )
 
 from traveltimepy.mapper import (
+    create_distance_map,
     create_time_filter,
     create_time_filter_fast,
     create_postcodes,
@@ -621,6 +622,39 @@ class TravelTimeSdk:
         )
         return resp
 
+    async def distance_map_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_distance: int = 900,
+        level_of_detail: Optional[LevelOfDetail] = None,
+    ) -> List[TimeMapResult]:
+        time_info = get_time_info(departure_time, arrival_time)
+        resp = await send_post_async(
+            TimeMapResponse,
+            "distance-map",
+            self._headers(AcceptType.JSON),
+            create_distance_map(
+                coordinates,
+                transportation,
+                travel_distance,
+                time_info,
+                level_of_detail
+            ),
+            self._sdk_params,
+        )
+        return resp.results
+
     @staticmethod
     def _geocoding_reverse_params(lat: float, lng: float) -> Dict[str, str]:
         full_query = {"lat": lat, "lng": lng}
@@ -670,10 +704,8 @@ def get_time_info(departure_time: Optional[datetime], arrival_time: Optional[dat
     if departure_time and arrival_time:
         raise ApiError("arrival_time and departure_time cannot be both specified")
 
-    time_info = None
     if departure_time:
-        time_info = DepartureTime(departure_time)
+        return DepartureTime(departure_time)
     elif arrival_time:
-        time_info = ArrivalTime(arrival_time)
+        return ArrivalTime(arrival_time)
 
-    return time_info

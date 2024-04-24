@@ -1,6 +1,7 @@
 import math
 from typing import Dict, Union, List, Optional
 
+from traveltimepy.dto.requests.distance_map import DistanceMapRequest
 from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
 from traveltimepy.dto.requests.time_map_wkt import TimeMapWKTRequest
 from traveltimepy.errors import ApiError
@@ -42,6 +43,7 @@ from traveltimepy.dto.requests.postcodes_zones import (
 from traveltimepy.dto.requests.time_map import TimeMapRequest
 
 from traveltimepy.dto.requests import (
+    distance_map,
     time_filter,
     time_filter_fast,
     postcodes,
@@ -485,6 +487,58 @@ def create_time_map_wkt(
                     departure_time=time_info.value,
                     transportation=transportation,
                     range=search_range,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+            unions=[],
+            intersections=[],
+        )
+    else:
+        raise ApiError("arrival_time or departure_time should be specified")
+
+def create_distance_map(
+    coordinates: List[Coordinates],
+    transportation: Union[
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
+    ],
+    travel_distance: int,
+    time_info: TimeInfo,
+    level_of_detail: Optional[LevelOfDetail],
+) -> TimeMapRequest:
+    if isinstance(time_info, ArrivalTime):
+        return DistanceMapRequest(
+            arrival_searches=[
+                distance_map.ArrivalSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_distance=travel_distance,
+                    arrival_time=time_info.value,
+                    transportation=transportation,
+                    level_of_detail=level_of_detail,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+            unions=[],
+            intersections=[],
+        )
+    elif isinstance(time_info, DepartureTime):
+        return DistanceMapRequest(
+            departure_searches=[
+                distance_map.DepartureSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_distance=travel_distance,
+                    departure_time=time_info.value,
+                    transportation=transportation,
+                    level_of_detail=level_of_detail,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
