@@ -23,7 +23,7 @@ jobs:
           - "3.11"
           - "3.12"
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
@@ -42,9 +42,11 @@ jobs:
         run: |
           pip install -U setuptools
           pip install -e ".[test]"
-      - name: Lint with flake8
-        run: |
-          flake8  --max-line-length=127
+      - name: Python Linter
+        uses: sunnysid3up/python-linter@master
+        with:
+         isort-options: "-w 127"
+         strict: "high"
       - name: Test with pytest
         run: |
           pytest
