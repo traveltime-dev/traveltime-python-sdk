@@ -45,6 +45,13 @@ jobs:
       - name: Lint with flake8
         run: |
           flake8  --max-line-length=127
+      - name: Type check with mypy
+        run: |
+          mypy . --ignore-missing-imports
+      - name: Check import order with isort
+        run: |
+          isort . --check-only
+
       - name: Test with pytest
         run: |
           pytest
