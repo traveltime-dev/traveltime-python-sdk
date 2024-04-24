@@ -123,6 +123,11 @@ class Property(str, Enum):
     FARES = "fares"
 
 
+class SnapPenalty(str, Enum):
+    ENABLED = "enabled"
+    DISABLED = "disabled"
+
+
 class PropertyProto(int, Enum):
     DISTANCE = 1
 
