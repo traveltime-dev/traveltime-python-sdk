@@ -645,11 +645,7 @@ class TravelTimeSdk:
             "distance-map",
             self._headers(AcceptType.JSON),
             create_distance_map(
-                coordinates,
-                transportation,
-                travel_distance,
-                time_info,
-                level_of_detail
+                coordinates, transportation, travel_distance, time_info, level_of_detail
             ),
             self._sdk_params,
         )
@@ -708,4 +704,3 @@ def get_time_info(departure_time: Optional[datetime], arrival_time: Optional[dat
         return DepartureTime(departure_time)
     elif arrival_time:
         return ArrivalTime(arrival_time)
-

@@ -497,6 +497,7 @@ def create_time_map_wkt(
     else:
         raise ApiError("arrival_time or departure_time should be specified")
 
+
 def create_distance_map(
     coordinates: List[Coordinates],
     transportation: Union[
