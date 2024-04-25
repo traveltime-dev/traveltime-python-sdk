@@ -528,7 +528,8 @@ def create_distance_map(
     travel_distance: int,
     time_info: TimeInfo,
     level_of_detail: Optional[LevelOfDetail],
-) -> TimeMapRequest:
+    snap_penalty: Optional[SnapPenalty],
+) -> DistanceMapRequest:
     if isinstance(time_info, ArrivalTime):
         return DistanceMapRequest(
             arrival_searches=[
@@ -539,6 +540,7 @@ def create_distance_map(
                     arrival_time=time_info.value,
                     transportation=transportation,
                     level_of_detail=level_of_detail,
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -556,6 +558,7 @@ def create_distance_map(
                     departure_time=time_info.value,
                     transportation=transportation,
                     level_of_detail=level_of_detail,
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
