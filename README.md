@@ -286,6 +286,51 @@ async def main():
 asyncio.run(main())
 ```
 
+### [Distance Map](https://docs.traveltime.com/api/reference/distance-map)
+
+Given origin coordinates, find shapes of zones reachable within corresponding travel distance.
+
+#### Takes:
+
+* coordinates: List[Coordinates] - Coordinates of the arrival or departure location.
+* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
+* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with
+  arrival_time.
+* travel_distance: int - Maximum journey distance (in meters). Maximum value is 800000 (800km). Minimum value is 75. 
+  Default value is 900.
+* transportation: Union - Transportation mode and related parameters.
+* level_of_detail: LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
+* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
+  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
+  Enabled by default.
+
+#### Returns:
+
+* results: List[TimeMapResult] - The list of isochrone shapes
+
+#### Example:
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.distance_map_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        arrival_time=datetime.now(),
+        transportation=Driving()
+    )
+    print(results)
+
+
+asyncio.run(main())
+```
+
 ### [Distance Matrix (Time Filter)](https://docs.traveltime.com/api/reference/travel-time-distance-matrix)
 
 Given origin and destination points filter out points that cannot be reached within specified time limit. Find out
