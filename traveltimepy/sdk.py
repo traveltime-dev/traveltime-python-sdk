@@ -653,6 +653,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_distance: int = 900,
         level_of_detail: Optional[LevelOfDetail] = None,
+        snap_penalty: Optional[SnapPenalty] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
         resp = await send_post_async(
@@ -660,7 +661,7 @@ class TravelTimeSdk:
             "distance-map",
             self._headers(AcceptType.JSON),
             create_distance_map(
-                coordinates, transportation, travel_distance, time_info, level_of_detail
+                coordinates, transportation, travel_distance, time_info, level_of_detail, snap_penalty
             ),
             self._sdk_params,
         )
