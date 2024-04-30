@@ -50,7 +50,8 @@ jobs:
           black . --check
       - name: Type check with mypy
         run: |
-          mypy . --exclude='^(build/|venv/|traveltimepy/TimeFilterFastRequest_pb2.py|traveltimepy/TimeFilterFastResponse_pb2.py)'
+          find . -name '*.py'
+          mypy . 
       - name: Test with pytest
         run: |
           pytest
