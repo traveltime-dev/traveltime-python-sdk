@@ -50,7 +50,7 @@ jobs:
           black . --check
       - name: Type check with mypy
         run: |
-          mypy . --config-file setup.cfg
+          mypy . 
       - name: Test with pytest
         run: |
           pytest
