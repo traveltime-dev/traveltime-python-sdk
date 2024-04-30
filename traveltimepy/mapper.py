@@ -772,8 +772,8 @@ def create_proto_request(
     properties: Optional[List[PropertyProto]],
     travel_time: int,
     one_to_many: bool = True,
-) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:
-    request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()
+) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:  # type: ignore
+    request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()  # type: ignore
 
     if one_to_many:
         request.oneToManyRequest.departureLocation.lat = origin.lat
@@ -782,7 +782,7 @@ def create_proto_request(
         request.oneToManyRequest.transportation.type = transportation.value.code
         request.oneToManyRequest.travelTime = travel_time
         request.oneToManyRequest.arrivalTimePeriod = (
-            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
+            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
         )
         if properties is not None:
             request.oneToManyRequest.properties.extend(properties)
@@ -799,7 +799,7 @@ def create_proto_request(
         request.manyToOneRequest.transportation.type = transportation.value.code
         request.manyToOneRequest.travelTime = travel_time
         request.manyToOneRequest.arrivalTimePeriod = (
-            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
+            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
         )
         if properties is not None:
             request.manyToOneRequest.properties.extend(properties)
