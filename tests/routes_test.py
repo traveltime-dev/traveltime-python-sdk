@@ -65,5 +65,6 @@ async def test_snap_penalty(sdk: TravelTimeSdk):
     traveltime_without_penalty = (
         result_without_penalty[0].locations[0].properties[0].travel_time
     )
-
+    assert traveltime_with_penalty is not None
+    assert traveltime_without_penalty is not None
     assert traveltime_with_penalty > traveltime_without_penalty

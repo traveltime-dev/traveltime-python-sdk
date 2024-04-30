@@ -155,6 +155,7 @@ class TravelTimeSdk:
             "map-info",
             self._headers(AcceptType.JSON),
             self._sdk_params,
+            None,
         )
         return res.maps
 

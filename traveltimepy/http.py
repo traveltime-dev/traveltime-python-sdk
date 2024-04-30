@@ -1,7 +1,7 @@
 import asyncio
 import json
 from dataclasses import dataclass
-from typing import TypeVar, Type, Dict
+from typing import TypeVar, Type, Dict, Optional
 
 from aiohttp import ClientSession, ClientResponse, TCPConnector, ClientTimeout
 from pydantic import BaseModel
@@ -88,7 +88,7 @@ async def send_get_async(
     path: str,
     headers: Dict[str, str],
     sdk_params: SdkParams,
-    params: Dict[str, str],
+    params: Optional[Dict[str, str]],
 ) -> T:
     async with ClientSession(
         timeout=ClientTimeout(total=sdk_params.timeout),
