@@ -50,7 +50,7 @@ jobs:
           black . --check
       - name: Type check with mypy
         run: |
-          mypy . --ignore-missing-imports
+          mypy . 
       - name: Test with pytest
         run: |
           pytest
