@@ -50,8 +50,7 @@ jobs:
           black . --check
       - name: Type check with mypy
         run: |
-          find . -name '*.py'
-          mypy . --verbose
+          mypy .
       - name: Test with pytest
         run: |
           pytest
