@@ -1,11 +1,11 @@
 import pytest
 from datetime import datetime
 
-from traveltimepy import PublicTransport
+from traveltimepy import PublicTransport, TravelTimeSdk
 
 
 @pytest.mark.asyncio
-async def test_departures(sdk, locations):
+async def test_departures(sdk: TravelTimeSdk, locations):
     results = await sdk.time_filter_async(
         locations=locations,
         search_ids={
@@ -19,7 +19,7 @@ async def test_departures(sdk, locations):
 
 
 @pytest.mark.asyncio
-async def test_arrivals(sdk, locations):
+async def test_arrivals(sdk: TravelTimeSdk, locations):
     results = await sdk.time_filter_async(
         locations=locations,
         search_ids={

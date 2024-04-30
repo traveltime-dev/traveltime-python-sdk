@@ -484,13 +484,11 @@ def create_time_map_wkt(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
             departure_searches=[],
-            unions=[],
-            intersections=[],
         )
     elif isinstance(time_info, DepartureTime):
         return TimeMapWKTRequest(
@@ -502,13 +500,11 @@ def create_time_map_wkt(
                     departure_time=time_info.value,
                     transportation=transportation,
                     range=search_range,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
             arrival_searches=[],
-            unions=[],
-            intersections=[],
         )
     else:
         raise ApiError("arrival_time or departure_time should be specified")
@@ -598,7 +594,7 @@ def create_intersection(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -622,7 +618,7 @@ def create_intersection(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -691,7 +687,7 @@ def create_union(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],

@@ -19,6 +19,7 @@ async def generate_matrix(size: int):
         transportation=Transportation(type="driving"),
     )
 
+
 if __name__ == "__main__":
     start = time.perf_counter()
     response = asyncio.run(generate_matrix(50))

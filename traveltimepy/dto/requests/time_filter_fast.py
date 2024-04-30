@@ -30,7 +30,7 @@ class OneToMany(BaseModel):
     travel_time: int
     arrival_time_period: str
     properties: List[Property]
-    snap_penalty: Optional[SnapPenalty] = None,
+    snap_penalty: Optional[SnapPenalty] = None
 
 
 class ManyToOne(BaseModel):

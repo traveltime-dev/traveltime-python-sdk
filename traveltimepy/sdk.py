@@ -228,7 +228,7 @@ class TravelTimeSdk:
                 travel_time,
                 properties,
                 one_to_many,
-                snap_penalty
+                snap_penalty,
             ),
             self._sdk_params,
         )
@@ -378,7 +378,7 @@ class TravelTimeSdk:
                 time_info,
                 properties,
                 range,
-                snap_penalty
+                snap_penalty,
             ),
             self._sdk_params,
         )
@@ -661,7 +661,12 @@ class TravelTimeSdk:
             "distance-map",
             self._headers(AcceptType.JSON),
             create_distance_map(
-                coordinates, transportation, travel_distance, time_info, level_of_detail, snap_penalty
+                coordinates,
+                transportation,
+                travel_distance,
+                time_info,
+                level_of_detail,
+                snap_penalty,
             ),
             self._sdk_params,
         )

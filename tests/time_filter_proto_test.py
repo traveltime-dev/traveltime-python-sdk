@@ -6,10 +6,11 @@ from traveltimepy.dto.requests.time_filter_proto import (
     ProtoTransportation,
     ProtoCountry,
 )
+from traveltimepy.sdk import TravelTimeSdk
 
 
 @pytest.mark.asyncio
-async def test_one_to_many(proto_sdk):
+async def test_one_to_many(proto_sdk: TravelTimeSdk):
     results = await proto_sdk.time_filter_proto_async(
         origin=Coordinates(lat=51.425709, lng=-0.122061),
         destinations=[
@@ -24,7 +25,7 @@ async def test_one_to_many(proto_sdk):
 
 
 @pytest.mark.asyncio
-async def test_many_to_one(proto_sdk):
+async def test_many_to_one(proto_sdk: TravelTimeSdk):
     results = await proto_sdk.time_filter_proto_async(
         origin=Coordinates(lat=51.425709, lng=-0.122061),
         destinations=[
@@ -40,7 +41,7 @@ async def test_many_to_one(proto_sdk):
 
 
 @pytest.mark.asyncio
-async def test_one_to_many_with_distances(proto_sdk):
+async def test_one_to_many_with_distances(proto_sdk: TravelTimeSdk):
     results = await proto_sdk.time_filter_proto_async(
         origin=Coordinates(lat=51.425709, lng=-0.122061),
         destinations=[
@@ -56,7 +57,7 @@ async def test_one_to_many_with_distances(proto_sdk):
 
 
 @pytest.mark.asyncio
-async def test_many_to_one_with_distances(proto_sdk):
+async def test_many_to_one_with_distances(proto_sdk: TravelTimeSdk):
     results = await proto_sdk.time_filter_proto_async(
         origin=Coordinates(lat=51.425709, lng=-0.122061),
         destinations=[

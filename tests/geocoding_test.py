@@ -1,8 +1,9 @@
 import pytest
+from traveltimepy import TravelTimeSdk
 
 
 @pytest.mark.asyncio
-async def test_geocoding_search(sdk):
+async def test_geocoding_search(sdk: TravelTimeSdk):
     response = await sdk.geocoding_async(
         query="Parliament square", limit=30, within_countries=["gb", "de"]
     )
@@ -11,6 +12,6 @@ async def test_geocoding_search(sdk):
 
 
 @pytest.mark.asyncio
-async def test_geocoding_reverse(sdk):
+async def test_geocoding_reverse(sdk: TravelTimeSdk):
     response = await sdk.geocoding_reverse_async(lat=51.507281, lng=-0.132120)
     assert len(response.features) > 0
