@@ -5,7 +5,7 @@ from traveltimepy.dto.requests.distance_map import DistanceMapRequest
 from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
 from traveltimepy.dto.requests.time_map_wkt import TimeMapWKTRequest
 from traveltimepy.errors import ApiError
-from traveltimepy import TimeFilterFastRequest_pb2
+from traveltimepy.proto import TimeFilterFastRequest_pb2
 
 from traveltimepy.dto.common import (
     Location,
