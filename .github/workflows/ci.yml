@@ -50,9 +50,7 @@ jobs:
           black . --check
       - name: Type check with mypy
         run: |
-          pwd
-          ls -a
-          mypy . 
+          mypy . --config-file setup.cfg
       - name: Test with pytest
         run: |
           pytest
