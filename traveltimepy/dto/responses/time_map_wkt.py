@@ -7,7 +7,7 @@ from traveltimepy.wkt.helper import print_indented
 Props = TypeVar("Props", bound=Union[Dict[str, Any], BaseModel])
 
 
-class TimeMapWKTResult(Generic[Props], BaseModel):
+class TimeMapWKTResult(BaseModel, Generic[Props]):
     search_id: str
     shape: WKTObject
     properties: Optional[Props] = Field(None)
