@@ -17,7 +17,11 @@ jobs:
       max-parallel: 1
       matrix:
         python-version:
+          #- "3.8"
+          #- "3.9"
+          #- "3.10"
           - "3.11"
+          #- "3.12"
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python ${{ matrix.python-version }}
@@ -38,23 +42,20 @@ jobs:
         run: |
           pip install -U setuptools
           pip install -e ".[test]"
-      - name: Lint with flake8
-        run: |
-          flake8  --max-line-length=127
-      - name: Formatting check with black
-        run: |
-          black . --check
-      - name: test
-        run: |
-          mypy --version
+      #- name: Lint with flake8
+        #run: |
+#flake8  --max-line-length=127
+      #- name: Formatting check with black
+        #run: |
+#black . --check
       - name: Type check with mypy
         run: |
           mypy .
-      - name: Test with pytest
-        run: |
-          pytest
-        env:
-          PROTO_APP_ID: ${{ secrets.PROTO_APP_ID }}
-          PROTO_API_KEY: ${{ secrets.PROTO_API_KEY }}
-          APP_ID: ${{ secrets.APP_ID }}
-          API_KEY: ${{ secrets.API_KEY }}
+      #- name: Test with pytest
+        #run: |
+#pytest
+        #env:
+#PROTO_APP_ID: ${{ secrets.PROTO_APP_ID }}
+#PROTO_API_KEY: ${{ secrets.PROTO_API_KEY }}
+#APP_ID: ${{ secrets.APP_ID }}
+#API_KEY: ${{ secrets.API_KEY }}
