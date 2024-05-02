@@ -155,6 +155,7 @@ class TravelTimeSdk:
             "map-info",
             self._headers(AcceptType.JSON),
             self._sdk_params,
+            None,
         )
         return res.maps
 
@@ -228,7 +229,7 @@ class TravelTimeSdk:
                 travel_time,
                 properties,
                 one_to_many,
-                snap_penalty
+                snap_penalty,
             ),
             self._sdk_params,
         )
@@ -378,7 +379,7 @@ class TravelTimeSdk:
                 time_info,
                 properties,
                 range,
-                snap_penalty
+                snap_penalty,
             ),
             self._sdk_params,
         )
@@ -661,7 +662,12 @@ class TravelTimeSdk:
             "distance-map",
             self._headers(AcceptType.JSON),
             create_distance_map(
-                coordinates, transportation, travel_distance, time_info, level_of_detail, snap_penalty
+                coordinates,
+                transportation,
+                travel_distance,
+                time_info,
+                level_of_detail,
+                snap_penalty,
             ),
             self._sdk_params,
         )
@@ -713,6 +719,9 @@ class TravelTimeSdk:
 
 
 def get_time_info(departure_time: Optional[datetime], arrival_time: Optional[datetime]):
+    if not departure_time and not arrival_time:
+        raise ApiError("either arrival_time or departure_time has to be specified")
+
     if departure_time and arrival_time:
         raise ApiError("arrival_time and departure_time cannot be both specified")
 

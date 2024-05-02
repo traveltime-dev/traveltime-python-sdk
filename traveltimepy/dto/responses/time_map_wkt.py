@@ -1,4 +1,4 @@
-from typing import List, Union, Dict, Any, TypeVar, Optional
+from typing import Generic, List, Union, Dict, Any, TypeVar, Optional
 from pydantic import field_validator, BaseModel, Field
 
 from traveltimepy.wkt import WKTObject, parse_wkt
@@ -7,7 +7,7 @@ from traveltimepy.wkt.helper import print_indented
 Props = TypeVar("Props", bound=Union[Dict[str, Any], BaseModel])
 
 
-class TimeMapWKTResult(BaseModel):
+class TimeMapWKTResult(BaseModel, Generic[Props]):
     search_id: str
     shape: WKTObject
     properties: Optional[Props] = Field(None)

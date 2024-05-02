@@ -36,7 +36,7 @@ jobs:
 
       - name: Generate proto files
         run: |
-          protoc -I=./proto --python_out=./traveltimepy/ ./proto/*
+          protoc -I=./proto --python_out=./traveltimepy/proto/ ./proto/*
 
       - name: Install Package with dependencies
         run: |
@@ -45,6 +45,12 @@ jobs:
       - name: Lint with flake8
         run: |
           flake8  --max-line-length=127
+      - name: Formatting check with black
+        run: |
+          black . --check
+      - name: Type check with mypy
+        run: |
+          mypy .
       - name: Test with pytest
         run: |
           pytest

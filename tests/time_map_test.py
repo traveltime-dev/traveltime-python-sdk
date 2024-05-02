@@ -1,11 +1,11 @@
 import pytest
 from datetime import datetime
 
-from traveltimepy import Coordinates, Driving, LevelOfDetail, Range
+from traveltimepy import Coordinates, Driving, LevelOfDetail, Range, TravelTimeSdk
 
 
 @pytest.mark.asyncio
-async def test_departures(sdk):
+async def test_departures(sdk: TravelTimeSdk):
     results = await sdk.time_map_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -21,7 +21,7 @@ async def test_departures(sdk):
 
 
 @pytest.mark.asyncio
-async def test_departures_geojson(sdk):
+async def test_departures_geojson(sdk: TravelTimeSdk):
     results = await sdk.time_map_geojson_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -37,7 +37,7 @@ async def test_departures_geojson(sdk):
 
 
 @pytest.mark.asyncio
-async def test_departures_wkt(sdk):
+async def test_departures_wkt(sdk: TravelTimeSdk):
     response = await sdk.time_map_wkt_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -53,7 +53,7 @@ async def test_departures_wkt(sdk):
 
 
 @pytest.mark.asyncio
-async def test_departures_wkt_no_holes(sdk):
+async def test_departures_wkt_no_holes(sdk: TravelTimeSdk):
     response = await sdk.time_map_wkt_no_holes_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -69,7 +69,7 @@ async def test_departures_wkt_no_holes(sdk):
 
 
 @pytest.mark.asyncio
-async def test_arrivals(sdk):
+async def test_arrivals(sdk: TravelTimeSdk):
     results = await sdk.time_map_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -85,7 +85,7 @@ async def test_arrivals(sdk):
 
 
 @pytest.mark.asyncio
-async def test_arrivals_geojson(sdk):
+async def test_arrivals_geojson(sdk: TravelTimeSdk):
     results = await sdk.time_map_geojson_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -101,7 +101,7 @@ async def test_arrivals_geojson(sdk):
 
 
 @pytest.mark.asyncio
-async def test_arrivals_wkt(sdk):
+async def test_arrivals_wkt(sdk: TravelTimeSdk):
     response = await sdk.time_map_wkt_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -117,7 +117,7 @@ async def test_arrivals_wkt(sdk):
 
 
 @pytest.mark.asyncio
-async def test_arrivals_wkt_no_holes(sdk):
+async def test_arrivals_wkt_no_holes(sdk: TravelTimeSdk):
     response = await sdk.time_map_wkt_no_holes_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -133,7 +133,7 @@ async def test_arrivals_wkt_no_holes(sdk):
 
 
 @pytest.mark.asyncio
-async def test_union_departures(sdk):
+async def test_union_departures(sdk: TravelTimeSdk):
     result = await sdk.union_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
@@ -149,7 +149,7 @@ async def test_union_departures(sdk):
 
 
 @pytest.mark.asyncio
-async def test_intersection_arrivals(sdk):
+async def test_intersection_arrivals(sdk: TravelTimeSdk):
     result = await sdk.intersection_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),

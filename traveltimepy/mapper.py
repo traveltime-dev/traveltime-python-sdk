@@ -5,7 +5,7 @@ from traveltimepy.dto.requests.distance_map import DistanceMapRequest
 from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
 from traveltimepy.dto.requests.time_map_wkt import TimeMapWKTRequest
 from traveltimepy.errors import ApiError
-from traveltimepy import TimeFilterFastRequest_pb2
+from traveltimepy.proto import TimeFilterFastRequest_pb2
 
 from traveltimepy.dto.common import (
     Location,
@@ -484,13 +484,11 @@ def create_time_map_wkt(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
             departure_searches=[],
-            unions=[],
-            intersections=[],
         )
     elif isinstance(time_info, DepartureTime):
         return TimeMapWKTRequest(
@@ -502,13 +500,11 @@ def create_time_map_wkt(
                     departure_time=time_info.value,
                     transportation=transportation,
                     range=search_range,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
             arrival_searches=[],
-            unions=[],
-            intersections=[],
         )
     else:
         raise ApiError("arrival_time or departure_time should be specified")
@@ -598,7 +594,7 @@ def create_intersection(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -622,7 +618,7 @@ def create_intersection(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -691,7 +687,7 @@ def create_union(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty
+                    snap_penalty=snap_penalty,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -776,8 +772,8 @@ def create_proto_request(
     properties: Optional[List[PropertyProto]],
     travel_time: int,
     one_to_many: bool = True,
-) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:
-    request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()
+) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:  # type: ignore
+    request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()  # type: ignore
 
     if one_to_many:
         request.oneToManyRequest.departureLocation.lat = origin.lat
@@ -786,7 +782,7 @@ def create_proto_request(
         request.oneToManyRequest.transportation.type = transportation.value.code
         request.oneToManyRequest.travelTime = travel_time
         request.oneToManyRequest.arrivalTimePeriod = (
-            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
+            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
         )
         if properties is not None:
             request.oneToManyRequest.properties.extend(properties)
@@ -803,7 +799,7 @@ def create_proto_request(
         request.manyToOneRequest.transportation.type = transportation.value.code
         request.manyToOneRequest.travelTime = travel_time
         request.manyToOneRequest.arrivalTimePeriod = (
-            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING
+            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
         )
         if properties is not None:
             request.manyToOneRequest.properties.extend(properties)

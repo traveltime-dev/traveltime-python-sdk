@@ -8,8 +8,7 @@ from aiohttp import (
     ClientTimeout,
 )
 
-from traveltimepy.TimeFilterFastResponse_pb2 import TimeFilterFastResponse
-from traveltimepy.TimeFilterFastRequest_pb2 import TimeFilterFastRequest
+from traveltimepy.proto import TimeFilterFastResponse_pb2, TimeFilterFastRequest_pb2
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.errors import ApiError
 
@@ -17,7 +16,7 @@ from traveltimepy.errors import ApiError
 async def send_proto_async(
     url: str,
     headers: Dict[str, str],
-    data: TimeFilterFastRequest,
+    data: TimeFilterFastRequest_pb2.TimeFilterFastRequest,  # type: ignore
     app_id: str,
     api_key: str,
     timeout: int,
@@ -42,7 +41,7 @@ async def _process_response(response: ClientResponse) -> TimeFilterProtoResponse
         )
         raise ApiError(msg)
     else:
-        response_body = TimeFilterFastResponse()
+        response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
         response_body.ParseFromString(content)
         return TimeFilterProtoResponse(
             travel_times=response_body.properties.travelTimes[:],
