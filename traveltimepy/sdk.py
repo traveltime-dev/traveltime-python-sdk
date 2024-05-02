@@ -719,6 +719,9 @@ class TravelTimeSdk:
 
 
 def get_time_info(departure_time: Optional[datetime], arrival_time: Optional[datetime]):
+    if not departure_time and not arrival_time:
+        raise ApiError("either arrival_time or departure_time has to be specified")
+
     if departure_time and arrival_time:
         raise ApiError("arrival_time and departure_time cannot be both specified")
 
