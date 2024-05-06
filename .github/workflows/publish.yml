@@ -25,7 +25,7 @@ jobs:
 
       - name: Generate proto files
         run: |
-          protoc -I=./proto --python_out=./traveltimepy/ ./proto/*
+          protoc -I=./proto --python_out=./traveltimepy/proto/ ./proto/*
 
       - name: Install setuptools
         run: |
