@@ -2,6 +2,7 @@ import pytest
 from datetime import datetime
 
 from traveltimepy import Coordinates, Driving, LevelOfDetail, TravelTimeSdk
+from traveltimepy.dto.common import ScaleType
 
 
 @pytest.mark.asyncio
@@ -14,7 +15,7 @@ async def test_departures(sdk: TravelTimeSdk):
         departure_time=datetime.now(),
         travel_distance=900,
         transportation=Driving(),
-        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+        level_of_detail=LevelOfDetail(scale_type=ScaleType.SIMPLE, level="lowest"),
     )
     assert len(results) == 2
 
@@ -29,6 +30,6 @@ async def test_arrivals(sdk: TravelTimeSdk):
         arrival_time=datetime.now(),
         travel_distance=900,
         transportation=Driving(),
-        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+        level_of_detail=LevelOfDetail(scale_type=ScaleType.SIMPLE, level="lowest"),
     )
     assert len(results) == 2

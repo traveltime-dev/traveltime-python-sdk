@@ -60,7 +60,10 @@ async def test_snapping(sdk: TravelTimeSdk):
         },
         transportation=Driving(),
         departure_time=datetime.now(),
-        snapping=Snapping(penalty=SnappingPenalty.DISABLED, accept_roads=SnappingAcceptRoads.ANY_DRIVABLE),
+        snapping=Snapping(
+            penalty=SnappingPenalty.DISABLED,
+            accept_roads=SnappingAcceptRoads.ANY_DRIVABLE,
+        ),
     )
     traveltime_without_penalty = (
         result_without_penalty[0].locations[0].properties[0].travel_time
