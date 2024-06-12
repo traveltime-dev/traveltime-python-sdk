@@ -123,9 +123,19 @@ class Property(str, Enum):
     FARES = "fares"
 
 
-class SnapPenalty(str, Enum):
+class SnappingPenalty(str, Enum):
     ENABLED = "enabled"
     DISABLED = "disabled"
+
+
+class SnappingAcceptRoads(str, Enum):
+    BOTH_DRIVABLE_AND_WALKABLE = "both_drivable_and_walkable"
+    ANY_DRIVABLE = "any_drivable"
+
+
+class Snapping(BaseModel):
+    penalty: Optional[SnappingPenalty]
+    accept_roads: Optional[SnappingAcceptRoads]
 
 
 class PropertyProto(int, Enum):
@@ -143,8 +153,14 @@ class Range(BaseModel):
     width: int
 
 
+class ScaleType(str, Enum):
+    SIMPLE = "simple"
+    SIMPLE_NUMERIC = "simple_numeric"
+    COARSE_GRID = "coarse_grid"
+
+
 class LevelOfDetail(BaseModel):
-    scale_type: Literal["simple", "simple_numeric", "coarse_grid"] = "simple"
+    scale_type: ScaleType = ScaleType.SIMPLE
     level: Optional[Union[int, str]] = None
     square_size: Optional[int] = None
 
