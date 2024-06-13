@@ -4,7 +4,7 @@ import pytest
 from datetime import datetime
 
 from traveltimepy import PublicTransport, Driving, Location, Coordinates
-from traveltimepy.dto.common import SnapPenalty
+from traveltimepy.dto.common import Snapping, SnappingAcceptRoads, SnappingPenalty
 from traveltimepy.sdk import TravelTimeSdk
 
 
@@ -37,7 +37,7 @@ async def test_arrivals(sdk: TravelTimeSdk, locations):
 
 
 @pytest.mark.asyncio
-async def test_snap_penalty(sdk: TravelTimeSdk):
+async def test_snapping(sdk: TravelTimeSdk):
     locations: List[Location] = [
         Location(id="A", coords=Coordinates(lat=53.806479, lng=-2.615711)),
         Location(id="B", coords=Coordinates(lat=53.810129, lng=-2.601099)),
@@ -60,7 +60,10 @@ async def test_snap_penalty(sdk: TravelTimeSdk):
         },
         transportation=Driving(),
         departure_time=datetime.now(),
-        snap_penalty=SnapPenalty.DISABLED,
+        snapping=Snapping(
+            penalty=SnappingPenalty.DISABLED,
+            accept_roads=SnappingAcceptRoads.ANY_DRIVABLE,
+        ),
     )
     traveltime_without_penalty = (
         result_without_penalty[0].locations[0].properties[0].travel_time

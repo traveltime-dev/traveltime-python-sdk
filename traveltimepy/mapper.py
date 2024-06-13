@@ -18,7 +18,7 @@ from traveltimepy.dto.common import (
     TimeInfo,
     ArrivalTime,
     DepartureTime,
-    SnapPenalty,
+    Snapping,
 )
 from traveltimepy.dto.transportation import (
     PublicTransport,
@@ -70,7 +70,7 @@ def create_time_filter(
     time_info: TimeInfo,
     travel_time: int,
     range: Optional[FullRange],
-    snap_penalty: Optional[SnapPenalty] = None,
+    snapping: Optional[Snapping] = None,
 ) -> TimeFilterRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -89,7 +89,7 @@ def create_time_filter(
                     transportation=transportation,
                     properties=properties,
                     range=range,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for arrival_id, departure_ids in search_ids.items()
             ],
@@ -108,7 +108,7 @@ def create_time_filter(
                     transportation=transportation,
                     properties=properties,
                     range=range,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for departure_id, arrival_ids in search_ids.items()
             ],
@@ -125,7 +125,7 @@ def create_time_filter_fast(
     travel_time: int = 3600,
     properties: Optional[List[Property]] = None,
     one_to_many: bool = False,
-    snap_penalty: Optional[SnapPenalty] = None,
+    snapping: Optional[Snapping] = None,
 ) -> TimeFilterFastRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -142,7 +142,7 @@ def create_time_filter_fast(
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",
                         properties=properties,
-                        snap_penalty=snap_penalty,
+                        snapping=snapping,
                     )
                     for departure_id, arrival_ids in search_ids.items()
                 ],
@@ -162,7 +162,7 @@ def create_time_filter_fast(
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",
                         properties=properties,
-                        snap_penalty=snap_penalty,
+                        snapping=snapping,
                     )
                     for arrival_id, departure_ids in search_ids.items()
                 ],
@@ -357,7 +357,7 @@ def create_time_map(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snap_penalty: Optional[SnapPenalty],
+    snapping: Optional[Snapping],
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -370,7 +370,7 @@ def create_time_map(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -389,7 +389,7 @@ def create_time_map(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -416,7 +416,7 @@ def create_time_map_geojson(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snap_penalty: Optional[SnapPenalty] = None,
+    snapping: Optional[Snapping] = None,
 ) -> TimeMapRequestGeojson:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequestGeojson(
@@ -429,7 +429,7 @@ def create_time_map_geojson(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -446,7 +446,7 @@ def create_time_map_geojson(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -471,7 +471,7 @@ def create_time_map_wkt(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snap_penalty: Optional[SnapPenalty] = None,
+    snapping: Optional[Snapping] = None,
 ) -> TimeMapWKTRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapWKTRequest(
@@ -484,7 +484,7 @@ def create_time_map_wkt(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -500,7 +500,7 @@ def create_time_map_wkt(
                     departure_time=time_info.value,
                     transportation=transportation,
                     range=search_range,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -524,7 +524,7 @@ def create_distance_map(
     travel_distance: int,
     time_info: TimeInfo,
     level_of_detail: Optional[LevelOfDetail],
-    snap_penalty: Optional[SnapPenalty],
+    snapping: Optional[Snapping],
 ) -> DistanceMapRequest:
     if isinstance(time_info, ArrivalTime):
         return DistanceMapRequest(
@@ -536,7 +536,7 @@ def create_distance_map(
                     arrival_time=time_info.value,
                     transportation=transportation,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -554,7 +554,7 @@ def create_distance_map(
                     departure_time=time_info.value,
                     transportation=transportation,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -581,7 +581,7 @@ def create_intersection(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snap_penalty: Optional[SnapPenalty] = None,
+    snapping: Optional[Snapping] = None,
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -594,7 +594,7 @@ def create_intersection(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -618,7 +618,7 @@ def create_intersection(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -650,7 +650,7 @@ def create_union(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snap_penalty: Optional[SnapPenalty] = None,
+    snapping: Optional[Snapping] = None,
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -663,7 +663,7 @@ def create_union(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -687,7 +687,7 @@ def create_union(
                     transportation=transportation,
                     range=search_range,
                     level_of_detail=level_of_detail,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -719,7 +719,7 @@ def create_routes(
     time_info: TimeInfo,
     properties: Optional[List[Property]],
     range: Optional[FullRange],
-    snap_penalty: Optional[SnapPenalty],
+    snapping: Optional[Snapping],
 ) -> RoutesRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -737,7 +737,7 @@ def create_routes(
                     transportation=transportation,
                     properties=properties,
                     range=range,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for arrival_id, departure_ids in search_ids.items()
             ],
@@ -755,7 +755,7 @@ def create_routes(
                     transportation=transportation,
                     properties=properties,
                     range=range,
-                    snap_penalty=snap_penalty,
+                    snapping=snapping,
                 )
                 for departure_id, arrival_ids in search_ids.items()
             ],

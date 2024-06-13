@@ -123,9 +123,21 @@ class Property(str, Enum):
     FARES = "fares"
 
 
-class SnapPenalty(str, Enum):
+class SnappingPenalty(str, Enum):
     ENABLED = "enabled"
     DISABLED = "disabled"
+
+
+class SnappingAcceptRoads(str, Enum):
+    BOTH_DRIVABLE_AND_WALKABLE = "both_drivable_and_walkable"
+    ANY_DRIVABLE = "any_drivable"
+
+
+class Snapping(BaseModel):
+    penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
+    accept_roads: Optional[SnappingAcceptRoads] = (
+        SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
+    )
 
 
 class PropertyProto(int, Enum):

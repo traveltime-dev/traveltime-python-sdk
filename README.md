@@ -70,9 +70,7 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 * level_of_detail: LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
-* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
-  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
-  Enabled by default.
+* snapping: Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 ### JSON response
 
@@ -208,9 +206,7 @@ Given origin coordinates, find intersections of specified shapes.
 * transportation: Union - Transportation mode and related parameters.
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
-* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
-  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
-  Enabled by default.
+* snapping: Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 #### Returns:
 
@@ -255,9 +251,7 @@ Finds the union of specified shapes.
 * transportation: Union - Transportation mode and related parameters.
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
-* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
-  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
-  Enabled by default.
+* snapping: Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 #### Returns:
 
@@ -300,9 +294,7 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
   Default value is 900.
 * transportation: Union - Transportation mode and related parameters.
 * level_of_detail: LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
-* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
-  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
-  Enabled by default.
+* snapping: Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 #### Returns:
 
@@ -349,9 +341,7 @@ travel times, distances and costs between an origin and up to 2,000 destination 
 * properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
-* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
-  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
-  Enabled by default.
+* snapping: Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 #### Returns:
 
@@ -408,9 +398,7 @@ A very fast version of `time_filter()`. However, the request parameters are much
 * properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
   backward search (many to one matrix). Default value is True.
-* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
-  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
-  Enabled by default.
+* snapping: Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 #### Returns:
 
@@ -513,9 +501,7 @@ Returns routing information between source and destinations.
 * properties: List[Property] - Properties to be returned about the locations. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
-* snap_penalty: SnapPenalty - When enabled, walking time and distance from the departure location to the nearest road, 
-  and from the nearest road to the arrival location, are added to the total travel time and distance of a journey. 
-  Enabled by default.
+* snapping: Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 #### Returns:
 
@@ -931,4 +917,26 @@ level_of_detail=LevelOfDetail(scale_type="simple_numeric", level=0)
 
 # scale_type "coarse_grid"
 level_of_detail=LevelOfDetail(scale_type="coarse_grid", square_size=600)
+```
+
+### Snapping
+
+`snapping` Adjusts the process of looking up the nearest roads from the departure / arrival points.
+
+For a more detailed description of how to use this parameter, you can refer to our [API Docs](https://docs.traveltime.com/api/reference/isochrones#departure_searches-snapping)
+
+#### Examples
+
+```python
+from traveltimepy.dto.common import Snapping, SnappingAcceptRoads, SnappingPenalty
+
+snapping=Snapping(
+    penalty=SnappingPenalty.ENABLED, # default
+    accept_roads=SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE # default
+)
+
+snapping=Snapping(
+    penalty=SnappingPenalty.DISABLED,
+    accept_roads=SnappingAcceptRoads.ANY_DRIVABLE
+)
 ```

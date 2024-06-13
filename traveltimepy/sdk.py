@@ -12,7 +12,7 @@ from traveltimepy.dto.common import (
     PropertyProto,
     DepartureTime,
     ArrivalTime,
-    SnapPenalty,
+    Snapping,
 )
 from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResponse,
@@ -126,7 +126,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_time: int = 3600,
         range: Optional[FullRange] = None,
-        snap_penalty: Optional[SnapPenalty] = None,
+        snapping: Optional[Snapping] = None,
     ) -> List[TimeFilterResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -142,7 +142,7 @@ class TravelTimeSdk:
                 time_info,
                 travel_time,
                 range,
-                snap_penalty,
+                snapping,
             ),
             self._sdk_params,
         )
@@ -216,7 +216,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         properties: Optional[List[Property]] = None,
         one_to_many: bool = True,
-        snap_penalty: Optional[SnapPenalty] = None,
+        snapping: Optional[Snapping] = None,
     ) -> List[TimeFilterFastResult]:
         resp = await send_post_async(
             TimeFilterFastResponse,
@@ -229,7 +229,7 @@ class TravelTimeSdk:
                 travel_time,
                 properties,
                 one_to_many,
-                snap_penalty,
+                snapping,
             ),
             self._sdk_params,
         )
@@ -364,7 +364,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
-        snap_penalty: Optional[SnapPenalty] = None,
+        snapping: Optional[Snapping] = None,
     ) -> List[RoutesResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -379,7 +379,7 @@ class TravelTimeSdk:
                 time_info,
                 properties,
                 range,
-                snap_penalty,
+                snapping,
             ),
             self._sdk_params,
         )
@@ -503,7 +503,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        snap_penalty: Optional[SnapPenalty] = None,
+        snapping: Optional[Snapping] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -518,7 +518,7 @@ class TravelTimeSdk:
                 time_info,
                 search_range,
                 level_of_detail,
-                snap_penalty,
+                snapping,
             ),
             self._sdk_params,
         )
@@ -541,7 +541,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        snap_penalty: Optional[SnapPenalty] = None,
+        snapping: Optional[Snapping] = None,
     ) -> FeatureCollection:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -556,7 +556,7 @@ class TravelTimeSdk:
                 time_info,
                 search_range,
                 level_of_detail,
-                snap_penalty,
+                snapping,
             ),
             self._sdk_params,
         )
@@ -579,7 +579,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        snap_penalty: Optional[SnapPenalty] = None,
+        snapping: Optional[Snapping] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -594,7 +594,7 @@ class TravelTimeSdk:
                 time_info,
                 search_range,
                 level_of_detail,
-                snap_penalty,
+                snapping,
             ),
             self._sdk_params,
         )
@@ -617,7 +617,7 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
-        snap_penalty: Optional[SnapPenalty] = None,
+        snapping: Optional[Snapping] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -632,7 +632,7 @@ class TravelTimeSdk:
                 time_info,
                 search_range,
                 level_of_detail,
-                snap_penalty,
+                snapping,
             ),
             self._sdk_params,
         )
@@ -654,7 +654,7 @@ class TravelTimeSdk:
         arrival_time: Optional[datetime] = None,
         travel_distance: int = 900,
         level_of_detail: Optional[LevelOfDetail] = None,
-        snap_penalty: Optional[SnapPenalty] = None,
+        snapping: Optional[Snapping] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
         resp = await send_post_async(
@@ -667,7 +667,7 @@ class TravelTimeSdk:
                 travel_distance,
                 time_info,
                 level_of_detail,
-                snap_penalty,
+                snapping,
             ),
             self._sdk_params,
         )
