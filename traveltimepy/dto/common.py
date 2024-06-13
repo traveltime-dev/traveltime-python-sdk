@@ -155,14 +155,8 @@ class Range(BaseModel):
     width: int
 
 
-class ScaleType(str, Enum):
-    SIMPLE = "simple"
-    SIMPLE_NUMERIC = "simple_numeric"
-    COARSE_GRID = "coarse_grid"
-
-
 class LevelOfDetail(BaseModel):
-    scale_type: ScaleType = ScaleType.SIMPLE
+    scale_type: Literal["simple", "simple_numeric", "coarse_grid"] = "simple"
     level: Optional[Union[int, str]] = None
     square_size: Optional[int] = None
 

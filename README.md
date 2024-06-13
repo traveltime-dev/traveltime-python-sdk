@@ -908,16 +908,15 @@ For a more detailed description of how to use this parameter, you can refer to o
 
 ```python
 from traveltimepy import LevelOfDetail
-from traveltimepy.dto.common import ScaleType
 
 # scale_type "simple"
-level_of_detail=LevelOfDetail(scale_type=ScaleType.SIMPLE, level="lowest")
+level_of_detail=LevelOfDetail(scale_type="simple", level="lowest")
 
 # scale_type "simple_numeric"
-level_of_detail=LevelOfDetail(scale_type=ScaleType.SIMPLE_NUMERIC, level=0)
+level_of_detail=LevelOfDetail(scale_type="simple_numeric", level=0)
 
 # scale_type "coarse_grid"
-level_of_detail=LevelOfDetail(scale_type=ScaleType.COARSE_GRID, square_size=600)
+level_of_detail=LevelOfDetail(scale_type="coarse_grid", square_size=600)
 ```
 
 ### Snapping
