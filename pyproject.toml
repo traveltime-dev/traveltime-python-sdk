@@ -34,7 +34,14 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest", "pytest-asyncio", "flake8", "mypy", "black"]
+test = [
+	"pytest",
+	"pytest-asyncio",
+	"flake8",
+	"flake8-pyproject",
+	"mypy",
+	"black",
+]
 
 [tool.setuptools]
 zip-safe = false
