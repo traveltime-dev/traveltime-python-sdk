@@ -35,7 +35,7 @@ from traveltimepy.dto.requests.time_filter_proto import (
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 from traveltimepy.errors import ApiError
 
-from traveltimepy.version import __version__
+from traveltimepy import __version__
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.itertools import join_opt
 from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
