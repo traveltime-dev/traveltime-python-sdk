@@ -1,5 +1,13 @@
 """Python sdk for working with traveltime api"""
 
+from importlib.metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:
+    # package is not installed
+    pass
+
 from traveltimepy.dto.transportation import (
     PublicTransport,
     Driving,
@@ -27,7 +35,6 @@ from traveltimepy.dto.common import (
 from traveltimepy.sdk import TravelTimeSdk
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
-from traveltimepy.version import __version__
 
 __all__ = [
     "__version__",

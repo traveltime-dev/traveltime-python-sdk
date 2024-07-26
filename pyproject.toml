@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "setuptools_scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -49,8 +49,7 @@ zip-safe = false
 include-package-data = true
 packages = { find = {} }
 
-[tool.setuptools.dynamic]
-version = { attr = "traveltimepy.version.__version__" }
+[tool.setuptools_scm]
 
 [tool.flake8]
 per-file-ignores = ["**/__init__.py:F401"]
