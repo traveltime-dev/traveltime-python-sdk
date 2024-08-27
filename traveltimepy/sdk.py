@@ -95,10 +95,11 @@ class TravelTimeSdk:
         host: str = "api.traveltimeapp.com",
         proto_host: str = "proto.api.traveltimeapp.com",
         timeout: int = 300,
-        user_agent: Optional[str] = None
+        user_agent: Optional[str] = None,
     ) -> None:
         self._app_id = app_id
         self._api_key = api_key
+
         if user_agent is not None:
             self._user_agent = user_agent
         else:
