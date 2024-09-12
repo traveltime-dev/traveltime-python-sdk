@@ -68,7 +68,7 @@ def _parse_polygon(geometry: Polygon) -> PolygonModel:
             PointModel(coordinates=Coordinates(lat=lat, lng=lng))
             for lat, lng in interior.coords
         ]
-        for interior in geometry.interiors
+        for interior in list(geometry.interiors)
     ]
     exterior_line = LineStringModel(coordinates=exterior_points)
     interior_lines = [
@@ -123,7 +123,7 @@ def _parse_multi_polygon(geometry: MultiPolygon) -> MultiPolygonModel:
                         for point in interior.coords
                     ],
                 )
-                for interior in polygon.interiors
+                for interior in list(polygon.interiors)
             ],
         )
         for polygon in geometry.geoms
