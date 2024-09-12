@@ -48,8 +48,8 @@ test = [
 [tool.setuptools]
 zip-safe = false
 include-package-data = true
-packages = ['traveltime']
-package-data = { 'traveltime' = ['py.typed'] }
+packages = { find = {} }
+package-data = { "traveltimepy" = ["py.typed"] }
 
 [tool.setuptools_scm]
 
