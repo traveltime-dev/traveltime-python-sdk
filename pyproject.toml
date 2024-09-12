@@ -60,7 +60,7 @@ exclude = ["build/", "venv/", "traveltimepy/proto/"]
 [tool.mypy]
 exclude = "^(traveltimepy/proto/.*|build/.*|venv/.*)$"
 
-[tool.mypy-shapely.*]
+[tool.mypy-shapely]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
