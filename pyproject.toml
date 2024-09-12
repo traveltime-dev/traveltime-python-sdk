@@ -58,7 +58,6 @@ extend-ignore = ["E203"]                             # See https://github.com/Py
 exclude = ["build/", "venv/", "traveltimepy/proto/"]
 
 [tool.mypy]
-ignore_missing_imports = true
 exclude = "^(traveltimepy/proto/.*|build/.*|venv/.*)$"
 
 [[tool.mypy.overrides]]
