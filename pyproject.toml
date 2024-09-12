@@ -42,6 +42,7 @@ test = [
 	"flake8-pyproject",
 	"mypy",
 	"black",
+	"types-shapely",
 ]
 
 [tool.setuptools]
@@ -59,9 +60,6 @@ exclude = ["build/", "venv/", "traveltimepy/proto/"]
 
 [tool.mypy]
 exclude = "^(traveltimepy/proto/.*|build/.*|venv/.*)$"
-
-[tool.mypy-shapely]
-ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = "traveltimepy.proto.*"
