@@ -49,11 +49,9 @@ test = [
 zip-safe = false
 include-package-data = true
 packages = { find = {} }
+package-data = { "traveltimepy" = ["py.typed"] }
 
 [tool.setuptools_scm]
-
-[tool.setuptools.package-data]
-"traveltimepy" = ["py.typed"]
 
 [tool.flake8]
 per-file-ignores = ["**/__init__.py:F401"]
