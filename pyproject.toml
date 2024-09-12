@@ -49,7 +49,6 @@ test = [
 zip-safe = false
 include-package-data = true
 packages = { find = {} }
-package-data = { "traveltimepy" = ["py.typed"] }
 
 [tool.setuptools_scm]
 
