@@ -119,4 +119,7 @@ async def _process_response(response_class: Type[T], response: ClientResponse) -
         )
         raise ApiError(msg)
     else:
-        return response_class.model_validate(json_data)
+        if response_class == TimeMapKmlResponse:
+            return parse_kml_as(text)
+        else:
+            return response_class.model_validate(json_data)

@@ -16,6 +16,7 @@ dependencies = [
 	"typing-extensions",
 	"geojson-pydantic>=1.0.1",
 	"shapely",
+	"fastkml",
 	"dacite",
 	"certifi>=2021.5.30",
 	"aiohttp",
