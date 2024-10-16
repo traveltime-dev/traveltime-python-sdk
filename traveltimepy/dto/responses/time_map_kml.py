@@ -1,5 +1,5 @@
-from typing import List, Optional
-from fastkml import KML, Placemark, kml
+from typing import List
+from fastkml import Placemark, kml
 from pydantic import BaseModel
 
 # The stable version of fastkml is from 2021 and does not have types defined, nor
