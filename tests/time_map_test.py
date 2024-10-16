@@ -69,6 +69,22 @@ async def test_departures_wkt_no_holes(sdk: TravelTimeSdk):
 
 
 @pytest.mark.asyncio
+async def test_departures_kml(sdk: TravelTimeSdk):
+    response = await sdk.time_map_kml_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            Coordinates(lat=51.517609, lng=-0.138315),
+        ],
+        departure_time=datetime.now(),
+        travel_time=900,
+        transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+    )
+    assert len(response.results) == 2
+
+
+@pytest.mark.asyncio
 async def test_arrivals(sdk: TravelTimeSdk):
     results = await sdk.time_map_async(
         coordinates=[
@@ -119,6 +135,22 @@ async def test_arrivals_wkt(sdk: TravelTimeSdk):
 @pytest.mark.asyncio
 async def test_arrivals_wkt_no_holes(sdk: TravelTimeSdk):
     response = await sdk.time_map_wkt_no_holes_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            Coordinates(lat=51.517609, lng=-0.138315),
+        ],
+        arrival_time=datetime.now(),
+        travel_time=900,
+        transportation=Driving(),
+        search_range=Range(enabled=True, width=1800),
+        level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+    )
+    assert len(response.results) == 2
+
+
+@pytest.mark.asyncio
+async def test_arrivals_kml(sdk: TravelTimeSdk):
+    response = await sdk.time_map_kml_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),
