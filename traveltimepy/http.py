@@ -1,7 +1,7 @@
 import asyncio
 import json
 from dataclasses import dataclass
-from typing import TypeVar, Type, Dict, Optional
+from typing import TypeVar, Type, Dict, Optional, Union
 
 from aiohttp import ClientSession, ClientResponse, TCPConnector, ClientTimeout
 from pydantic import BaseModel
@@ -38,7 +38,7 @@ async def send_post_request_async(
     headers: Dict[str, str],
     request: TravelTimeRequest,
     rate_limit: AsyncLimiter,
-) -> T:
+) -> Union[T, TimeMapKmlResponse]:
     async with rate_limit:
         async with client.post(
             url=url, headers=headers, data=request.model_dump_json()
@@ -46,7 +46,7 @@ async def send_post_request_async(
             if response_class == TimeMapKmlResponse:
                 return await _process_kml_response(resp)
             else:
-                return await _process_response(response_class, resp)
+                return await _process_json_response(response_class, resp)
 
 
 async def send_post_async(
@@ -110,7 +110,7 @@ async def send_get_async(
                 headers=headers,
                 params=params,
             ) as resp:
-                return await _process_response(response_class, resp)
+                return await _process_json_response(response_class, resp)
 
 
 def _handle_non_ok_response(json_data):
@@ -124,7 +124,9 @@ def _handle_non_ok_response(json_data):
     raise ApiError(msg)
 
 
-async def _process_response(response_class: Type[T], response: ClientResponse) -> T:
+async def _process_json_response(
+    response_class: Type[T], response: ClientResponse
+) -> T:
     text = await response.text()
     json_data = json.loads(text)
     if response.status != 200:
