@@ -647,7 +647,7 @@ class TravelTimeSdk:
         )
         return resp
 
-    async def time_map_wkt_async(
+    async def time_map_kml_async(
         self,
         coordinates: List[Coordinates],
         transportation: Union[
@@ -667,7 +667,6 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
     ) -> TimeMapKmlResponse:
         time_info = get_time_info(departure_time, arrival_time)
-
         resp = await send_post_async(
             TimeMapKmlResponse,
             "time-map",

@@ -17,6 +17,7 @@ dependencies = [
 	"geojson-pydantic>=1.0.1",
 	"shapely",
 	"fastkml",
+	"lxml",
 	"dacite",
 	"certifi>=2021.5.30",
 	"aiohttp",
