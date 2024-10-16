@@ -66,3 +66,7 @@ exclude = "^(traveltimepy/proto/.*|build/.*|venv/.*)$"
 [[tool.mypy.overrides]]
 module = "traveltimepy.proto.*"
 follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "fastkml"
+ignore_missing_imports = true
