@@ -25,5 +25,5 @@ class TimeMapRequestKML(TravelTimeRequest[TimeMapKmlResponse]):
         ]
 
     def merge(self, responses: List[TimeMapKmlResponse]) -> TimeMapKmlResponse:
-        merged_features = flatten([response.placemarks for response in responses])
-        return TimeMapKmlResponse(placemarks=merged_features)
+        merged_features = flatten([response.results for response in responses])
+        return TimeMapKmlResponse(results=merged_features)
