@@ -35,7 +35,7 @@ class Location(BaseModel):
 
 
 class BasicPart(BaseModel):
-    id: str
+    id: int
     mode: str
     directions: str
     distance: int
@@ -45,7 +45,7 @@ class BasicPart(BaseModel):
 
 
 class RoadPart(BaseModel):
-    id: str
+    id: int
     mode: str
     directions: str
     distance: int
@@ -57,7 +57,7 @@ class RoadPart(BaseModel):
 
 
 class StartEndPart(BaseModel):
-    id: str
+    id: int
     mode: str
     directions: str
     distance: int
@@ -68,7 +68,7 @@ class StartEndPart(BaseModel):
 
 
 class PublicTransportPart(BaseModel):
-    id: str
+    id: int
     mode: str
     directions: str
     distance: int
@@ -135,9 +135,9 @@ class SnappingAcceptRoads(str, Enum):
 
 class Snapping(BaseModel):
     penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
-    accept_roads: Optional[SnappingAcceptRoads] = (
-        SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
-    )
+    accept_roads: Optional[
+        SnappingAcceptRoads
+    ] = SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
 
 
 class PropertyProto(int, Enum):
