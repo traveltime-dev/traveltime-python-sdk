@@ -3,6 +3,7 @@ from typing import Dict, Union, List, Optional
 
 from traveltimepy.dto.requests.distance_map import DistanceMapRequest
 from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
+from traveltimepy.dto.requests.time_map_kml import TimeMapRequestKML
 from traveltimepy.dto.requests.time_map_wkt import TimeMapWKTRequest
 from traveltimepy.errors import ApiError
 from traveltimepy.proto import TimeFilterFastRequest_pb2
@@ -492,6 +493,60 @@ def create_time_map_wkt(
         )
     elif isinstance(time_info, DepartureTime):
         return TimeMapWKTRequest(
+            departure_searches=[
+                time_map.DepartureSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+        )
+    else:
+        raise ApiError("arrival_time or departure_time should be specified")
+
+
+def create_time_map_kml(
+    coordinates: List[Coordinates],
+    transportation: Union[
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
+    ],
+    travel_time: int,
+    time_info: TimeInfo,
+    search_range: Optional[Range],
+    level_of_detail: Optional[LevelOfDetail],
+    snapping: Optional[Snapping] = None,
+) -> TimeMapRequestKML:
+    if isinstance(time_info, ArrivalTime):
+        return TimeMapRequestKML(
+            arrival_searches=[
+                time_map.ArrivalSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    level_of_detail=level_of_detail,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+        )
+    elif isinstance(time_info, DepartureTime):
+        return TimeMapRequestKML(
             departure_searches=[
                 time_map.DepartureSearch(
                     id=f"Search {ind}",

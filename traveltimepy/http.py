@@ -1,12 +1,16 @@
 import asyncio
 import json
 from dataclasses import dataclass
-from typing import TypeVar, Type, Dict, Optional
+from typing import TypeVar, Type, Dict, Optional, Union
 
 from aiohttp import ClientSession, ClientResponse, TCPConnector, ClientTimeout
 from pydantic import BaseModel
 from traveltimepy.dto.requests.request import TravelTimeRequest
 
+from traveltimepy.dto.responses.time_map_kml import (
+    TimeMapKmlResponse,
+    parse_kml_as,
+)
 from traveltimepy.dto.responses.error import ResponseError
 from traveltimepy.errors import ApiError
 from aiohttp_retry import RetryClient, ExponentialRetry
@@ -34,12 +38,15 @@ async def send_post_request_async(
     headers: Dict[str, str],
     request: TravelTimeRequest,
     rate_limit: AsyncLimiter,
-) -> T:
+) -> Union[T, TimeMapKmlResponse]:
     async with rate_limit:
         async with client.post(
             url=url, headers=headers, data=request.model_dump_json()
         ) as resp:
-            return await _process_response(response_class, resp)
+            if response_class == TimeMapKmlResponse:
+                return await _process_kml_response(resp)
+            else:
+                return await _process_json_response(response_class, resp)
 
 
 async def send_post_async(
@@ -103,20 +110,35 @@ async def send_get_async(
                 headers=headers,
                 params=params,
             ) as resp:
-                return await _process_response(response_class, resp)
+                return await _process_json_response(response_class, resp)
 
 
-async def _process_response(response_class: Type[T], response: ClientResponse) -> T:
+def _handle_non_ok_response(json_data):
+    parsed = ResponseError.model_validate_json(json.dumps(json_data))
+    msg = (
+        f"Travel Time API request failed: {parsed.description}\n"
+        f"Error code: {parsed.error_code}\n"
+        f"Additional info: {parsed.additional_info}\n"
+        f"<{parsed.documentation_link}>\n"
+    )
+    raise ApiError(msg)
+
+
+async def _process_json_response(
+    response_class: Type[T], response: ClientResponse
+) -> T:
     text = await response.text()
     json_data = json.loads(text)
     if response.status != 200:
-        parsed = ResponseError.model_validate_json(json.dumps(json_data))
-        msg = (
-            f"Travel Time API request failed: {parsed.description}\n"
-            f"Error code: {parsed.error_code}\n"
-            f"Additional info: {parsed.additional_info}\n"
-            f"<{parsed.documentation_link}>\n"
-        )
-        raise ApiError(msg)
+        return _handle_non_ok_response(json_data)
     else:
         return response_class.model_validate(json_data)
+
+
+async def _process_kml_response(response: ClientResponse) -> TimeMapKmlResponse:
+    text = await response.text()
+    if response.status != 200:
+        json_data = json.loads(text)
+        return _handle_non_ok_response(json_data)
+    else:
+        return parse_kml_as(text)
