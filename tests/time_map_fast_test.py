@@ -15,7 +15,7 @@ async def test_one_to_many(sdk: TravelTimeSdk):
         transportation=Transportation(type="public_transport"),
     )
 
-    assert len(results) > 0
+    assert len(results) == 2
 
 
 @pytest.mark.asyncio
@@ -30,7 +30,7 @@ async def test_many_to_one(sdk: TravelTimeSdk):
         one_to_many=False,
     )
 
-    assert len(results) > 0
+    assert len(results) == 2
 
 
 @pytest.mark.asyncio
@@ -44,7 +44,7 @@ async def test_one_to_many_geojson(sdk: TravelTimeSdk):
         transportation=Transportation(type="public_transport"),
     )
 
-    assert len(results) > 0
+    assert len(results) == 2
 
 
 @pytest.mark.asyncio
@@ -59,4 +59,4 @@ async def test_many_to_one_geojson(sdk: TravelTimeSdk):
         one_to_many=False,
     )
 
-    assert len(results) > 0
+    assert len(results) == 2
