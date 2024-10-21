@@ -47,3 +47,8 @@ class ProtoCountry(str, Enum):
     ITALY = "it"
     POLAND = "pl"
     SWEDEN = "se"
+    LIECHTENSTEIN = "li"
+    MEXICO = "mx"
+    SAUDI_ARABIA = "sa"
+    SERBIA = "rs"
+    SLOVENIA = "si"
