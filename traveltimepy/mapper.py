@@ -1,6 +1,7 @@
 import math
 from typing import Dict, Union, List, Optional
 
+from traveltimepy.dto.requests import time_map_fast
 from traveltimepy.dto.requests.distance_map import DistanceMapRequest
 from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
 from traveltimepy.dto.requests.time_map_wkt import TimeMapWKTRequest
@@ -36,6 +37,8 @@ from traveltimepy.dto.requests.postcodes import PostcodesRequest
 from traveltimepy.dto.requests.routes import RoutesRequest
 from traveltimepy.dto.requests.time_filter import TimeFilterRequest
 from traveltimepy.dto.requests.time_filter_fast import TimeFilterFastRequest
+from traveltimepy.dto.requests.time_map_fast import TimeMapFastRequest
+from traveltimepy.dto.requests.time_map_fast_geojson import TimeMapFastGeojsonRequest
 from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
 from traveltimepy.dto.requests.postcodes_zones import (
     PostcodesDistrictsRequest,
@@ -118,13 +121,105 @@ def create_time_filter(
         raise ApiError("arrival_time or departure_time should be specified")
 
 
+def create_time_map_fast(
+    coordinates: List[Coordinates],
+    transportation: time_map_fast.Transportation,
+    travel_time: int,
+    level_of_detail: Optional[LevelOfDetail],
+    snapping: Optional[Snapping],
+    one_to_many: bool = True,
+) -> TimeMapFastRequest:
+    if one_to_many:
+        return TimeMapFastRequest(
+            arrival_searches=time_map_fast.ArrivalSearches(
+                one_to_many=[
+                    time_map_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        level_of_detail=level_of_detail,
+                        snapping=snapping,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                many_to_one=[],
+            ),
+        )
+    else:
+        return TimeMapFastRequest(
+            arrival_searches=time_map_fast.ArrivalSearches(
+                many_to_one=[
+                    time_map_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        level_of_detail=level_of_detail,
+                        snapping=snapping,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                one_to_many=[],
+            ),
+        )
+
+
+def create_time_map_fast_geojson(
+    coordinates: List[Coordinates],
+    transportation: time_map_fast.Transportation,
+    travel_time: int,
+    level_of_detail: Optional[LevelOfDetail],
+    snapping: Optional[Snapping],
+    one_to_many: bool = True,
+) -> TimeMapFastGeojsonRequest:
+    if one_to_many:
+        return TimeMapFastGeojsonRequest(
+            arrival_searches=time_map_fast.ArrivalSearches(
+                one_to_many=[
+                    time_map_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        level_of_detail=level_of_detail,
+                        snapping=snapping,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                many_to_one=[],
+            ),
+        )
+    else:
+        return TimeMapFastGeojsonRequest(
+            arrival_searches=time_map_fast.ArrivalSearches(
+                many_to_one=[
+                    time_map_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        level_of_detail=level_of_detail,
+                        snapping=snapping,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                one_to_many=[],
+            ),
+        )
+
+
 def create_time_filter_fast(
     locations: List[Location],
     search_ids: Dict[str, List[str]],
     transportation: Transportation,
     travel_time: int = 3600,
     properties: Optional[List[Property]] = None,
-    one_to_many: bool = False,
+    one_to_many: bool = True,
     snapping: Optional[Snapping] = None,
 ) -> TimeFilterFastRequest:
     if properties is None:
@@ -140,7 +235,7 @@ def create_time_filter_fast(
                         arrival_location_ids=arrival_ids,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",
+                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
                         properties=properties,
                         snapping=snapping,
                     )
@@ -160,7 +255,7 @@ def create_time_filter_fast(
                         departure_location_ids=departure_ids,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",
+                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
                         properties=properties,
                         snapping=snapping,
                     )

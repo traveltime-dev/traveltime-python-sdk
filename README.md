@@ -280,6 +280,76 @@ async def main():
 asyncio.run(main())
 ```
 
+### [Time Map (Fast)](https://docs.traveltime.com/api/reference/isochrones-fast)
+
+A very fast version of `time_map()`. However, the request parameters are much more limited.
+
+#### Takes:
+
+* coordinates: List[Coordinates] - Isochrones coordinates.
+* [transportation]: Transportation - Transportation mode and related parameters.
+* travel_time: int - Maximum journey time (in seconds). Maximum value is 10800. Default value is 3600.
+* one_to_many: boolean - returns the reachable area for journeys arriving at the chosen arrival location if false,
+returns the reachable area for journeys departing from the chosen departure location if true.
+* [level_of_detail](#level-of-detail): LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
+* [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
+
+### JSON response
+
+#### Returns:
+
+* results: List[TimeMapResult] - The list of isochrone shapes.
+
+#### Example:
+
+```python
+import asyncio
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.requests.time_map_fast import Transportation
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.time_map_fast_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        transportation=Transportation(type="driving+ferry"),
+        travel_time=900
+    )
+
+    print(results)
+
+asyncio.run(main())
+```
+
+### GEOJSON response
+
+#### Returns:
+
+* results: FeatureCollection - The list of Features.
+
+#### Example:
+
+```python
+import asyncio
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.requests.time_map_fast import Transportation
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.time_map_fast_geojson_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        transportation=Transportation(type="driving+ferry"),
+        travel_time=900
+    )
+
+    print(results)
+
+asyncio.run(main())
+```
+
 ### [Distance Map](https://docs.traveltime.com/api/reference/distance-map)
 
 Given origin coordinates, find shapes of zones reachable within corresponding travel distance.
@@ -394,7 +464,7 @@ A very fast version of `time_filter()`. However, the request parameters are much
 * locations: List[Locations] - All locations. Location ids must be unique.
 * search_ids: Dict[str, List[str]] - Searches from a target location to destinations. You can define up to 100,000
   destinations
-* [transportation](#transportation): Union - Transportation mode and related parameters.
+* [transportation]: Transportation - Transportation mode and related parameters.
 * travel_time: int - Maximum journey time (in seconds). Maximum value is 10800. Default value is 3600.
 * properties: List[Property] - Properties to be returned about the points. Default value is travel_time.
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
