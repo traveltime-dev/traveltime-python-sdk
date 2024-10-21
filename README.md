@@ -325,7 +325,7 @@ asyncio.run(main())
 
 #### Returns:
 
-* results: List[TimeMapGeojsonResult] - The list of Features.
+* results: FeatureCollection - The list of Features.
 
 #### Example:
 
