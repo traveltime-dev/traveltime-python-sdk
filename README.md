@@ -291,6 +291,7 @@ A very fast version of `time_map()`. However, the request parameters are much mo
 * travel_time: int - Maximum journey time (in seconds). Maximum value is 10800. Default value is 3600.
 * one_to_many: boolean - returns the reachable area for journeys arriving at the chosen arrival location if false,
 returns the reachable area for journeys departing from the chosen departure location if true.
+* [level_of_detail](#level-of-detail): LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 ### JSON response
