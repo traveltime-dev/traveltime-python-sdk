@@ -14,6 +14,7 @@ from traveltimepy.dto.common import (
     ArrivalTime,
     Snapping,
 )
+from traveltimepy.dto.requests import time_map_fast
 from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResponse,
 )
@@ -68,6 +69,8 @@ from traveltimepy.mapper import (
     create_proto_request,
     create_time_map,
     create_intersection,
+    create_time_map_fast,
+    create_time_map_fast_geojson,
     create_union,
     create_time_map_geojson,
     create_time_map_wkt,
@@ -214,6 +217,52 @@ class TravelTimeSdk:
             SupportedLocationsRequest(locations=locations),
             self._sdk_params,
         )
+
+    async def time_map_fast_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: time_map_fast.Transportation,
+        travel_time: int = 3600,
+        one_to_many: bool = True,
+        snapping: Optional[Snapping] = None,
+    ) -> List[TimeMapResult]:
+        resp = await send_post_async(
+            TimeMapResponse,
+            "time-map/fast",
+            self._headers(AcceptType.JSON),
+            create_time_map_fast(
+                coordinates,
+                transportation,
+                travel_time,
+                one_to_many,
+                snapping,
+            ),
+            self._sdk_params,
+        )
+        return resp.results
+
+    async def time_map_fast_geojson_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: time_map_fast.Transportation,
+        travel_time: int = 3600,
+        one_to_many: bool = True,
+        snapping: Optional[Snapping] = None,
+    ) -> FeatureCollection:
+        resp = await send_post_async(
+            FeatureCollection,
+            "time-map/fast",
+            self._headers(AcceptType.GEO_JSON),
+            create_time_map_fast_geojson(
+                coordinates,
+                transportation,
+                travel_time,
+                one_to_many,
+                snapping,
+            ),
+            self._sdk_params,
+        )
+        return resp
 
     async def time_filter_fast_async(
         self,
