@@ -139,7 +139,7 @@ def create_time_map_fast(
                         transportation=transportation,
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
-                        level_of_detail = level_of_detail,
+                        level_of_detail=level_of_detail,
                         snapping=snapping,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
@@ -157,7 +157,7 @@ def create_time_map_fast(
                         transportation=transportation,
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
-                        level_of_detail = level_of_detail,
+                        level_of_detail=level_of_detail,
                         snapping=snapping,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
@@ -185,7 +185,7 @@ def create_time_map_fast_geojson(
                         transportation=transportation,
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
-                        level_of_detail = level_of_detail,
+                        level_of_detail=level_of_detail,
                         snapping=snapping,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
@@ -203,7 +203,7 @@ def create_time_map_fast_geojson(
                         transportation=transportation,
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
-                        level_of_detail = level_of_detail,
+                        level_of_detail=level_of_detail,
                         snapping=snapping,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
