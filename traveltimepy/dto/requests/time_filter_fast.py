@@ -12,6 +12,9 @@ from traveltimepy.itertools import split, flatten
 class Transportation(BaseModel):
     type: Literal[
         "public_transport",
+        "driving",
+        "cycling",
+        "walking",
         "walking+ferry",
         "cycling+ferry",
         "driving+ferry",

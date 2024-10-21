@@ -16,7 +16,7 @@ async def generate_matrix(size: int):
     return await sdk.time_filter_fast_async(
         locations=locations,
         search_ids=dict(search_ids),
-        transportation=Transportation(type="driving+ferry"),
+        transportation=Transportation(type="driving"),
     )
 
 
