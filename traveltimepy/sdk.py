@@ -224,6 +224,7 @@ class TravelTimeSdk:
         transportation: time_map_fast.Transportation,
         travel_time: int = 3600,
         one_to_many: bool = True,
+        level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
     ) -> List[TimeMapResult]:
         resp = await send_post_async(
@@ -234,8 +235,9 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                one_to_many,
+                level_of_detail,
                 snapping,
+                one_to_many,
             ),
             self._sdk_params,
         )
@@ -247,6 +249,7 @@ class TravelTimeSdk:
         transportation: time_map_fast.Transportation,
         travel_time: int = 3600,
         one_to_many: bool = True,
+        level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
     ) -> FeatureCollection:
         resp = await send_post_async(
@@ -257,8 +260,9 @@ class TravelTimeSdk:
                 coordinates,
                 transportation,
                 travel_time,
-                one_to_many,
+                level_of_detail,
                 snapping,
+                one_to_many,
             ),
             self._sdk_params,
         )

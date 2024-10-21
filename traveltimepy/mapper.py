@@ -124,9 +124,10 @@ def create_time_filter(
 def create_time_map_fast(
     coordinates: List[Coordinates],
     transportation: time_map_fast.Transportation,
-    travel_time: int = 3600,
-    one_to_many: bool = False,
-    snapping: Optional[Snapping] = None,
+    travel_time: int,
+    level_of_detail: Optional[LevelOfDetail],
+    snapping: Optional[Snapping],
+    one_to_many: bool = True,
 ) -> TimeMapFastRequest:
     if one_to_many:
         return TimeMapFastRequest(
@@ -138,6 +139,7 @@ def create_time_map_fast(
                         transportation=transportation,
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        level_of_detail = level_of_detail,
                         snapping=snapping,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
@@ -155,6 +157,7 @@ def create_time_map_fast(
                         transportation=transportation,
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        level_of_detail = level_of_detail,
                         snapping=snapping,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
@@ -167,9 +170,10 @@ def create_time_map_fast(
 def create_time_map_fast_geojson(
     coordinates: List[Coordinates],
     transportation: time_map_fast.Transportation,
-    travel_time: int = 3600,
-    one_to_many: bool = False,
-    snapping: Optional[Snapping] = None,
+    travel_time: int,
+    level_of_detail: Optional[LevelOfDetail],
+    snapping: Optional[Snapping],
+    one_to_many: bool = True,
 ) -> TimeMapFastGeojsonRequest:
     if one_to_many:
         return TimeMapFastGeojsonRequest(
@@ -181,6 +185,7 @@ def create_time_map_fast_geojson(
                         transportation=transportation,
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        level_of_detail = level_of_detail,
                         snapping=snapping,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
@@ -198,6 +203,7 @@ def create_time_map_fast_geojson(
                         transportation=transportation,
                         travel_time=travel_time,
                         arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        level_of_detail = level_of_detail,
                         snapping=snapping,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
@@ -213,7 +219,7 @@ def create_time_filter_fast(
     transportation: Transportation,
     travel_time: int = 3600,
     properties: Optional[List[Property]] = None,
-    one_to_many: bool = False,
+    one_to_many: bool = True,
     snapping: Optional[Snapping] = None,
 ) -> TimeFilterFastRequest:
     if properties is None:
