@@ -1,5 +1,4 @@
 from typing import List, Optional
-from typing_extensions import Literal
 
 from pydantic import BaseModel
 
@@ -11,16 +10,7 @@ from traveltimepy.dto.common import (
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
-
-
-class Transportation(BaseModel):
-    type: Literal[
-        "public_transport",
-        "walking+ferry",
-        "cycling+ferry",
-        "driving+ferry",
-        "driving+public_transport",
-    ]
+from traveltimepy.dto.requests.time_filter_fast import Transportation
 
 
 class Search(BaseModel):
