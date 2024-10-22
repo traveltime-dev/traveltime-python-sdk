@@ -695,7 +695,8 @@ def create_intersection(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snapping: Optional[Snapping] = None,
+    snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -709,6 +710,7 @@ def create_intersection(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -733,6 +735,7 @@ def create_intersection(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -764,7 +767,8 @@ def create_union(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snapping: Optional[Snapping] = None,
+    snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -778,6 +782,7 @@ def create_union(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -802,6 +807,7 @@ def create_union(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
