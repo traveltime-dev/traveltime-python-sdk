@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from traveltimepy.dto.common import (
     Coordinates,
     LevelOfDetail,
+    PolygonsFilter,
     Snapping,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
@@ -21,6 +22,7 @@ class Search(BaseModel):
     arrival_time_period: str
     level_of_detail: Optional[LevelOfDetail] = None
     snapping: Optional[Snapping] = None
+    polygons_filter: Optional[PolygonsFilter] = None
 
 
 class ArrivalSearches(BaseModel):

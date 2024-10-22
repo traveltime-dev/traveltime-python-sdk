@@ -4,6 +4,7 @@ from typing import List, Optional, Dict, Union
 from traveltimepy.dto.common import (
     Location,
     Coordinates,
+    PolygonsFilter,
     Rectangle,
     Property,
     FullRange,
@@ -226,6 +227,7 @@ class TravelTimeSdk:
         one_to_many: bool = True,
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
     ) -> List[TimeMapResult]:
         resp = await send_post_async(
             TimeMapResponse,
@@ -238,6 +240,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 one_to_many,
+                polygons_filter,
             ),
             self._sdk_params,
         )
@@ -564,6 +567,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -579,6 +583,7 @@ class TravelTimeSdk:
                 search_range,
                 level_of_detail,
                 snapping,
+                polygons_filter,
             ),
             self._sdk_params,
         )
@@ -602,6 +607,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
     ) -> FeatureCollection:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -617,6 +623,7 @@ class TravelTimeSdk:
                 search_range,
                 level_of_detail,
                 snapping,
+                polygons_filter,
             ),
             self._sdk_params,
         )
@@ -640,6 +647,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -655,6 +663,7 @@ class TravelTimeSdk:
                 search_range,
                 level_of_detail,
                 snapping,
+                polygons_filter,
             ),
             self._sdk_params,
         )
@@ -678,6 +687,7 @@ class TravelTimeSdk:
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -693,6 +703,7 @@ class TravelTimeSdk:
                 search_range,
                 level_of_detail,
                 snapping,
+                polygons_filter,
             ),
             self._sdk_params,
         )
@@ -715,6 +726,7 @@ class TravelTimeSdk:
         travel_distance: int = 900,
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
         resp = await send_post_async(
@@ -728,6 +740,7 @@ class TravelTimeSdk:
                 time_info,
                 level_of_detail,
                 snapping,
+                polygons_filter,
             ),
             self._sdk_params,
         )
