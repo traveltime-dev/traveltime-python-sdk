@@ -495,6 +495,8 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
+        snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -509,6 +511,8 @@ class TravelTimeSdk:
                 time_info,
                 search_range,
                 level_of_detail,
+                snapping,
+                polygons_filter,
             ),
             self._sdk_params,
         )
@@ -531,6 +535,8 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         level_of_detail: Optional[LevelOfDetail] = None,
+        snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -545,6 +551,8 @@ class TravelTimeSdk:
                 time_info,
                 search_range,
                 level_of_detail,
+                snapping,
+                polygons_filter,
             ),
             self._sdk_params,
         )
