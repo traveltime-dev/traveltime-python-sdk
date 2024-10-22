@@ -140,7 +140,7 @@ def create_time_map_fast(
                         coords=cur_coordinates,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
@@ -159,7 +159,7 @@ def create_time_map_fast(
                         coords=cur_coordinates,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
@@ -189,7 +189,7 @@ def create_time_map_fast_geojson(
                         coords=cur_coordinates,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
@@ -208,7 +208,7 @@ def create_time_map_fast_geojson(
                         coords=cur_coordinates,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
@@ -242,7 +242,7 @@ def create_time_filter_fast(
                         arrival_location_ids=arrival_ids,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         properties=properties,
                         snapping=snapping,
                     )
@@ -262,7 +262,7 @@ def create_time_filter_fast(
                         departure_location_ids=departure_ids,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         properties=properties,
                         snapping=snapping,
                     )
