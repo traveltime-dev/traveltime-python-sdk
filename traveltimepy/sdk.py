@@ -239,8 +239,8 @@ class TravelTimeSdk:
                 travel_time,
                 level_of_detail,
                 snapping,
-                one_to_many,
                 polygons_filter,
+                one_to_many,
             ),
             self._sdk_params,
         )
@@ -254,6 +254,7 @@ class TravelTimeSdk:
         one_to_many: bool = True,
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
     ) -> FeatureCollection:
         resp = await send_post_async(
             FeatureCollection,
@@ -265,6 +266,7 @@ class TravelTimeSdk:
                 travel_time,
                 level_of_detail,
                 snapping,
+                polygons_filter,
                 one_to_many,
             ),
             self._sdk_params,
