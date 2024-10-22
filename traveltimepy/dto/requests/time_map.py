@@ -78,7 +78,6 @@ class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
     arrival_searches: List[ArrivalSearch]
     unions: List[Union]
     intersections: List[Intersection]
-    snapping: Optional[Snapping] = None
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
