@@ -497,6 +497,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        remove_water_bodies: Optional[bool] = None,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -513,6 +514,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -537,6 +539,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        remove_water_bodies: Optional[bool] = None,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -553,6 +556,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -578,6 +582,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        remove_water_bodies: Optional[bool] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -594,6 +599,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -618,6 +624,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        remove_water_bodies: Optional[bool] = None,
     ) -> FeatureCollection:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -634,6 +641,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -658,6 +666,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        remove_water_bodies: Optional[bool] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -674,6 +683,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -698,6 +708,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        remove_water_bodies: Optional[bool] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -714,6 +725,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                remove_water_bodies,
             ),
             self._sdk_params,
         )
