@@ -12,6 +12,7 @@ from traveltimepy.dto.common import (
     Location,
     Coordinates,
     FullRange,
+    PolygonsFilter,
     Property,
     Range,
     LevelOfDetail,
@@ -127,6 +128,7 @@ def create_time_map_fast(
     travel_time: int,
     level_of_detail: Optional[LevelOfDetail],
     snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
     one_to_many: bool = True,
 ) -> TimeMapFastRequest:
     if one_to_many:
@@ -138,9 +140,10 @@ def create_time_map_fast(
                         coords=cur_coordinates,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         level_of_detail=level_of_detail,
                         snapping=snapping,
+                        polygons_filter=polygons_filter,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -156,9 +159,10 @@ def create_time_map_fast(
                         coords=cur_coordinates,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         level_of_detail=level_of_detail,
                         snapping=snapping,
+                        polygons_filter=polygons_filter,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -173,6 +177,7 @@ def create_time_map_fast_geojson(
     travel_time: int,
     level_of_detail: Optional[LevelOfDetail],
     snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
     one_to_many: bool = True,
 ) -> TimeMapFastGeojsonRequest:
     if one_to_many:
@@ -184,9 +189,10 @@ def create_time_map_fast_geojson(
                         coords=cur_coordinates,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         level_of_detail=level_of_detail,
                         snapping=snapping,
+                        polygons_filter=polygons_filter,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -202,9 +208,10 @@ def create_time_map_fast_geojson(
                         coords=cur_coordinates,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         level_of_detail=level_of_detail,
                         snapping=snapping,
+                        polygons_filter=polygons_filter,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -235,7 +242,7 @@ def create_time_filter_fast(
                         arrival_location_ids=arrival_ids,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         properties=properties,
                         snapping=snapping,
                     )
@@ -255,7 +262,7 @@ def create_time_filter_fast(
                         departure_location_ids=departure_ids,
                         transportation=transportation,
                         travel_time=travel_time,
-                        arrival_time_period="weekday_morning",  # TODO: make customizable with enum / literal
+                        arrival_time_period="weekday_morning",
                         properties=properties,
                         snapping=snapping,
                     )
@@ -453,6 +460,7 @@ def create_time_map(
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
     snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -466,6 +474,7 @@ def create_time_map(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -485,6 +494,7 @@ def create_time_map(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -511,7 +521,8 @@ def create_time_map_geojson(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snapping: Optional[Snapping] = None,
+    snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
 ) -> TimeMapRequestGeojson:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequestGeojson(
@@ -525,6 +536,7 @@ def create_time_map_geojson(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -542,6 +554,7 @@ def create_time_map_geojson(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -566,7 +579,8 @@ def create_time_map_wkt(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snapping: Optional[Snapping] = None,
+    snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
 ) -> TimeMapWKTRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapWKTRequest(
@@ -580,6 +594,7 @@ def create_time_map_wkt(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -596,6 +611,7 @@ def create_time_map_wkt(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -620,6 +636,7 @@ def create_distance_map(
     time_info: TimeInfo,
     level_of_detail: Optional[LevelOfDetail],
     snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
 ) -> DistanceMapRequest:
     if isinstance(time_info, ArrivalTime):
         return DistanceMapRequest(
@@ -632,6 +649,7 @@ def create_distance_map(
                     transportation=transportation,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -650,6 +668,7 @@ def create_distance_map(
                     transportation=transportation,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -676,7 +695,8 @@ def create_intersection(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snapping: Optional[Snapping] = None,
+    snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -690,6 +710,7 @@ def create_intersection(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -714,6 +735,7 @@ def create_intersection(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -745,7 +767,8 @@ def create_union(
     time_info: TimeInfo,
     search_range: Optional[Range],
     level_of_detail: Optional[LevelOfDetail],
-    snapping: Optional[Snapping] = None,
+    snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -759,6 +782,7 @@ def create_union(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -783,6 +807,7 @@ def create_union(
                     range=search_range,
                     level_of_detail=level_of_detail,
                     snapping=snapping,
+                    polygons_filter=polygons_filter,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],

@@ -161,6 +161,10 @@ class LevelOfDetail(BaseModel):
     square_size: Optional[int] = None
 
 
+class PolygonsFilter(BaseModel):
+    limit: int
+
+
 class TimeInfo:
     def __init__(self, time_value: datetime):
         self.value = time_value
