@@ -72,6 +72,7 @@ from traveltimepy.mapper import (
     create_intersection,
     create_time_map_fast,
     create_time_map_fast_geojson,
+    create_time_map_fast_wkt,
     create_union,
     create_time_map_geojson,
     create_time_map_wkt,
@@ -261,6 +262,60 @@ class TravelTimeSdk:
             "time-map/fast",
             self._headers(AcceptType.GEO_JSON),
             create_time_map_fast_geojson(
+                coordinates,
+                transportation,
+                travel_time,
+                level_of_detail,
+                snapping,
+                polygons_filter,
+                one_to_many,
+            ),
+            self._sdk_params,
+        )
+        return resp
+
+    async def time_map_fast_wkt_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: time_map_fast.Transportation,
+        travel_time: int = 3600,
+        one_to_many: bool = True,
+        level_of_detail: Optional[LevelOfDetail] = None,
+        snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
+    ) -> TimeMapWKTResponse:
+        resp = await send_post_async(
+            TimeMapWKTResponse,
+            "time-map/fast",
+            self._headers(AcceptType.WKT),
+            create_time_map_fast_wkt(
+                coordinates,
+                transportation,
+                travel_time,
+                level_of_detail,
+                snapping,
+                polygons_filter,
+                one_to_many,
+            ),
+            self._sdk_params,
+        )
+        return resp
+
+    async def time_map_fast_wkt_no_holes_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: time_map_fast.Transportation,
+        travel_time: int = 3600,
+        one_to_many: bool = True,
+        level_of_detail: Optional[LevelOfDetail] = None,
+        snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
+    ) -> TimeMapWKTResponse:
+        resp = await send_post_async(
+            TimeMapWKTResponse,
+            "time-map/fast",
+            self._headers(AcceptType.WKT_NO_HOLES),
+            create_time_map_fast_wkt(
                 coordinates,
                 transportation,
                 travel_time,

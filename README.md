@@ -350,6 +350,62 @@ async def main():
 asyncio.run(main())
 ```
 
+### WKT response
+
+#### Returns:
+
+* results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes.
+
+#### Example:
+
+```python
+import asyncio
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.requests.time_map_fast import Transportation
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.time_map_fast_wkt_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        transportation=Transportation(type="driving+ferry"),
+        travel_time=900
+    )
+
+    print(results)
+
+asyncio.run(main())
+```
+
+### WKT_NO_HOLES response
+
+#### Returns:
+
+* results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes (no holes).
+
+#### Example:
+
+```python
+import asyncio
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.requests.time_map_fast import Transportation
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.time_map_fast_wkt_no_holes_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        transportation=Transportation(type="driving+ferry"),
+        travel_time=900
+    )
+
+    print(results)
+
+asyncio.run(main())
+```
+
 ### [Distance Map](https://docs.traveltime.com/api/reference/distance-map)
 
 Given origin coordinates, find shapes of zones reachable within corresponding travel distance.
