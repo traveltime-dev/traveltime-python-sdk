@@ -70,6 +70,8 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 * [level_of_detail](#level-of-detail): LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
+* remove_water_bodies: bool - if set to true (default) - returned shape will not cover large nearby water bodies.
+False - returned shape may cover nearby water bodies like large lakes, wide rivers and seas.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 ### JSON response
