@@ -90,6 +90,7 @@ async def test_many_to_one_wkt(sdk: TravelTimeSdk):
 
     assert len(response.results) == 2
 
+
 @pytest.mark.asyncio
 async def test_one_to_many_wkt_no_holes(sdk: TravelTimeSdk):
     response = await sdk.time_map_fast_wkt_no_holes_async(
