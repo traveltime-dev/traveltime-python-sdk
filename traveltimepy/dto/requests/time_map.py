@@ -41,6 +41,7 @@ class DepartureSearch(BaseModel):
     level_of_detail: Optional[LevelOfDetail] = None
     snapping: Optional[Snapping]
     polygons_filter: Optional[PolygonsFilter]
+    remove_water_bodies: Optional[bool]
 
 
 class ArrivalSearch(BaseModel):
@@ -61,6 +62,7 @@ class ArrivalSearch(BaseModel):
     level_of_detail: Optional[LevelOfDetail] = None
     snapping: Optional[Snapping] = None
     polygons_filter: Optional[PolygonsFilter]
+    remove_water_bodies: Optional[bool]
 
 
 class Intersection(BaseModel):
