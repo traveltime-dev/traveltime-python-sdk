@@ -40,6 +40,7 @@ from traveltimepy.dto.requests.time_filter import TimeFilterRequest
 from traveltimepy.dto.requests.time_filter_fast import TimeFilterFastRequest
 from traveltimepy.dto.requests.time_map_fast import TimeMapFastRequest
 from traveltimepy.dto.requests.time_map_fast_geojson import TimeMapFastGeojsonRequest
+from traveltimepy.dto.requests.time_map_fast_wkt import TimeMapFastWKTRequest
 from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
 from traveltimepy.dto.requests.postcodes_zones import (
     PostcodesDistrictsRequest,
@@ -201,6 +202,55 @@ def create_time_map_fast_geojson(
         )
     else:
         return TimeMapFastGeojsonRequest(
+            arrival_searches=time_map_fast.ArrivalSearches(
+                many_to_one=[
+                    time_map_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",
+                        level_of_detail=level_of_detail,
+                        snapping=snapping,
+                        polygons_filter=polygons_filter,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                one_to_many=[],
+            ),
+        )
+
+
+def create_time_map_fast_wkt(
+    coordinates: List[Coordinates],
+    transportation: time_map_fast.Transportation,
+    travel_time: int,
+    level_of_detail: Optional[LevelOfDetail],
+    snapping: Optional[Snapping],
+    polygons_filter: Optional[PolygonsFilter],
+    one_to_many: bool = True,
+) -> TimeMapFastWKTRequest:
+    if one_to_many:
+        return TimeMapFastWKTRequest(
+            arrival_searches=time_map_fast.ArrivalSearches(
+                one_to_many=[
+                    time_map_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",
+                        level_of_detail=level_of_detail,
+                        snapping=snapping,
+                        polygons_filter=polygons_filter,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                many_to_one=[],
+            ),
+        )
+    else:
+        return TimeMapFastWKTRequest(
             arrival_searches=time_map_fast.ArrivalSearches(
                 many_to_one=[
                     time_map_fast.Search(

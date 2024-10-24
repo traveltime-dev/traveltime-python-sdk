@@ -70,6 +70,8 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 * [level_of_detail](#level-of-detail): LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
+* remove_water_bodies: bool - if set to true (default) - returned shape will not cover large nearby water bodies.
+False - returned shape may cover nearby water bodies like large lakes, wide rivers and seas.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
 ### JSON response
@@ -340,6 +342,62 @@ async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
 
     results = await sdk.time_map_fast_geojson_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        transportation=Transportation(type="driving+ferry"),
+        travel_time=900
+    )
+
+    print(results)
+
+asyncio.run(main())
+```
+
+### WKT response
+
+#### Returns:
+
+* results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes.
+
+#### Example:
+
+```python
+import asyncio
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.requests.time_map_fast import Transportation
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.time_map_fast_wkt_async(
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        transportation=Transportation(type="driving+ferry"),
+        travel_time=900
+    )
+
+    print(results)
+
+asyncio.run(main())
+```
+
+### WKT_NO_HOLES response
+
+#### Returns:
+
+* results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes (no holes).
+
+#### Example:
+
+```python
+import asyncio
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.requests.time_map_fast import Transportation
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.time_map_fast_wkt_no_holes_async(
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
         transportation=Transportation(type="driving+ferry"),
         travel_time=900
