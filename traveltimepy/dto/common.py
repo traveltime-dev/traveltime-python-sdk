@@ -135,10 +135,9 @@ class SnappingAcceptRoads(str, Enum):
 
 class Snapping(BaseModel):
     penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
-    accept_roads: Optional[
-        SnappingAcceptRoads
-    ] = SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
-
+    accept_roads: Optional[SnappingAcceptRoads] = (
+        SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
+    )
 
 class PropertyProto(int, Enum):
     DISTANCE = 1
