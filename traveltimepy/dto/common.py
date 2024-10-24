@@ -139,6 +139,7 @@ class Snapping(BaseModel):
         SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
     )
 
+
 class PropertyProto(int, Enum):
     DISTANCE = 1
 
