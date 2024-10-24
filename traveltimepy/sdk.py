@@ -272,8 +272,8 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
-                one_to_many,
                 render_mode,
+                one_to_many,
             ),
             self._sdk_params,
         )
