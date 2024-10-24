@@ -17,7 +17,7 @@ from traveltimepy import (
     CyclingPublicTransport,
     LevelOfDetail,
 )
-from traveltimepy.dto.common import PolygonsFilter, Snapping
+from traveltimepy.dto.common import PolygonsFilter, RenderMode, Snapping
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
@@ -42,6 +42,7 @@ class DepartureSearch(BaseModel):
     snapping: Optional[Snapping]
     polygons_filter: Optional[PolygonsFilter]
     remove_water_bodies: Optional[bool]
+    render_mode: Optional[RenderMode]
 
 
 class ArrivalSearch(BaseModel):
@@ -63,6 +64,7 @@ class ArrivalSearch(BaseModel):
     snapping: Optional[Snapping] = None
     polygons_filter: Optional[PolygonsFilter]
     remove_water_bodies: Optional[bool]
+    render_mode: Optional[RenderMode]
 
 
 class Intersection(BaseModel):

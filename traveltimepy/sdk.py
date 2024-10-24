@@ -13,6 +13,7 @@ from traveltimepy.dto.common import (
     PropertyProto,
     DepartureTime,
     ArrivalTime,
+    RenderMode,
     Snapping,
 )
 from traveltimepy.dto.requests import time_map_fast
@@ -229,6 +230,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> List[TimeMapResult]:
         resp = await send_post_async(
             TimeMapResponse,
@@ -241,6 +243,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                render_mode,
                 one_to_many,
             ),
             self._sdk_params,
@@ -256,6 +259,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> FeatureCollection:
         resp = await send_post_async(
             FeatureCollection,
@@ -269,6 +273,7 @@ class TravelTimeSdk:
                 snapping,
                 polygons_filter,
                 one_to_many,
+                render_mode,
             ),
             self._sdk_params,
         )
@@ -283,6 +288,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> TimeMapWKTResponse:
         resp = await send_post_async(
             TimeMapWKTResponse,
@@ -295,6 +301,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                render_mode,
                 one_to_many,
             ),
             self._sdk_params,
@@ -310,6 +317,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> TimeMapWKTResponse:
         resp = await send_post_async(
             TimeMapWKTResponse,
@@ -322,6 +330,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                render_mode,
                 one_to_many,
             ),
             self._sdk_params,
@@ -553,6 +562,7 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -570,6 +580,7 @@ class TravelTimeSdk:
                 snapping,
                 polygons_filter,
                 remove_water_bodies,
+                render_mode,
             ),
             self._sdk_params,
         )
@@ -595,6 +606,7 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -612,6 +624,7 @@ class TravelTimeSdk:
                 snapping,
                 polygons_filter,
                 remove_water_bodies,
+                render_mode,
             ),
             self._sdk_params,
         )
@@ -638,6 +651,7 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -655,6 +669,7 @@ class TravelTimeSdk:
                 snapping,
                 polygons_filter,
                 remove_water_bodies,
+                render_mode,
             ),
             self._sdk_params,
         )
@@ -680,6 +695,7 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> FeatureCollection:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -697,6 +713,7 @@ class TravelTimeSdk:
                 snapping,
                 polygons_filter,
                 remove_water_bodies,
+                render_mode,
             ),
             self._sdk_params,
         )
@@ -722,6 +739,7 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -739,6 +757,7 @@ class TravelTimeSdk:
                 snapping,
                 polygons_filter,
                 remove_water_bodies,
+                render_mode,
             ),
             self._sdk_params,
         )
@@ -764,6 +783,7 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
+        render_mode: Optional[RenderMode] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -781,6 +801,7 @@ class TravelTimeSdk:
                 snapping,
                 polygons_filter,
                 remove_water_bodies,
+                render_mode,
             ),
             self._sdk_params,
         )

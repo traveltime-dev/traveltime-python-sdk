@@ -135,9 +135,9 @@ class SnappingAcceptRoads(str, Enum):
 
 class Snapping(BaseModel):
     penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
-    accept_roads: Optional[SnappingAcceptRoads] = (
-        SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
-    )
+    accept_roads: Optional[
+        SnappingAcceptRoads
+    ] = SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
 
 
 class PropertyProto(int, Enum):
@@ -163,6 +163,11 @@ class LevelOfDetail(BaseModel):
 
 class PolygonsFilter(BaseModel):
     limit: int
+
+
+class RenderMode(str, Enum):
+    APPROXIMATE_TIME_FILTER = "approximate_time_filter"
+    ROAD_BUFFERING = "road_buffering"
 
 
 class TimeInfo:
