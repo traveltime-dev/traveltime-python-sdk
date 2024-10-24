@@ -6,6 +6,7 @@ from traveltimepy.dto.common import (
     Coordinates,
     LevelOfDetail,
     PolygonsFilter,
+    RenderMode,
     Snapping,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
@@ -20,9 +21,10 @@ class Search(BaseModel):
     transportation: Transportation
     travel_time: int
     arrival_time_period: str
-    level_of_detail: Optional[LevelOfDetail] = None
+    level_of_detail: Optional[LevelOfDetail]
     snapping: Optional[Snapping] = None
-    polygons_filter: Optional[PolygonsFilter] = None
+    polygons_filter: Optional[PolygonsFilter]
+    render_mode: Optional[RenderMode]
 
 
 class ArrivalSearches(BaseModel):

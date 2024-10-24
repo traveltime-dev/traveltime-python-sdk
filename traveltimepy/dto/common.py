@@ -165,6 +165,11 @@ class PolygonsFilter(BaseModel):
     limit: int
 
 
+class RenderMode(str, Enum):
+    APPROXIMATE_TIME_FILTER = "approximate_time_filter"
+    ROAD_BUFFERING = "road_buffering"
+
+
 class TimeInfo:
     def __init__(self, time_value: datetime):
         self.value = time_value
