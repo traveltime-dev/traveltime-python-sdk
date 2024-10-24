@@ -35,7 +35,6 @@ async def send_post_request_async(
     request: TravelTimeRequest,
     rate_limit: AsyncLimiter,
 ) -> T:
-    print(request.model_dump_json())
     async with rate_limit:
         async with client.post(
             url=url, headers=headers, data=request.model_dump_json()
