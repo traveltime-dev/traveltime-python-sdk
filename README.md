@@ -73,6 +73,8 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * remove_water_bodies: bool - if set to true (default) - returned shape will not cover large nearby water bodies.
 False - returned shape may cover nearby water bodies like large lakes, wide rivers and seas.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
+* [polygons_filter](#polygons-filter): PolygonsFilter - Specifies polygon filter of a single shape.
+* [render_mode](#render-mode): RenderMode - Specifies which render mode should be used.
 
 ### JSON response
 
@@ -295,6 +297,8 @@ A very fast version of `time_map()`. However, the request parameters are much mo
 returns the reachable area for journeys departing from the chosen departure location if true.
 * [level_of_detail](#level-of-detail): LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
+* [polygons_filter](#polygons-filter): PolygonsFilter - Specifies polygon filter of a single shape.
+* [render_mode](#render-mode): RenderMode - Specifies which render mode should be used.
 
 ### JSON response
 
@@ -1069,4 +1073,34 @@ snapping=Snapping(
     penalty=SnappingPenalty.DISABLED,
     accept_roads=SnappingAcceptRoads.ANY_DRIVABLE
 )
+```
+
+### Polygons Filter
+
+`polygons_filter` specifies polygon filter of a single shape.
+
+For a more detailed description of how to use this parameter, you can refer to our [API Docs](https://docs.traveltime.com/api/reference/isochrones#departure_searches-polygons_filter)
+
+#### Examples
+
+```python
+from traveltimepy.dto.common import PolygonsFilter
+
+polygons_filter = PolygonsFilter(limit=1)
+polygons_filter = PolygonsFilter(limit=5)
+```
+
+### Render Mode
+
+`render_mode` specifies how the shape should be rendered.
+
+For a more detailed description of how to use this parameter, you can refer to our [API Docs](https://docs.traveltime.com/api/reference/isochrones#departure_searches-render_mode)
+
+#### Examples
+
+```python
+from traveltimepy.dto.common import RenderMode
+
+render_mode = RenderMode.APPROXIMATE_TIME_FILTER  # default
+render_mode = RenderMode.ROAD_BUFFERING
 ```

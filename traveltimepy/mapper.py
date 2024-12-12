@@ -17,6 +17,7 @@ from traveltimepy.dto.common import (
     Range,
     LevelOfDetail,
     PropertyProto,
+    RenderMode,
     TimeInfo,
     ArrivalTime,
     DepartureTime,
@@ -130,7 +131,8 @@ def create_time_map_fast(
     level_of_detail: Optional[LevelOfDetail],
     snapping: Optional[Snapping],
     polygons_filter: Optional[PolygonsFilter],
-    one_to_many: bool = True,
+    render_mode: Optional[RenderMode],
+    one_to_many: bool,
 ) -> TimeMapFastRequest:
     if one_to_many:
         return TimeMapFastRequest(
@@ -145,6 +147,7 @@ def create_time_map_fast(
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
+                        render_mode=render_mode,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -164,6 +167,7 @@ def create_time_map_fast(
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
+                        render_mode=render_mode,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -179,7 +183,8 @@ def create_time_map_fast_geojson(
     level_of_detail: Optional[LevelOfDetail],
     snapping: Optional[Snapping],
     polygons_filter: Optional[PolygonsFilter],
-    one_to_many: bool = True,
+    render_mode: Optional[RenderMode],
+    one_to_many: bool,
 ) -> TimeMapFastGeojsonRequest:
     if one_to_many:
         return TimeMapFastGeojsonRequest(
@@ -194,6 +199,7 @@ def create_time_map_fast_geojson(
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
+                        render_mode=render_mode,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -213,6 +219,7 @@ def create_time_map_fast_geojson(
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
+                        render_mode=render_mode,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -228,7 +235,8 @@ def create_time_map_fast_wkt(
     level_of_detail: Optional[LevelOfDetail],
     snapping: Optional[Snapping],
     polygons_filter: Optional[PolygonsFilter],
-    one_to_many: bool = True,
+    render_mode: Optional[RenderMode],
+    one_to_many: bool,
 ) -> TimeMapFastWKTRequest:
     if one_to_many:
         return TimeMapFastWKTRequest(
@@ -243,6 +251,7 @@ def create_time_map_fast_wkt(
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
+                        render_mode=render_mode,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -262,6 +271,7 @@ def create_time_map_fast_wkt(
                         level_of_detail=level_of_detail,
                         snapping=snapping,
                         polygons_filter=polygons_filter,
+                        render_mode=render_mode,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
@@ -512,6 +522,7 @@ def create_time_map(
     snapping: Optional[Snapping],
     polygons_filter: Optional[PolygonsFilter],
     remove_water_bodies: Optional[bool],
+    render_mode: Optional[RenderMode],
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -527,6 +538,7 @@ def create_time_map(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -548,6 +560,7 @@ def create_time_map(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -577,6 +590,7 @@ def create_time_map_geojson(
     snapping: Optional[Snapping],
     polygons_filter: Optional[PolygonsFilter],
     remove_water_bodies: Optional[bool],
+    render_mode: Optional[RenderMode],
 ) -> TimeMapRequestGeojson:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequestGeojson(
@@ -592,6 +606,7 @@ def create_time_map_geojson(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -611,6 +626,7 @@ def create_time_map_geojson(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -638,6 +654,7 @@ def create_time_map_wkt(
     snapping: Optional[Snapping],
     polygons_filter: Optional[PolygonsFilter],
     remove_water_bodies: Optional[bool],
+    render_mode: Optional[RenderMode],
 ) -> TimeMapWKTRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapWKTRequest(
@@ -653,6 +670,7 @@ def create_time_map_wkt(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -671,6 +689,7 @@ def create_time_map_wkt(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -760,6 +779,7 @@ def create_intersection(
     snapping: Optional[Snapping],
     polygons_filter: Optional[PolygonsFilter],
     remove_water_bodies: Optional[bool],
+    render_mode: Optional[RenderMode],
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -775,6 +795,7 @@ def create_intersection(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -801,6 +822,7 @@ def create_intersection(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -835,6 +857,7 @@ def create_union(
     snapping: Optional[Snapping],
     polygons_filter: Optional[PolygonsFilter],
     remove_water_bodies: Optional[bool],
+    render_mode: Optional[RenderMode],
 ) -> TimeMapRequest:
     if isinstance(time_info, ArrivalTime):
         return TimeMapRequest(
@@ -850,6 +873,7 @@ def create_union(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -876,6 +900,7 @@ def create_union(
                     snapping=snapping,
                     polygons_filter=polygons_filter,
                     remove_water_bodies=remove_water_bodies,
+                    render_mode=render_mode,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
