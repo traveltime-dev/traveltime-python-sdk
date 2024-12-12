@@ -19,6 +19,7 @@ from traveltimepy.dto.requests import time_map_fast
 from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResponse,
 )
+from traveltimepy.dto.responses.time_map_kml import TimeMapKmlResponse
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.dto.transportation import (
     PublicTransport,
@@ -76,6 +77,7 @@ from traveltimepy.mapper import (
     create_union,
     create_time_map_geojson,
     create_time_map_wkt,
+    create_time_map_kml,
 )
 
 from traveltimepy.proto_http import send_proto_async
@@ -781,6 +783,43 @@ class TravelTimeSdk:
                 snapping,
                 polygons_filter,
                 remove_water_bodies,
+            ),
+            self._sdk_params,
+        )
+        return resp
+
+    async def time_map_kml_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        level_of_detail: Optional[LevelOfDetail] = None,
+        snapping: Optional[Snapping] = None,
+    ) -> TimeMapKmlResponse:
+        time_info = get_time_info(departure_time, arrival_time)
+        resp = await send_post_async(
+            TimeMapKmlResponse,
+            "time-map",
+            self._headers(AcceptType.KML_XML),
+            create_time_map_kml(
+                coordinates,
+                transportation,
+                travel_time,
+                time_info,
+                search_range,
+                level_of_detail,
+                snapping,
             ),
             self._sdk_params,
         )
