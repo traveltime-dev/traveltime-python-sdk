@@ -804,6 +804,7 @@ class TravelTimeSdk:
         level_of_detail: Optional[LevelOfDetail] = None,
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
+        no_holes: Optional[bool] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
         resp = await send_post_async(
@@ -818,6 +819,7 @@ class TravelTimeSdk:
                 level_of_detail,
                 snapping,
                 polygons_filter,
+                no_holes,
             ),
             self._sdk_params,
         )
