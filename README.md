@@ -423,6 +423,7 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * [transportation](#transportation): Union - Transportation mode and related parameters.
 * [level_of_detail](#level-of-detail): LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
+* [no_holes](#no_holes): No holes - Enable to remove holes from returned polygons.
 
 #### Returns:
 
