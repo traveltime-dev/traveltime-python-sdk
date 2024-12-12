@@ -696,7 +696,7 @@ def create_distance_map(
     level_of_detail: Optional[LevelOfDetail],
     snapping: Optional[Snapping],
     polygons_filter: Optional[PolygonsFilter],
-    no_holes: Optional[bool]
+    no_holes: Optional[bool],
 ) -> DistanceMapRequest:
     if isinstance(time_info, ArrivalTime):
         return DistanceMapRequest(
