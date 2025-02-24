@@ -134,7 +134,7 @@ async def test_arrivals_wkt_no_holes(sdk: TravelTimeSdk):
 
 @pytest.mark.asyncio
 async def test_union_departures(sdk: TravelTimeSdk):
-    result = await sdk.union_async(
+    result = await sdk.time_map_union_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),
@@ -150,7 +150,7 @@ async def test_union_departures(sdk: TravelTimeSdk):
 
 @pytest.mark.asyncio
 async def test_intersection_arrivals(sdk: TravelTimeSdk):
-    result = await sdk.intersection_async(
+    result = await sdk.time_map_intersection_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             Coordinates(lat=51.517609, lng=-0.138315),

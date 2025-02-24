@@ -123,6 +123,12 @@ class Property(str, Enum):
     FARES = "fares"
 
 
+class CellProperty(str, Enum):
+    MIN = "min"
+    MAX = "max"
+    MEAN = "mean"
+
+
 class SnappingPenalty(str, Enum):
     ENABLED = "enabled"
     DISABLED = "disabled"
