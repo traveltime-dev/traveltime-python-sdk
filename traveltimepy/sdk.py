@@ -18,6 +18,7 @@ from traveltimepy.dto.common import (
     Snapping,
 )
 from traveltimepy.dto.requests import time_map_fast
+from traveltimepy.dto.responses.geohash import GeohashResponse, GeohashResult
 from traveltimepy.dto.responses.h3 import H3Response, H3Result
 from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResponse,
@@ -64,6 +65,9 @@ from traveltimepy.dto.responses.zones import (
 
 from traveltimepy.mapper import (
     create_distance_map,
+    create_geohash,
+    create_geohash_intersection,
+    create_geohash_union,
     create_h3,
     create_h3_intersection,
     create_h3_union,
@@ -1001,6 +1005,133 @@ class TravelTimeSdk:
             "h3",
             self._headers(AcceptType.JSON),
             create_h3(
+                coordinates=coordinates,
+                transportation=transportation,
+                resolution=resolution,
+                properties=properties,
+                travel_time=travel_time,
+                time_info=time_info,
+                search_range=search_range,
+                snapping=snapping,
+                remove_water_bodies=remove_water_bodies,
+            ),
+            self._sdk_params,
+        )
+        return resp.results
+
+    async def geohash_intersection_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        resolution: int,
+        properties: List[CellProperty] = [],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        snapping: Optional[Snapping] = None,
+        remove_water_bodies: Optional[bool] = None,
+    ) -> GeohashResult:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            GeohashResponse,
+            "geohash",
+            self._headers(AcceptType.JSON),
+            create_geohash_intersection(
+                coordinates=coordinates,
+                transportation=transportation,
+                resolution=resolution,
+                properties=properties,
+                travel_time=travel_time,
+                time_info=time_info,
+                search_range=search_range,
+                snapping=snapping,
+                remove_water_bodies=remove_water_bodies,
+            ),
+            self._sdk_params,
+        )
+        return resp.results[0]
+
+    async def geohash_union_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        resolution: int,
+        properties: List[CellProperty] = [],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        snapping: Optional[Snapping] = None,
+        remove_water_bodies: Optional[bool] = None,
+    ) -> GeohashResult:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            GeohashResponse,
+            "geohash",
+            self._headers(AcceptType.JSON),
+            create_geohash_union(
+                coordinates=coordinates,
+                transportation=transportation,
+                resolution=resolution,
+                properties=properties,
+                travel_time=travel_time,
+                time_info=time_info,
+                search_range=search_range,
+                snapping=snapping,
+                remove_water_bodies=remove_water_bodies,
+            ),
+            self._sdk_params,
+        )
+
+        return resp.results[0]
+
+    async def geohash_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        resolution: int,
+        properties: List[CellProperty] = [],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        snapping: Optional[Snapping] = None,
+        remove_water_bodies: Optional[bool] = None,
+    ) -> List[GeohashResult]:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            GeohashResponse,
+            "geohash",
+            self._headers(AcceptType.JSON),
+            create_geohash(
                 coordinates=coordinates,
                 transportation=transportation,
                 resolution=resolution,
