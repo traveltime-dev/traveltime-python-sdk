@@ -284,7 +284,7 @@ def create_time_filter_fast(
     locations: List[Location],
     search_ids: Dict[str, List[str]],
     transportation: Transportation,
-    travel_time: int = 3600,
+    travel_time: int,
     properties: Optional[List[Property]],
     one_to_many: bool,
     snapping: Optional[Snapping],
