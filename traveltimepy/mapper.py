@@ -685,6 +685,7 @@ def create_time_map_wkt(
                     travel_time=travel_time,
                     departure_time=time_info.value,
                     transportation=transportation,
+                    level_of_detail=level_of_detail,
                     range=search_range,
                     snapping=snapping,
                     polygons_filter=polygons_filter,
