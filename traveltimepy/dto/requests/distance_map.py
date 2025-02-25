@@ -36,10 +36,10 @@ class DepartureSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    level_of_detail: Optional[LevelOfDetail] = None
-    snapping: Optional[Snapping] = None
-    polygons_filter: Optional[PolygonsFilter] = None
-    no_holes: Optional[bool] = None
+    level_of_detail: Optional[LevelOfDetail]
+    snapping: Optional[Snapping]
+    polygons_filter: Optional[PolygonsFilter]
+    no_holes: Optional[bool]
 
 
 class ArrivalSearch(BaseModel):
@@ -56,10 +56,10 @@ class ArrivalSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    level_of_detail: Optional[LevelOfDetail] = None
-    snapping: Optional[Snapping] = None
-    polygons_filter: Optional[PolygonsFilter] = None
-    no_holes: Optional[bool] = None
+    level_of_detail: Optional[LevelOfDetail]
+    snapping: Optional[Snapping]
+    polygons_filter: Optional[PolygonsFilter]
+    no_holes: Optional[bool]
 
 
 class Intersection(BaseModel):

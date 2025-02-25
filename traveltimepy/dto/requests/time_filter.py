@@ -34,8 +34,8 @@ class ArrivalSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange] = None
-    snapping: Optional[Snapping] = None
+    range: Optional[FullRange]
+    snapping: Optional[Snapping]
 
 
 class DepartureSearch(BaseModel):
@@ -54,8 +54,8 @@ class DepartureSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange] = None
-    snapping: Optional[Snapping] = None
+    range: Optional[FullRange]
+    snapping: Optional[Snapping]
 
 
 class TimeFilterRequest(TravelTimeRequest[TimeFilterResponse]):

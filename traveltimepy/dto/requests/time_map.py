@@ -37,8 +37,8 @@ class DepartureSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range] = None
-    level_of_detail: Optional[LevelOfDetail] = None
+    range: Optional[Range]
+    level_of_detail: Optional[LevelOfDetail]
     snapping: Optional[Snapping]
     polygons_filter: Optional[PolygonsFilter]
     remove_water_bodies: Optional[bool]
@@ -59,9 +59,9 @@ class ArrivalSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range] = None
-    level_of_detail: Optional[LevelOfDetail] = None
-    snapping: Optional[Snapping] = None
+    range: Optional[Range]
+    level_of_detail: Optional[LevelOfDetail]
+    snapping: Optional[Snapping]
     polygons_filter: Optional[PolygonsFilter]
     remove_water_bodies: Optional[bool]
     render_mode: Optional[RenderMode]

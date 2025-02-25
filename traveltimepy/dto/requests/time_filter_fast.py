@@ -30,7 +30,7 @@ class OneToMany(BaseModel):
     travel_time: int
     arrival_time_period: str
     properties: List[Property]
-    snapping: Optional[Snapping] = None
+    snapping: Optional[Snapping]
 
 
 class ManyToOne(BaseModel):
@@ -41,7 +41,7 @@ class ManyToOne(BaseModel):
     travel_time: int
     arrival_time_period: str
     properties: List[Property]
-    snapping: Optional[Snapping] = None
+    snapping: Optional[Snapping]
 
 
 class ArrivalSearches(BaseModel):
