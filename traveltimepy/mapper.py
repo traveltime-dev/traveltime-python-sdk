@@ -76,7 +76,7 @@ def create_time_filter(
     time_info: TimeInfo,
     travel_time: int,
     range: Optional[FullRange],
-    snapping: Optional[Snapping] = None,
+    snapping: Optional[Snapping],
 ) -> TimeFilterRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -285,9 +285,9 @@ def create_time_filter_fast(
     search_ids: Dict[str, List[str]],
     transportation: Transportation,
     travel_time: int = 3600,
-    properties: Optional[List[Property]] = None,
-    one_to_many: bool = True,
-    snapping: Optional[Snapping] = None,
+    properties: Optional[List[Property]],
+    one_to_many: bool,
+    snapping: Optional[Snapping],
 ) -> TimeFilterFastRequest:
     if properties is None:
         properties = [Property.TRAVEL_TIME]
@@ -985,7 +985,7 @@ def create_proto_request(
     transportation: ProtoTransportation,
     properties: Optional[List[PropertyProto]],
     travel_time: int,
-    one_to_many: bool = True,
+    one_to_many: bool,
 ) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:  # type: ignore
     request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()  # type: ignore
 
