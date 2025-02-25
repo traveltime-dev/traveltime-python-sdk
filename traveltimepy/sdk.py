@@ -911,7 +911,6 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        remove_water_bodies: Optional[bool] = None,
     ) -> H3Result:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -928,7 +927,6 @@ class TravelTimeSdk:
                 time_info=time_info,
                 search_range=search_range,
                 snapping=snapping,
-                remove_water_bodies=remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -953,7 +951,6 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        remove_water_bodies: Optional[bool] = None,
     ) -> H3Result:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -970,7 +967,6 @@ class TravelTimeSdk:
                 time_info=time_info,
                 search_range=search_range,
                 snapping=snapping,
-                remove_water_bodies=remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -996,7 +992,6 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        remove_water_bodies: Optional[bool] = None,
     ) -> List[H3Result]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -1013,7 +1008,6 @@ class TravelTimeSdk:
                 time_info=time_info,
                 search_range=search_range,
                 snapping=snapping,
-                remove_water_bodies=remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -1038,7 +1032,6 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        remove_water_bodies: Optional[bool] = None,
     ) -> GeohashResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -1055,7 +1048,6 @@ class TravelTimeSdk:
                 time_info=time_info,
                 search_range=search_range,
                 snapping=snapping,
-                remove_water_bodies=remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -1080,7 +1072,6 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        remove_water_bodies: Optional[bool] = None,
     ) -> GeohashResult:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -1097,7 +1088,6 @@ class TravelTimeSdk:
                 time_info=time_info,
                 search_range=search_range,
                 snapping=snapping,
-                remove_water_bodies=remove_water_bodies,
             ),
             self._sdk_params,
         )
@@ -1123,7 +1113,6 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        remove_water_bodies: Optional[bool] = None,
     ) -> List[GeohashResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
@@ -1140,7 +1129,6 @@ class TravelTimeSdk:
                 time_info=time_info,
                 search_range=search_range,
                 snapping=snapping,
-                remove_water_bodies=remove_water_bodies,
             ),
             self._sdk_params,
         )

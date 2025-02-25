@@ -38,7 +38,6 @@ class DepartureSearch(BaseModel):
     ]
     range: Optional[Range]
     snapping: Optional[Snapping]
-    remove_water_bodies: Optional[bool]
 
 
 class ArrivalSearch(BaseModel):
@@ -57,7 +56,6 @@ class ArrivalSearch(BaseModel):
     ]
     range: Optional[Range]
     snapping: Optional[Snapping]
-    remove_water_bodies: Optional[bool]
 
 
 class Intersection(BaseModel):

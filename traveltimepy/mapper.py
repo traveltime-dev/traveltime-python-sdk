@@ -722,7 +722,6 @@ def create_h3(
     time_info: TimeInfo,
     search_range: Optional[Range],
     snapping: Optional[Snapping],
-    remove_water_bodies: Optional[bool],
 ) -> H3Request:
     if isinstance(time_info, ArrivalTime):
         return H3Request(
@@ -737,7 +736,6 @@ def create_h3(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -758,7 +756,6 @@ def create_h3(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -787,7 +784,6 @@ def create_geohash(
     time_info: TimeInfo,
     search_range: Optional[Range],
     snapping: Optional[Snapping],
-    remove_water_bodies: Optional[bool],
 ) -> GeohashRequest:
     if isinstance(time_info, ArrivalTime):
         return GeohashRequest(
@@ -802,7 +798,6 @@ def create_geohash(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -823,7 +818,6 @@ def create_geohash(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -992,7 +986,6 @@ def create_h3_intersection(
     time_info: TimeInfo,
     search_range: Optional[Range],
     snapping: Optional[Snapping],
-    remove_water_bodies: Optional[bool],
 ) -> H3Request:
     if isinstance(time_info, ArrivalTime):
         return H3Request(
@@ -1007,7 +1000,6 @@ def create_h3_intersection(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -1033,7 +1025,6 @@ def create_h3_intersection(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -1067,7 +1058,6 @@ def create_geohash_intersection(
     time_info: TimeInfo,
     search_range: Optional[Range],
     snapping: Optional[Snapping],
-    remove_water_bodies: Optional[bool],
 ) -> GeohashRequest:
     if isinstance(time_info, ArrivalTime):
         return GeohashRequest(
@@ -1082,7 +1072,6 @@ def create_geohash_intersection(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -1108,7 +1097,6 @@ def create_geohash_intersection(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -1220,7 +1208,6 @@ def create_h3_union(
     time_info: TimeInfo,
     search_range: Optional[Range],
     snapping: Optional[Snapping],
-    remove_water_bodies: Optional[bool],
 ) -> H3Request:
     if isinstance(time_info, ArrivalTime):
         return H3Request(
@@ -1235,7 +1222,6 @@ def create_h3_union(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -1261,7 +1247,6 @@ def create_h3_union(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -1295,7 +1280,6 @@ def create_geohash_union(
     time_info: TimeInfo,
     search_range: Optional[Range],
     snapping: Optional[Snapping],
-    remove_water_bodies: Optional[bool],
 ) -> GeohashRequest:
     if isinstance(time_info, ArrivalTime):
         return GeohashRequest(
@@ -1310,7 +1294,6 @@ def create_geohash_union(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
@@ -1336,7 +1319,6 @@ def create_geohash_union(
                     transportation=transportation,
                     range=search_range,
                     snapping=snapping,
-                    remove_water_bodies=remove_water_bodies,
                 )
                 for ind, cur_coordinates in enumerate(coordinates)
             ],
