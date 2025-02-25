@@ -33,7 +33,7 @@ class ArrivalSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange] = None
+    range: Optional[FullRange]
 
 
 class DepartureSearch(BaseModel):
@@ -51,7 +51,7 @@ class DepartureSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange] = None
+    range: Optional[FullRange]
 
 
 class PostcodesRequest(TravelTimeRequest[PostcodesResponse]):

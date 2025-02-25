@@ -22,7 +22,7 @@ class Search(BaseModel):
     travel_time: int
     arrival_time_period: str
     level_of_detail: Optional[LevelOfDetail]
-    snapping: Optional[Snapping] = None
+    snapping: Optional[Snapping]
     polygons_filter: Optional[PolygonsFilter]
     render_mode: Optional[RenderMode]
 
