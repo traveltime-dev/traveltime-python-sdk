@@ -16,6 +16,8 @@ dependencies = [
 	"typing-extensions",
 	"geojson-pydantic>=1.0.1",
 	"shapely",
+	"fastkml==0.12",
+	"lxml",
 	"dacite",
 	"certifi>=2021.5.30",
 	"aiohttp",
@@ -64,3 +66,7 @@ exclude = "^(traveltimepy/proto/.*|build/.*|venv/.*)$"
 [[tool.mypy.overrides]]
 module = "traveltimepy.proto.*"
 follow_imports = "skip"
+
+[[tool.mypy.overrides]]
+module = "fastkml"
+ignore_missing_imports = true
