@@ -36,7 +36,7 @@ class DepartureSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range] = None
+    range: Optional[Range]
     snapping: Optional[Snapping]
     remove_water_bodies: Optional[bool]
 
@@ -55,8 +55,8 @@ class ArrivalSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range] = None
-    snapping: Optional[Snapping] = None
+    range: Optional[Range]
+    snapping: Optional[Snapping]
     remove_water_bodies: Optional[bool]
 
 
