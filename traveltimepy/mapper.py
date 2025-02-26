@@ -14,6 +14,8 @@ from traveltimepy.proto import TimeFilterFastRequest_pb2
 
 from traveltimepy.dto.common import (
     CellProperty,
+    GeohashCentroid,
+    H3Centroid,
     Location,
     Coordinates,
     FullRange,
@@ -706,7 +708,7 @@ def create_time_map_wkt(
 
 
 def create_h3(
-    coordinates: List[Coordinates],
+    coordinates: List[Union[Coordinates, H3Centroid]],
     transportation: Union[
         PublicTransport,
         Driving,
@@ -768,7 +770,7 @@ def create_h3(
 
 
 def create_geohash(
-    coordinates: List[Coordinates],
+    coordinates: List[Union[Coordinates, GeohashCentroid]],
     transportation: Union[
         PublicTransport,
         Driving,
@@ -970,7 +972,7 @@ def create_time_map_intersection(
 
 
 def create_h3_intersection(
-    coordinates: List[Coordinates],
+    coordinates: List[Union[Coordinates, H3Centroid]],
     transportation: Union[
         PublicTransport,
         Driving,
@@ -1042,7 +1044,7 @@ def create_h3_intersection(
 
 
 def create_geohash_intersection(
-    coordinates: List[Coordinates],
+    coordinates: List[Union[Coordinates, GeohashCentroid]],
     transportation: Union[
         PublicTransport,
         Driving,
@@ -1192,7 +1194,7 @@ def create_time_map_union(
 
 
 def create_h3_union(
-    coordinates: List[Coordinates],
+    coordinates: List[Union[Coordinates, H3Centroid]],
     transportation: Union[
         PublicTransport,
         Driving,
@@ -1264,7 +1266,7 @@ def create_h3_union(
 
 
 def create_geohash_union(
-    coordinates: List[Coordinates],
+    coordinates: List[Union[Coordinates, GeohashCentroid]],
     transportation: Union[
         PublicTransport,
         Driving,

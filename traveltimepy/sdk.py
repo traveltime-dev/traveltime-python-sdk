@@ -3,6 +3,8 @@ from typing import List, Optional, Dict, Union
 
 from traveltimepy.dto.common import (
     CellProperty,
+    GeohashCentroid,
+    H3Centroid,
     Location,
     Coordinates,
     PolygonsFilter,
@@ -894,7 +896,7 @@ class TravelTimeSdk:
 
     async def h3_intersection_async(
         self,
-        coordinates: List[Coordinates],
+        coordinates: List[Union[Coordinates, H3Centroid]],
         transportation: Union[
             PublicTransport,
             Driving,
@@ -934,7 +936,7 @@ class TravelTimeSdk:
 
     async def h3_union_async(
         self,
-        coordinates: List[Coordinates],
+        coordinates: List[Union[Coordinates, H3Centroid]],
         transportation: Union[
             PublicTransport,
             Driving,
@@ -975,7 +977,7 @@ class TravelTimeSdk:
 
     async def h3_async(
         self,
-        coordinates: List[Coordinates],
+        coordinates: List[Union[Coordinates, H3Centroid]],
         transportation: Union[
             PublicTransport,
             Driving,
@@ -1015,7 +1017,7 @@ class TravelTimeSdk:
 
     async def geohash_intersection_async(
         self,
-        coordinates: List[Coordinates],
+        coordinates: List[Union[Coordinates, GeohashCentroid]],
         transportation: Union[
             PublicTransport,
             Driving,
@@ -1055,7 +1057,7 @@ class TravelTimeSdk:
 
     async def geohash_union_async(
         self,
-        coordinates: List[Coordinates],
+        coordinates: List[Union[Coordinates, GeohashCentroid]],
         transportation: Union[
             PublicTransport,
             Driving,
@@ -1096,7 +1098,7 @@ class TravelTimeSdk:
 
     async def geohash_async(
         self,
-        coordinates: List[Coordinates],
+        coordinates: List[Union[Coordinates, GeohashCentroid]],
         transportation: Union[
             PublicTransport,
             Driving,

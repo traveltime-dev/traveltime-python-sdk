@@ -6,7 +6,6 @@ from typing import List, Optional
 from pydantic.main import BaseModel
 
 from traveltimepy import (
-    Coordinates,
     Range,
     PublicTransport,
     Driving,
@@ -16,7 +15,7 @@ from traveltimepy import (
     DrivingTrain,
     CyclingPublicTransport,
 )
-from traveltimepy.dto.common import CellProperty, Snapping
+from traveltimepy.dto.common import CellProperty, Coordinates, H3Centroid, Snapping
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.h3 import H3Response
 from traveltimepy.itertools import split, flatten
@@ -24,7 +23,7 @@ from traveltimepy.itertools import split, flatten
 
 class DepartureSearch(BaseModel):
     id: str
-    coords: Coordinates
+    coords: typing.Union[Coordinates, H3Centroid] 
     departure_time: datetime
     travel_time: int
     transportation: typing.Union[
@@ -42,7 +41,7 @@ class DepartureSearch(BaseModel):
 
 class ArrivalSearch(BaseModel):
     id: str
-    coords: Coordinates
+    coords: typing.Union[Coordinates, H3Centroid] 
     arrival_time: datetime
     travel_time: int
     transportation: typing.Union[
