@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 
 from traveltimepy import Coordinates, Driving, Range, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, GeohashCentroid, H3Centroid
+from traveltimepy.dto.common import CellProperty, H3Centroid
 
 
 @pytest.mark.asyncio
