@@ -2,7 +2,7 @@ import pytest
 from datetime import datetime
 
 from traveltimepy import Coordinates, Driving, Range, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty
+from traveltimepy.dto.common import CellProperty, GeohashCentroid, H3Centroid
 
 
 @pytest.mark.asyncio
@@ -10,7 +10,7 @@ async def test_departures(sdk: TravelTimeSdk):
     results = await sdk.h3_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
-            Coordinates(lat=51.517609, lng=-0.138315),
+            H3Centroid(h3_centroid="87195da49ffffff")
         ],
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
@@ -27,7 +27,7 @@ async def test_arrivals(sdk: TravelTimeSdk):
     results = await sdk.h3_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
-            Coordinates(lat=51.517609, lng=-0.138315),
+            H3Centroid(h3_centroid="87195da49ffffff")
         ],
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
@@ -44,7 +44,7 @@ async def test_union_departures(sdk: TravelTimeSdk):
     result = await sdk.h3_union_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
-            Coordinates(lat=51.517609, lng=-0.138315),
+            H3Centroid(h3_centroid="87195da49ffffff")
         ],
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
@@ -61,7 +61,7 @@ async def test_intersection_arrivals(sdk: TravelTimeSdk):
     result = await sdk.h3_intersection_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
-            Coordinates(lat=51.517609, lng=-0.138315),
+            H3Centroid(h3_centroid="87195da49ffffff")
         ],
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],

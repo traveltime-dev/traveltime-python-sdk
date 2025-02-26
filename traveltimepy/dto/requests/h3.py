@@ -23,7 +23,7 @@ from traveltimepy.itertools import split, flatten
 
 class DepartureSearch(BaseModel):
     id: str
-    coords: typing.Union[Coordinates, H3Centroid] 
+    coords: typing.Union[Coordinates, H3Centroid]
     departure_time: datetime
     travel_time: int
     transportation: typing.Union[
@@ -41,7 +41,7 @@ class DepartureSearch(BaseModel):
 
 class ArrivalSearch(BaseModel):
     id: str
-    coords: typing.Union[Coordinates, H3Centroid] 
+    coords: typing.Union[Coordinates, H3Centroid]
     arrival_time: datetime
     travel_time: int
     transportation: typing.Union[
