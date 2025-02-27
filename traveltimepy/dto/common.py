@@ -26,6 +26,14 @@ class Coordinates(BaseModel):
         return v
 
 
+class GeohashCentroid(BaseModel):
+    geohash_centroid: str
+
+
+class H3Centroid(BaseModel):
+    h3_centroid: str
+
+
 class Location(BaseModel):
     id: str
     coords: Coordinates
@@ -121,6 +129,12 @@ class Property(str, Enum):
     DISTANCE = "distance"
     ROUTE = "route"
     FARES = "fares"
+
+
+class CellProperty(str, Enum):
+    MIN = "min"
+    MAX = "max"
+    MEAN = "mean"
 
 
 class SnappingPenalty(str, Enum):

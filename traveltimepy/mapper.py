@@ -2,13 +2,20 @@ import math
 from typing import Dict, Union, List, Optional
 
 from traveltimepy.dto.requests import time_map_fast
+from traveltimepy.dto.requests import h3
+from traveltimepy.dto.requests import geohash
 from traveltimepy.dto.requests.distance_map import DistanceMapRequest
+from traveltimepy.dto.requests.geohash import GeohashRequest
+from traveltimepy.dto.requests.h3 import H3Request
 from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
 from traveltimepy.dto.requests.time_map_wkt import TimeMapWKTRequest
 from traveltimepy.errors import ApiError
 from traveltimepy.proto import TimeFilterFastRequest_pb2
 
 from traveltimepy.dto.common import (
+    CellProperty,
+    GeohashCentroid,
+    H3Centroid,
     Location,
     Coordinates,
     FullRange,
@@ -700,6 +707,130 @@ def create_time_map_wkt(
         raise ApiError("arrival_time or departure_time should be specified")
 
 
+def create_h3(
+    coordinates: List[Union[Coordinates, H3Centroid]],
+    transportation: Union[
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
+    ],
+    resolution: int,
+    travel_time: int,
+    properties: List[CellProperty],
+    time_info: TimeInfo,
+    search_range: Optional[Range],
+    snapping: Optional[Snapping],
+) -> H3Request:
+    if isinstance(time_info, ArrivalTime):
+        return H3Request(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=[
+                h3.ArrivalSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+            unions=[],
+            intersections=[],
+        )
+    elif isinstance(time_info, DepartureTime):
+        return H3Request(
+            resolution=resolution,
+            properties=properties,
+            departure_searches=[
+                h3.DepartureSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+            unions=[],
+            intersections=[],
+        )
+    else:
+        raise ApiError("arrival_time or departure_time should be specified")
+
+
+def create_geohash(
+    coordinates: List[Union[Coordinates, GeohashCentroid]],
+    transportation: Union[
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
+    ],
+    resolution: int,
+    travel_time: int,
+    properties: List[CellProperty],
+    time_info: TimeInfo,
+    search_range: Optional[Range],
+    snapping: Optional[Snapping],
+) -> GeohashRequest:
+    if isinstance(time_info, ArrivalTime):
+        return GeohashRequest(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=[
+                geohash.ArrivalSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+            unions=[],
+            intersections=[],
+        )
+    elif isinstance(time_info, DepartureTime):
+        return GeohashRequest(
+            resolution=resolution,
+            properties=properties,
+            departure_searches=[
+                geohash.DepartureSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+            unions=[],
+            intersections=[],
+        )
+    else:
+        raise ApiError("arrival_time or departure_time should be specified")
+
+
 def create_distance_map(
     coordinates: List[Coordinates],
     transportation: Union[
@@ -762,7 +893,7 @@ def create_distance_map(
         raise ApiError("arrival_time or departure_time should be specified")
 
 
-def create_intersection(
+def create_time_map_intersection(
     coordinates: List[Coordinates],
     transportation: Union[
         PublicTransport,
@@ -840,7 +971,151 @@ def create_intersection(
         raise ApiError("arrival_time or departure_time should be specified")
 
 
-def create_union(
+def create_h3_intersection(
+    coordinates: List[Union[Coordinates, H3Centroid]],
+    transportation: Union[
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
+    ],
+    resolution: int,
+    travel_time: int,
+    properties: List[CellProperty],
+    time_info: TimeInfo,
+    search_range: Optional[Range],
+    snapping: Optional[Snapping],
+) -> H3Request:
+    if isinstance(time_info, ArrivalTime):
+        return H3Request(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=[
+                h3.ArrivalSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+            unions=[],
+            intersections=[
+                h3.Intersection(
+                    id="Intersection search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
+                )
+            ],
+        )
+    elif isinstance(time_info, DepartureTime):
+        return H3Request(
+            resolution=resolution,
+            properties=properties,
+            departure_searches=[
+                h3.DepartureSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+            unions=[],
+            intersections=[
+                h3.Intersection(
+                    id="Intersection search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
+                )
+            ],
+        )
+    else:
+        raise ApiError("arrival_time or departure_time should be specified")
+
+
+def create_geohash_intersection(
+    coordinates: List[Union[Coordinates, GeohashCentroid]],
+    transportation: Union[
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
+    ],
+    resolution: int,
+    travel_time: int,
+    properties: List[CellProperty],
+    time_info: TimeInfo,
+    search_range: Optional[Range],
+    snapping: Optional[Snapping],
+) -> GeohashRequest:
+    if isinstance(time_info, ArrivalTime):
+        return GeohashRequest(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=[
+                geohash.ArrivalSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+            unions=[],
+            intersections=[
+                geohash.Intersection(
+                    id="Intersection search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
+                )
+            ],
+        )
+    elif isinstance(time_info, DepartureTime):
+        return GeohashRequest(
+            resolution=resolution,
+            properties=properties,
+            departure_searches=[
+                geohash.DepartureSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+            unions=[],
+            intersections=[
+                geohash.Intersection(
+                    id="Intersection search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
+                )
+            ],
+        )
+    else:
+        raise ApiError("arrival_time or departure_time should be specified")
+
+
+def create_time_map_union(
     coordinates: List[Coordinates],
     transportation: Union[
         PublicTransport,
@@ -908,6 +1183,150 @@ def create_union(
             arrival_searches=[],
             unions=[
                 time_map.Union(
+                    id="Union search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
+                )
+            ],
+            intersections=[],
+        )
+    else:
+        raise ApiError("arrival_time or departure_time should be specified")
+
+
+def create_h3_union(
+    coordinates: List[Union[Coordinates, H3Centroid]],
+    transportation: Union[
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
+    ],
+    resolution: int,
+    travel_time: int,
+    properties: List[CellProperty],
+    time_info: TimeInfo,
+    search_range: Optional[Range],
+    snapping: Optional[Snapping],
+) -> H3Request:
+    if isinstance(time_info, ArrivalTime):
+        return H3Request(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=[
+                h3.ArrivalSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+            unions=[
+                h3.Union(
+                    id="Union search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
+                )
+            ],
+            intersections=[],
+        )
+    elif isinstance(time_info, DepartureTime):
+        return H3Request(
+            resolution=resolution,
+            properties=properties,
+            departure_searches=[
+                h3.DepartureSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+            unions=[
+                h3.Union(
+                    id="Union search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
+                )
+            ],
+            intersections=[],
+        )
+    else:
+        raise ApiError("arrival_time or departure_time should be specified")
+
+
+def create_geohash_union(
+    coordinates: List[Union[Coordinates, GeohashCentroid]],
+    transportation: Union[
+        PublicTransport,
+        Driving,
+        Ferry,
+        Walking,
+        Cycling,
+        DrivingTrain,
+        CyclingPublicTransport,
+    ],
+    resolution: int,
+    travel_time: int,
+    properties: List[CellProperty],
+    time_info: TimeInfo,
+    search_range: Optional[Range],
+    snapping: Optional[Snapping],
+) -> GeohashRequest:
+    if isinstance(time_info, ArrivalTime):
+        return GeohashRequest(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=[
+                geohash.ArrivalSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    arrival_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            departure_searches=[],
+            unions=[
+                geohash.Union(
+                    id="Union search",
+                    search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
+                )
+            ],
+            intersections=[],
+        )
+    elif isinstance(time_info, DepartureTime):
+        return GeohashRequest(
+            resolution=resolution,
+            properties=properties,
+            departure_searches=[
+                geohash.DepartureSearch(
+                    id=f"Search {ind}",
+                    coords=cur_coordinates,
+                    travel_time=travel_time,
+                    departure_time=time_info.value,
+                    transportation=transportation,
+                    range=search_range,
+                    snapping=snapping,
+                )
+                for ind, cur_coordinates in enumerate(coordinates)
+            ],
+            arrival_searches=[],
+            unions=[
+                geohash.Union(
                     id="Union search",
                     search_ids=[f"Search {ind}" for ind, _ in enumerate(coordinates)],
                 )

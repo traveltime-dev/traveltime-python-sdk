@@ -2,6 +2,9 @@ from datetime import datetime
 from typing import List, Optional, Dict, Union
 
 from traveltimepy.dto.common import (
+    CellProperty,
+    GeohashCentroid,
+    H3Centroid,
     Location,
     Coordinates,
     PolygonsFilter,
@@ -17,6 +20,8 @@ from traveltimepy.dto.common import (
     Snapping,
 )
 from traveltimepy.dto.requests import time_map_fast
+from traveltimepy.dto.responses.geohash import GeohashResponse, GeohashResult
+from traveltimepy.dto.responses.h3 import H3Response, H3Result
 from traveltimepy.dto.responses.time_map_wkt import (
     TimeMapWKTResponse,
 )
@@ -62,6 +67,12 @@ from traveltimepy.dto.responses.zones import (
 
 from traveltimepy.mapper import (
     create_distance_map,
+    create_geohash,
+    create_geohash_intersection,
+    create_geohash_union,
+    create_h3,
+    create_h3_intersection,
+    create_h3_union,
     create_time_filter,
     create_time_filter_fast,
     create_postcodes,
@@ -70,11 +81,11 @@ from traveltimepy.mapper import (
     create_routes,
     create_proto_request,
     create_time_map,
-    create_intersection,
+    create_time_map_intersection,
     create_time_map_fast,
     create_time_map_fast_geojson,
     create_time_map_fast_wkt,
-    create_union,
+    create_time_map_union,
     create_time_map_geojson,
     create_time_map_wkt,
 )
@@ -542,6 +553,51 @@ class TravelTimeSdk:
         )
         return resp
 
+    async def time_map_intersection_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        level_of_detail: Optional[LevelOfDetail] = None,
+        snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
+        remove_water_bodies: Optional[bool] = None,
+        render_mode: Optional[RenderMode] = None,
+    ) -> TimeMapResult:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            TimeMapResponse,
+            "time-map",
+            self._headers(AcceptType.JSON),
+            create_time_map_intersection(
+                coordinates,
+                transportation,
+                travel_time,
+                time_info,
+                search_range,
+                level_of_detail,
+                snapping,
+                polygons_filter,
+                remove_water_bodies,
+                render_mode,
+            ),
+            self._sdk_params,
+        )
+        return resp.results[0]
+
+    # intersection_async was renamed to time_map_intersection_async. Keeping this for legacy users
     async def intersection_async(
         self,
         coordinates: List[Coordinates],
@@ -564,29 +620,22 @@ class TravelTimeSdk:
         remove_water_bodies: Optional[bool] = None,
         render_mode: Optional[RenderMode] = None,
     ) -> TimeMapResult:
-        time_info = get_time_info(departure_time, arrival_time)
-
-        resp = await send_post_async(
-            TimeMapResponse,
-            "time-map",
-            self._headers(AcceptType.JSON),
-            create_intersection(
-                coordinates,
-                transportation,
-                travel_time,
-                time_info,
-                search_range,
-                level_of_detail,
-                snapping,
-                polygons_filter,
-                remove_water_bodies,
-                render_mode,
-            ),
-            self._sdk_params,
+        resp = await self.time_map_intersection_async(
+            coordinates=coordinates,
+            transportation=transportation,
+            departure_time=departure_time,
+            arrival_time=arrival_time,
+            travel_time=travel_time,
+            search_range=search_range,
+            level_of_detail=level_of_detail,
+            snapping=snapping,
+            polygons_filter=polygons_filter,
+            remove_water_bodies=remove_water_bodies,
+            render_mode=render_mode,
         )
-        return resp.results[0]
+        return resp
 
-    async def union_async(
+    async def time_map_union_async(
         self,
         coordinates: List[Coordinates],
         transportation: Union[
@@ -614,7 +663,7 @@ class TravelTimeSdk:
             TimeMapResponse,
             "time-map",
             self._headers(AcceptType.JSON),
-            create_union(
+            create_time_map_union(
                 coordinates,
                 transportation,
                 travel_time,
@@ -630,6 +679,44 @@ class TravelTimeSdk:
         )
 
         return resp.results[0]
+
+    # union_async was renamed to time_map_union_async. Keeping this for legacy users
+    async def union_async(
+        self,
+        coordinates: List[Coordinates],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        level_of_detail: Optional[LevelOfDetail] = None,
+        snapping: Optional[Snapping] = None,
+        polygons_filter: Optional[PolygonsFilter] = None,
+        remove_water_bodies: Optional[bool] = None,
+        render_mode: Optional[RenderMode] = None,
+    ) -> TimeMapResult:
+        resp = await self.time_map_union_async(
+            coordinates=coordinates,
+            transportation=transportation,
+            departure_time=departure_time,
+            arrival_time=arrival_time,
+            travel_time=travel_time,
+            search_range=search_range,
+            level_of_detail=level_of_detail,
+            snapping=snapping,
+            polygons_filter=polygons_filter,
+            remove_water_bodies=remove_water_bodies,
+            render_mode=render_mode,
+        )
+        return resp
 
     async def time_map_async(
         self,
@@ -806,6 +893,248 @@ class TravelTimeSdk:
             self._sdk_params,
         )
         return resp
+
+    async def h3_intersection_async(
+        self,
+        coordinates: List[Union[Coordinates, H3Centroid]],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        resolution: int,
+        properties: List[CellProperty] = [],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        snapping: Optional[Snapping] = None,
+    ) -> H3Result:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            H3Response,
+            "h3",
+            self._headers(AcceptType.JSON),
+            create_h3_intersection(
+                coordinates=coordinates,
+                transportation=transportation,
+                resolution=resolution,
+                properties=properties,
+                travel_time=travel_time,
+                time_info=time_info,
+                search_range=search_range,
+                snapping=snapping,
+            ),
+            self._sdk_params,
+        )
+        return resp.results[0]
+
+    async def h3_union_async(
+        self,
+        coordinates: List[Union[Coordinates, H3Centroid]],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        resolution: int,
+        properties: List[CellProperty] = [],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        snapping: Optional[Snapping] = None,
+    ) -> H3Result:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            H3Response,
+            "h3",
+            self._headers(AcceptType.JSON),
+            create_h3_union(
+                coordinates=coordinates,
+                transportation=transportation,
+                resolution=resolution,
+                properties=properties,
+                travel_time=travel_time,
+                time_info=time_info,
+                search_range=search_range,
+                snapping=snapping,
+            ),
+            self._sdk_params,
+        )
+
+        return resp.results[0]
+
+    async def h3_async(
+        self,
+        coordinates: List[Union[Coordinates, H3Centroid]],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        resolution: int,
+        properties: List[CellProperty] = [],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        snapping: Optional[Snapping] = None,
+    ) -> List[H3Result]:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            H3Response,
+            "h3",
+            self._headers(AcceptType.JSON),
+            create_h3(
+                coordinates=coordinates,
+                transportation=transportation,
+                resolution=resolution,
+                properties=properties,
+                travel_time=travel_time,
+                time_info=time_info,
+                search_range=search_range,
+                snapping=snapping,
+            ),
+            self._sdk_params,
+        )
+        return resp.results
+
+    async def geohash_intersection_async(
+        self,
+        coordinates: List[Union[Coordinates, GeohashCentroid]],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        resolution: int,
+        properties: List[CellProperty] = [],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        snapping: Optional[Snapping] = None,
+    ) -> GeohashResult:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            GeohashResponse,
+            "geohash",
+            self._headers(AcceptType.JSON),
+            create_geohash_intersection(
+                coordinates=coordinates,
+                transportation=transportation,
+                resolution=resolution,
+                properties=properties,
+                travel_time=travel_time,
+                time_info=time_info,
+                search_range=search_range,
+                snapping=snapping,
+            ),
+            self._sdk_params,
+        )
+        return resp.results[0]
+
+    async def geohash_union_async(
+        self,
+        coordinates: List[Union[Coordinates, GeohashCentroid]],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        resolution: int,
+        properties: List[CellProperty] = [],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        snapping: Optional[Snapping] = None,
+    ) -> GeohashResult:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            GeohashResponse,
+            "geohash",
+            self._headers(AcceptType.JSON),
+            create_geohash_union(
+                coordinates=coordinates,
+                transportation=transportation,
+                resolution=resolution,
+                properties=properties,
+                travel_time=travel_time,
+                time_info=time_info,
+                search_range=search_range,
+                snapping=snapping,
+            ),
+            self._sdk_params,
+        )
+
+        return resp.results[0]
+
+    async def geohash_async(
+        self,
+        coordinates: List[Union[Coordinates, GeohashCentroid]],
+        transportation: Union[
+            PublicTransport,
+            Driving,
+            Ferry,
+            Walking,
+            Cycling,
+            DrivingTrain,
+            CyclingPublicTransport,
+        ],
+        resolution: int,
+        properties: List[CellProperty] = [],
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        travel_time: int = 3600,
+        search_range: Optional[Range] = None,
+        snapping: Optional[Snapping] = None,
+    ) -> List[GeohashResult]:
+        time_info = get_time_info(departure_time, arrival_time)
+
+        resp = await send_post_async(
+            GeohashResponse,
+            "geohash",
+            self._headers(AcceptType.JSON),
+            create_geohash(
+                coordinates=coordinates,
+                transportation=transportation,
+                resolution=resolution,
+                properties=properties,
+                travel_time=travel_time,
+                time_info=time_info,
+                search_range=search_range,
+                snapping=snapping,
+            ),
+            self._sdk_params,
+        )
+        return resp.results
 
     async def distance_map_async(
         self,

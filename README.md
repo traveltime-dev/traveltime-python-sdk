@@ -196,7 +196,7 @@ async def main():
 asyncio.run(main())
 ```
 
-### [Isochrones (Intersection)](https://docs.traveltime.com/api/reference/isochrones)
+### [Isochrones (Time Map Intersection)](https://docs.traveltime.com/api/reference/isochrones)
 
 Given origin coordinates, find intersections of specified shapes.
 
@@ -227,7 +227,7 @@ from traveltimepy import Driving, Coordinates, TravelTimeSdk
 
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-    results = await sdk.intersection_async(
+    results = await sdk.time_map_intersection_async( # `sdk.intersection_async` will work too
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
         arrival_time=datetime.now(),
         transportation=Driving()
@@ -239,7 +239,7 @@ async def main():
 asyncio.run(main())
 ```
 
-### [Isochrones (Union)](https://docs.traveltime.com/api/reference/isochrones)
+### [Isochrones (Time Map Union)](https://docs.traveltime.com/api/reference/isochrones)
 
 Given origin coordinates, find unions of specified shapes.
 
@@ -272,7 +272,7 @@ from traveltimepy import Driving, Coordinates, TravelTimeSdk
 
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-    results = await sdk.union_async(
+    results = await sdk.time_map_union_async( # `sdk.union_async` will work too
         coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
         arrival_time=datetime.now(),
         transportation=Driving()
@@ -283,6 +283,235 @@ async def main():
 
 asyncio.run(main())
 ```
+
+### [Isochrones (H3)](https://docs.traveltime.com/api/reference/h3)
+
+Calculate the travel times to all H3 cells within a travel time catchment area. Return the max, min, and mean travel time for each cell.
+
+#### Takes:
+
+* resolution: int - H3 resolution of results to be returned, values can be in range [1, 8].
+* [properties](#cell-properties): List[CellProperty] - Properties to be returned for heach H3 hexagon. Possible values: min, max, mean.
+* coordinates: List[Union[Coordinates, H3Centroid]] - Coordinates of the departure location. Use either latitude and longitude, or the centroid of an h3 cell.
+* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
+* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with
+  arrival_time.
+* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 3600
+* [transportation](#transportation): Union - Transportation mode and related parameters.
+* search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
+  journeys that arrive during this window.
+* [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
+
+#### Returns:
+
+* results: List[H3Result] - The list of H3 isochrone cells.
+
+#### Example:
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, H3Centroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.h3_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            H3Centroid(h3_centroid="87195da49ffffff"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=8,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
+### H3 Union and Intersection
+
+Works the same way as Time-Map Unions and Intersections, just with H3 params.
+
+#### Examples
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, H3Centroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.h3_union_async_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            H3Centroid(h3_centroid="87195da49ffffff"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=8,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, H3Centroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.h3_intersection_async_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            H3Centroid(h3_centroid="87195da49ffffff"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=8,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
+### [Isochrones (Geohash)](https://docs.traveltime.com/api/reference/geohash)
+
+Calculate the travel times to all geohash cells within a travel time catchment area. Return the max, min, and mean travel time for each cell.
+
+#### Takes:
+
+* resolution: int - H3 resolution of results to be returned, values can be in range [1, 6].
+* [properties](#cell-properties): List[CellProperty] - Properties to be returned for heach H3 hexagon. Possible values: min, max, mean.
+* coordinates: List[Union[Coordinates, GeohashCentroid]] - Coordinates of the departure location. Use either latitude and longitude, or the centroid of a geohash cell.
+* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
+* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with
+  arrival_time.
+* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 3600
+* [transportation](#transportation): Union - Transportation mode and related parameters.
+* search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
+  journeys that arrive during this window.
+* [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
+
+#### Returns:
+
+* results: List[GeohashResult] - The list of H3 isochrone cells.
+
+#### Example:
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, GeohashCentroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.geohash_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            GeohashCentroid(geohash_centroid="87195da49ffffff"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=8,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
+### Geohash Union and Intersection
+
+Works the same way as Time-Map Unions and Intersections, just with Geohash params.
+
+#### Examples
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, GeohashCentroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.geohash_union_async_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            GeohashCentroid(geohash_centroid="87195da49ffffff"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=8,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, GeohashCentroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.geohash_intersection_async_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            GeohashCentroid(geohash_centroid="87195da49ffffff"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=8,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
 
 ### [Time Map (Fast)](https://docs.traveltime.com/api/reference/isochrones-fast)
 
@@ -1073,6 +1302,22 @@ snapping=Snapping(
     penalty=SnappingPenalty.DISABLED,
     accept_roads=SnappingAcceptRoads.ANY_DRIVABLE
 )
+```
+
+### Cell Properties
+
+Cell properties are the `properties` param used in H3 and geohash requests. Specifies proprties to be returned for each cell. Possible values: min, max, mean.
+
+#### Examples
+
+```python
+from traveltimepy.dto.common import CellProperty
+
+# all properties
+properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN]
+
+# some properties
+properties=[CellProperty.MIN]
 ```
 
 ### Polygons Filter
