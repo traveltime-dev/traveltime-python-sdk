@@ -19,7 +19,7 @@ from traveltimepy.dto.common import (
     RenderMode,
     Snapping,
 )
-from traveltimepy.dto.requests import time_map_fast
+from traveltimepy.dto.requests import geohash_fast, h3_fast, time_map_fast
 from traveltimepy.dto.responses.geohash import GeohashResponse, GeohashResult
 from traveltimepy.dto.responses.h3 import H3Response, H3Result
 from traveltimepy.dto.responses.time_map_wkt import (
@@ -68,9 +68,11 @@ from traveltimepy.dto.responses.zones import (
 from traveltimepy.mapper import (
     create_distance_map,
     create_geohash,
+    create_geohash_fast,
     create_geohash_intersection,
     create_geohash_union,
     create_h3,
+    create_h3_fast,
     create_h3_intersection,
     create_h3_union,
     create_time_filter,
@@ -347,6 +349,60 @@ class TravelTimeSdk:
             self._sdk_params,
         )
         return resp
+
+    async def h3_fast_async(
+        self,
+        coordinates: List[Union[Coordinates, H3Centroid]],
+        transportation: h3_fast.Transportation,
+        properties: List[CellProperty],
+        resolution: int,
+        travel_time: int = 3600,
+        one_to_many: bool = True,
+        snapping: Optional[Snapping] = None,
+    ) -> List[H3Result]:
+        resp = await send_post_async(
+            H3Response,
+            "h3/fast",
+            self._headers(AcceptType.JSON),
+            create_h3_fast(
+                coordinates=coordinates,
+                transportation=transportation,
+                properties=properties,
+                resolution=resolution,
+                travel_time=travel_time,
+                snapping=snapping,
+                one_to_many=one_to_many,
+            ),
+            self._sdk_params,
+        )
+        return resp.results
+
+    async def geohash_fast_async(
+        self,
+        coordinates: List[Union[Coordinates, GeohashCentroid]],
+        transportation: geohash_fast.Transportation,
+        properties: List[CellProperty],
+        resolution: int,
+        travel_time: int = 3600,
+        one_to_many: bool = True,
+        snapping: Optional[Snapping] = None,
+    ) -> List[GeohashResult]:
+        resp = await send_post_async(
+            GeohashResponse,
+            "geohash/fast",
+            self._headers(AcceptType.JSON),
+            create_geohash_fast(
+                coordinates=coordinates,
+                transportation=transportation,
+                properties=properties,
+                resolution=resolution,
+                travel_time=travel_time,
+                snapping=snapping,
+                one_to_many=one_to_many,
+            ),
+            self._sdk_params,
+        )
+        return resp.results
 
     async def time_filter_fast_async(
         self,
