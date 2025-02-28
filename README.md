@@ -59,7 +59,7 @@ sdk = TravelTimeSdk(app_id="YOUR_APP_ID", api_key="YOUR_APP_KEY")
 
 Given origin coordinates, find shapes of zones reachable within corresponding travel time.
 
-#### Takes:
+##### Takes:
 
 * coordinates: List[Coordinates] - Isochrones coordinates.
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
@@ -76,13 +76,13 @@ False - returned shape may cover nearby water bodies like large lakes, wide rive
 * [polygons_filter](#polygons-filter): PolygonsFilter - Specifies polygon filter of a single shape.
 * [render_mode](#render-mode): RenderMode - Specifies which render mode should be used.
 
-### JSON response
+#### JSON response
 
-#### Returns:
+##### Returns:
 
 * results: List[TimeMapResult] - The list of isochrone shapes.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -105,13 +105,13 @@ async def main():
 asyncio.run(main())
 ```
 
-### GEOJSON response
+#### GEOJSON response
 
-#### Returns:
+##### Returns:
 
 * results: FeatureCollection - The list of Features.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -134,13 +134,13 @@ async def main():
 asyncio.run(main())
 ```
 
-### WKT response
+#### WKT response
 
-#### Returns:
+##### Returns:
 
 * results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -165,13 +165,13 @@ async def main():
 asyncio.run(main())
 ```
 
-### WKT_NO_HOLES response
+#### WKT_NO_HOLES response
 
-#### Returns:
+##### Returns:
 
 * results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes (no holes).
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -196,99 +196,11 @@ async def main():
 asyncio.run(main())
 ```
 
-### [Isochrones (Time Map Intersection)](https://docs.traveltime.com/api/reference/isochrones)
-
-Given origin coordinates, find intersections of specified shapes.
-
-#### Takes:
-
-* coordinates: List[Coordinates] - Intersection coordinates. The size of list cannot be more than 10.
-* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
-* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with
-  arrival_time.
-* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 3600
-* [transportation](#transportation): Union - Transportation mode and related parameters.
-* search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
-  journeys that arrive during this window.
-* [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-
-#### Returns:
-
-* results: List[TimeMapResult] - The list of isochrone shapes.
-
-#### Example:
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Driving, Coordinates, TravelTimeSdk
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-    results = await sdk.time_map_intersection_async( # `sdk.intersection_async` will work too
-        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
-        arrival_time=datetime.now(),
-        transportation=Driving()
-    )
-
-    print(results)
-
-
-asyncio.run(main())
-```
-
-### [Isochrones (Time Map Union)](https://docs.traveltime.com/api/reference/isochrones)
-
-Given origin coordinates, find unions of specified shapes.
-
-Finds the union of specified shapes.
-
-#### Takes:
-
-* coordinates: List[Coordinates] - Union coordinates. The size of list cannot be more than 10.
-* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
-* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with
-  arrival_time.
-* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 3600
-* [transportation](#transportation): Union - Transportation mode and related parameters.
-* search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
-  journeys that arrive during this window.
-* [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-
-#### Returns:
-
-* results: List[TimeMapResult] - The list of isochrone shapes.
-
-#### Example:
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Driving, Coordinates, TravelTimeSdk
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-    results = await sdk.time_map_union_async( # `sdk.union_async` will work too
-        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
-        arrival_time=datetime.now(),
-        transportation=Driving()
-    )
-
-    print(results)
-
-
-asyncio.run(main())
-```
-
 ### [Time Map (Fast)](https://docs.traveltime.com/api/reference/isochrones-fast)
 
 A very fast version of `time_map()`. However, the request parameters are much more limited.
 
-#### Takes:
+##### Takes:
 
 * coordinates: List[Coordinates] - Isochrones coordinates.
 * [transportation]: Transportation - Transportation mode and related parameters.
@@ -300,13 +212,13 @@ returns the reachable area for journeys departing from the chosen departure loca
 * [polygons_filter](#polygons-filter): PolygonsFilter - Specifies polygon filter of a single shape.
 * [render_mode](#render-mode): RenderMode - Specifies which render mode should be used.
 
-### JSON response
+#### JSON response
 
-#### Returns:
+##### Returns:
 
 * results: List[TimeMapResult] - The list of isochrone shapes.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -328,13 +240,13 @@ async def main():
 asyncio.run(main())
 ```
 
-### GEOJSON response
+#### GEOJSON response
 
-#### Returns:
+##### Returns:
 
 * results: FeatureCollection - The list of Features.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -356,13 +268,13 @@ async def main():
 asyncio.run(main())
 ```
 
-### WKT response
+#### WKT response
 
-#### Returns:
+##### Returns:
 
 * results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -384,13 +296,13 @@ async def main():
 asyncio.run(main())
 ```
 
-### WKT_NO_HOLES response
+#### WKT_NO_HOLES response
 
-#### Returns:
+##### Returns:
 
 * results: TimeMapWKTResponse - TimeMapWktResponse with isochrone shapes (no holes).
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -416,7 +328,7 @@ asyncio.run(main())
 
 Calculate the travel times to all H3 cells within a travel time catchment area. Return the max, min, and mean travel time for each cell.
 
-#### Takes:
+##### Takes:
 
 * resolution: int - H3 resolution of results to be returned, values can be in range [1, 8].
 * [properties](#cell-properties): List[CellProperty] - Properties to be returned for each H3 hexagon. Possible values: min, max, mean.
@@ -430,11 +342,11 @@ Calculate the travel times to all H3 cells within a travel time catchment area. 
   journeys that arrive during this window.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
-#### Returns:
+##### Returns:
 
 * results: List[H3Result] - The list of H3 isochrone cells.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -464,73 +376,11 @@ async def main():
 asyncio.run(main())
 ```
 
-### H3 Union and Intersection
-
-Works the same way as Time-Map Unions and Intersections, just with H3 params.
-
-#### Examples
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Coordinates, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, H3Centroid
-from traveltimepy.dto.transportation import Driving
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-
-    results = await sdk.h3_union_async_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
-        ],
-        arrival_time=datetime.now(),
-        transportation=Driving(),
-        travel_time=900,
-        resolution=8,
-        properties=[CellProperty.MIN],
-    )
-    print(results)
-
-asyncio.run(main())
-```
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Coordinates, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, H3Centroid
-from traveltimepy.dto.transportation import Driving
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-
-    results = await sdk.h3_intersection_async_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
-        ],
-        arrival_time=datetime.now(),
-        transportation=Driving(),
-        travel_time=900,
-        resolution=8,
-        properties=[CellProperty.MIN],
-    )
-    print(results)
-
-asyncio.run(main())
-```
-
 ### [H3 (Fast)](https://docs.traveltime.com/api/reference/h3-fast)
 
 A very fast version of H3. However, the request parameters are more limited.
 
-#### Takes:
+##### Takes:
 
 * resolution: int - H3 resolution of results to be returned, values can be in range [1, 8].
 * [properties](#cell-properties): List[CellProperty] - Properties to be returned for each H3 hexagon. Possible values: min, max, mean.
@@ -541,11 +391,11 @@ A very fast version of H3. However, the request parameters are more limited.
 returns the reachable area for journeys departing from the chosen departure location if true.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
-#### Returns:
+##### Returns:
 
 * results: List[H3Result] - The list of H3 isochrone cells.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -577,7 +427,7 @@ asyncio.run(main())
 
 Calculate the travel times to all geohash cells within a travel time catchment area. Return the max, min, and mean travel time for each cell.
 
-#### Takes:
+##### Takes:
 
 * resolution: int - H3 resolution of results to be returned, values can be in range [1, 6].
 * [properties](#cell-properties): List[CellProperty] - Properties to be returned for each H3 hexagon. Possible values: min, max, mean.
@@ -591,11 +441,11 @@ Calculate the travel times to all geohash cells within a travel time catchment a
   journeys that arrive during this window.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
-#### Returns:
+##### Returns:
 
 * results: List[GeohashResult] - The list of H3 isochrone cells.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -625,39 +475,126 @@ async def main():
 asyncio.run(main())
 ```
 
-### Geohash Union and Intersection
+### [Geohash (Fast)](https://docs.traveltime.com/api/reference/geohash-fast)
 
-Works the same way as Time-Map Unions and Intersections, just with Geohash params.
+A very fast version of Geohash. However, the request parameters are more limited.
 
-#### Examples
+##### Takes:
+
+* resolution: int - Geohash resolution of results to be returned, values can be in range [1, 6].
+* [properties](#cell-properties): List[CellProperty] - Properties to be returned for each Geohash hexagon. Possible values: min, max, mean.
+* coordinates: List[Union[Coordinates, GeohashCentroid]] - Coordinates of the departure location. Use either latitude and longitude, or the centroid of a geohash cell.
+* [transportation]: Transportation - Transportation mode.
+* travel_time: int - Maximum journey time (in seconds). Maximum value is 10800. Default value is 3600.
+* one_to_many: boolean - returns the reachable area for journeys arriving at the chosen arrival location if false,
+returns the reachable area for journeys departing from the chosen departure location if true.
+* [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
+
+##### Returns:
+
+* results: List[GeohashResult] - The list of geohash isochrone cells.
+
+##### Example:
+
+```python
+import asyncio
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, GeohashCentroid
+from traveltimepy.dto.requests.time_filter_fast import Transportation
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.geohash_fast_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            GeohashCentroid(geohash_centroid="gcpvj3"),
+        ],
+        properties=[CellProperty.MIN],
+        resolution = 6,
+        transportation=Transportation(type="driving+ferry"),
+        travel_time=900,
+    )
+
+    print(results)
+
+asyncio.run(main())
+```
+
+### [Isochrone Intersections](https://docs.traveltime.com/api/reference/isochrones#intersections)
+
+Given origin coordinates, find intersections of specified shapes or cells.
+
+Currently these requests support Intersections in this SDK:
+* [Time Map](#isochrones-time-map)
+* [H3](#isochrones-h3)
+* [Geohash](#isochrones-geohash)
+
+##### Takes:
+
+Intersection requests take the same params as their regular (`arrival_search` / `departure_search`) counterparts. Coordinates list size cannot be more than 10.
+
+##### Returns:
+
+Intersection requests return the same responses as their regular (`arrival_search` / `departure_search`) counterparts.
+
+##### Examples:
+
+**Time Map:**
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+    results = await sdk.time_map_intersection_async( # `sdk.intersection_async` will work too
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        arrival_time=datetime.now(),
+        transportation=Driving()
+    )
+
+    print(results)
+
+
+asyncio.run(main())
+```
+
+**H3:**
 
 ```python
 import asyncio
 from datetime import datetime
 
 from traveltimepy import Coordinates, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, GeohashCentroid
+from traveltimepy.dto.common import CellProperty, H3Centroid
 from traveltimepy.dto.transportation import Driving
 
 
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
 
-    results = await sdk.geohash_union_async_async(
+    results = await sdk.h3_intersection_async_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
-            GeohashCentroid(geohash_centroid="gcpvj3"),
+            H3Centroid(h3_centroid="87195da49ffffff"),
         ],
         arrival_time=datetime.now(),
         transportation=Driving(),
         travel_time=900,
-        resolution=6,
+        resolution=8,
         properties=[CellProperty.MIN],
     )
     print(results)
 
 asyncio.run(main())
 ```
+
+**Geohash:**
 
 ```python
 import asyncio
@@ -687,48 +624,103 @@ async def main():
 asyncio.run(main())
 ```
 
-### [Geohash (Fast)](https://docs.traveltime.com/api/reference/geohash-fast)
+### [Isochrone Unions](https://docs.traveltime.com/api/reference/isochrones#unions)
 
-A very fast version of Geohash. However, the request parameters are more limited.
+Given origin coordinates, find unions of specified shapes or cells.
 
-#### Takes:
+Currently these requests support Intersections in this SDK:
+* [Time Map](#isochrones-time-map)
+* [H3](#isochrones-h3)
+* [Geohash](#isochrones-geohash)
 
-* resolution: int - Geohash resolution of results to be returned, values can be in range [1, 6].
-* [properties](#cell-properties): List[CellProperty] - Properties to be returned for each Geohash hexagon. Possible values: min, max, mean.
-* coordinates: List[Union[Coordinates, GeohashCentroid]] - Coordinates of the departure location. Use either latitude and longitude, or the centroid of a geohash cell.
-* [transportation]: Transportation - Transportation mode.
-* travel_time: int - Maximum journey time (in seconds). Maximum value is 10800. Default value is 3600.
-* one_to_many: boolean - returns the reachable area for journeys arriving at the chosen arrival location if false,
-returns the reachable area for journeys departing from the chosen departure location if true.
-* [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
+##### Takes:
 
-#### Returns:
+Union requests take the same params as their regular (`arrival_search` / `departure_search`) counterparts. Coordinates list size cannot be more than 10.
 
-* results: List[GeohashResult] - The list of geohash isochrone cells.
+##### Returns:
 
-#### Example:
+Union requests return the same responses as their regular (`arrival_search` / `departure_search`) counterparts.
+
+##### Examples:
+
+**Time Map:**
 
 ```python
 import asyncio
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+    results = await sdk.time_map_union_async( # `sdk.union_async` will work too
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        arrival_time=datetime.now(),
+        transportation=Driving()
+    )
+
+    print(results)
+
+
+asyncio.run(main())
+```
+
+**H3:**
+
+```python
+import asyncio
+from datetime import datetime
 
 from traveltimepy import Coordinates, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, GeohashCentroid
-from traveltimepy.dto.requests.time_filter_fast import Transportation
+from traveltimepy.dto.common import CellProperty, H3Centroid
+from traveltimepy.dto.transportation import Driving
+
 
 async def main():
     sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
 
-    results = await sdk.geohash_fast_async(
+    results = await sdk.h3_union_async_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            H3Centroid(h3_centroid="87195da49ffffff"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=8,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
+**Geohash:**
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, GeohashCentroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.geohash_union_async_async(
         coordinates=[
             Coordinates(lat=51.507609, lng=-0.128315),
             GeohashCentroid(geohash_centroid="gcpvj3"),
         ],
-        properties=[CellProperty.MIN],
-        resolution = 6,
-        transportation=Transportation(type="driving+ferry"),
+        arrival_time=datetime.now(),
+        transportation=Driving(),
         travel_time=900,
+        resolution=6,
+        properties=[CellProperty.MIN],
     )
-
     print(results)
 
 asyncio.run(main())
@@ -738,7 +730,7 @@ asyncio.run(main())
 
 Given origin coordinates, find shapes of zones reachable within corresponding travel distance.
 
-#### Takes:
+##### Takes:
 
 * coordinates: List[Coordinates] - Coordinates of the arrival or departure location.
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
@@ -751,11 +743,11 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 * [no_holes](#no_holes): No holes - Enable to remove holes from returned polygons.
 
-#### Returns:
+##### Returns:
 
 * results: List[TimeMapResult] - The list of isochrone shapes
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -783,7 +775,7 @@ asyncio.run(main())
 Given origin and destination points filter out points that cannot be reached within specified time limit. Find out
 travel times, distances and costs between an origin and up to 2,000 destination points.
 
-#### Takes:
+##### Takes:
 
 * locations: List[Locations] - All locations. Location ids must be unique.
 * search_ids: Dict[str, List[str]] - Search ids from a target location to destinations. You can define up to 2000
@@ -799,11 +791,11 @@ travel times, distances and costs between an origin and up to 2,000 destination 
 * snapping: Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
-#### Returns:
+##### Returns:
 
 * results: List[TimeFilterResult] - The results list of reachable and unreachable locations.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -844,7 +836,7 @@ asyncio.run(main())
 
 A very fast version of `time_filter()`. However, the request parameters are much more limited.
 
-#### Takes:
+##### Takes:
 
 * locations: List[Locations] - All locations. Location ids must be unique.
 * search_ids: Dict[str, List[str]] - Searches from a target location to destinations. You can define up to 100,000
@@ -856,11 +848,11 @@ A very fast version of `time_filter()`. However, the request parameters are much
   backward search (many to one matrix). Default value is True.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
-#### Returns:
+##### Returns:
 
 * results: List[TimeFilterFastResult] - The results list of reachable and unreachable locations.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -900,7 +892,7 @@ approximately correct (95% of the results are guaranteed to be within 5% of the 
 This inflexibility comes with a benefit of faster response times (Over 5x faster compared to regular time filter) and
 larger limits on the amount of destination points.
 
-#### Takes:
+##### Takes:
 
 * origin: Coordinates - Origin point.
 * destinations: List[Coordinates] - Destination points. Cannot be more than 200,000.
@@ -911,13 +903,13 @@ larger limits on the amount of destination points.
   backward search (many to one matrix). Default value is True.
 * properties: List[PropertyProto] - specifies which extra properties should be calculated in the response. 
 
-#### Returns:
+##### Returns:
 
 * results: TimeFilterProtoResponse - The response contains:
   * list of travel times, where each position denotes either a travel time (in seconds)
     of a journey, or if travel time is negative, that the journey from the origin to the destination point is impossible. 
   * (optional) list of distances where each position denotes distance (in meters) to the specified location. 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -946,7 +938,7 @@ asyncio.run(main())
 
 Returns routing information between source and destinations.
 
-#### Takes:
+##### Takes:
 
 * locations: List[Locations] - All locations. Location ids must be unique.
 * search_ids: Dict[str, List[str]] - Searches from a target location to destinations.
@@ -959,11 +951,11 @@ Returns routing information between source and destinations.
   journeys that arrive during this window.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 
-#### Returns:
+##### Returns:
 
 * results: List[RoutesResult] - The results list of routes.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -998,7 +990,7 @@ asyncio.run(main())
 
 Match a query string to geographic coordinates.
 
-#### Takes:
+##### Takes:
 
 * query: str - A query to geocode. Can be an address, a postcode or a venue.
 * within_countries: List[str] - Only return the results that are within the specified country.
@@ -1008,11 +1000,11 @@ Match a query string to geographic coordinates.
 * format_exclude_country: bool - Exclude the country from the formatted name field.
 * bounds: Rectangle - Used to limit the results to a bounding box.
 
-#### Returns:
+##### Returns:
 
 * Matched locations in geojson format
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -1030,16 +1022,16 @@ asyncio.run(main())
 
 Match a latitude, longitude pair to an address.
 
-#### Takes:
+##### Takes:
 
 * lat: float - Latitude
 * lng: float - Longitude
 
-#### Returns:
+##### Returns:
 
 * Matched locations in a geojson format
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -1058,7 +1050,7 @@ asyncio.run(main())
 Find reachable postcodes from origin (or to destination) and get statistics about such postcodes. Currently only
 supports United Kingdom.
 
-#### Takes:
+##### Takes:
 
 * coordinates: List[Coordinates] - Location coordinates.
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
@@ -1070,11 +1062,11 @@ supports United Kingdom.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 
-#### Returns:
+##### Returns:
 
 * results: List[PostcodesResult] - The results list of postcodes.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -1100,7 +1092,7 @@ asyncio.run(main())
 Find districts that have a certain coverage from origin (or to destination) and get statistics about postcodes within
 such districts. Currently only supports United Kingdom.
 
-#### Takes:
+##### Takes:
 
 * coordinates: List[Coordinates] - Location coordinates.
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
@@ -1115,11 +1107,11 @@ such districts. Currently only supports United Kingdom.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 
-#### Returns:
+##### Returns:
 
 * results: List[DistrictsResult] - The results list of districts.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -1146,7 +1138,7 @@ asyncio.run(main())
 Find sectors that have a certain coverage from origin (or to destination) and get statistics about postcodes within such
 sectors. Currently only supports United Kingdom.
 
-#### Takes:
+##### Takes:
 
 * coordinates: List[Coordinates] - Location coordinates.
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
@@ -1161,11 +1153,11 @@ sectors. Currently only supports United Kingdom.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 
-#### Returns:
+##### Returns:
 
 * results: List[SectorsResult] - The results list of postcode sectors.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -1194,7 +1186,7 @@ It is useful when you have an application that can do searches in any country th
 Locations to get the map name for a certain point and then use this endpoint to check what features are available for
 that map. That way you could show fares for routes in the maps that support it.
 
-#### Returns:
+##### Returns:
 
 * maps: List[Map]
 * name - An internal map id. The first two characters usually correspond to the ISO 3166-2 standard (e.g th, ie)
@@ -1202,7 +1194,7 @@ that map. That way you could show fares for routes in the maps that support it.
   info endpoint.
 * features - Features that are supported in the specified map
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
@@ -1221,11 +1213,11 @@ asyncio.run(main())
 Find out what points are supported by our api. The returned map name for a point can be used to determine what features
 are supported.
 
-#### Takes:
+##### Takes:
 
 * locations: List[Location] - Each location requires an id and lat/lng values
 
-#### Returns:
+##### Returns:
 
 * locations: List[SupportedLocation]
 * id - Location id that you specified in the request.
@@ -1235,7 +1227,7 @@ are supported.
 * additional_map_names - In case the location is in more than one map, other map ids are listed here.
 * unsupported_locations: List[str] - List that contains ids of locations that are unsupported.
 
-#### Example:
+##### Example:
 
 ```python
 import asyncio
