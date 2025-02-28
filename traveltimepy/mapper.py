@@ -4,6 +4,8 @@ from typing import Dict, Union, List, Optional
 from traveltimepy.dto.requests import time_map_fast
 from traveltimepy.dto.requests import h3
 from traveltimepy.dto.requests import geohash
+from traveltimepy.dto.requests import h3_fast
+from traveltimepy.dto.requests import geohash_fast
 from traveltimepy.dto.requests.distance_map import DistanceMapRequest
 from traveltimepy.dto.requests.geohash import GeohashRequest
 from traveltimepy.dto.requests.h3 import H3Request
@@ -50,6 +52,8 @@ from traveltimepy.dto.requests.time_map_fast import TimeMapFastRequest
 from traveltimepy.dto.requests.time_map_fast_geojson import TimeMapFastGeojsonRequest
 from traveltimepy.dto.requests.time_map_fast_wkt import TimeMapFastWKTRequest
 from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
+from traveltimepy.dto.requests.h3_fast import H3FastRequest
+from traveltimepy.dto.requests.geohash_fast import GeohashFastRequest
 from traveltimepy.dto.requests.postcodes_zones import (
     PostcodesDistrictsRequest,
     PostcodesSectorsRequest,
@@ -279,6 +283,104 @@ def create_time_map_fast_wkt(
                         snapping=snapping,
                         polygons_filter=polygons_filter,
                         render_mode=render_mode,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                one_to_many=[],
+            ),
+        )
+
+
+def create_h3_fast(
+    coordinates: List[Union[Coordinates, H3Centroid]],
+    properties: List[CellProperty],
+    resolution: int,
+    transportation: h3_fast.Transportation,
+    travel_time: int,
+    snapping: Optional[Snapping],
+    one_to_many: bool,
+) -> H3FastRequest:
+    if one_to_many:
+        return H3FastRequest(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=h3_fast.ArrivalSearches(
+                one_to_many=[
+                    h3_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",
+                        snapping=snapping,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                many_to_one=[],
+            ),
+        )
+    else:
+        return H3FastRequest(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=h3_fast.ArrivalSearches(
+                many_to_one=[
+                    h3_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",
+                        snapping=snapping,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                one_to_many=[],
+            ),
+        )
+
+
+def create_geohash_fast(
+    coordinates: List[Union[Coordinates, GeohashCentroid]],
+    properties: List[CellProperty],
+    resolution: int,
+    transportation: geohash_fast.Transportation,
+    travel_time: int,
+    snapping: Optional[Snapping],
+    one_to_many: bool,
+) -> GeohashFastRequest:
+    if one_to_many:
+        return GeohashFastRequest(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=geohash_fast.ArrivalSearches(
+                one_to_many=[
+                    geohash_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",
+                        snapping=snapping,
+                    )
+                    for ind, cur_coordinates in enumerate(coordinates)
+                ],
+                many_to_one=[],
+            ),
+        )
+    else:
+        return GeohashFastRequest(
+            resolution=resolution,
+            properties=properties,
+            arrival_searches=geohash_fast.ArrivalSearches(
+                many_to_one=[
+                    geohash_fast.Search(
+                        id=f"Search {ind}",
+                        coords=cur_coordinates,
+                        transportation=transportation,
+                        travel_time=travel_time,
+                        arrival_time_period="weekday_morning",
+                        snapping=snapping,
                     )
                     for ind, cur_coordinates in enumerate(coordinates)
                 ],
