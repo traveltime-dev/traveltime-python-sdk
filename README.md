@@ -196,94 +196,6 @@ async def main():
 asyncio.run(main())
 ```
 
-### [Isochrones (Time Map Intersection)](https://docs.traveltime.com/api/reference/isochrones)
-
-Given origin coordinates, find intersections of specified shapes.
-
-##### Takes:
-
-* coordinates: List[Coordinates] - Intersection coordinates. The size of list cannot be more than 10.
-* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
-* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with
-  arrival_time.
-* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 3600
-* [transportation](#transportation): Union - Transportation mode and related parameters.
-* search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
-  journeys that arrive during this window.
-* [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-
-##### Returns:
-
-* results: List[TimeMapResult] - The list of isochrone shapes.
-
-##### Example:
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Driving, Coordinates, TravelTimeSdk
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-    results = await sdk.time_map_intersection_async( # `sdk.intersection_async` will work too
-        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
-        arrival_time=datetime.now(),
-        transportation=Driving()
-    )
-
-    print(results)
-
-
-asyncio.run(main())
-```
-
-### [Isochrones (Time Map Union)](https://docs.traveltime.com/api/reference/isochrones)
-
-Given origin coordinates, find unions of specified shapes.
-
-Finds the union of specified shapes.
-
-##### Takes:
-
-* coordinates: List[Coordinates] - Union coordinates. The size of list cannot be more than 10.
-* arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
-* departure_time: datetime - Leave departure location at no earlier than given time. Cannot be specified with
-  arrival_time.
-* travel_time: int - Maximum journey time (in seconds). Maximum value is 14400. Default value is 3600
-* [transportation](#transportation): Union - Transportation mode and related parameters.
-* search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
-  journeys that arrive during this window.
-* [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-
-##### Returns:
-
-* results: List[TimeMapResult] - The list of isochrone shapes.
-
-##### Example:
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Driving, Coordinates, TravelTimeSdk
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-    results = await sdk.time_map_union_async( # `sdk.union_async` will work too
-        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
-        arrival_time=datetime.now(),
-        transportation=Driving()
-    )
-
-    print(results)
-
-
-asyncio.run(main())
-```
-
 ### [Time Map (Fast)](https://docs.traveltime.com/api/reference/isochrones-fast)
 
 A very fast version of `time_map()`. However, the request parameters are much more limited.
@@ -464,68 +376,6 @@ async def main():
 asyncio.run(main())
 ```
 
-### H3 Union and Intersection
-
-Works the same way as Time-Map Unions and Intersections, just with H3 params.
-
-#### Examples
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Coordinates, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, H3Centroid
-from traveltimepy.dto.transportation import Driving
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-
-    results = await sdk.h3_union_async_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
-        ],
-        arrival_time=datetime.now(),
-        transportation=Driving(),
-        travel_time=900,
-        resolution=8,
-        properties=[CellProperty.MIN],
-    )
-    print(results)
-
-asyncio.run(main())
-```
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Coordinates, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, H3Centroid
-from traveltimepy.dto.transportation import Driving
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-
-    results = await sdk.h3_intersection_async_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
-        ],
-        arrival_time=datetime.now(),
-        transportation=Driving(),
-        travel_time=900,
-        resolution=8,
-        properties=[CellProperty.MIN],
-    )
-    print(results)
-
-asyncio.run(main())
-```
-
 ### [H3 (Fast)](https://docs.traveltime.com/api/reference/h3-fast)
 
 A very fast version of H3. However, the request parameters are more limited.
@@ -625,68 +475,6 @@ async def main():
 asyncio.run(main())
 ```
 
-### Geohash Union and Intersection
-
-Works the same way as Time-Map Unions and Intersections, just with Geohash params.
-
-#### Examples
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Coordinates, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, GeohashCentroid
-from traveltimepy.dto.transportation import Driving
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-
-    results = await sdk.geohash_union_async_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            GeohashCentroid(geohash_centroid="gcpvj3"),
-        ],
-        arrival_time=datetime.now(),
-        transportation=Driving(),
-        travel_time=900,
-        resolution=6,
-        properties=[CellProperty.MIN],
-    )
-    print(results)
-
-asyncio.run(main())
-```
-
-```python
-import asyncio
-from datetime import datetime
-
-from traveltimepy import Coordinates, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, GeohashCentroid
-from traveltimepy.dto.transportation import Driving
-
-
-async def main():
-    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
-
-    results = await sdk.geohash_intersection_async_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            GeohashCentroid(geohash_centroid="gcpvj3"),
-        ],
-        arrival_time=datetime.now(),
-        transportation=Driving(),
-        travel_time=900,
-        resolution=6,
-        properties=[CellProperty.MIN],
-    )
-    print(results)
-
-asyncio.run(main())
-```
-
 ### [Geohash (Fast)](https://docs.traveltime.com/api/reference/geohash-fast)
 
 A very fast version of Geohash. However, the request parameters are more limited.
@@ -729,6 +517,210 @@ async def main():
         travel_time=900,
     )
 
+    print(results)
+
+asyncio.run(main())
+```
+
+### [Isochrone Intersections](https://docs.traveltime.com/api/reference/isochrones#intersections)
+
+Given origin coordinates, find intersections of specified shapes or cells.
+
+Currently these requests support Intersections in this SDK:
+* [Time Map](#isochrones-time-map)
+* [H3](#isochrones-h3)
+* [Geohash](#isochrones-geohash)
+
+##### Takes:
+
+Intersection requests take the same params as their regular (`arrival_search` / `departure_search`) counterparts. Coordinates list size cannot be more than 10.
+
+##### Returns:
+
+Intersection requests return the same responses as their regular (`arrival_search` / `departure_search`) counterparts.
+
+##### Examples:
+
+**Time Map:**
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+    results = await sdk.time_map_intersection_async( # `sdk.intersection_async` will work too
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        arrival_time=datetime.now(),
+        transportation=Driving()
+    )
+
+    print(results)
+
+
+asyncio.run(main())
+```
+
+**H3:**
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, H3Centroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.h3_intersection_async_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            H3Centroid(h3_centroid="87195da49ffffff"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=8,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
+**Geohash:**
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, GeohashCentroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.geohash_intersection_async_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            GeohashCentroid(geohash_centroid="gcpvj3"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=6,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
+### [Isochrone Unions](https://docs.traveltime.com/api/reference/isochrones#unions)
+
+Given origin coordinates, find unions of specified shapes or cells.
+
+Currently these requests support Intersections in this SDK:
+* [Time Map](#isochrones-time-map)
+* [H3](#isochrones-h3)
+* [Geohash](#isochrones-geohash)
+
+##### Takes:
+
+Union requests take the same params as their regular (`arrival_search` / `departure_search`) counterparts. Coordinates list size cannot be more than 10.
+
+##### Returns:
+
+Union requests return the same responses as their regular (`arrival_search` / `departure_search`) counterparts.
+
+##### Examples:
+
+**Time Map:**
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Driving, Coordinates, TravelTimeSdk
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+    results = await sdk.time_map_union_async( # `sdk.union_async` will work too
+        coordinates=[Coordinates(lat=51.507609, lng=-0.128315), Coordinates(lat=51.517609, lng=-0.138315)],
+        arrival_time=datetime.now(),
+        transportation=Driving()
+    )
+
+    print(results)
+
+
+asyncio.run(main())
+```
+
+**H3:**
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, H3Centroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.h3_union_async_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            H3Centroid(h3_centroid="87195da49ffffff"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=8,
+        properties=[CellProperty.MIN],
+    )
+    print(results)
+
+asyncio.run(main())
+```
+
+**Geohash:**
+
+```python
+import asyncio
+from datetime import datetime
+
+from traveltimepy import Coordinates, TravelTimeSdk
+from traveltimepy.dto.common import CellProperty, GeohashCentroid
+from traveltimepy.dto.transportation import Driving
+
+
+async def main():
+    sdk = TravelTimeSdk("YOUR_APP_ID", "YOUR_APP_KEY")
+
+    results = await sdk.geohash_union_async_async(
+        coordinates=[
+            Coordinates(lat=51.507609, lng=-0.128315),
+            GeohashCentroid(geohash_centroid="gcpvj3"),
+        ],
+        arrival_time=datetime.now(),
+        transportation=Driving(),
+        travel_time=900,
+        resolution=6,
+        properties=[CellProperty.MIN],
+    )
     print(results)
 
 asyncio.run(main())
