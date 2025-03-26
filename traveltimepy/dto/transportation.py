@@ -1,8 +1,10 @@
 from typing import Optional
 from typing_extensions import Literal
 
-
 from pydantic.main import BaseModel
+from pydantic import model_validator
+
+from traveltimepy.dto.common import DrivingTrafficModel
 
 
 class MaxChanges(BaseModel):
@@ -13,6 +15,7 @@ class MaxChanges(BaseModel):
 class Driving(BaseModel):
     type: Literal["driving"] = "driving"
     disable_border_crossing: Optional[bool] = None
+    traffic_model: Optional[DrivingTrafficModel] = None
 
 
 class Walking(BaseModel):
@@ -26,6 +29,15 @@ class Cycling(BaseModel):
 class Ferry(BaseModel):
     type: Literal["ferry", "cycling+ferry", "driving+ferry"] = "ferry"
     boarding_time: Optional[int] = None
+    traffic_model: Optional[DrivingTrafficModel] = None
+
+    @model_validator(mode="after")
+    def check_traffic_model(self):
+        if self.type != "driving+ferry" and self.traffic_model:
+            raise ValueError(
+                '"traffic_model" cannot be specified when type is not "driving+ferry"'
+            )
+        return self
 
 
 class DrivingTrain(BaseModel):
@@ -35,6 +47,7 @@ class DrivingTrain(BaseModel):
     parking_time: Optional[int] = None
     walking_time: Optional[int] = None
     max_changes: Optional[MaxChanges] = None
+    traffic_model: Optional[DrivingTrafficModel] = None
 
 
 class PublicTransport(BaseModel):
