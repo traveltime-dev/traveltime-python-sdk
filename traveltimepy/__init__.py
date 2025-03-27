@@ -35,6 +35,7 @@ from traveltimepy.dto.common import (
     Range,
     Rectangle,
     LevelOfDetail,
+    DrivingTrafficModel,
 )
 
 from traveltimepy.sdk import TravelTimeSdk
@@ -68,4 +69,5 @@ __all__ = [
     "TravelTimeSdk",
     "Transportation",
     "ZonesProperty",
+    "DrivingTrafficModel",
 ]

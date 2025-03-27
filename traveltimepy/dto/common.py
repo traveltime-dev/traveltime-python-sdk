@@ -147,6 +147,12 @@ class SnappingAcceptRoads(str, Enum):
     ANY_DRIVABLE = "any_drivable"
 
 
+class DrivingTrafficModel(str, Enum):
+    OPTIMISTIC = "optimistic"
+    BALANCED = "balanced"
+    PESSIMISTIC = "pessimistic"
+
+
 class Snapping(BaseModel):
     penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
     accept_roads: Optional[SnappingAcceptRoads] = (

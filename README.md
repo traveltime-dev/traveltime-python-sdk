@@ -1263,10 +1263,11 @@ These examples don't apply to proto / fast endpoints. For more examples you can 
 #### Driving 
 
 ```python
-from traveltimepy import Driving
+from traveltimepy import Driving, DrivingTrafficModel
 
 transportation=Driving()
 transportation=Driving(disable_border_crossing = True)
+transportation=Driving(traffic_model = DrivingTrafficModel.OPTIMISTIC)
 ```
 
 #### Walking 
@@ -1288,18 +1289,20 @@ transportation=Cycling()
 #### Ferry 
 
 ```python
-from traveltimepy import Ferry 
+from traveltimepy import Ferry, DrivingTrafficModel
 
 transportation=Ferry()
 transportation=Ferry(type="cycling+ferry")
 transportation=Ferry(type="driving+ferry")
 transportation=Ferry(type="cycling+ferry", boarding_time = 300)
+
+transportation=Ferry(type="driving+ferry", traffic_model=DrivingTrafficModel.OPTIMISTIC)
 ``` 
 
 #### DrivingTrain 
 
 ```python
-from traveltimepy import DrivingTrain, MaxChanges
+from traveltimepy import DrivingTrain, MaxChanges, DrivingTrafficModel
 
 transportation=DrivingTrain()
 
@@ -1308,7 +1311,8 @@ transportation=DrivingTrain(
   driving_time_to_station=1800, 
   parking_time=800,
   walking_time=500,
-  max_changes=MaxChanges(enabled=True, limit=3)
+  max_changes=MaxChanges(enabled=True, limit=3),
+  traffic_model=DrivingTrafficModel.OPTIMISTIC
 )
 ``` 
 
