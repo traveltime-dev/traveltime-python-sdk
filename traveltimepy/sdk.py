@@ -153,13 +153,13 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         range: Optional[FullRange] = None,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[TimeFilterResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeFilterResponse,
-            v4_endpoint or "time-filter",
+            v4_endpoint_path or "time-filter",
             self._headers(AcceptType.JSON),
             create_time_filter(
                 locations,
@@ -178,11 +178,11 @@ class TravelTimeSdk:
 
     async def map_info_async(
         self,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[Map]:
         res = await send_get_async(
             MapInfoResponse,
-            v4_endpoint or "map-info",
+            v4_endpoint_path or "map-info",
             self._headers(AcceptType.JSON),
             self._sdk_params,
             None,
@@ -197,11 +197,11 @@ class TravelTimeSdk:
         format_name: Optional[bool] = None,
         format_exclude_country: Optional[bool] = None,
         bounds: Optional[Rectangle] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
-            v4_endpoint or "geocoding/search",
+            v4_endpoint_path or "geocoding/search",
             self._headers(AcceptType.JSON),
             self._sdk_params,
             self._geocoding_params(
@@ -218,11 +218,11 @@ class TravelTimeSdk:
         self,
         lat: float,
         lng: float,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> FeatureCollection:
         return await send_get_async(
             FeatureCollection,
-            v4_endpoint or "geocoding/reverse",
+            v4_endpoint_path or "geocoding/reverse",
             self._headers(AcceptType.JSON),
             self._sdk_params,
             self._geocoding_reverse_params(lat, lng),
@@ -231,11 +231,11 @@ class TravelTimeSdk:
     async def supported_locations_async(
         self,
         locations: List[Location],
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> SupportedLocationsResponse:
         return await send_post_async(
             SupportedLocationsResponse,
-            v4_endpoint or "supported-locations",
+            v4_endpoint_path or "supported-locations",
             self._headers(AcceptType.JSON),
             SupportedLocationsRequest(locations=locations),
             self._sdk_params,
@@ -251,11 +251,11 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[TimeMapResult]:
         resp = await send_post_async(
             TimeMapResponse,
-            v4_endpoint or "time-map/fast",
+            v4_endpoint_path or "time-map/fast",
             self._headers(AcceptType.JSON),
             create_time_map_fast(
                 coordinates,
@@ -281,11 +281,11 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> FeatureCollection:
         resp = await send_post_async(
             FeatureCollection,
-            v4_endpoint or "time-map/fast",
+            v4_endpoint_path or "time-map/fast",
             self._headers(AcceptType.GEO_JSON),
             create_time_map_fast_geojson(
                 coordinates,
@@ -311,11 +311,11 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> TimeMapWKTResponse:
         resp = await send_post_async(
             TimeMapWKTResponse,
-            v4_endpoint or "time-map/fast",
+            v4_endpoint_path or "time-map/fast",
             self._headers(AcceptType.WKT),
             create_time_map_fast_wkt(
                 coordinates,
@@ -341,11 +341,11 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> TimeMapWKTResponse:
         resp = await send_post_async(
             TimeMapWKTResponse,
-            v4_endpoint or "time-map/fast",
+            v4_endpoint_path or "time-map/fast",
             self._headers(AcceptType.WKT_NO_HOLES),
             create_time_map_fast_wkt(
                 coordinates,
@@ -370,11 +370,11 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         one_to_many: bool = True,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[H3Result]:
         resp = await send_post_async(
             H3Response,
-            v4_endpoint or "h3/fast",
+            v4_endpoint_path or "h3/fast",
             self._headers(AcceptType.JSON),
             create_h3_fast(
                 coordinates=coordinates,
@@ -398,11 +398,11 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         one_to_many: bool = True,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[GeohashResult]:
         resp = await send_post_async(
             GeohashResponse,
-            v4_endpoint or "geohash/fast",
+            v4_endpoint_path or "geohash/fast",
             self._headers(AcceptType.JSON),
             create_geohash_fast(
                 coordinates=coordinates,
@@ -426,11 +426,11 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         one_to_many: bool = True,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[TimeFilterFastResult]:
         resp = await send_post_async(
             TimeFilterFastResponse,
-            v4_endpoint or "time-filter/fast",
+            v4_endpoint_path or "time-filter/fast",
             self._headers(AcceptType.JSON),
             create_time_filter_fast(
                 locations,
@@ -462,13 +462,13 @@ class TravelTimeSdk:
         travel_time: int = 1800,
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[PostcodesResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             PostcodesResponse,
-            v4_endpoint or "time-filter/postcodes",
+            v4_endpoint_path or "time-filter/postcodes",
             self._headers(AcceptType.JSON),
             create_postcodes(
                 coordinates,
@@ -500,13 +500,13 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[PostcodesDistrictsResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
         res = await send_post_async(
             PostcodesDistrictsResponse,
-            v4_endpoint or "time-filter/postcode-districts",
+            v4_endpoint_path or "time-filter/postcode-districts",
             self._headers(AcceptType.JSON),
             create_districts(
                 coordinates,
@@ -539,13 +539,13 @@ class TravelTimeSdk:
         reachable_postcodes_threshold=0.1,
         properties: Optional[List[ZonesProperty]] = None,
         range: Optional[FullRange] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[PostcodesSectorsResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             PostcodesSectorsResponse,
-            v4_endpoint or "time-filter/postcode-sectors",
+            v4_endpoint_path or "time-filter/postcode-sectors",
             self._headers(AcceptType.JSON),
             create_sectors(
                 coordinates,
@@ -578,13 +578,13 @@ class TravelTimeSdk:
         properties: Optional[List[Property]] = None,
         range: Optional[FullRange] = None,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[RoutesResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             RoutesResponse,
-            v4_endpoint or "routes",
+            v4_endpoint_path or "routes",
             self._headers(AcceptType.JSON),
             create_routes(
                 locations,
@@ -648,13 +648,13 @@ class TravelTimeSdk:
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapResponse,
-            v4_endpoint or "time-map",
+            v4_endpoint_path or "time-map",
             self._headers(AcceptType.JSON),
             create_time_map_intersection(
                 coordinates,
@@ -731,13 +731,13 @@ class TravelTimeSdk:
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> TimeMapResult:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapResponse,
-            v4_endpoint or "time-map",
+            v4_endpoint_path or "time-map",
             self._headers(AcceptType.JSON),
             create_time_map_union(
                 coordinates,
@@ -815,13 +815,13 @@ class TravelTimeSdk:
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapResponse,
-            v4_endpoint or "time-map",
+            v4_endpoint_path or "time-map",
             self._headers(AcceptType.JSON),
             create_time_map(
                 coordinates,
@@ -860,13 +860,13 @@ class TravelTimeSdk:
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> FeatureCollection:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             FeatureCollection,
-            v4_endpoint or "time-map",
+            v4_endpoint_path or "time-map",
             self._headers(AcceptType.GEO_JSON),
             create_time_map_geojson(
                 coordinates,
@@ -905,13 +905,13 @@ class TravelTimeSdk:
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapWKTResponse,
-            v4_endpoint or "time-map",
+            v4_endpoint_path or "time-map",
             self._headers(AcceptType.WKT),
             create_time_map_wkt(
                 coordinates,
@@ -950,13 +950,13 @@ class TravelTimeSdk:
         polygons_filter: Optional[PolygonsFilter] = None,
         remove_water_bodies: Optional[bool] = None,
         render_mode: Optional[RenderMode] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> TimeMapWKTResponse:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             TimeMapWKTResponse,
-            v4_endpoint or "time-map",
+            v4_endpoint_path or "time-map",
             self._headers(AcceptType.WKT_NO_HOLES),
             create_time_map_wkt(
                 coordinates,
@@ -993,13 +993,13 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> H3Result:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             H3Response,
-            v4_endpoint or "h3",
+            v4_endpoint_path or "h3",
             self._headers(AcceptType.JSON),
             create_h3_intersection(
                 coordinates=coordinates,
@@ -1034,13 +1034,13 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> H3Result:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             H3Response,
-            v4_endpoint or "h3",
+            v4_endpoint_path or "h3",
             self._headers(AcceptType.JSON),
             create_h3_union(
                 coordinates=coordinates,
@@ -1076,13 +1076,13 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[H3Result]:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             H3Response,
-            v4_endpoint or "h3",
+            v4_endpoint_path or "h3",
             self._headers(AcceptType.JSON),
             create_h3(
                 coordinates=coordinates,
@@ -1117,13 +1117,13 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> GeohashResult:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             GeohashResponse,
-            v4_endpoint or "geohash",
+            v4_endpoint_path or "geohash",
             self._headers(AcceptType.JSON),
             create_geohash_intersection(
                 coordinates=coordinates,
@@ -1158,13 +1158,13 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> GeohashResult:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             GeohashResponse,
-            v4_endpoint or "geohash",
+            v4_endpoint_path or "geohash",
             self._headers(AcceptType.JSON),
             create_geohash_union(
                 coordinates=coordinates,
@@ -1200,13 +1200,13 @@ class TravelTimeSdk:
         travel_time: int = 3600,
         search_range: Optional[Range] = None,
         snapping: Optional[Snapping] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[GeohashResult]:
         time_info = get_time_info(departure_time, arrival_time)
 
         resp = await send_post_async(
             GeohashResponse,
-            v4_endpoint or "geohash",
+            v4_endpoint_path or "geohash",
             self._headers(AcceptType.JSON),
             create_geohash(
                 coordinates=coordinates,
@@ -1241,12 +1241,12 @@ class TravelTimeSdk:
         snapping: Optional[Snapping] = None,
         polygons_filter: Optional[PolygonsFilter] = None,
         no_holes: Optional[bool] = None,
-        v4_endpoint: Optional[str] = None,
+        v4_endpoint_path: Optional[str] = None,
     ) -> List[TimeMapResult]:
         time_info = get_time_info(departure_time, arrival_time)
         resp = await send_post_async(
             TimeMapResponse,
-            v4_endpoint or "distance-map",
+            v4_endpoint_path or "distance-map",
             self._headers(AcceptType.JSON),
             create_distance_map(
                 coordinates,

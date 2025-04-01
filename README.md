@@ -75,7 +75,7 @@ False - returned shape may cover nearby water bodies like large lakes, wide rive
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 * [polygons_filter](#polygons-filter): PolygonsFilter - Specifies polygon filter of a single shape.
 * [render_mode](#render-mode): RenderMode - Specifies which render mode should be used.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 #### JSON response
 
@@ -212,7 +212,7 @@ returns the reachable area for journeys departing from the chosen departure loca
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 * [polygons_filter](#polygons-filter): PolygonsFilter - Specifies polygon filter of a single shape.
 * [render_mode](#render-mode): RenderMode - Specifies which render mode should be used.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 #### JSON response
 
@@ -343,7 +343,7 @@ Calculate the travel times to all H3 cells within a travel time catchment area. 
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -393,7 +393,7 @@ A very fast version of H3. However, the request parameters are more limited.
 * one_to_many: boolean - returns the reachable area for journeys arriving at the chosen arrival location if false,
 returns the reachable area for journeys departing from the chosen departure location if true.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -444,7 +444,7 @@ Calculate the travel times to all geohash cells within a travel time catchment a
 * search_range: Range - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -494,7 +494,7 @@ A very fast version of Geohash. However, the request parameters are more limited
 * one_to_many: boolean - returns the reachable area for journeys arriving at the chosen arrival location if false,
 returns the reachable area for journeys departing from the chosen departure location if true.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -748,7 +748,7 @@ Given origin coordinates, find shapes of zones reachable within corresponding tr
 * [level_of_detail](#level-of-detail): LevelOfDetail - When enabled, allows the user to specify how detailed the isochrones should be.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 * [no_holes](#no_holes): No holes - Enable to remove holes from returned polygons.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -797,7 +797,7 @@ travel times, distances and costs between an origin and up to 2,000 destination 
   journeys that arrive during this window.
 * snapping: Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -855,7 +855,7 @@ A very fast version of `time_filter()`. However, the request parameters are much
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
   backward search (many to one matrix). Default value is True.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -959,7 +959,7 @@ Returns routing information between source and destinations.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
 * [snapping](#snapping): Snapping - Adjusts the process of looking up the nearest roads from the departure / arrival points.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -1009,7 +1009,7 @@ Match a query string to geographic coordinates.
   of the location.
 * format_exclude_country: bool - Exclude the country from the formatted name field.
 * bounds: Rectangle - Used to limit the results to a bounding box.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -1037,7 +1037,7 @@ Match a latitude, longitude pair to an address.
 
 * lat: float - Latitude
 * lng: float - Longitude
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -1073,7 +1073,7 @@ supports United Kingdom.
 * properties: List[Property] - Properties to be returned about the postcodes. Default value is travel_time.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -1119,7 +1119,7 @@ such districts. Currently only supports United Kingdom.
 * properties: List[Property] - Properties to be returned about the districts. Default value is travel_time_all.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -1166,7 +1166,7 @@ sectors. Currently only supports United Kingdom.
 * properties: List[Property] - Properties to be returned about the sectors. Default value is travel_time_all.
 * range: FullRange - When enabled, range adds an arrival window to the arrival time, and results are returned for any
   journeys that arrive during this window.
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
@@ -1208,7 +1208,7 @@ that map. That way you could show fares for routes in the maps that support it.
   sometimes followed by additional characters (e.g ca_pst, us_pst). To get features of a specific map, use the map
   info endpoint.
 * features - Features that are supported in the specified map
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Example:
 
@@ -1232,7 +1232,7 @@ are supported.
 ##### Takes:
 
 * locations: List[Location] - Each location requires an id and lat/lng values
-* v4_endpoint: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
+* v4_endpoint_path: str - If defined, overrides the endpoint of the url `f"/v4/{v4_endpoint}"`.
 
 ##### Returns:
 
