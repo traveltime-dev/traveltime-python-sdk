@@ -27,7 +27,7 @@ jobs:
 
       - name: Generate proto files
         run: |
-          protoc -I=./proto --python_out=./traveltimepy/proto/ ./proto/*
+          protoc -I=. --python_out=. com/igeolise/traveltime/rabbitmq/requests/*.proto
 
       - name: Install setuptools
         run: |
