@@ -36,8 +36,15 @@ async def send_proto_async(
 async def _process_response(response: ClientResponse) -> TimeFilterProtoResponse:
     content = await response.read()
     if response.status != 200:
+        error_code = response.headers.get('X-ERROR-CODE', 'Unknown')
+        error_details = response.headers.get('X-ERROR-DETAILS', 'No details provided')
+        error_message = response.headers.get('X-ERROR-MESSAGE', 'No message provided')
+
         msg = (
             f"Travel Time API proto request failed with error code: {response.status}\n"
+            f"X-ERROR-CODE: {error_code}\n"
+            f"X-ERROR-DETAILS: {error_details}\n"
+            f"X-ERROR-MESSAGE: {error_message}"
         )
         raise ApiError(msg)
     else:
