@@ -8,7 +8,8 @@ from aiohttp import (
     ClientTimeout,
 )
 
-from traveltimepy.proto import TimeFilterFastResponse_pb2, TimeFilterFastRequest_pb2
+import TimeFilterFastResponse_pb2  # type: ignore
+import TimeFilterFastRequest_pb2  # type: ignore
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.errors import ApiError
 

@@ -12,7 +12,8 @@ from traveltimepy.dto.requests.h3 import H3Request
 from traveltimepy.dto.requests.time_map_geojson import TimeMapRequestGeojson
 from traveltimepy.dto.requests.time_map_wkt import TimeMapWKTRequest
 from traveltimepy.errors import ApiError
-from traveltimepy.proto import TimeFilterFastRequest_pb2
+import TimeFilterFastRequest_pb2  # type: ignore
+import RequestsCommon_pb2  # type: ignore
 
 from traveltimepy.dto.common import (
     CellProperty,
@@ -1517,7 +1518,7 @@ def create_proto_request(
         request.oneToManyRequest.transportation.type = transportation.value.code
         request.oneToManyRequest.travelTime = travel_time
         request.oneToManyRequest.arrivalTimePeriod = (
-            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
+            RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
         )
         if properties is not None:
             request.oneToManyRequest.properties.extend(properties)
@@ -1534,7 +1535,7 @@ def create_proto_request(
         request.manyToOneRequest.transportation.type = transportation.value.code
         request.manyToOneRequest.travelTime = travel_time
         request.manyToOneRequest.arrivalTimePeriod = (
-            TimeFilterFastRequest_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
+            RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
         )
         if properties is not None:
             request.manyToOneRequest.properties.extend(properties)
