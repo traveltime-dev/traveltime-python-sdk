@@ -56,11 +56,4 @@ packages = { find = {} }
 per-file-ignores = ["**/__init__.py:F401"]
 max-line-length = 88
 extend-ignore = ["E203"]                             # See https://github.com/PyCQA/pycodestyle/issues/373
-exclude = ["build/", "venv/", "traveltimepy/proto/"]
 
-[tool.mypy]
-exclude = "^(traveltimepy/proto/.*|build/.*|venv/.*)$"
-
-[[tool.mypy.overrides]]
-module = "traveltimepy.proto.*"
-follow_imports = "skip"

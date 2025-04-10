@@ -179,5 +179,4 @@ dmypy.json
 cython_debug/
 
 # Proto
-traveltimepy/proto/TimeFilterFastRequest_pb2.py
-traveltimepy/proto/TimeFilterFastResponse_pb2.py
+*_pb2.py
