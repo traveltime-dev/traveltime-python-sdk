@@ -42,10 +42,12 @@ async def _process_response(response: ClientResponse) -> TimeFilterProtoResponse
         error_message = response.headers.get("X-ERROR-MESSAGE", "No message provided")
 
         msg = (
-            f"Travel Time API proto request failed with error code: {response.status} | "
-            f"X-ERROR-CODE: {error_code} | X-ERROR-DETAILS: {error_details} | "
+            f"Travel Time API proto request failed with error code: {response.status}\n"
+            f"X-ERROR-CODE: {error_code}\n"
+            f"X-ERROR-DETAILS: {error_details}\n"
             f"X-ERROR-MESSAGE: {error_message}"
         )
+
         raise ApiError(msg)
     else:
         response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
