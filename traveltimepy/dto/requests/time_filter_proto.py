@@ -10,9 +10,27 @@ class TransportationInfo:
 
 class ProtoTransportation(Enum):
     PUBLIC_TRANSPORT = TransportationInfo(0, "pt")
+    DRIVING = TransportationInfo(1, "driving")
+    DRIVING_AND_PUBLIC_TRANSPORT = TransportationInfo(2, "pt")
     DRIVING_FERRY = TransportationInfo(3, "driving+ferry")
+    WALKING = TransportationInfo(4, "walking")
+    CYCLING = TransportationInfo(5, "cycling")
     CYCLING_FERRY = TransportationInfo(6, "cycling+ferry")
     WALKING_FERRY = TransportationInfo(7, "walking+ferry")
+
+
+@dataclass
+class PublicTransportWithDetails:
+    walking_time_to_station: int = 0  # 0 means use default (1800s)
+    type: ProtoTransportation = ProtoTransportation.PUBLIC_TRANSPORT
+
+
+@dataclass
+class DrivingAndPublicTransportWithDetails:
+    walking_time_to_station: int = 0  # 0 means use default (1800s)
+    driving_time_to_station: int = 0  # 0 means use default (1800s)
+    parking_time: int = -1  # -1 means use default (300s)
+    type: ProtoTransportation = ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
 
 
 class ProtoCountry(str, Enum):

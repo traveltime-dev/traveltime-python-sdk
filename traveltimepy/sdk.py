@@ -37,8 +37,10 @@ from traveltimepy.dto.transportation import (
 )
 from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 from traveltimepy.dto.requests.time_filter_proto import (
+    DrivingAndPublicTransportWithDetails,
     ProtoCountry,
     ProtoTransportation,
+    PublicTransportWithDetails,
 )
 from traveltimepy.dto.requests.time_filter_fast import Transportation
 from traveltimepy.errors import ApiError
@@ -604,13 +606,22 @@ class TravelTimeSdk:
         origin: Coordinates,
         destinations: List[Coordinates],
         country: ProtoCountry,
-        transportation: ProtoTransportation,
+        transportation: Union[
+            ProtoTransportation,
+            PublicTransportWithDetails,
+            DrivingAndPublicTransportWithDetails,
+        ],
         travel_time: int,
         one_to_many: bool = True,
         properties: Optional[List[PropertyProto]] = None,
     ) -> TimeFilterProtoResponse:
+        if isinstance(transportation, ProtoTransportation):
+            transportationMode = transportation.value.name
+        else:
+            transportationMode = transportation.type.value.name
+
         resp = await send_proto_async(
-            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportation.value.name}",
+            f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportationMode}",
             # noqa
             self._proto_headers(),
             create_proto_request(

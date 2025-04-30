@@ -52,7 +52,11 @@ from traveltimepy.dto.requests.time_filter_fast import TimeFilterFastRequest
 from traveltimepy.dto.requests.time_map_fast import TimeMapFastRequest
 from traveltimepy.dto.requests.time_map_fast_geojson import TimeMapFastGeojsonRequest
 from traveltimepy.dto.requests.time_map_fast_wkt import TimeMapFastWKTRequest
-from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
+from traveltimepy.dto.requests.time_filter_proto import (
+    DrivingAndPublicTransportWithDetails,
+    ProtoTransportation,
+    PublicTransportWithDetails,
+)
 from traveltimepy.dto.requests.h3_fast import H3FastRequest
 from traveltimepy.dto.requests.geohash_fast import GeohashFastRequest
 from traveltimepy.dto.requests.postcodes_zones import (
@@ -1504,7 +1508,11 @@ def create_routes(
 def create_proto_request(
     origin: Coordinates,
     destinations: List[Coordinates],
-    transportation: ProtoTransportation,
+    transportation: Union[
+        ProtoTransportation,
+        PublicTransportWithDetails,
+        DrivingAndPublicTransportWithDetails,
+    ],
     properties: Optional[List[PropertyProto]],
     travel_time: int,
     one_to_many: bool,
@@ -1515,7 +1523,28 @@ def create_proto_request(
         request.oneToManyRequest.departureLocation.lat = origin.lat
         request.oneToManyRequest.departureLocation.lng = origin.lng
 
-        request.oneToManyRequest.transportation.type = transportation.value.code
+        # Set transportation type
+        if isinstance(transportation, ProtoTransportation):
+            request.oneToManyRequest.transportation.type = transportation.value.code
+        else:  # PublicTransportDetails or DrivingAndPublicTransportDetails
+            request.oneToManyRequest.transportation.type = (
+                transportation.type.value.code
+            )
+            if isinstance(transportation, PublicTransportWithDetails):
+                request.oneToManyRequest.transportation.publicTransport.walkingTimeToStation = (
+                    transportation.walking_time_to_station
+                )
+            elif isinstance(transportation, DrivingAndPublicTransportWithDetails):
+                request.oneToManyRequest.transportation.drivingAndPublicTransport.walkingTimeToStation = (
+                    transportation.walking_time_to_station
+                )
+                request.oneToManyRequest.transportation.drivingAndPublicTransport.drivingTimeToStation = (
+                    transportation.driving_time_to_station
+                )
+                request.oneToManyRequest.transportation.drivingAndPublicTransport.parkingTime = (
+                    transportation.parking_time
+                )
+
         request.oneToManyRequest.travelTime = travel_time
         request.oneToManyRequest.arrivalTimePeriod = (
             RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
@@ -1532,7 +1561,28 @@ def create_proto_request(
         request.manyToOneRequest.arrivalLocation.lat = origin.lat
         request.manyToOneRequest.arrivalLocation.lng = origin.lng
 
-        request.manyToOneRequest.transportation.type = transportation.value.code
+        # Set transportation type
+        if isinstance(transportation, ProtoTransportation):
+            request.manyToOneRequest.transportation.type = transportation.value.code
+        else:  # PublicTransportDetails or DrivingAndPublicTransportDetails
+            request.manyToOneRequest.transportation.type = (
+                transportation.type.value.code
+            )
+            if isinstance(transportation, PublicTransportWithDetails):
+                request.manyToOneRequest.transportation.publicTransport.walkingTimeToStation = (
+                    transportation.walking_time_to_station
+                )
+            elif isinstance(transportation, DrivingAndPublicTransportWithDetails):
+                request.manyToOneRequest.transportation.drivingAndPublicTransport.walkingTimeToStation = (
+                    transportation.walking_time_to_station
+                )
+                request.manyToOneRequest.transportation.drivingAndPublicTransport.drivingTimeToStation = (
+                    transportation.driving_time_to_station
+                )
+                request.manyToOneRequest.transportation.drivingAndPublicTransport.parkingTime = (
+                    transportation.parking_time
+                )
+
         request.manyToOneRequest.travelTime = travel_time
         request.manyToOneRequest.arrivalTimePeriod = (
             RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
