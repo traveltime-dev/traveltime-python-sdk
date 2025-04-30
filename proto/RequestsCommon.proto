@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package com.igeolise.traveltime.rabbitmq.requests;
+
+message Coords {
+  float lat = 1;
+  float lng = 2;
+}
+
+message Transportation {
+  TransportationType type = 1;
+}
+
+enum TransportationType {
+  // Considers all paths found by the following steps:
+  // * up to 30 minutes of walking (always included even if no stops found)
+  // * all connections in the 30 minute walking range from public transport
+  //   stops to other public transport stops in travel_time_limit, AND 
+  // * up to 30 minutes of walking from public transport stops that were visited
+  //   by public transport (IOW a path
+  //     [origin]--walking->[stop]--walking-->[destination] is not possible but 
+  //     [origin]--walking->[stop]--public_transport-->[stop]--walking--> is.
+  PUBLIC_TRANSPORT = 0;
+  // Considers all paths found traveling by car from origin(s) to
+  // destination(s) within the travel_time_limit
+  DRIVING = 1;
+  // Considers all paths found by the following steps:
+  // * up to 30 minutes of driving (always included even no stops found)
+  // * all connections in the 30 minute driving range from public transport stops
+  //   to other public transport stops in travel_time_limit, AND
+  // * up to 30 minutes of walking from public transport stops that were visited
+  //   by public transport (IOW a path
+  //     [origin]--driving->[stop]--walking-->[destination] is not possible but 
+  //     [origin]--driving->[stop]--public_transport-->[stop]--walking--> is.
+  // AND/OR 
+  // * up to 30 minutes of walking
+  //
+  DRIVING_AND_PUBLIC_TRANSPORT = 2;
+  // Considers all paths found travelling by car from origin(s) to
+  // destination(s) including all paths that are traversable by ferries that
+  // take cars within the travel_time_limit.
+  DRIVING_AND_FERRY = 3;
+  // Considers all paths found travelling by foot from origin(s) to
+  // destination(s) within the travel_time_limit
+  WALKING = 4;
+  // Considers all paths found travelling by foot from origin(s) to
+  // destination(s) including all paths that are traversable by ferries that
+  // take passengers within the travel_time_limit
+  WALKING_AND_FERRY = 7;
+  // Considers all paths found travelling by bike from origin(s) to
+  // destination(s) within the travel_time_limit
+  CYCLING = 5;
+  // Considers all paths found travelling by bike from origin(s) to
+  // destination(s) including all paths that are traversable by ferries that
+  // take bikes within the travel_time_limit
+  CYCLING_AND_FERRY = 6;
+}
+
+enum TimePeriod {
+  WEEKDAY_MORNING = 0;
+}
+

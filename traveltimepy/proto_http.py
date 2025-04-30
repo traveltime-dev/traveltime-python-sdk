@@ -8,7 +8,8 @@ from aiohttp import (
     ClientTimeout,
 )
 
-from traveltimepy.proto import TimeFilterFastResponse_pb2, TimeFilterFastRequest_pb2
+import TimeFilterFastResponse_pb2  # type: ignore
+import TimeFilterFastRequest_pb2  # type: ignore
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.errors import ApiError
 
@@ -36,9 +37,17 @@ async def send_proto_async(
 async def _process_response(response: ClientResponse) -> TimeFilterProtoResponse:
     content = await response.read()
     if response.status != 200:
+        error_code = response.headers.get("X-ERROR-CODE", "Unknown")
+        error_details = response.headers.get("X-ERROR-DETAILS", "No details provided")
+        error_message = response.headers.get("X-ERROR-MESSAGE", "No message provided")
+
         msg = (
             f"Travel Time API proto request failed with error code: {response.status}\n"
+            f"X-ERROR-CODE: {error_code}\n"
+            f"X-ERROR-DETAILS: {error_details}\n"
+            f"X-ERROR-MESSAGE: {error_message}"
         )
+
         raise ApiError(msg)
     else:
         response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
