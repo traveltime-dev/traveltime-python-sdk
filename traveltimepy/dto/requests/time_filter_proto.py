@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
+from typing import ClassVar
 
 
 @dataclass
@@ -22,7 +23,7 @@ class ProtoTransportation(Enum):
 @dataclass
 class PublicTransportWithDetails:
     walking_time_to_station: int = 0  # 0 means use default (1800s)
-    type: ProtoTransportation = ProtoTransportation.PUBLIC_TRANSPORT
+    TYPE: ClassVar[ProtoTransportation] = ProtoTransportation.PUBLIC_TRANSPORT
 
 
 @dataclass
@@ -30,7 +31,7 @@ class DrivingAndPublicTransportWithDetails:
     walking_time_to_station: int = 0  # 0 means use default (1800s)
     driving_time_to_station: int = 0  # 0 means use default (1800s)
     parking_time: int = -1  # -1 means use default (300s)
-    type: ProtoTransportation = ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
+    TYPE: ClassVar[ProtoTransportation] = ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
 
 
 class ProtoCountry(str, Enum):

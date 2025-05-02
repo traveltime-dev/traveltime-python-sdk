@@ -618,7 +618,7 @@ class TravelTimeSdk:
         if isinstance(transportation, ProtoTransportation):
             transportationMode = transportation.value.name
         else:
-            transportationMode = transportation.type.value.name
+            transportationMode = transportation.TYPE.value.name
 
         resp = await send_proto_async(
             f"https://{self._sdk_params.proto_host}/api/v2/{country.value}/time-filter/fast/{transportationMode}",

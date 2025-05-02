@@ -1528,7 +1528,7 @@ def create_proto_request(
             request.oneToManyRequest.transportation.type = transportation.value.code
         else:  # PublicTransportDetails or DrivingAndPublicTransportDetails
             request.oneToManyRequest.transportation.type = (
-                transportation.type.value.code
+                transportation.TYPE.value.code
             )
             if isinstance(transportation, PublicTransportWithDetails):
                 request.oneToManyRequest.transportation.publicTransport.walkingTimeToStation = (
@@ -1566,7 +1566,7 @@ def create_proto_request(
             request.manyToOneRequest.transportation.type = transportation.value.code
         else:  # PublicTransportDetails or DrivingAndPublicTransportDetails
             request.manyToOneRequest.transportation.type = (
-                transportation.type.value.code
+                transportation.TYPE.value.code
             )
             if isinstance(transportation, PublicTransportWithDetails):
                 request.manyToOneRequest.transportation.publicTransport.walkingTimeToStation = (
