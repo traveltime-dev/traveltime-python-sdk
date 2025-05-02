@@ -31,7 +31,9 @@ class DrivingAndPublicTransportWithDetails:
     walking_time_to_station: int = 0  # 0 means use default (1800s)
     driving_time_to_station: int = 0  # 0 means use default (1800s)
     parking_time: int = -1  # -1 means use default (300s)
-    TYPE: ClassVar[ProtoTransportation] = ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
+    TYPE: ClassVar[ProtoTransportation] = (
+        ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
+    )
 
 
 class ProtoCountry(str, Enum):
