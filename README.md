@@ -332,7 +332,7 @@ Calculate the travel times to all H3 cells within a travel time catchment area. 
 
 ##### Takes:
 
-* resolution: int - H3 resolution of results to be returned, values can be in range [1, 8].
+* resolution: int - H3 resolution of results to be returned, values can be in range [1, 9].
 * [properties](#cell-properties): List[CellProperty] - Properties to be returned for each H3 hexagon. Possible values: min, max, mean.
 * coordinates: List[Union[Coordinates, H3Centroid]] - Coordinates of the departure location. Use either latitude and longitude, or the centroid of an h3 cell.
 * arrival_time: datetime - Be at arrival location at no later than given time. Cannot be specified with departure_time.
@@ -385,7 +385,7 @@ A very fast version of H3. However, the request parameters are more limited.
 
 ##### Takes:
 
-* resolution: int - H3 resolution of results to be returned, values can be in range [1, 8].
+* resolution: int - H3 resolution of results to be returned, values can be in range [1, 9].
 * [properties](#cell-properties): List[CellProperty] - Properties to be returned for each H3 hexagon. Possible values: min, max, mean.
 * coordinates: List[Union[Coordinates, H3Centroid]] - Coordinates of the departure location. Use either latitude and longitude, or the centroid of an h3 cell.
 * [transportation]: Transportation - Transportation mode.
