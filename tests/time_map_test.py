@@ -33,7 +33,7 @@ async def test_departures_geojson(sdk: TravelTimeSdk):
         search_range=Range(enabled=True, width=1800),
         level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
-    assert len(results) == 2
+    assert len(results.features) == 2
 
 
 @pytest.mark.asyncio
@@ -97,7 +97,7 @@ async def test_arrivals_geojson(sdk: TravelTimeSdk):
         search_range=Range(enabled=True, width=1800),
         level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
     )
-    assert len(results) == 2
+    assert len(results.features) == 2
 
 
 @pytest.mark.asyncio
