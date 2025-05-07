@@ -1531,18 +1531,39 @@ def create_proto_request(
                 transportation.TYPE.value.code
             )
             if isinstance(transportation, PublicTransportWithDetails):
-                request.oneToManyRequest.transportation.publicTransport.walkingTimeToStation = (
+                walking_time = (
                     transportation.walking_time_to_station
+                    if transportation.walking_time_to_station is not None
+                    else 0
+                )
+                request.oneToManyRequest.transportation.publicTransport.walkingTimeToStation = (
+                    walking_time
                 )
             elif isinstance(transportation, DrivingAndPublicTransportWithDetails):
-                request.oneToManyRequest.transportation.drivingAndPublicTransport.walkingTimeToStation = (
+                walking_time = (
                     transportation.walking_time_to_station
+                    if transportation.walking_time_to_station is not None
+                    else 0
+                )
+                driving_time = (
+                    transportation.driving_time_to_station
+                    if transportation.driving_time_to_station is not None
+                    else 0
+                )
+                parking_time = (
+                    transportation.parking_time
+                    if transportation.parking_time is not None
+                    else -1
+                )
+
+                request.oneToManyRequest.transportation.drivingAndPublicTransport.walkingTimeToStation = (
+                    walking_time
                 )
                 request.oneToManyRequest.transportation.drivingAndPublicTransport.drivingTimeToStation = (
-                    transportation.driving_time_to_station
+                    driving_time
                 )
                 request.oneToManyRequest.transportation.drivingAndPublicTransport.parkingTime = (
-                    transportation.parking_time
+                    parking_time
                 )
 
         request.oneToManyRequest.travelTime = travel_time
@@ -1569,18 +1590,39 @@ def create_proto_request(
                 transportation.TYPE.value.code
             )
             if isinstance(transportation, PublicTransportWithDetails):
-                request.manyToOneRequest.transportation.publicTransport.walkingTimeToStation = (
+                walking_time = (
                     transportation.walking_time_to_station
+                    if transportation.walking_time_to_station is not None
+                    else 0
+                )
+                request.manyToOneRequest.transportation.publicTransport.walkingTimeToStation = (
+                    walking_time
                 )
             elif isinstance(transportation, DrivingAndPublicTransportWithDetails):
-                request.manyToOneRequest.transportation.drivingAndPublicTransport.walkingTimeToStation = (
+                walking_time = (
                     transportation.walking_time_to_station
+                    if transportation.walking_time_to_station is not None
+                    else 0
+                )
+                driving_time = (
+                    transportation.driving_time_to_station
+                    if transportation.driving_time_to_station is not None
+                    else 0
+                )
+                parking_time = (
+                    transportation.parking_time
+                    if transportation.parking_time is not None
+                    else -1
+                )
+
+                request.manyToOneRequest.transportation.drivingAndPublicTransport.walkingTimeToStation = (
+                    walking_time
                 )
                 request.manyToOneRequest.transportation.drivingAndPublicTransport.drivingTimeToStation = (
-                    transportation.driving_time_to_station
+                    driving_time
                 )
                 request.manyToOneRequest.transportation.drivingAndPublicTransport.parkingTime = (
-                    transportation.parking_time
+                    parking_time
                 )
 
         request.manyToOneRequest.travelTime = travel_time
