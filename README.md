@@ -1412,7 +1412,7 @@ transportation=PublicTransportWithDetails(walking_time_to_station=900)
 ```
 
 Parameter details:
-- `walking_time_to_station` Must be <= 1800. Default is 0, which is treated as 1800s
+- `walking_time_to_station` Optional. Must be <= 1800.
 
 #### DrivingAndPublicTransportWithDetails
 
@@ -1427,9 +1427,9 @@ transportation=DrivingAndPublicTransportWithDetails(walking_time_to_station=900,
 ```
 
 Parameter details:
-- `walking_time_to_station` Must be <= 1800. Default is 0, which is treated as 1800s
-- `driving_time_to_station` Must be <= 1800. Default is 0, which is treated as 1800s
-- `parking_time` Cannot be greater than the global travel time limit. Default is -1, any negative number is treated as 300s
+- `walking_time_to_station` Optional. Must be <= 1800.
+- `driving_time_to_station` Optional. Must be <= 1800.
+- `parking_time` Optional. Cannot be greater than the global travel time limit.
 
 ### Level of Detail
 
