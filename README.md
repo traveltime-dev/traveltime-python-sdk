@@ -1369,9 +1369,10 @@ transportation=CyclingPublicTransport(
 
 ### Proto Transportation
 
-Proto requests transportation param is a union of 3 types.
+When picking transportation mode for proto requests take note that some of the transportation modes
+support extra configuration parameters.
 
-transportation: Union[ProtoTransportation, PublicTransportWithDetails, DrivingAndPublicTransportWithDetails]
+* transportation: Union[ProtoTransportation, PublicTransportWithDetails, DrivingAndPublicTransportWithDetails]
 
 Examples:
 
@@ -1401,7 +1402,10 @@ transportation=ProtoTransportation.WALKING_FERRY
 
 #### PublicTransportWithDetails
 
-Uses `ProtoTransportation.PUBLIC_TRANSPORT`, allows setting `walking_time_to_station`.
+This mode uses `ProtoTransportation.PUBLIC_TRANSPORT` transportion mode and allows to set these parameters:
+* `walking_time_to_station` - limits the possible duration of walking paths.
+  This limit is of low precedence and will not override the global travel time limit
+  Optional. Must be <= 1800.
 
 ```python
 from traveltimepy.dto.requests.time_filter_proto import PublicTransportWithDetails
@@ -1411,12 +1415,17 @@ transportation=PublicTransportWithDetails()
 transportation=PublicTransportWithDetails(walking_time_to_station=900)
 ```
 
-Parameter details:
-- `walking_time_to_station` Optional. Must be <= 1800.
-
 #### DrivingAndPublicTransportWithDetails
 
-Uses `ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT`, allows setting `walking_time_to_station`, `driving_time_to_station` and `parking_time`.
+This mode uses `ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT` transportion mode and allows to set these parameters:
+* `walking_time_to_station` - limits the possible duration of walking paths.
+  This limit is of low precedence and will not override the global travel time limit.
+  Optional. Must be <= 1800.
+* `driving_time_to_station` - limits the possible duration of driving paths.
+  This limit is of low precedence and will not override the global travel time limit
+  Optional. Must be <= 1800.
+* `parking_time` - constant penalty to apply to simulate the difficulty of finding a parking spot.
+  Optional. Cannot be greater than the global travel time limit.
 
 ```python
 from traveltimepy.dto.requests.time_filter_proto import DrivingAndPublicTransportWithDetails
@@ -1425,11 +1434,6 @@ transportation=DrivingAndPublicTransportWithDetails()
 
 transportation=DrivingAndPublicTransportWithDetails(walking_time_to_station=900, driving_time_to_station=1800, parking_time=300)
 ```
-
-Parameter details:
-- `walking_time_to_station` Optional. Must be <= 1800.
-- `driving_time_to_station` Optional. Must be <= 1800.
-- `parking_time` Optional. Cannot be greater than the global travel time limit.
 
 ### Level of Detail
 
