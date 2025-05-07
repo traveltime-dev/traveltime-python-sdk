@@ -23,9 +23,9 @@ class ProtoTransportation(Enum):
 @dataclass
 class PublicTransportWithDetails:
 
-    walking_time_to_station: Optional[int] = None 
+    walking_time_to_station: Optional[int] = None
     """Limit on walking path duration. Must be <= 1800"""
-    
+
     TYPE: ClassVar[ProtoTransportation] = ProtoTransportation.PUBLIC_TRANSPORT
 
 
