@@ -1519,123 +1519,55 @@ def create_proto_request(
 ) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:  # type: ignore
     request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()  # type: ignore
 
+    req = request.oneToManyRequest if one_to_many else request.manyToOneRequest
+
     if one_to_many:
-        request.oneToManyRequest.departureLocation.lat = origin.lat
-        request.oneToManyRequest.departureLocation.lng = origin.lng
-
-        # Set transportation type
-        if isinstance(transportation, ProtoTransportation):
-            request.oneToManyRequest.transportation.type = transportation.value.code
-        else:  # PublicTransportDetails or DrivingAndPublicTransportDetails
-            request.oneToManyRequest.transportation.type = (
-                transportation.TYPE.value.code
-            )
-            if isinstance(transportation, PublicTransportWithDetails):
-                walking_time = (
-                    transportation.walking_time_to_station
-                    if transportation.walking_time_to_station is not None
-                    else 0
-                )
-                request.oneToManyRequest.transportation.publicTransport.walkingTimeToStation = (
-                    walking_time
-                )
-            elif isinstance(transportation, DrivingAndPublicTransportWithDetails):
-                walking_time = (
-                    transportation.walking_time_to_station
-                    if transportation.walking_time_to_station is not None
-                    else 0
-                )
-                driving_time = (
-                    transportation.driving_time_to_station
-                    if transportation.driving_time_to_station is not None
-                    else 0
-                )
-                parking_time = (
-                    transportation.parking_time
-                    if transportation.parking_time is not None
-                    else -1
-                )
-
-                request.oneToManyRequest.transportation.drivingAndPublicTransport.walkingTimeToStation = (
-                    walking_time
-                )
-                request.oneToManyRequest.transportation.drivingAndPublicTransport.drivingTimeToStation = (
-                    driving_time
-                )
-                request.oneToManyRequest.transportation.drivingAndPublicTransport.parkingTime = (
-                    parking_time
-                )
-
-        request.oneToManyRequest.travelTime = travel_time
-        request.oneToManyRequest.arrivalTimePeriod = (
-            RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
-        )
-        if properties is not None:
-            request.oneToManyRequest.properties.extend(properties)
-
-        mult = math.pow(10, 5)
-        for destination in destinations:
-            lat_delta = round((destination.lat - origin.lat) * mult)
-            lng_delta = round((destination.lng - origin.lng) * mult)
-            request.oneToManyRequest.locationDeltas.extend([lat_delta, lng_delta])
+        req.departureLocation.lat = origin.lat
+        req.departureLocation.lng = origin.lng
     else:
-        request.manyToOneRequest.arrivalLocation.lat = origin.lat
-        request.manyToOneRequest.arrivalLocation.lng = origin.lng
+        req.arrivalLocation.lat = origin.lat
+        req.arrivalLocation.lng = origin.lng
 
-        # Set transportation type
-        if isinstance(transportation, ProtoTransportation):
-            request.manyToOneRequest.transportation.type = transportation.value.code
-        else:  # PublicTransportDetails or DrivingAndPublicTransportDetails
-            request.manyToOneRequest.transportation.type = (
-                transportation.TYPE.value.code
-            )
-            if isinstance(transportation, PublicTransportWithDetails):
-                walking_time = (
+    # Set transportation type
+    if isinstance(transportation, ProtoTransportation):
+        req.transportation.type = transportation.value.code
+    else:  # PublicTransportDetails or DrivingAndPublicTransportDetails
+        req.transportation.type = transportation.TYPE.value.code
+
+        if isinstance(transportation, PublicTransportWithDetails):
+            if transportation.walking_time_to_station is not None:
+                req.transportation.publicTransport.walkingTimeToStation = (
                     transportation.walking_time_to_station
-                    if transportation.walking_time_to_station is not None
-                    else 0
                 )
-                request.manyToOneRequest.transportation.publicTransport.walkingTimeToStation = (
-                    walking_time
-                )
-            elif isinstance(transportation, DrivingAndPublicTransportWithDetails):
-                walking_time = (
+
+        elif isinstance(transportation, DrivingAndPublicTransportWithDetails):
+            if transportation.walking_time_to_station is not None:
+                req.transportation.drivingAndPublicTransport.walkingTimeToStation = (
                     transportation.walking_time_to_station
-                    if transportation.walking_time_to_station is not None
-                    else 0
                 )
-                driving_time = (
+
+            if transportation.driving_time_to_station is not None:
+                req.transportation.drivingAndPublicTransport.drivingTimeToStation = (
                     transportation.driving_time_to_station
-                    if transportation.driving_time_to_station is not None
-                    else 0
                 )
-                parking_time = (
+
+            if transportation.parking_time is not None:
+                req.transportation.drivingAndPublicTransport.parkingTime = (
                     transportation.parking_time
-                    if transportation.parking_time is not None
-                    else -1
                 )
 
-                request.manyToOneRequest.transportation.drivingAndPublicTransport.walkingTimeToStation = (
-                    walking_time
-                )
-                request.manyToOneRequest.transportation.drivingAndPublicTransport.drivingTimeToStation = (
-                    driving_time
-                )
-                request.manyToOneRequest.transportation.drivingAndPublicTransport.parkingTime = (
-                    parking_time
-                )
+    # Set common parameters
+    req.travelTime = travel_time
+    req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
 
-        request.manyToOneRequest.travelTime = travel_time
-        request.manyToOneRequest.arrivalTimePeriod = (
-            RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
-        )
-        if properties is not None:
-            request.manyToOneRequest.properties.extend(properties)
+    if properties is not None:
+        req.properties.extend(properties)
 
-        mult = math.pow(10, 5)
-        for destination in destinations:
-            lat_delta = round((destination.lat - origin.lat) * mult)
-            lng_delta = round((destination.lng - origin.lng) * mult)
-            request.manyToOneRequest.locationDeltas.extend([lat_delta, lng_delta])
+    # Calculate and add location deltas
+    mult = math.pow(10, 5)
+    for destination in destinations:
+        lat_delta = round((destination.lat - origin.lat) * mult)
+        lng_delta = round((destination.lng - origin.lng) * mult)
+        req.locationDeltas.extend([lat_delta, lng_delta])
 
     return request
