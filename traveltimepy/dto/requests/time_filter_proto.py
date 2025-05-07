@@ -22,24 +22,28 @@ class ProtoTransportation(Enum):
 
 @dataclass
 class PublicTransportWithDetails:
-    walking_time_to_station: Optional[int] = (
-        None  # Limit on walking path duration. Must be <= 1800
-    )
+
+    walking_time_to_station: Optional[int] = None 
+    """Limit on walking path duration. Must be <= 1800"""
+    
     TYPE: ClassVar[ProtoTransportation] = ProtoTransportation.PUBLIC_TRANSPORT
 
 
 @dataclass
 class DrivingAndPublicTransportWithDetails:
-    walking_time_to_station: Optional[int] = (
-        None  # Limit on walking path duration. Must be <= 1800
-    )
-    driving_time_to_station: Optional[int] = (
-        None  # Limit on driving path duration. Must be <= 1800
-    )
-    parking_time: Optional[int] = (
-        None  # Constant penalty to simulate finding a parking spot.
-        # Must be less than travel time limit
-    )
+
+    walking_time_to_station: Optional[int] = None
+    """Limit on walking path duration. Must be <= 1800"""
+
+    driving_time_to_station: Optional[int] = None
+    """Limit on driving path duration. Must be <= 1800"""
+
+    parking_time: Optional[int] = None
+    """
+    Constant penalty to simulate finding a parking spot in seconds.
+    Must be less than the overall travel time limit.
+    """
+
     TYPE: ClassVar[ProtoTransportation] = (
         ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
     )
