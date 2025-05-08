@@ -52,7 +52,11 @@ from traveltimepy.dto.requests.time_filter_fast import TimeFilterFastRequest
 from traveltimepy.dto.requests.time_map_fast import TimeMapFastRequest
 from traveltimepy.dto.requests.time_map_fast_geojson import TimeMapFastGeojsonRequest
 from traveltimepy.dto.requests.time_map_fast_wkt import TimeMapFastWKTRequest
-from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
+from traveltimepy.dto.requests.time_filter_proto import (
+    DrivingAndPublicTransportWithDetails,
+    ProtoTransportation,
+    PublicTransportWithDetails,
+)
 from traveltimepy.dto.requests.h3_fast import H3FastRequest
 from traveltimepy.dto.requests.geohash_fast import GeohashFastRequest
 from traveltimepy.dto.requests.postcodes_zones import (
@@ -1504,46 +1508,66 @@ def create_routes(
 def create_proto_request(
     origin: Coordinates,
     destinations: List[Coordinates],
-    transportation: ProtoTransportation,
+    transportation: Union[
+        ProtoTransportation,
+        PublicTransportWithDetails,
+        DrivingAndPublicTransportWithDetails,
+    ],
     properties: Optional[List[PropertyProto]],
     travel_time: int,
     one_to_many: bool,
 ) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:  # type: ignore
     request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()  # type: ignore
 
+    req = request.oneToManyRequest if one_to_many else request.manyToOneRequest
+
     if one_to_many:
-        request.oneToManyRequest.departureLocation.lat = origin.lat
-        request.oneToManyRequest.departureLocation.lng = origin.lng
-
-        request.oneToManyRequest.transportation.type = transportation.value.code
-        request.oneToManyRequest.travelTime = travel_time
-        request.oneToManyRequest.arrivalTimePeriod = (
-            RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
-        )
-        if properties is not None:
-            request.oneToManyRequest.properties.extend(properties)
-
-        mult = math.pow(10, 5)
-        for destination in destinations:
-            lat_delta = round((destination.lat - origin.lat) * mult)
-            lng_delta = round((destination.lng - origin.lng) * mult)
-            request.oneToManyRequest.locationDeltas.extend([lat_delta, lng_delta])
+        req.departureLocation.lat = origin.lat
+        req.departureLocation.lng = origin.lng
     else:
-        request.manyToOneRequest.arrivalLocation.lat = origin.lat
-        request.manyToOneRequest.arrivalLocation.lng = origin.lng
+        req.arrivalLocation.lat = origin.lat
+        req.arrivalLocation.lng = origin.lng
 
-        request.manyToOneRequest.transportation.type = transportation.value.code
-        request.manyToOneRequest.travelTime = travel_time
-        request.manyToOneRequest.arrivalTimePeriod = (
-            RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
-        )
-        if properties is not None:
-            request.manyToOneRequest.properties.extend(properties)
+    # Set transportation type
+    if isinstance(transportation, ProtoTransportation):
+        req.transportation.type = transportation.value.code
+    else:  # PublicTransportDetails or DrivingAndPublicTransportDetails
+        req.transportation.type = transportation.TYPE.value.code
 
-        mult = math.pow(10, 5)
-        for destination in destinations:
-            lat_delta = round((destination.lat - origin.lat) * mult)
-            lng_delta = round((destination.lng - origin.lng) * mult)
-            request.manyToOneRequest.locationDeltas.extend([lat_delta, lng_delta])
+        if isinstance(transportation, PublicTransportWithDetails):
+            if transportation.walking_time_to_station is not None:
+                req.transportation.publicTransport.walkingTimeToStation = (
+                    transportation.walking_time_to_station
+                )
+
+        elif isinstance(transportation, DrivingAndPublicTransportWithDetails):
+            if transportation.walking_time_to_station is not None:
+                req.transportation.drivingAndPublicTransport.walkingTimeToStation = (
+                    transportation.walking_time_to_station
+                )
+
+            if transportation.driving_time_to_station is not None:
+                req.transportation.drivingAndPublicTransport.drivingTimeToStation = (
+                    transportation.driving_time_to_station
+                )
+
+            if transportation.parking_time is not None:
+                req.transportation.drivingAndPublicTransport.parkingTime = (
+                    transportation.parking_time
+                )
+
+    # Set common parameters
+    req.travelTime = travel_time
+    req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
+
+    if properties is not None:
+        req.properties.extend(properties)
+
+    # Calculate and add location deltas
+    mult = math.pow(10, 5)
+    for destination in destinations:
+        lat_delta = round((destination.lat - origin.lat) * mult)
+        lng_delta = round((destination.lng - origin.lng) * mult)
+        req.locationDeltas.extend([lat_delta, lng_delta])
 
     return request

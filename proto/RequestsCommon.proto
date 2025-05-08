@@ -9,6 +9,59 @@ message Coords {
 
 message Transportation {
   TransportationType type = 1;
+
+  // override defaults for some of the transportation modes
+  oneof transportationDetails {
+    PublicTransportDetails publicTransport = 2;
+    DrivingAndPublicTransportDetails drivingAndPublicTransport = 3;
+  }
+}
+
+// semantically valid only for TransportationType.PUBLIC_TRANSPORT
+message PublicTransportDetails {
+  // limits the possible duration of walking paths
+  //
+  // walkingTimeToStation limit is of low precedence and will not override the global
+  // travel time limit
+  //
+  // walkingTimeToStation must be <= 1800
+  // if walkingTimeToStation == 0: use service default (1800s)
+  // if walkingTimeToStation > 0: limit the path to at most this value
+  uint32 walkingTimeToStation = 1;
+}
+
+// semantically valid only for TransportationType.DRIVING_AND_PUBLIC_TRANSPORT
+message DrivingAndPublicTransportDetails {
+  // limits the possible duration of walking paths
+  //
+  // walkingTimeToStation limit is of low precedence and will not override the global
+  // travel time limit
+  //
+  // walkingTimeToStation must be <= 1800
+  // if walkingTimeToStation == 0: use service default (1800s)
+  // if walkingTimeToStation > 0: limit the path to at most this value
+  uint32 walkingTimeToStation = 1;
+
+  // limits the possible duration of driving paths
+  //
+  // drivingTimeToStation limit is of low precedence and will not override the global
+  // travel time limit
+  //
+  // drivingTimeToStation must be <= 1800
+  // if drivingTimeToStation == 0: use service default (1800s)
+  // if drivingTimeToStation > 0: limit the path to at most this value
+  uint32 drivingTimeToStation = 2;
+
+  // constant penalty to apply to simulate the difficulty of finding a parking
+  // spot
+  //
+  // if parkingTime < 0: use service default (300s)
+  // if parkingTime >= 0: apply the parking penalty when searching for possible
+  //                      paths
+  //
+  // NOTE: parkingTime penalty cannot be greater than the global travel time
+  // limit
+  sint32 parkingTime = 3;
 }
 
 enum TransportationType {

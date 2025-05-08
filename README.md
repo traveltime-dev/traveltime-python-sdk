@@ -905,7 +905,7 @@ larger limits on the amount of destination points.
 
 * origin: Coordinates - Origin point.
 * destinations: List[Coordinates] - Destination points. Cannot be more than 200,000.
-* transportation: ProtoTransportation - Transportation type.
+* [transportation](#proto-transportation): Union[ProtoTransportation, PublicTransportWithDetails, DrivingAndPublicTransportWithDetails] - Transportation type with with optional extra details.
 * travel_time: int - Time limit. Maximum value is 7200.
 * country: ProtoCountry - Return the results that are within the specified country.
 * one_to_many: boolean - if one_to_many is equal to true, then it'll be a forward search (one to many matrix), false -
@@ -1301,7 +1301,7 @@ transportation=Walking()
 from traveltimepy import Cycling 
 
 transportation=Cycling()
-``` 
+```
 
 #### Ferry 
 
@@ -1314,7 +1314,7 @@ transportation=Ferry(type="driving+ferry")
 transportation=Ferry(type="cycling+ferry", boarding_time = 300)
 
 transportation=Ferry(type="driving+ferry", traffic_model=DrivingTrafficModel.OPTIMISTIC)
-``` 
+```
 
 #### DrivingTrain 
 
@@ -1331,7 +1331,7 @@ transportation=DrivingTrain(
   max_changes=MaxChanges(enabled=True, limit=3),
   traffic_model=DrivingTrafficModel.OPTIMISTIC
 )
-``` 
+```
 
 #### PublicTransport 
 
@@ -1348,7 +1348,7 @@ transportation=PublicTransport(
   walking_time=500,
   max_changes=MaxChanges(enabled=True, limit=3)
 )
-``` 
+```
 
 #### CyclingPublicTransport 
 
@@ -1365,7 +1365,75 @@ transportation=CyclingPublicTransport(
   boarding_time=300,
   max_changes=MaxChanges(enabled=True, limit=3)
 )
-``` 
+```
+
+### Proto Transportation
+
+When picking transportation mode for proto requests take note that some of the transportation modes
+support extra configuration parameters.
+
+* transportation: Union[ProtoTransportation, PublicTransportWithDetails, DrivingAndPublicTransportWithDetails]
+
+Examples:
+
+#### ProtoTransportation
+
+Select transportation mode, no extra parameters
+
+```python
+from traveltimepy.dto.requests.time_filter_proto import ProtoTransportation
+
+transportation=ProtoTransportation.PUBLIC_TRANSPORT
+
+transportation=ProtoTransportation.DRIVING 
+
+transportation=ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT 
+
+transportation=ProtoTransportation.DRIVING_FERRY 
+
+transportation=ProtoTransportation.WALKING 
+
+transportation=ProtoTransportation.CYCLING 
+
+transportation=ProtoTransportation.CYCLING_FERRY 
+
+transportation=ProtoTransportation.WALKING_FERRY 
+```
+
+#### PublicTransportWithDetails
+
+This mode uses `ProtoTransportation.PUBLIC_TRANSPORT` transportion mode and allows to set these parameters:
+* `walking_time_to_station` - limits the possible duration of walking paths.
+  This limit is of low precedence and will not override the global travel time limit
+  Optional. Must be <= 1800.
+
+```python
+from traveltimepy.dto.requests.time_filter_proto import PublicTransportWithDetails
+
+transportation=PublicTransportWithDetails()
+
+transportation=PublicTransportWithDetails(walking_time_to_station=900)
+```
+
+#### DrivingAndPublicTransportWithDetails
+
+This mode uses `ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT` transportion mode and allows to set these parameters:
+* `walking_time_to_station` - limits the possible duration of walking paths.
+  This limit is of low precedence and will not override the global travel time limit.
+  Optional. Must be <= 1800.
+* `driving_time_to_station` - limits the possible duration of driving paths.
+  This limit is of low precedence and will not override the global travel time limit
+  Optional. Must be <= 1800.
+* `parking_time` - constant penalty to apply to simulate the difficulty of finding a parking spot.
+  Optional. Cannot be greater than the global travel time limit.
+
+```python
+from traveltimepy.dto.requests.time_filter_proto import DrivingAndPublicTransportWithDetails
+
+transportation=DrivingAndPublicTransportWithDetails()
+
+transportation=DrivingAndPublicTransportWithDetails(walking_time_to_station=900, driving_time_to_station=1800, parking_time=300)
+```
 
 ### Level of Detail
 
