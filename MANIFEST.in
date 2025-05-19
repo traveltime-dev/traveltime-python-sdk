@@ -1,1 +1,2 @@
 include README.md
+include *_pb2.py
