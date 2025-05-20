@@ -48,6 +48,11 @@ test = [
 [tool.setuptools]
 zip-safe = false
 include-package-data = true
+py-modules = [
+    "RequestsCommon_pb2",
+    "TimeFilterFastRequest_pb2", 
+    "TimeFilterFastResponse_pb2"
+]
 packages = { find = {} }
 
 [tool.setuptools_scm]
