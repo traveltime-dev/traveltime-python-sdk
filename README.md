@@ -1405,7 +1405,7 @@ transportation=ProtoTransportation.WALKING_FERRY
 This mode uses `ProtoTransportation.PUBLIC_TRANSPORT` transportion mode and allows to set these parameters:
 * `walking_time_to_station` - limits the possible duration of walking paths.
   This limit is of low precedence and will not override the global travel time limit
-  Optional. Must be <= 1800.
+  Optional. Must be > 0 and <= 1800.
 
 ```python
 from traveltimepy.dto.requests.time_filter_proto import PublicTransportWithDetails
@@ -1420,12 +1420,12 @@ transportation=PublicTransportWithDetails(walking_time_to_station=900)
 This mode uses `ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT` transportion mode and allows to set these parameters:
 * `walking_time_to_station` - limits the possible duration of walking paths.
   This limit is of low precedence and will not override the global travel time limit.
-  Optional. Must be <= 1800.
+  Optional. Must be > 0 and <= 1800.
 * `driving_time_to_station` - limits the possible duration of driving paths.
   This limit is of low precedence and will not override the global travel time limit
-  Optional. Must be <= 1800.
+  Optional. Must be > 0 and <= 1800.
 * `parking_time` - constant penalty to apply to simulate the difficulty of finding a parking spot.
-  Optional. Cannot be greater than the global travel time limit.
+  Optional. Must be non-negative. Cannot be greater than the global travel time limit.
 
 ```python
 from traveltimepy.dto.requests.time_filter_proto import DrivingAndPublicTransportWithDetails
