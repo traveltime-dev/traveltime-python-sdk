@@ -24,7 +24,7 @@ class ProtoTransportation(Enum):
 class PublicTransportWithDetails:
 
     walking_time_to_station: Optional[int] = None
-    """Limit on walking path duration. Must be <= 1800"""
+    """Limit on walking path duration. Must be > 0 and <= 1800"""
 
     TYPE: ClassVar[ProtoTransportation] = ProtoTransportation.PUBLIC_TRANSPORT
 
@@ -33,14 +33,15 @@ class PublicTransportWithDetails:
 class DrivingAndPublicTransportWithDetails:
 
     walking_time_to_station: Optional[int] = None
-    """Limit on walking path duration. Must be <= 1800"""
+    """Limit on walking path duration. Must be > 0 and <= 1800"""
 
     driving_time_to_station: Optional[int] = None
-    """Limit on driving path duration. Must be <= 1800"""
+    """Limit on driving path duration. Must be > 0 and <= 1800"""
 
     parking_time: Optional[int] = None
     """
     Constant penalty to simulate finding a parking spot in seconds.
+    Cannot be negative.
     Must be less than the overall travel time limit.
     """
 

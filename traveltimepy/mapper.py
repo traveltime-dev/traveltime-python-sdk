@@ -1536,23 +1536,23 @@ def create_proto_request(
 
         if isinstance(transportation, PublicTransportWithDetails):
             if transportation.walking_time_to_station is not None:
-                req.transportation.publicTransport.walkingTimeToStation = (
+                req.transportation.publicTransport.walkingTimeToStation.value = (
                     transportation.walking_time_to_station
                 )
 
         elif isinstance(transportation, DrivingAndPublicTransportWithDetails):
             if transportation.walking_time_to_station is not None:
-                req.transportation.drivingAndPublicTransport.walkingTimeToStation = (
+                req.transportation.drivingAndPublicTransport.walkingTimeToStation.value = (
                     transportation.walking_time_to_station
                 )
 
             if transportation.driving_time_to_station is not None:
-                req.transportation.drivingAndPublicTransport.drivingTimeToStation = (
+                req.transportation.drivingAndPublicTransport.drivingTimeToStation.value = (
                     transportation.driving_time_to_station
                 )
 
             if transportation.parking_time is not None:
-                req.transportation.drivingAndPublicTransport.parkingTime = (
+                req.transportation.drivingAndPublicTransport.parkingTime.value = (
                     transportation.parking_time
                 )
 
