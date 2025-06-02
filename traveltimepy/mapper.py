@@ -100,7 +100,7 @@ def create_time_filter(
         return TimeFilterRequest(
             locations=locations,
             arrival_searches=[
-                time_filter.ArrivalSearch(
+                time_filter.TimeFilterArrivalSearch(
                     id=arrival_id,
                     arrival_location_id=arrival_id,
                     departure_location_ids=[
@@ -121,7 +121,7 @@ def create_time_filter(
         return TimeFilterRequest(
             locations=locations,
             departure_searches=[
-                time_filter.DepartureSearch(
+                time_filter.TimeFilterDepartureSearch(
                     id=departure_id,
                     departure_location_id=departure_id,
                     arrival_location_ids=[arrival_id for arrival_id in arrival_ids],
