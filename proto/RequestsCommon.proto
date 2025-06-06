@@ -24,10 +24,10 @@ message PublicTransportDetails {
   // walkingTimeToStation limit is of low precedence and will not override the global
   // travel time limit
   //
-  // walkingTimeToStation must be 0 > and <= 1800
-  // if walkingTimeToStation is not set: use service default 
+  // walkingTimeToStation must be <= 1800
+  // if walkingTimeToStation == 0: use service default (1800s)
   // if walkingTimeToStation > 0: limit the path to at most this value
-  OptionalPositiveUInt32 walkingTimeToStation = 1;
+  uint32 walkingTimeToStation = 1;
 }
 
 // semantically valid only for TransportationType.DRIVING_AND_PUBLIC_TRANSPORT
@@ -37,20 +37,20 @@ message DrivingAndPublicTransportDetails {
   // walkingTimeToStation limit is of low precedence and will not override the global
   // travel time limit
   //
-  // walkingTimeToStation must be > 0 and <= 1800
-  // if walkingTimeToStation is not set: use service default
-  // if walkingTimeToStation > 0: limit the walking path to at most this value
-  OptionalPositiveUInt32 walkingTimeToStation = 1;
+  // walkingTimeToStation must be <= 1800
+  // if walkingTimeToStation == 0: use service default (1800s)
+  // if walkingTimeToStation > 0: limit the path to at most this value
+  uint32 walkingTimeToStation = 1;
 
   // limits the possible duration of driving paths
   //
   // drivingTimeToStation limit is of low precedence and will not override the global
   // travel time limit
   //
-  // drivingTimeToStation must be > 0 and <= 1800
-  // if drivingTimeToStation is not set: use service default
+  // drivingTimeToStation must be <= 1800
+  // if drivingTimeToStation == 0: use service default (1800s)
   // if drivingTimeToStation > 0: limit the path to at most this value
-  OptionalPositiveUInt32 drivingTimeToStation = 2;
+  uint32 drivingTimeToStation = 2;
 
   // constant penalty to apply to simulate the difficulty of finding a parking
   // spot
@@ -61,17 +61,17 @@ message DrivingAndPublicTransportDetails {
   //
   // NOTE: parkingTime penalty cannot be greater than the global travel time
   // limit
-  OptionalNonNegativeUInt32 parkingTime = 3;
+  sint32 parkingTime = 3;
 }
 
 enum TransportationType {
   // Considers all paths found by the following steps:
   // * up to 30 minutes of walking (always included even if no stops found)
   // * all connections in the 30 minute walking range from public transport
-  //   stops to other public transport stops in travel_time_limit, AND 
+  //   stops to other public transport stops in travel_time_limit, AND
   // * up to 30 minutes of walking from public transport stops that were visited
   //   by public transport (IOW a path
-  //     [origin]--walking->[stop]--walking-->[destination] is not possible but 
+  //     [origin]--walking->[stop]--walking-->[destination] is not possible but
   //     [origin]--walking->[stop]--public_transport-->[stop]--walking--> is.
   PUBLIC_TRANSPORT = 0;
   // Considers all paths found traveling by car from origin(s) to
@@ -83,9 +83,9 @@ enum TransportationType {
   //   to other public transport stops in travel_time_limit, AND
   // * up to 30 minutes of walking from public transport stops that were visited
   //   by public transport (IOW a path
-  //     [origin]--driving->[stop]--walking-->[destination] is not possible but 
+  //     [origin]--driving->[stop]--walking-->[destination] is not possible but
   //     [origin]--driving->[stop]--public_transport-->[stop]--walking--> is.
-  // AND/OR 
+  // AND/OR
   // * up to 30 minutes of walking
   //
   DRIVING_AND_PUBLIC_TRANSPORT = 2;
@@ -111,26 +111,4 @@ enum TransportationType {
 
 enum TimePeriod {
   WEEKDAY_MORNING = 0;
-}
-
-enum CellPropertyType {
-  MEAN = 0;
-  MIN = 1;
-  MAX = 2;
-}
-
-// represents an optional positive (strictly greater than 0) uint32 parameter
-//
-// the positive requirement cannot be checked at the protocol level and will
-// only be verified by the server
-message OptionalPositiveUInt32 {
-  uint32 value = 1;
-}
-
-// represents an optional non negative (greater or equal than 0) uint32 parameter
-//
-// the non negative requirement  cannot be checked at the protocol level and will only
-// be verified by the server
-message OptionalNonNegativeUInt32 {
-  uint32 value = 1;
 }

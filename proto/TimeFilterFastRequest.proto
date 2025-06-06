@@ -56,4 +56,3 @@ message TimeFilterFastRequest {
   OneToMany oneToManyRequest = 1;
   ManyToOne manyToOneRequest = 2;
 }
-

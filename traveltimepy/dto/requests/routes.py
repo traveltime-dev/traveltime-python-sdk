@@ -18,7 +18,7 @@ from traveltimepy.dto.responses.routes import RoutesResponse
 from traveltimepy.itertools import split, flatten
 
 
-class ArrivalSearch(BaseModel):
+class RoutesArrivalSearch(BaseModel):
     id: str
     departure_location_ids: List[str]
     arrival_location_id: str
@@ -33,11 +33,11 @@ class ArrivalSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange]
-    snapping: Optional[Snapping]
+    range: Optional[FullRange] = None
+    snapping: Optional[Snapping] = None
 
 
-class DepartureSearch(BaseModel):
+class RoutesDepartureSearch(BaseModel):
     id: str
     arrival_location_ids: List[str]
     departure_location_id: str
@@ -52,14 +52,14 @@ class DepartureSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange]
-    snapping: Optional[Snapping]
+    range: Optional[FullRange] = None
+    snapping: Optional[Snapping] = None
 
 
 class RoutesRequest(TravelTimeRequest[RoutesResponse]):
     locations: List[Location]
-    departure_searches: List[DepartureSearch]
-    arrival_searches: List[ArrivalSearch]
+    departure_searches: List[RoutesDepartureSearch]
+    arrival_searches: List[RoutesArrivalSearch]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [

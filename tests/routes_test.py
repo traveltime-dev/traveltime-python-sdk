@@ -4,66 +4,94 @@ import pytest
 from datetime import datetime
 
 from traveltimepy import PublicTransport, Driving, Location, Coordinates
-from traveltimepy.dto.common import Snapping, SnappingAcceptRoads, SnappingPenalty
-from traveltimepy.sdk import TravelTimeSdk
+from traveltimepy.async_client import AsyncClient
+from traveltimepy.dto.common import Snapping, SnappingAcceptRoads, SnappingPenalty, Property
+from traveltimepy.dto.requests.routes import RoutesDepartureSearch, RoutesArrivalSearch
 
 
 @pytest.mark.asyncio
-async def test_departures(sdk: TravelTimeSdk, locations):
-    results = await sdk.routes_async(
+async def test_departures(async_client: AsyncClient, locations):
+    results = await async_client.routes(
         locations=locations,
-        search_ids={
-            "London center": ["Hyde Park", "ZSL London Zoo"],
-            "ZSL London Zoo": ["Hyde Park", "London center"],
-        },
-        transportation=PublicTransport(),
-        departure_time=datetime.now(),
+        arrival_searches=[],
+        departure_searches=[
+            RoutesDepartureSearch(
+                id="id",
+                arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                departure_location_id="London center",
+                departure_time=datetime.now(),
+                transportation=Driving(),
+                properties=[Property.TRAVEL_TIME]
+            )
+        ]
     )
-    assert len(results) == 2
+    assert len(results) == 1
 
 
 @pytest.mark.asyncio
-async def test_arrivals(sdk: TravelTimeSdk, locations):
-    results = await sdk.routes_async(
+async def test_arrivals(async_client: AsyncClient, locations):
+    results = await async_client.routes(
         locations=locations,
-        search_ids={
-            "London center": ["Hyde Park", "ZSL London Zoo"],
-            "ZSL London Zoo": ["Hyde Park", "London center"],
-        },
-        transportation=PublicTransport(),
-        departure_time=datetime.now(),
+        departure_searches=[],
+        arrival_searches=[
+            RoutesArrivalSearch(
+                id="id",
+                arrival_location_id="London center",
+                departure_location_ids=["Hyde Park", "ZSL London Zoo"],
+                arrival_time=datetime.now(),
+                transportation=Driving(),
+                properties=[Property.TRAVEL_TIME]
+            )
+        ]
     )
-    assert len(results) == 2
+    assert len(results) == 1
+
 
 
 @pytest.mark.asyncio
-async def test_snapping(sdk: TravelTimeSdk):
+async def test_snapping(async_client: AsyncClient):
     locations: List[Location] = [
         Location(id="A", coords=Coordinates(lat=53.806479, lng=-2.615711)),
         Location(id="B", coords=Coordinates(lat=53.810129, lng=-2.601099)),
     ]
-    result_with_penalty = await sdk.routes_async(
+    result_with_penalty = await async_client.routes(
         locations=locations,
-        search_ids={
-            "A": ["B"],
-        },
-        transportation=Driving(),
-        departure_time=datetime.now(),
+        arrival_searches=[
+            RoutesArrivalSearch(
+                id="id",
+                arrival_location_id="B",
+                departure_location_ids=[
+                    "A"
+                ],
+                arrival_time=datetime.now(),
+                transportation=Driving(),
+                properties=[Property.TRAVEL_TIME]
+            )
+        ],
+        departure_searches=[]
     )
     traveltime_with_penalty = (
         result_with_penalty[0].locations[0].properties[0].travel_time
     )
-    result_without_penalty = await sdk.routes_async(
+    result_without_penalty = await async_client.routes(
         locations=locations,
-        search_ids={
-            "A": ["B"],
-        },
-        transportation=Driving(),
-        departure_time=datetime.now(),
-        snapping=Snapping(
-            penalty=SnappingPenalty.DISABLED,
-            accept_roads=SnappingAcceptRoads.ANY_DRIVABLE,
-        ),
+        arrival_searches=[
+            RoutesArrivalSearch(
+                id="id",
+                arrival_location_id="B",
+                departure_location_ids=[
+                    "A"
+                ],
+                arrival_time=datetime.now(),
+                transportation=Driving(),
+                properties=[Property.TRAVEL_TIME],
+                snapping=Snapping(
+                    penalty=SnappingPenalty.DISABLED,
+                    accept_roads=SnappingAcceptRoads.ANY_DRIVABLE,
+                )
+            )
+        ],
+        departure_searches=[]
     )
     traveltime_without_penalty = (
         result_without_penalty[0].locations[0].properties[0].travel_time

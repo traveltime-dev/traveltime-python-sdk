@@ -1,7 +1,18 @@
+import math
 from dataclasses import dataclass
 from enum import Enum
-from typing import ClassVar, Optional
+from typing import ClassVar, Optional, List, Union
 
+import RequestsCommon_pb2
+import TimeFilterFastRequest_pb2
+from traveltimepy.dto.common import Coordinates, ProtoProperty
+
+
+class RequestType(Enum):
+    # single departure location and multiple arrival locations
+    ONE_TO_MANY = "one_to_many"
+     # single arrival location and multiple departure locations
+    MANY_TO_ONE = "many_to_one"
 
 @dataclass
 class TransportationInfo:
@@ -21,7 +32,7 @@ class ProtoTransportation(Enum):
 
 
 @dataclass
-class PublicTransportWithDetails:
+class ProtoPublicTransportWithDetails:
 
     walking_time_to_station: Optional[int] = None
     """Limit on walking path duration. Must be > 0 and <= 1800"""
@@ -30,7 +41,7 @@ class PublicTransportWithDetails:
 
 
 @dataclass
-class DrivingAndPublicTransportWithDetails:
+class ProtoDrivingAndPublicTransportWithDetails:
 
     walking_time_to_station: Optional[int] = None
     """Limit on walking path duration. Must be > 0 and <= 1800"""
@@ -49,6 +60,11 @@ class DrivingAndPublicTransportWithDetails:
         ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
     )
 
+TimeFilterFastProtoTransportation = Union[
+    ProtoTransportation,
+    ProtoPublicTransportWithDetails,
+    ProtoDrivingAndPublicTransportWithDetails,
+]
 
 class ProtoCountry(str, Enum):
     NETHERLANDS = "nl"
@@ -87,3 +103,91 @@ class ProtoCountry(str, Enum):
     SAUDI_ARABIA = "sa"
     SERBIA = "rs"
     SLOVENIA = "si"
+
+class TimeFilterFastProtoRequest:
+    originCoordinate: Coordinates
+    destinationCoordinates: List[Coordinates]
+    transportation: TimeFilterFastProtoTransportation
+    travelTime: int
+    requestType: RequestType
+    country: ProtoCountry
+    withDistance: bool
+
+    def __init__(
+        self,
+        origin_coordinate: Coordinates,
+        destination_coordinates: List[Coordinates],
+        transportation: TimeFilterFastProtoTransportation,
+        travel_time: int,
+        request_type: RequestType,
+        country: ProtoCountry,
+        with_distance: bool
+    ):
+        self.originCoordinate = origin_coordinate
+        self.destinationCoordinates = destination_coordinates
+        self.transportation = transportation
+        self.travelTime = travel_time
+        self.requestType = request_type
+        self.country = country
+        self.withDistance = with_distance
+
+    def get_request(self) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:  # type: ignore
+        request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()  # type: ignore
+
+        if self.requestType.ONE_TO_MANY:
+            req = request.oneToManyRequest
+
+            req.departureLocation.lat = self.originCoordinate.lat
+            req.departureLocation.lng = self.originCoordinate.lng
+        else:
+            req = request.manyToOneRequest
+
+            req.arrivalLocation.lat = self.originCoordinate.lat
+            req.arrivalLocation.lng = self.originCoordinate.lng
+
+        # Set transportation type
+        if isinstance(self.transportation, ProtoTransportation):
+            req.transportation.type = self.transportation.value.code
+        else:  # PublicTransportDetails or DrivingAndPublicTransportDetails
+            req.transportation.type = self.transportation.TYPE.value.code
+
+            if isinstance(self.transportation, ProtoPublicTransportWithDetails):
+                if self.transportation.walking_time_to_station is not None:
+                    req.transportation.publicTransport.walkingTimeToStation.value = (
+                        self.transportation.walking_time_to_station
+                    )
+
+            elif isinstance(self.transportation, ProtoDrivingAndPublicTransportWithDetails):
+                if self.transportation.walking_time_to_station is not None:
+                    req.transportation.drivingAndPublicTransport.walkingTimeToStation.value = (
+                        self.transportation.walking_time_to_station
+                    )
+
+                if self.transportation.driving_time_to_station is not None:
+                    req.transportation.drivingAndPublicTransport.drivingTimeToStation.value = (
+                        self.transportation.driving_time_to_station
+                    )
+
+                if self.transportation.parking_time is not None:
+                    req.transportation.drivingAndPublicTransport.parkingTime.value = (
+                        self.transportation.parking_time
+                    )
+
+        req.travelTime = self.travelTime
+        req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING
+
+        if self.withDistance:
+            req.properties.extend([TimeFilterFastRequest_pb2.TimeFilterFastRequest.PostcodeProperty.DISTANCES])
+
+        # Calculate and add location deltas
+        mult = math.pow(10, 5)
+        for destination in self.destinationCoordinates:
+            lat_delta = round((destination.lat - self.originCoordinate.lat) * mult)
+            lng_delta = round((destination.lng - self.originCoordinate.lng) * mult)
+            req.locationDeltas.extend([lat_delta, lng_delta])
+
+        return request
+
+
+
+

@@ -28,12 +28,11 @@ class ZonesProperty(str, Enum):
     COVERAGE = "coverage"
 
 
-class ArrivalSearch(BaseModel):
+class PostcodeFilterArrivalSearch(BaseModel):
     id: str
     coords: Coordinates
     travel_time: int
     arrival_time: datetime
-    reachable_postcodes_threshold: float
     transportation: Union[
         PublicTransport,
         Driving,
@@ -44,15 +43,15 @@ class ArrivalSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[ZonesProperty]
-    range: Optional[FullRange]
+    reachable_postcodes_threshold: float = 0
+    range: Optional[FullRange] = None
 
 
-class DepartureSearch(BaseModel):
+class PostcodeFilterDepartureSearch(BaseModel):
     id: str
     coords: Coordinates
     travel_time: int
     departure_time: datetime
-    reachable_postcodes_threshold: float
     transportation: Union[
         PublicTransport,
         Driving,
@@ -63,12 +62,13 @@ class DepartureSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[ZonesProperty]
-    range: Optional[FullRange]
+    reachable_postcodes_threshold: float = 0
+    range: Optional[FullRange] = None
 
 
 class PostcodesSectorsRequest(TravelTimeRequest[PostcodesSectorsResponse]):
-    departure_searches: List[DepartureSearch]
-    arrival_searches: List[ArrivalSearch]
+    departure_searches: List[PostcodeFilterDepartureSearch]
+    arrival_searches: List[PostcodeFilterArrivalSearch]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
@@ -92,8 +92,8 @@ class PostcodesSectorsRequest(TravelTimeRequest[PostcodesSectorsResponse]):
 
 
 class PostcodesDistrictsRequest(TravelTimeRequest[PostcodesDistrictsResponse]):
-    departure_searches: List[DepartureSearch]
-    arrival_searches: List[ArrivalSearch]
+    departure_searches: List[PostcodeFilterDepartureSearch]
+    arrival_searches: List[PostcodeFilterArrivalSearch]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [

@@ -1,6 +1,5 @@
 import typing
 from datetime import datetime
-
 from typing import List, Optional
 
 from pydantic.main import BaseModel
@@ -17,11 +16,11 @@ from traveltimepy import (
 )
 from traveltimepy.dto.common import CellProperty, Coordinates, GeohashCentroid, Snapping
 from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.geohash import GeohashResponse
+from traveltimepy.dto.responses.geohash import GeoHashResponse
 from traveltimepy.itertools import split, flatten
 
 
-class DepartureSearch(BaseModel):
+class GeoHashDepartureSearch(BaseModel):
     id: str
     coords: typing.Union[Coordinates, GeohashCentroid]
     departure_time: datetime
@@ -35,11 +34,11 @@ class DepartureSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range]
-    snapping: Optional[Snapping]
+    range: Optional[Range] = None
+    snapping: Optional[Snapping] = None
 
 
-class ArrivalSearch(BaseModel):
+class GeoHashArrivalSearch(BaseModel):
     id: str
     coords: typing.Union[Coordinates, GeohashCentroid]
     arrival_time: datetime
@@ -53,66 +52,51 @@ class ArrivalSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range]
-    snapping: Optional[Snapping]
+    range: Optional[Range] = None
+    snapping: Optional[Snapping] = None
 
 
-class Intersection(BaseModel):
+class GeoHashIntersection(BaseModel):
     id: str
     search_ids: List[str]
 
 
-class Union(BaseModel):
+class GeoHashUnion(BaseModel):
     id: str
     search_ids: List[str]
 
 
-class GeohashRequest(TravelTimeRequest[GeohashResponse]):
+class GeoHashRequest(TravelTimeRequest[GeoHashResponse]):
     resolution: int
     properties: List[CellProperty]
-    departure_searches: List[DepartureSearch]
-    arrival_searches: List[ArrivalSearch]
-    unions: List[Union]
-    intersections: List[Intersection]
+    departure_searches: List[GeoHashDepartureSearch]
+    arrival_searches: List[GeoHashArrivalSearch]
+    unions: List[GeoHashUnion]
+    intersections: List[GeoHashIntersection]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
-        return [
-            GeohashRequest(
-                resolution=self.resolution,
-                properties=self.properties,
-                departure_searches=departures,
-                arrival_searches=arrivals,
-                unions=self.unions,
-                intersections=self.intersections,
-            )
-            for departures, arrivals in split(
-                self.departure_searches, self.arrival_searches, window_size
-            )
-        ]
-
-    def merge(self, responses: List[GeohashResponse]) -> GeohashResponse:
-        if len(self.unions) != 0:
-            return GeohashResponse(
-                results=list(
-                    filter(
-                        lambda res: res.search_id == "Union search",
-                        flatten([response.results for response in responses]),
-                    )
-                )
-            )
-        elif len(self.intersections) != 0:
-            return GeohashResponse(
-                results=list(
-                    filter(
-                        lambda res: res.search_id == "Intersection search",
-                        flatten([response.results for response in responses]),
-                    )
-                )
-            )
+        # Do not split request if unions/intersections are defined
+        if len(self.unions) > 0 or len(self.intersections) > 0:
+            return [self]
         else:
-            return GeohashResponse(
-                results=sorted(
-                    flatten([response.results for response in responses]),
-                    key=lambda res: res.search_id,
+            chunks = split(self.departure_searches, self.arrival_searches, window_size)
+
+            return [
+                GeoHashRequest(
+                    resolution=self.resolution,
+                    properties=self.properties,
+                    departure_searches=departures,
+                    arrival_searches=arrivals,
+                    unions=self.unions,
+                    intersections=self.intersections,
                 )
+                for departures, arrivals in chunks
+            ]
+
+    def merge(self, responses: List[GeoHashResponse]) -> GeoHashResponse:
+        return GeoHashResponse(
+            results=sorted(
+                flatten([response.results for response in responses]),
+                key=lambda res: res.search_id,
             )
+        )

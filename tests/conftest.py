@@ -5,22 +5,10 @@ import pytest
 
 from traveltimepy import Location, Coordinates
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.sdk import TravelTimeSdk
-
-
-@pytest.fixture
-def sdk() -> TravelTimeSdk:
-    return TravelTimeSdk(os.environ["APP_ID"], os.environ["API_KEY"])
 
 @pytest.fixture
 def async_client() -> AsyncClient:
     return AsyncClient(os.environ["APP_ID"], os.environ["API_KEY"])
-
-
-@pytest.fixture
-def proto_sdk() -> TravelTimeSdk:
-    return TravelTimeSdk(os.environ["PROTO_APP_ID"], os.environ["PROTO_API_KEY"])
-
 
 @pytest.fixture
 def locations() -> List[Location]:

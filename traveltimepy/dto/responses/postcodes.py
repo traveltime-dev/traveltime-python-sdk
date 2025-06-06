@@ -3,14 +3,14 @@ from typing import List, Optional
 from pydantic import BaseModel
 
 
-class Property(BaseModel):
+class PostcodeProperty(BaseModel):
     travel_time: Optional[int] = None
     distance: Optional[int] = None
 
 
 class Postcode(BaseModel):
     code: str
-    properties: List[Property]
+    properties: List[PostcodeProperty]
 
 
 class PostcodesResult(BaseModel):

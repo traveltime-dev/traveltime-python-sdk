@@ -5,7 +5,7 @@ from pydantic.main import BaseModel
 from traveltimepy.dto.common import Fares, Route
 
 
-class Property(BaseModel):
+class RoutesProperty(BaseModel):
     travel_time: Optional[int] = None
     fares: Optional[Fares] = None
     distance: Optional[int] = None
@@ -14,7 +14,7 @@ class Property(BaseModel):
 
 class Location(BaseModel):
     id: str
-    properties: List[Property]
+    properties: List[RoutesProperty]
 
 
 class RoutesResult(BaseModel):

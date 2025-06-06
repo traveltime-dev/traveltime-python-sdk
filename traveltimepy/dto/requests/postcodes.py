@@ -18,7 +18,7 @@ from traveltimepy.dto.transportation import (
 )
 
 
-class ArrivalSearch(BaseModel):
+class PostcodeArrivalSearch(BaseModel):
     id: str
     coords: Coordinates
     travel_time: int
@@ -33,10 +33,10 @@ class ArrivalSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange]
+    range: Optional[FullRange] = None
 
 
-class DepartureSearch(BaseModel):
+class PostcodeDepartureSearch(BaseModel):
     id: str
     coords: Coordinates
     travel_time: int
@@ -51,12 +51,12 @@ class DepartureSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange]
+    range: Optional[FullRange] = None
 
 
 class PostcodesRequest(TravelTimeRequest[PostcodesResponse]):
-    departure_searches: List[DepartureSearch]
-    arrival_searches: List[ArrivalSearch]
+    departure_searches: List[PostcodeDepartureSearch]
+    arrival_searches: List[PostcodeArrivalSearch]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
