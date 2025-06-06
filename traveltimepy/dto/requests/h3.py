@@ -21,7 +21,7 @@ from traveltimepy.dto.responses.h3 import H3Response
 from traveltimepy.itertools import split, flatten
 
 
-class DepartureSearch(BaseModel):
+class H3DepartureSearch(BaseModel):
     id: str
     coords: typing.Union[Coordinates, H3Centroid]
     departure_time: datetime
@@ -35,11 +35,11 @@ class DepartureSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range]
-    snapping: Optional[Snapping]
+    range: Optional[Range] = None
+    snapping: Optional[Snapping] = None
 
 
-class ArrivalSearch(BaseModel):
+class H3ArrivalSearch(BaseModel):
     id: str
     coords: typing.Union[Coordinates, H3Centroid]
     arrival_time: datetime
@@ -53,16 +53,16 @@ class ArrivalSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    range: Optional[Range]
-    snapping: Optional[Snapping]
+    range: Optional[Range] = None
+    snapping: Optional[Snapping] = None
 
 
-class Intersection(BaseModel):
+class H3Intersection(BaseModel):
     id: str
     search_ids: List[str]
 
 
-class Union(BaseModel):
+class H3Union(BaseModel):
     id: str
     search_ids: List[str]
 
@@ -70,49 +70,34 @@ class Union(BaseModel):
 class H3Request(TravelTimeRequest[H3Response]):
     resolution: int
     properties: List[CellProperty]
-    departure_searches: List[DepartureSearch]
-    arrival_searches: List[ArrivalSearch]
-    unions: List[Union]
-    intersections: List[Intersection]
+    departure_searches: List[H3DepartureSearch]
+    arrival_searches: List[H3ArrivalSearch]
+    unions: List[H3Union]
+    intersections: List[H3Intersection]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
-        return [
-            H3Request(
-                resolution=self.resolution,
-                properties=self.properties,
-                departure_searches=departures,
-                arrival_searches=arrivals,
-                unions=self.unions,
-                intersections=self.intersections,
-            )
-            for departures, arrivals in split(
-                self.departure_searches, self.arrival_searches, window_size
-            )
-        ]
+        # Do not split request if unions/intersections are defined
+        if len(self.unions) > 0 or len(self.intersections) > 0:
+            return [self]
+        else:
+            chunks = split(self.departure_searches, self.arrival_searches, window_size)
+
+            return [
+                H3Request(
+                    resolution=self.resolution,
+                    properties=self.properties,
+                    departure_searches=departures,
+                    arrival_searches=arrivals,
+                    unions=self.unions,
+                    intersections=self.intersections,
+                )
+                for departures, arrivals in chunks
+            ]
 
     def merge(self, responses: List[H3Response]) -> H3Response:
-        if len(self.unions) != 0:
-            return H3Response(
-                results=list(
-                    filter(
-                        lambda res: res.search_id == "Union search",
-                        flatten([response.results for response in responses]),
-                    )
-                )
+        return H3Response(
+            results=sorted(
+                flatten([response.results for response in responses]),
+                key=lambda res: res.search_id,
             )
-        elif len(self.intersections) != 0:
-            return H3Response(
-                results=list(
-                    filter(
-                        lambda res: res.search_id == "Intersection search",
-                        flatten([response.results for response in responses]),
-                    )
-                )
-            )
-        else:
-            return H3Response(
-                results=sorted(
-                    flatten([response.results for response in responses]),
-                    key=lambda res: res.search_id,
-                )
-            )
+        )

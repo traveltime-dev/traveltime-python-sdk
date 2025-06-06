@@ -2,17 +2,17 @@ from typing import List
 from geojson_pydantic import FeatureCollection
 
 from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.requests.time_map_fast import ArrivalSearches
+from traveltimepy.dto.requests.time_map_fast import TimeMapFastArrivalSearches
 from traveltimepy.itertools import split, flatten
 
 
 class TimeMapFastGeojsonRequest(TravelTimeRequest[FeatureCollection]):
-    arrival_searches: ArrivalSearches
+    arrival_searches: TimeMapFastArrivalSearches
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
             TimeMapFastGeojsonRequest(
-                arrival_searches=ArrivalSearches(
+                arrival_searches=TimeMapFastArrivalSearches(
                     one_to_many=one_to_many, many_to_one=many_to_one
                 ),
             )

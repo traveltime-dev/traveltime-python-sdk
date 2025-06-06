@@ -1,73 +1,132 @@
 import pytest
 from datetime import datetime
 
-from traveltimepy import Coordinates, Driving, Range, TravelTimeSdk
+from traveltimepy import Coordinates, Driving, Range
+from traveltimepy.async_client import AsyncClient
 from traveltimepy.dto.common import CellProperty, H3Centroid
+from traveltimepy.dto.requests.h3 import H3DepartureSearch, H3ArrivalSearch, H3Union, H3Intersection
+from traveltimepy.dto.requests.h3_fast import H3FastArrivalSearches
 
 
 @pytest.mark.asyncio
-async def test_departures(sdk: TravelTimeSdk):
-    results = await sdk.h3_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
+async def test_departures(async_client: AsyncClient):
+    results = await async_client.h3(
+        arrival_searches=[],
+        departure_searches=[
+            H3DepartureSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                departure_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving()
+            ),
+            H3DepartureSearch(
+                id="id 2",
+                coords=H3Centroid(h3_centroid="87195da49ffffff"),
+                departure_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving()
+            )
         ],
-        resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        departure_time=datetime.now(),
-        travel_time=900,
-        transportation=Driving(),
-        search_range=Range(enabled=True, width=1800),
+        resolution=7,
+        unions=[],
+        intersections=[]
     )
+
     assert len(results) == 2
 
 
 @pytest.mark.asyncio
-async def test_arrivals(sdk: TravelTimeSdk):
-    results = await sdk.h3_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
+async def test_arrivals(async_client: AsyncClient):
+    results = await async_client.h3(
+        departure_searches=[],
+        arrival_searches=[
+            H3ArrivalSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                arrival_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving()
+            ),
+            H3ArrivalSearch(
+                id="id 2",
+                coords=H3Centroid(h3_centroid="87195da49ffffff"),
+                arrival_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving()
+            )
         ],
-        resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        arrival_time=datetime.now(),
-        travel_time=900,
-        transportation=Driving(),
-        search_range=Range(enabled=True, width=1800),
+        resolution=7,
+        unions=[],
+        intersections=[]
     )
+
     assert len(results) == 2
 
+@pytest.mark.asyncio
+async def test_union_departures(async_client: AsyncClient):
+    results = await async_client.h3(
+        departure_searches=[],
+        arrival_searches=[
+            H3ArrivalSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                arrival_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving()
+            ),
+            H3ArrivalSearch(
+                id="id 2",
+                coords=H3Centroid(h3_centroid="87195da49ffffff"),
+                arrival_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving()
+            )
+        ],
+        properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
+        resolution=7,
+        unions=[
+            H3Union(
+                id="union",
+                search_ids=["id", "id 2"]
+            )
+        ],
+        intersections=[]
+    )
+
+    assert len(results) == 3
 
 @pytest.mark.asyncio
-async def test_union_departures(sdk: TravelTimeSdk):
-    result = await sdk.h3_union_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
+async def test_intersection_arrivals(async_client: AsyncClient):
+    results = await async_client.h3(
+        departure_searches=[],
+        arrival_searches=[
+            H3ArrivalSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                arrival_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving()
+            ),
+            H3ArrivalSearch(
+                id="id 2",
+                coords=H3Centroid(h3_centroid="87195da49ffffff"),
+                arrival_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving()
+            )
         ],
-        resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        departure_time=datetime.now(),
-        travel_time=900,
-        transportation=Driving(),
-        search_range=Range(enabled=True, width=1800),
-    )
-    assert len(result.cells) > 0
-
-
-@pytest.mark.asyncio
-async def test_intersection_arrivals(sdk: TravelTimeSdk):
-    result = await sdk.h3_intersection_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
-        ],
         resolution=7,
-        properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        arrival_time=datetime.now(),
-        travel_time=900,
-        transportation=Driving(),
-        search_range=Range(enabled=True, width=1800),
+        unions=[],
+        intersections=[
+            H3Intersection(
+                id="intersection",
+                search_ids=["id", "id 2"]
+            )
+        ]
     )
-    assert len(result.cells) > 0
+
+    assert len(results) == 3

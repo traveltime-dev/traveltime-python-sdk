@@ -10,7 +10,7 @@ class DistanceBreakdown(BaseModel):
     distance: int
 
 
-class Property(BaseModel):
+class TimeFilterProperty(BaseModel):
     travel_time: int
     distance: Optional[int] = None
     distance_breakdown: Optional[List[DistanceBreakdown]] = None
@@ -20,7 +20,7 @@ class Property(BaseModel):
 
 class Location(BaseModel):
     id: str
-    properties: List[Property]
+    properties: List[TimeFilterProperty]
 
 
 class TimeFilterResult(BaseModel):

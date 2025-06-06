@@ -152,6 +152,9 @@ class DrivingTrafficModel(str, Enum):
     BALANCED = "balanced"
     PESSIMISTIC = "pessimistic"
 
+class ArrivalTimePeriod(str, Enum):
+    WEEKDAY_MORNING = "weekday_morning"
+
 
 class Snapping(BaseModel):
     penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
@@ -160,7 +163,7 @@ class Snapping(BaseModel):
     )
 
 
-class PropertyProto(int, Enum):
+class ProtoProperty(int, Enum):
     DISTANCE = 1
 
 

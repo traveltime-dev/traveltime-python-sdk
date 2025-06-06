@@ -18,7 +18,7 @@ from traveltimepy.dto.transportation import (
 )
 
 
-class ArrivalSearch(BaseModel):
+class TimeFilterArrivalSearch(BaseModel):
     id: str
     departure_location_ids: List[str]
     arrival_location_id: str
@@ -34,11 +34,11 @@ class ArrivalSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange]
-    snapping: Optional[Snapping]
+    range: Optional[FullRange] = None
+    snapping: Optional[Snapping] = None
 
 
-class DepartureSearch(BaseModel):
+class TimeFilterDepartureSearch(BaseModel):
     id: str
     arrival_location_ids: List[str]
     departure_location_id: str
@@ -54,14 +54,14 @@ class DepartureSearch(BaseModel):
         CyclingPublicTransport,
     ]
     properties: List[Property]
-    range: Optional[FullRange]
-    snapping: Optional[Snapping]
+    range: Optional[FullRange] = None
+    snapping: Optional[Snapping] = None
 
 
 class TimeFilterRequest(TravelTimeRequest[TimeFilterResponse]):
     locations: List[Location]
-    departure_searches: List[DepartureSearch]
-    arrival_searches: List[ArrivalSearch]
+    departure_searches: List[TimeFilterDepartureSearch]
+    arrival_searches: List[TimeFilterArrivalSearch]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [

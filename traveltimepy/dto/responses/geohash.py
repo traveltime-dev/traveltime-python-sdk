@@ -14,10 +14,10 @@ class Cell(BaseModel):
     properties: Properties
 
 
-class GeohashResult(BaseModel):
+class GeoHashResult(BaseModel):
     search_id: str
     cells: List[Cell]
 
 
-class GeohashResponse(BaseModel):
-    results: List[GeohashResult]
+class GeoHashResponse(BaseModel):
+    results: List[GeoHashResult]

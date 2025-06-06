@@ -3,15 +3,15 @@ from typing import List
 from geojson_pydantic import FeatureCollection
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.requests.time_map import (
-    DepartureSearch,
-    ArrivalSearch,
+    TimeMapDepartureSearch,
+    TimeMapArrivalSearch,
 )
 from traveltimepy.itertools import split, flatten
 
 
 class TimeMapRequestGeojson(TravelTimeRequest[FeatureCollection]):
-    departure_searches: List[DepartureSearch]
-    arrival_searches: List[ArrivalSearch]
+    departure_searches: List[TimeMapDepartureSearch]
+    arrival_searches: List[TimeMapArrivalSearch]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [

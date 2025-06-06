@@ -1,45 +1,50 @@
 from typing import List, Optional
 import typing
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_serializer
 
 from traveltimepy.dto.common import (
     CellProperty,
     Coordinates,
     H3Centroid,
-    Snapping,
+    Snapping, ArrivalTimePeriod,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.h3 import H3Response
 from traveltimepy.itertools import split, flatten
-from traveltimepy.dto.requests.time_filter_fast import Transportation
+from traveltimepy.dto.requests.time_filter_fast import TransportationFast
 
 
-class Search(BaseModel):
+class H3FastSearch(BaseModel):
     id: str
     coords: typing.Union[Coordinates, H3Centroid]
-    transportation: Transportation
+    transportation: TransportationFast
     travel_time: int
-    arrival_time_period: str
-    snapping: Optional[Snapping]
+    arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
+    snapping: Optional[Snapping] = None
+
+    # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
+    @field_serializer('transportation')
+    def serialize_transportation(self, value: TransportationFast) -> dict:
+        return {"type": value.value}
 
 
-class ArrivalSearches(BaseModel):
-    many_to_one: List[Search]
-    one_to_many: List[Search]
+class H3FastArrivalSearches(BaseModel):
+    many_to_one: List[H3FastSearch]
+    one_to_many: List[H3FastSearch]
 
 
 class H3FastRequest(TravelTimeRequest[H3Response]):
     resolution: int
     properties: List[CellProperty]
-    arrival_searches: ArrivalSearches
+    arrival_searches: H3FastArrivalSearches
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
             H3FastRequest(
                 resolution=self.resolution,
                 properties=self.properties,
-                arrival_searches=ArrivalSearches(
+                arrival_searches=H3FastArrivalSearches(
                     one_to_many=one_to_many, many_to_one=many_to_one
                 ),
             )

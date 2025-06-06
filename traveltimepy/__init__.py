@@ -30,7 +30,7 @@ from traveltimepy.dto.common import (
     Property,
     CellProperty,
     Snapping,
-    PropertyProto,
+    ProtoProperty,
     FullRange,
     Range,
     Rectangle,
@@ -38,8 +38,7 @@ from traveltimepy.dto.common import (
     DrivingTrafficModel,
 )
 
-from traveltimepy.sdk import TravelTimeSdk
-from traveltimepy.dto.requests.time_filter_fast import Transportation
+from traveltimepy.dto.requests.time_filter_fast import TransportationFast
 from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 
 __all__ = [
@@ -61,13 +60,12 @@ __all__ = [
     "Location",
     "Property",
     "CellProperty",
-    "PropertyProto",
+    "ProtoProperty",
     "FullRange",
     "Range",
     "Rectangle",
     "LevelOfDetail",
-    "TravelTimeSdk",
-    "Transportation",
+    "TransportationFast",
     "ZonesProperty",
     "DrivingTrafficModel",
 ]

@@ -1,6 +1,6 @@
 import pytest
 
-from traveltimepy import Transportation, TravelTimeSdk
+from traveltimepy import TransportationFast, TravelTimeSdk
 
 
 @pytest.mark.asyncio
@@ -11,7 +11,7 @@ async def test_one_to_many(sdk: TravelTimeSdk, locations):
             "London center": ["Hyde Park", "ZSL London Zoo"],
             "ZSL London Zoo": ["Hyde Park", "London center"],
         },
-        transportation=Transportation(type="public_transport"),
+        transportation=TransportationFast(type="public_transport"),
     )
 
     assert len(results) > 0
@@ -25,7 +25,7 @@ async def test_many_to_one(sdk: TravelTimeSdk, locations):
             "London center": ["Hyde Park", "ZSL London Zoo"],
             "ZSL London Zoo": ["Hyde Park", "London center"],
         },
-        transportation=Transportation(type="public_transport"),
+        transportation=TransportationFast(type="public_transport"),
         one_to_many=False,
     )
 
