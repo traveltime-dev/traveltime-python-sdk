@@ -2,10 +2,10 @@ from typing import List, Optional
 
 from pydantic import BaseModel, field_serializer
 
-from traveltimepy.dto.common import Location, Property, Snapping
+from traveltimepy import TransportationFast
+from traveltimepy.dto.common import Location, Property, Snapping, ArrivalTimePeriod
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
-from traveltimepy.dto.transportation_fast import TransportationFast
 from traveltimepy.itertools import split, flatten
 
 
@@ -15,9 +15,9 @@ class TimeFilterFastOneToMany(BaseModel):
     arrival_location_ids: List[str]
     transportation: TransportationFast
     travel_time: int
-    arrival_time_period: str
+    arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     properties: List[Property]
-    snapping: Optional[Snapping]
+    snapping: Optional[Snapping] = None
     
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
     @field_serializer('transportation')
@@ -31,9 +31,9 @@ class TimeFilterFastManyToOne(BaseModel):
     departure_location_ids: List[str]
     transportation: TransportationFast
     travel_time: int
-    arrival_time_period: str
+    arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     properties: List[Property]
-    snapping: Optional[Snapping]
+    snapping: Optional[Snapping] = None
     
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
     @field_serializer('transportation')

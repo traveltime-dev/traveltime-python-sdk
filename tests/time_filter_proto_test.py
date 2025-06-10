@@ -77,7 +77,7 @@ async def test_many_to_one_with_distances(async_client: AsyncClient):
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 2
 
-
+@pytest.mark.asyncio
 async def test_one_to_many_pt_with_params(async_client: AsyncClient):
     results = await async_client.time_filter_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
@@ -110,7 +110,7 @@ async def test_many_to_one_pt_with_params(async_client: AsyncClient):
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 0
 
-
+@pytest.mark.asyncio
 async def test_one_to_many_driving_and_pt_with_params(async_client: AsyncClient):
     results = await async_client.time_filter_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),

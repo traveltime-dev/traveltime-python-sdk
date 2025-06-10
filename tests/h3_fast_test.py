@@ -14,13 +14,13 @@ async def test_one_to_many(async_client: AsyncClient):
                 H3FastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast(type="public_transport"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
                     travel_time=900
                 ),
                 H3FastSearch(
                     id="id 2",
                     coords=H3Centroid(h3_centroid="87195da49ffffff"),
-                    transportation=TransportationFast(type="public_transport"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
                     travel_time=900
                 ),
             ],
@@ -41,13 +41,13 @@ async def test_many_to_one(async_client: AsyncClient):
                 H3FastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast(type="public_transport"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
                     travel_time=900
                 ),
                 H3FastSearch(
                     id="id 2",
                     coords=H3Centroid(h3_centroid="87195da49ffffff"),
-                    transportation=TransportationFast(type="public_transport"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
                     travel_time=900
                 ),
             ],

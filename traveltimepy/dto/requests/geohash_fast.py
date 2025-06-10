@@ -3,6 +3,7 @@ import typing
 
 from pydantic import BaseModel, field_serializer
 
+from traveltimepy import TransportationFast
 from traveltimepy.dto.common import (
     CellProperty,
     Coordinates,
@@ -12,7 +13,6 @@ from traveltimepy.dto.common import (
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.geohash import GeoHashResponse
 from traveltimepy.itertools import split, flatten
-from traveltimepy.dto.requests.time_filter_fast import TransportationFast
 
 
 class GeoHashFastSearch(BaseModel):

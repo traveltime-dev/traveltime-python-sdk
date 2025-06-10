@@ -1,3 +1,4 @@
+from enum import Enum
 from typing import Optional
 from typing_extensions import Literal
 
@@ -65,3 +66,14 @@ class CyclingPublicTransport(BaseModel):
     parking_time: Optional[int] = None
     boarding_time: Optional[int] = None
     max_changes: Optional[MaxChanges] = None
+
+
+class TransportationFast(str, Enum):
+    PUBLIC_TRANSPORT = "public_transport"
+    DRIVING = "driving"
+    CYCLING = "cycling"
+    WALKING = "walking"
+    WALKING_FERRY = "walking+ferry"
+    CYCLING_FERRY = "cycling+ferry"
+    DRIVING_FERRY = "driving+ferry"
+    DRIVING_PUBLIC_TRANSPORT = "driving+public_transport"

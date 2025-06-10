@@ -12,7 +12,7 @@ from traveltimepy.dto.common import (
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.h3 import H3Response
 from traveltimepy.itertools import split, flatten
-from traveltimepy.dto.requests.time_filter_fast import TransportationFast
+from traveltimepy import TransportationFast
 
 
 class H3FastSearch(BaseModel):

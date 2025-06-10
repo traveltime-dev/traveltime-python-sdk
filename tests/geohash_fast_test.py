@@ -14,13 +14,13 @@ async def test_one_to_many(async_client: AsyncClient):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast(type="public_transport"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
                     travel_time=900
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast(type="public_transport"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
                     travel_time=900
                 ),
             ],
@@ -42,13 +42,13 @@ async def test_many_to_one(async_client: AsyncClient):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast(type="public_transport"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
                     travel_time=900
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast(type="public_transport"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
                     travel_time=900
                 ),
             ]

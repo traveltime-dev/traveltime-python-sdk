@@ -16,7 +16,7 @@ from traveltimepy.dto.transportation import (
     Cycling,
     DrivingTrain,
     CyclingPublicTransport,
-    MaxChanges,
+    MaxChanges, TransportationFast,
 )
 from traveltimepy.dto.requests.time_filter_proto import (
     ProtoTransportation,
@@ -38,11 +38,11 @@ from traveltimepy.dto.common import (
     DrivingTrafficModel,
 )
 
-from traveltimepy.dto.requests.time_filter_fast import TransportationFast
 from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 
 __all__ = [
     "__version__",
+    "TransportationFast",
     "PublicTransport",
     "Driving",
     "Ferry",
@@ -65,7 +65,6 @@ __all__ = [
     "Range",
     "Rectangle",
     "LevelOfDetail",
-    "TransportationFast",
     "ZonesProperty",
     "DrivingTrafficModel",
 ]

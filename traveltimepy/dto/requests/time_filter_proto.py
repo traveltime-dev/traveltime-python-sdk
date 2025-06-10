@@ -153,23 +153,23 @@ class TimeFilterFastProtoRequest:
 
             if isinstance(self.transportation, ProtoPublicTransportWithDetails):
                 if self.transportation.walking_time_to_station is not None:
-                    req.transportation.publicTransport.walkingTimeToStation.value = (
+                    req.transportation.publicTransport.walkingTimeToStation = (
                         self.transportation.walking_time_to_station
                     )
 
             elif isinstance(self.transportation, ProtoDrivingAndPublicTransportWithDetails):
                 if self.transportation.walking_time_to_station is not None:
-                    req.transportation.drivingAndPublicTransport.walkingTimeToStation.value = (
+                    req.transportation.drivingAndPublicTransport.walkingTimeToStation = (
                         self.transportation.walking_time_to_station
                     )
 
                 if self.transportation.driving_time_to_station is not None:
-                    req.transportation.drivingAndPublicTransport.drivingTimeToStation.value = (
+                    req.transportation.drivingAndPublicTransport.drivingTimeToStation = (
                         self.transportation.driving_time_to_station
                     )
 
                 if self.transportation.parking_time is not None:
-                    req.transportation.drivingAndPublicTransport.parkingTime.value = (
+                    req.transportation.drivingAndPublicTransport.parkingTime = (
                         self.transportation.parking_time
                     )
 
@@ -177,7 +177,7 @@ class TimeFilterFastProtoRequest:
         req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING
 
         if self.withDistance:
-            req.properties.extend([TimeFilterFastRequest_pb2.TimeFilterFastRequest.PostcodeProperty.DISTANCES])
+            req.properties.extend([TimeFilterFastRequest_pb2.TimeFilterFastRequest.Property.DISTANCES])
 
         # Calculate and add location deltas
         mult = math.pow(10, 5)

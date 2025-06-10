@@ -26,6 +26,10 @@ from traveltimepy.dto.requests.time_filter_proto import TimeFilterFastProtoReque
 from traveltimepy.dto.requests.time_map import TimeMapDepartureSearch, TimeMapArrivalSearch, TimeMapUnion, \
     TimeMapIntersection, TimeMapRequest
 from traveltimepy.dto.requests.time_map_fast import TimeMapFastArrivalSearches, TimeMapFastRequest
+from traveltimepy.dto.requests.time_map_fast_geojson import TimeMapFastGeojsonRequest
+from traveltimepy.dto.requests.time_map_fast_wkt import TimeMapFastWKTRequest
+from traveltimepy.dto.requests.time_map_geojson import TimeMapGeojsonRequest
+from traveltimepy.dto.requests.time_map_wkt import TimeMapWktRequest
 from traveltimepy.dto.responses.geohash import GeoHashResult, GeoHashResponse
 from traveltimepy.dto.responses.h3 import H3Result, H3Response
 from traveltimepy.dto.responses.map_info import MapInfoResponse, Map
@@ -36,6 +40,7 @@ from traveltimepy.dto.responses.time_filter import TimeFilterResponse, TimeFilte
 from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResult, TimeFilterFastResponse
 from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.dto.responses.time_map import TimeMapResult, TimeMapResponse
+from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResponse
 from traveltimepy.dto.responses.zones import PostcodesDistrictsResult, PostcodesDistrictsResponse, \
     PostcodesSectorsResult, PostcodesSectorsResponse
 
@@ -158,13 +163,12 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
         unions: List[TimeMapUnion],
-        intersections: List[TimeMapIntersection],
-        accept_type: AcceptType = AcceptType.JSON
-    ) -> TimeMapResult:
+        intersections: List[TimeMapIntersection]
+    ) -> List[TimeMapResult]:
         resp = await self._api_call_post(
             TimeMapResponse,
             "time-map",
-            accept_type,
+            AcceptType.JSON,
             TimeMapRequest(
                 arrival_searches=arrival_searches,
                 departure_searches=departure_searches,
@@ -174,18 +178,101 @@ class AsyncClient(AsyncBaseClient):
         )
         return resp.results
 
+    async def time_map_geojson(
+        self,
+        arrival_searches: List[TimeMapArrivalSearch],
+        departure_searches: List[TimeMapDepartureSearch],
+    ) -> FeatureCollection:
+        resp = await self._api_call_post(
+            FeatureCollection,
+            "time-map",
+            AcceptType.GEO_JSON,
+            TimeMapGeojsonRequest(
+                arrival_searches=arrival_searches,
+                departure_searches=departure_searches
+            )
+        )
+        return resp
+
+    async def time_map_wkt(
+        self,
+        arrival_searches: List[TimeMapArrivalSearch],
+        departure_searches: List[TimeMapDepartureSearch],
+    ) -> TimeMapWKTResponse:
+        resp = await self._api_call_post(
+            TimeMapWKTResponse,
+            "time-map",
+            AcceptType.WKT,
+            TimeMapWktRequest(
+                arrival_searches=arrival_searches,
+                departure_searches=departure_searches
+            )
+        )
+        return resp
+
+    async def time_map_wkt_no_holes(
+        self,
+        arrival_searches: List[TimeMapArrivalSearch],
+        departure_searches: List[TimeMapDepartureSearch],
+    ) -> TimeMapWKTResponse:
+        resp = await self._api_call_post(
+            TimeMapWKTResponse,
+            "time-map",
+            AcceptType.WKT_NO_HOLES,
+            TimeMapWktRequest(
+                arrival_searches=arrival_searches,
+                departure_searches=departure_searches
+            )
+        )
+        return resp
+
     async def time_map_fast(
         self,
         arrival_searches: TimeMapFastArrivalSearches,
-        accept_type: AcceptType = AcceptType.JSON
     ) -> List[TimeMapResult]:
         resp = await self._api_call_post(
             TimeMapResponse,
             "time-map/fast",
-            accept_type,
+            AcceptType.JSON,
             TimeMapFastRequest(arrival_searches=arrival_searches)
         )
         return resp.results
+
+    async def time_map_fast_geojson(
+        self,
+        arrival_searches: TimeMapFastArrivalSearches,
+    ) -> FeatureCollection:
+        resp = await self._api_call_post(
+            FeatureCollection,
+            "time-map/fast",
+            AcceptType.GEO_JSON,
+            TimeMapFastGeojsonRequest(arrival_searches=arrival_searches)
+        )
+        return resp
+
+    async def time_map_fast_wkt(
+        self,
+        arrival_searches: TimeMapFastArrivalSearches,
+    ) -> TimeMapWKTResponse:
+        resp = await self._api_call_post(
+            TimeMapWKTResponse,
+            "time-map/fast",
+            AcceptType.WKT,
+            TimeMapFastWKTRequest(arrival_searches=arrival_searches)
+        )
+        return resp
+
+    async def time_map_fast_wkt_no_holes(
+        self,
+        arrival_searches: TimeMapFastArrivalSearches,
+    ) -> TimeMapWKTResponse:
+        resp = await self._api_call_post(
+            TimeMapWKTResponse,
+            "time-map/fast",
+            AcceptType.WKT_NO_HOLES,
+            TimeMapFastWKTRequest(arrival_searches=arrival_searches)
+        )
+        return resp
 
     async def h3(
         self,

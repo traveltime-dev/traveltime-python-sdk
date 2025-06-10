@@ -5,13 +5,13 @@ from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResponse
 from traveltimepy.itertools import split, flatten
 
 
-class TimeMapWKTRequest(TravelTimeRequest[TimeMapWKTResponse]):
+class TimeMapWktRequest(TravelTimeRequest[TimeMapWKTResponse]):
     departure_searches: List[TimeMapDepartureSearch]
     arrival_searches: List[TimeMapArrivalSearch]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
-            TimeMapWKTRequest(departure_searches=departures, arrival_searches=arrivals)
+            TimeMapWktRequest(departure_searches=departures, arrival_searches=arrivals)
             for departures, arrivals in split(
                 self.departure_searches, self.arrival_searches, window_size
             )
