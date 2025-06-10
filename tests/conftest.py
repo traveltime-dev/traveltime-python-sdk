@@ -11,6 +11,7 @@ from traveltimepy.async_client import AsyncClient
 def async_client() -> AsyncClient:
     return AsyncClient(os.environ["APP_ID"], os.environ["API_KEY"])
 
+
 @pytest.fixture
 def locations() -> List[Location]:
     return [
