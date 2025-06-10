@@ -37,7 +37,7 @@ jobs:
           pip install -e ".[test]"
       - name: Lint with flake8
         run: |
-          flake8 --max-line-length=127
+          flake8 --max-line-length=127 --ignore=E203
       - name: Formatting check with black
         run: |
           black . --check --diff
