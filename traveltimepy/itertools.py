@@ -6,7 +6,7 @@ R = TypeVar("R")
 
 
 def sliding(values: List[T], window_size: int) -> List[List[T]]:
-    return [values[i : i + window_size] for i in range(0, len(values), window_size)]
+    return [values[i: i + window_size] for i in range(0, len(values), window_size)]
 
 
 def split(

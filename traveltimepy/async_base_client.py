@@ -9,7 +9,7 @@ from aiolimiter import AsyncLimiter
 from pydantic import BaseModel
 
 import TimeFilterFastResponse_pb2
-from traveltimepy import ProtoTransportation
+from traveltimepy import ProtoTransportation, __version__
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.requests.time_filter_proto import TimeFilterFastProtoRequest
@@ -32,7 +32,7 @@ class AsyncBaseClient:
         use_ssl: bool = True,
         _host: str = "api.traveltimeapp.com",
         _proto_host: str = "proto.api.traveltimeapp.com",
-        _user_agent: str = f"Travel Time Python SDK",
+        _user_agent: str = f"Travel Time Python SDK {__version__}",
         _split_size: int = 10,  # Splits requests to improve performance
     ):
         self.app_id = app_id
@@ -192,7 +192,7 @@ class AsyncBaseClient:
     def _get_proto_headers(self) -> Dict[str, str]:
         return {
             "Content-Type": AcceptType.OCTET_STREAM.value,
-            "User-Agent": f"Travel Time Python SDK ",
+            "User-Agent": f"Travel Time Python SDK {__version__}",
         }
 
     async def _handle_response(

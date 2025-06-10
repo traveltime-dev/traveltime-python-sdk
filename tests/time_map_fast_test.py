@@ -1,7 +1,6 @@
 import pytest
 
 from traveltimepy import TransportationFast
-from traveltimepy.accept_type import AcceptType
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.dto.common import Coordinates
 from traveltimepy.dto.requests.time_map_fast import (

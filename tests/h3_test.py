@@ -1,7 +1,8 @@
-import pytest
 from datetime import datetime
 
-from traveltimepy import Coordinates, Driving, Range
+import pytest
+
+from traveltimepy import Coordinates, Driving
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.dto.common import CellProperty, H3Centroid
 from traveltimepy.dto.requests.h3 import (
@@ -10,7 +11,6 @@ from traveltimepy.dto.requests.h3 import (
     H3Union,
     H3Intersection,
 )
-from traveltimepy.dto.requests.h3_fast import H3FastArrivalSearches
 
 
 @pytest.mark.asyncio

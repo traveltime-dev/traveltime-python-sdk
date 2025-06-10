@@ -5,7 +5,7 @@ from typing import ClassVar, Optional, List, Union
 
 import RequestsCommon_pb2
 import TimeFilterFastRequest_pb2
-from traveltimepy.dto.common import Coordinates, ProtoProperty
+from traveltimepy.dto.common import Coordinates
 
 
 class RequestType(Enum):

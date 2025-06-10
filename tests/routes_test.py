@@ -1,9 +1,9 @@
+from datetime import datetime
 from typing import List
 
 import pytest
-from datetime import datetime
 
-from traveltimepy import PublicTransport, Driving, Location, Coordinates
+from traveltimepy import Driving, Location, Coordinates
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.dto.common import (
     Snapping,

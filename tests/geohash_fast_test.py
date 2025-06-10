@@ -6,7 +6,6 @@ from traveltimepy.dto.common import (
     CellProperty,
     Coordinates,
     GeohashCentroid,
-    ArrivalTimePeriod,
 )
 from traveltimepy.dto.requests.geohash_fast import (
     GeoHashFastArrivalSearches,
