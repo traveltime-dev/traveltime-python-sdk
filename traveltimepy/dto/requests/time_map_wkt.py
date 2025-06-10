@@ -1,6 +1,9 @@
 from typing import List
 from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.requests.time_map import TimeMapDepartureSearch, TimeMapArrivalSearch
+from traveltimepy.dto.requests.time_map import (
+    TimeMapDepartureSearch,
+    TimeMapArrivalSearch,
+)
 from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResponse
 from traveltimepy.itertools import split, flatten
 

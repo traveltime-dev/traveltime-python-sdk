@@ -8,7 +8,8 @@ from traveltimepy.dto.common import (
     CellProperty,
     Coordinates,
     GeohashCentroid,
-    Snapping, ArrivalTimePeriod,
+    Snapping,
+    ArrivalTimePeriod,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.geohash import GeoHashResponse
@@ -24,7 +25,7 @@ class GeoHashFastSearch(BaseModel):
     snapping: Optional[Snapping] = None
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
-    @field_serializer('transportation')
+    @field_serializer("transportation")
     def serialize_transportation(self, value: TransportationFast) -> dict:
         return {"type": value.value}
 

@@ -5,22 +5,26 @@ import pytest
 from traveltimepy import Coordinates, Driving, Range, PublicTransport
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.dto.common import CellProperty, GeohashCentroid
-from traveltimepy.dto.requests.geohash import GeoHashDepartureSearch, GeoHashArrivalSearch, GeoHashUnion, \
-    GeoHashIntersection
+from traveltimepy.dto.requests.geohash import (
+    GeoHashDepartureSearch,
+    GeoHashArrivalSearch,
+    GeoHashUnion,
+    GeoHashIntersection,
+)
 
 
 @pytest.mark.asyncio
 async def test_departures(async_client: AsyncClient):
     results = await async_client.geohash(
-        arrival_searches= [],
-        departure_searches= [
+        arrival_searches=[],
+        departure_searches=[
             GeoHashDepartureSearch(
                 id="id",
                 coords=Coordinates(lat=51.507609, lng=-0.128315),
                 transportation=Driving(),
                 travel_time=900,
                 departure_time=datetime.now(),
-                range=Range(enabled=True, width=1800)
+                range=Range(enabled=True, width=1800),
             ),
             GeoHashDepartureSearch(
                 id="id 2",
@@ -28,13 +32,13 @@ async def test_departures(async_client: AsyncClient):
                 transportation=Driving(),
                 travel_time=900,
                 departure_time=datetime.now(),
-                range=Range(enabled=True, width=1800)
+                range=Range(enabled=True, width=1800),
             ),
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
         unions=[],
-        intersections=[]
+        intersections=[],
     )
 
     assert len(results) == 2
@@ -43,15 +47,15 @@ async def test_departures(async_client: AsyncClient):
 @pytest.mark.asyncio
 async def test_arrivals(async_client: AsyncClient):
     results = await async_client.geohash(
-        departure_searches= [],
-        arrival_searches= [
+        departure_searches=[],
+        arrival_searches=[
             GeoHashArrivalSearch(
                 id="id",
                 coords=Coordinates(lat=51.507609, lng=-0.128315),
                 transportation=Driving(),
                 travel_time=900,
                 arrival_time=datetime.now(),
-                range=Range(enabled=True, width=1800)
+                range=Range(enabled=True, width=1800),
             ),
             GeoHashArrivalSearch(
                 id="id 2",
@@ -59,13 +63,13 @@ async def test_arrivals(async_client: AsyncClient):
                 transportation=Driving(),
                 travel_time=900,
                 arrival_time=datetime.now(),
-                range=Range(enabled=True, width=1800)
+                range=Range(enabled=True, width=1800),
             ),
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
         unions=[],
-        intersections=[]
+        intersections=[],
     )
 
     assert len(results) == 2
@@ -74,15 +78,15 @@ async def test_arrivals(async_client: AsyncClient):
 @pytest.mark.asyncio
 async def test_union_departures(async_client: AsyncClient):
     results = await async_client.geohash(
-        arrival_searches= [],
-        departure_searches= [
+        arrival_searches=[],
+        departure_searches=[
             GeoHashDepartureSearch(
                 id="id",
                 coords=Coordinates(lat=51.507609, lng=-0.128315),
                 transportation=Driving(),
                 travel_time=900,
                 departure_time=datetime.now(),
-                range=Range(enabled=True, width=1800)
+                range=Range(enabled=True, width=1800),
             ),
             GeoHashDepartureSearch(
                 id="id 2",
@@ -90,18 +94,13 @@ async def test_union_departures(async_client: AsyncClient):
                 transportation=PublicTransport(),
                 travel_time=900,
                 departure_time=datetime.now(),
-                range=Range(enabled=True, width=1800)
-            )
+                range=Range(enabled=True, width=1800),
+            ),
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
-        unions=[
-            GeoHashUnion(
-                id="union",
-                search_ids=["id", "id 2"]
-            )
-        ],
-        intersections=[]
+        unions=[GeoHashUnion(id="union", search_ids=["id", "id 2"])],
+        intersections=[],
     )
 
     assert len(results) == 3
@@ -110,15 +109,15 @@ async def test_union_departures(async_client: AsyncClient):
 @pytest.mark.asyncio
 async def test_intersection_arrivals(async_client: AsyncClient):
     results = await async_client.geohash(
-        departure_searches= [],
-        arrival_searches= [
+        departure_searches=[],
+        arrival_searches=[
             GeoHashArrivalSearch(
                 id="id",
                 coords=Coordinates(lat=51.507609, lng=-0.128315),
                 transportation=Driving(),
                 travel_time=900,
                 arrival_time=datetime.now(),
-                range=Range(enabled=True, width=1800)
+                range=Range(enabled=True, width=1800),
             ),
             GeoHashArrivalSearch(
                 id="id 2",
@@ -126,18 +125,15 @@ async def test_intersection_arrivals(async_client: AsyncClient):
                 transportation=Driving(),
                 travel_time=900,
                 arrival_time=datetime.now(),
-                range=Range(enabled=True, width=1800)
+                range=Range(enabled=True, width=1800),
             ),
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
         unions=[],
         intersections=[
-            GeoHashIntersection(
-                id="intersection",
-                search_ids=["id", "id 2"]
-            )
-        ]
+            GeoHashIntersection(id="intersection", search_ids=["id", "id 2"])
+        ],
     )
 
     assert len(results) == 3

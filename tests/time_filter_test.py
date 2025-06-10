@@ -4,7 +4,10 @@ import pytest
 
 from traveltimepy import Property, Driving
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.time_filter import TimeFilterDepartureSearch, TimeFilterArrivalSearch
+from traveltimepy.dto.requests.time_filter import (
+    TimeFilterDepartureSearch,
+    TimeFilterArrivalSearch,
+)
 
 
 @pytest.mark.asyncio
@@ -19,7 +22,7 @@ async def test_departures(async_client: AsyncClient, locations):
                 departure_time=datetime.now(),
                 transportation=Driving(),
                 travel_time=1800,
-                properties=[Property.TRAVEL_TIME]
+                properties=[Property.TRAVEL_TIME],
             ),
             TimeFilterDepartureSearch(
                 id="ZSL London Zoo",
@@ -28,12 +31,13 @@ async def test_departures(async_client: AsyncClient, locations):
                 departure_time=datetime.now(),
                 transportation=Driving(),
                 travel_time=1800,
-                properties=[Property.TRAVEL_TIME]
+                properties=[Property.TRAVEL_TIME],
             ),
         ],
         arrival_searches=[],
     )
     assert len(results) == 2
+
 
 @pytest.mark.asyncio
 async def test_arrivals(async_client: AsyncClient, locations):
@@ -47,7 +51,7 @@ async def test_arrivals(async_client: AsyncClient, locations):
                 arrival_time=datetime.now(),
                 transportation=Driving(),
                 travel_time=1800,
-                properties=[Property.TRAVEL_TIME]
+                properties=[Property.TRAVEL_TIME],
             ),
             TimeFilterArrivalSearch(
                 id="ZSL London Zoo",
@@ -56,8 +60,8 @@ async def test_arrivals(async_client: AsyncClient, locations):
                 arrival_time=datetime.now(),
                 transportation=Driving(),
                 travel_time=1800,
-                properties=[Property.TRAVEL_TIME]
-            )
+                properties=[Property.TRAVEL_TIME],
+            ),
         ],
         departure_searches=[],
     )

@@ -18,9 +18,9 @@ class TimeFilterFastOneToMany(BaseModel):
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     properties: List[Property]
     snapping: Optional[Snapping] = None
-    
+
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
-    @field_serializer('transportation')
+    @field_serializer("transportation")
     def serialize_transportation(self, value: TransportationFast) -> dict:
         return {"type": value.value}
 
@@ -34,9 +34,9 @@ class TimeFilterFastManyToOne(BaseModel):
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     properties: List[Property]
     snapping: Optional[Snapping] = None
-    
+
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
-    @field_serializer('transportation')
+    @field_serializer("transportation")
     def serialize_transportation(self, value: TransportationFast) -> dict:
         return {"type": value.value}
 

@@ -27,6 +27,7 @@ class GeocodingRequest(BaseModel):
             key: str(value) for (key, value) in full_query.items() if value is not None
         }
 
+
 class ReverseGeocodingRequest(BaseModel):
     lat: float
     lng: float

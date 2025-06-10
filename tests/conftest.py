@@ -6,6 +6,7 @@ import pytest
 from traveltimepy import Location, Coordinates
 from traveltimepy.async_client import AsyncClient
 
+
 @pytest.fixture
 def async_client() -> AsyncClient:
     return AsyncClient(os.environ["APP_ID"], os.environ["API_KEY"])

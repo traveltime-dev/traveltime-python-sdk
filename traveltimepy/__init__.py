@@ -16,7 +16,8 @@ from traveltimepy.dto.transportation import (
     Cycling,
     DrivingTrain,
     CyclingPublicTransport,
-    MaxChanges, TransportationFast,
+    MaxChanges,
+    TransportationFast,
 )
 from traveltimepy.dto.requests.time_filter_proto import (
     ProtoTransportation,

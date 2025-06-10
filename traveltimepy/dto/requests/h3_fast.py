@@ -7,7 +7,8 @@ from traveltimepy.dto.common import (
     CellProperty,
     Coordinates,
     H3Centroid,
-    Snapping, ArrivalTimePeriod,
+    Snapping,
+    ArrivalTimePeriod,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.h3 import H3Response
@@ -24,7 +25,7 @@ class H3FastSearch(BaseModel):
     snapping: Optional[Snapping] = None
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
-    @field_serializer('transportation')
+    @field_serializer("transportation")
     def serialize_transportation(self, value: TransportationFast) -> dict:
         return {"type": value.value}
 

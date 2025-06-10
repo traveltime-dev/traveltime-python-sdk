@@ -4,8 +4,14 @@ import pytest
 
 from traveltimepy import Coordinates, PublicTransport
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.postcodes import PostcodeDepartureSearch, PostcodeArrivalSearch
-from traveltimepy.dto.requests.postcodes_zones import PostcodeFilterDepartureSearch, PostcodeFilterArrivalSearch
+from traveltimepy.dto.requests.postcodes import (
+    PostcodeDepartureSearch,
+    PostcodeArrivalSearch,
+)
+from traveltimepy.dto.requests.postcodes_zones import (
+    PostcodeFilterDepartureSearch,
+    PostcodeFilterArrivalSearch,
+)
 
 
 @pytest.mark.asyncio
@@ -18,10 +24,10 @@ async def test_departures(async_client: AsyncClient):
                 travel_time=900,
                 departure_time=datetime.now(),
                 transportation=PublicTransport(),
-                properties=[]
-
-            )],
-        arrival_searches=[]
+                properties=[],
+            )
+        ],
+        arrival_searches=[],
     )
     assert len(results) > 0
 
@@ -36,12 +42,13 @@ async def test_arrivals(async_client: AsyncClient):
                 travel_time=900,
                 arrival_time=datetime.now(),
                 transportation=PublicTransport(),
-                properties=[]
-
-            )],
-        departure_searches=[]
+                properties=[],
+            )
+        ],
+        departure_searches=[],
     )
     assert len(results) > 0
+
 
 @pytest.mark.asyncio
 async def test_districts_departure(async_client: AsyncClient):
@@ -53,9 +60,10 @@ async def test_districts_departure(async_client: AsyncClient):
                 travel_time=900,
                 departure_time=datetime.now(),
                 transportation=PublicTransport(),
-                properties=[]
-            )],
-        arrival_searches=[]
+                properties=[],
+            )
+        ],
+        arrival_searches=[],
     )
     assert len(results) > 0
 
@@ -70,10 +78,10 @@ async def test_districts_arrival(async_client: AsyncClient):
                 travel_time=900,
                 arrival_time=datetime.now(),
                 transportation=PublicTransport(),
-                properties=[]
+                properties=[],
             )
         ],
-        departure_searches=[]
+        departure_searches=[],
     )
 
     assert len(results) > 0
@@ -89,9 +97,10 @@ async def test_sectors_departure(async_client: AsyncClient):
                 travel_time=900,
                 departure_time=datetime.now(),
                 transportation=PublicTransport(),
-                properties=[]
-            )],
-        arrival_searches=[]
+                properties=[],
+            )
+        ],
+        arrival_searches=[],
     )
     assert len(results) > 0
 
@@ -106,10 +115,10 @@ async def test_sectors_arrival(async_client: AsyncClient):
                 travel_time=900,
                 arrival_time=datetime.now(),
                 transportation=PublicTransport(),
-                properties=[]
+                properties=[],
             )
         ],
-        departure_searches=[]
+        departure_searches=[],
     )
 
     assert len(results) > 0

@@ -152,6 +152,7 @@ class DrivingTrafficModel(str, Enum):
     BALANCED = "balanced"
     PESSIMISTIC = "pessimistic"
 
+
 class ArrivalTimePeriod(str, Enum):
     WEEKDAY_MORNING = "weekday_morning"
 

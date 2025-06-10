@@ -7,7 +7,8 @@ from traveltimepy.dto.common import (
     LevelOfDetail,
     PolygonsFilter,
     RenderMode,
-    Snapping, ArrivalTimePeriod,
+    Snapping,
+    ArrivalTimePeriod,
 )
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
@@ -27,9 +28,10 @@ class TimeMapFastSearch(BaseModel):
     render_mode: Optional[RenderMode] = None
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
-    @field_serializer('transportation')
+    @field_serializer("transportation")
     def serialize_transportation(self, value: TransportationFast) -> dict:
         return {"type": value.value}
+
 
 class TimeMapFastArrivalSearches(BaseModel):
     many_to_one: List[TimeMapFastSearch]

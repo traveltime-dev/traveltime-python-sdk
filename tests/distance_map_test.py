@@ -5,7 +5,10 @@ import pytest
 from traveltimepy import Driving
 from traveltimepy.dto.common import Coordinates, LevelOfDetail
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.distance_map import DistanceMapDepartureSearch, DistanceMapArrivalSearch
+from traveltimepy.dto.requests.distance_map import (
+    DistanceMapDepartureSearch,
+    DistanceMapArrivalSearch,
+)
 
 
 @pytest.mark.asyncio
@@ -19,7 +22,7 @@ async def test_departures(async_client: AsyncClient):
                 departure_time=datetime.now(),
                 travel_distance=900,
                 transportation=Driving(),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest")
+                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
             ),
             DistanceMapDepartureSearch(
                 id="id 2",
@@ -27,11 +30,11 @@ async def test_departures(async_client: AsyncClient):
                 departure_time=datetime.now(),
                 travel_distance=900,
                 transportation=Driving(),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest")
+                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
             ),
         ],
         unions=[],
-        intersections=[]
+        intersections=[],
     )
     assert len(results) == 2
 
@@ -46,7 +49,7 @@ async def test_arrivals(async_client: AsyncClient):
                 arrival_time=datetime.now(),
                 travel_distance=900,
                 transportation=Driving(),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest")
+                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
             ),
             DistanceMapArrivalSearch(
                 id="id 2",
@@ -54,11 +57,11 @@ async def test_arrivals(async_client: AsyncClient):
                 arrival_time=datetime.now(),
                 travel_distance=900,
                 transportation=Driving(),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest")
+                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
             ),
         ],
         departure_searches=[],
         unions=[],
-        intersections=[]
+        intersections=[],
     )
     assert len(results) == 2

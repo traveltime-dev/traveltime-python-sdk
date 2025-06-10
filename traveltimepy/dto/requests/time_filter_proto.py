@@ -11,8 +11,9 @@ from traveltimepy.dto.common import Coordinates, ProtoProperty
 class RequestType(Enum):
     # single departure location and multiple arrival locations
     ONE_TO_MANY = "one_to_many"
-     # single arrival location and multiple departure locations
+    # single arrival location and multiple departure locations
     MANY_TO_ONE = "many_to_one"
+
 
 @dataclass
 class TransportationInfo:
@@ -60,11 +61,13 @@ class ProtoDrivingAndPublicTransportWithDetails:
         ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
     )
 
+
 TimeFilterFastProtoTransportation = Union[
     ProtoTransportation,
     ProtoPublicTransportWithDetails,
     ProtoDrivingAndPublicTransportWithDetails,
 ]
+
 
 class ProtoCountry(str, Enum):
     NETHERLANDS = "nl"
@@ -104,6 +107,7 @@ class ProtoCountry(str, Enum):
     SERBIA = "rs"
     SLOVENIA = "si"
 
+
 class TimeFilterFastProtoRequest:
     originCoordinate: Coordinates
     destinationCoordinates: List[Coordinates]
@@ -121,7 +125,7 @@ class TimeFilterFastProtoRequest:
         travel_time: int,
         request_type: RequestType,
         country: ProtoCountry,
-        with_distance: bool
+        with_distance: bool,
     ):
         self.originCoordinate = origin_coordinate
         self.destinationCoordinates = destination_coordinates
@@ -157,7 +161,9 @@ class TimeFilterFastProtoRequest:
                         self.transportation.walking_time_to_station
                     )
 
-            elif isinstance(self.transportation, ProtoDrivingAndPublicTransportWithDetails):
+            elif isinstance(
+                self.transportation, ProtoDrivingAndPublicTransportWithDetails
+            ):
                 if self.transportation.walking_time_to_station is not None:
                     req.transportation.drivingAndPublicTransport.walkingTimeToStation = (
                         self.transportation.walking_time_to_station
@@ -177,7 +183,9 @@ class TimeFilterFastProtoRequest:
         req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING
 
         if self.withDistance:
-            req.properties.extend([TimeFilterFastRequest_pb2.TimeFilterFastRequest.Property.DISTANCES])
+            req.properties.extend(
+                [TimeFilterFastRequest_pb2.TimeFilterFastRequest.Property.DISTANCES]
+            )
 
         # Calculate and add location deltas
         mult = math.pow(10, 5)
@@ -187,7 +195,3 @@ class TimeFilterFastProtoRequest:
             req.locationDeltas.extend([lat_delta, lng_delta])
 
         return request
-
-
-
-

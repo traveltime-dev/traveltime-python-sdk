@@ -6,7 +6,8 @@ from traveltimepy.dto.requests.time_filter_proto import (
     ProtoDrivingAndPublicTransportWithDetails,
     ProtoTransportation,
     ProtoCountry,
-    ProtoPublicTransportWithDetails, RequestType,
+    ProtoPublicTransportWithDetails,
+    RequestType,
 )
 
 
@@ -22,7 +23,7 @@ async def test_one_to_many(async_client: AsyncClient):
         travel_time=7200,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        with_distance=False
+        with_distance=False,
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 0
 
@@ -39,7 +40,7 @@ async def test_many_to_one(async_client: AsyncClient):
         travel_time=7200,
         request_type=RequestType.MANY_TO_ONE,
         country=ProtoCountry.UNITED_KINGDOM,
-        with_distance=False
+        with_distance=False,
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 0
 
@@ -56,7 +57,7 @@ async def test_one_to_many_with_distances(async_client: AsyncClient):
         travel_time=7200,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        with_distance=True
+        with_distance=True,
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 2
 
@@ -73,9 +74,10 @@ async def test_many_to_one_with_distances(async_client: AsyncClient):
         travel_time=7200,
         request_type=RequestType.MANY_TO_ONE,
         country=ProtoCountry.UNITED_KINGDOM,
-        with_distance=True
+        with_distance=True,
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 2
+
 
 @pytest.mark.asyncio
 async def test_one_to_many_pt_with_params(async_client: AsyncClient):
@@ -89,7 +91,7 @@ async def test_one_to_many_pt_with_params(async_client: AsyncClient):
         travel_time=7200,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        with_distance=False
+        with_distance=False,
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 0
 
@@ -106,9 +108,10 @@ async def test_many_to_one_pt_with_params(async_client: AsyncClient):
         travel_time=7200,
         request_type=RequestType.MANY_TO_ONE,
         country=ProtoCountry.UNITED_KINGDOM,
-        with_distance=False
+        with_distance=False,
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 0
+
 
 @pytest.mark.asyncio
 async def test_one_to_many_driving_and_pt_with_params(async_client: AsyncClient):
@@ -124,7 +127,7 @@ async def test_one_to_many_driving_and_pt_with_params(async_client: AsyncClient)
         travel_time=7200,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        with_distance=False
+        with_distance=False,
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 0
 
@@ -143,6 +146,6 @@ async def test_many_to_one_driving_and_pt_with_params(async_client: AsyncClient)
         travel_time=7200,
         request_type=RequestType.MANY_TO_ONE,
         country=ProtoCountry.UNITED_KINGDOM,
-        with_distance=False
+        with_distance=False,
     )
     assert len(results.travel_times) == 2 and len(results.distances) == 0
