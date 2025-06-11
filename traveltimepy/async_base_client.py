@@ -8,7 +8,7 @@ from aiohttp_retry import RetryClient, ExponentialRetry
 from aiolimiter import AsyncLimiter
 from pydantic import BaseModel
 
-import TimeFilterFastResponse_pb2
+import TimeFilterFastResponse_pb2  # type: ignore
 from traveltimepy import ProtoTransportation, __version__
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.dto.requests.request import TravelTimeRequest
