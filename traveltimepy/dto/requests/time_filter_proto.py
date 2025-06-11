@@ -157,7 +157,7 @@ class TimeFilterFastProtoRequest:
 
             if isinstance(self.transportation, ProtoPublicTransportWithDetails):
                 if self.transportation.walking_time_to_station is not None:
-                    req.transportation.publicTransport.walkingTimeToStation = (
+                    req.transportation.publicTransport.walkingTimeToStation.value = (
                         self.transportation.walking_time_to_station
                     )
 
@@ -165,17 +165,17 @@ class TimeFilterFastProtoRequest:
                 self.transportation, ProtoDrivingAndPublicTransportWithDetails
             ):
                 if self.transportation.walking_time_to_station is not None:
-                    req.transportation.drivingAndPublicTransport.walkingTimeToStation = (
+                    req.transportation.drivingAndPublicTransport.walkingTimeToStation.value = (
                         self.transportation.walking_time_to_station
                     )
 
                 if self.transportation.driving_time_to_station is not None:
-                    req.transportation.drivingAndPublicTransport.drivingTimeToStation = (
+                    req.transportation.drivingAndPublicTransport.drivingTimeToStation.value = (
                         self.transportation.driving_time_to_station
                     )
 
                 if self.transportation.parking_time is not None:
-                    req.transportation.drivingAndPublicTransport.parkingTime = (
+                    req.transportation.drivingAndPublicTransport.parkingTime.value = (
                         self.transportation.parking_time
                     )
 
