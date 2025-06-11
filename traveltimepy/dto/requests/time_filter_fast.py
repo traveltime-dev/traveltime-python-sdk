@@ -15,8 +15,8 @@ class TimeFilterFastOneToMany(BaseModel):
     arrival_location_ids: List[str]
     transportation: TransportationFast
     travel_time: int
-    arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     properties: List[Property]
+    arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
@@ -31,8 +31,8 @@ class TimeFilterFastManyToOne(BaseModel):
     departure_location_ids: List[str]
     transportation: TransportationFast
     travel_time: int
-    arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     properties: List[Property]
+    arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`

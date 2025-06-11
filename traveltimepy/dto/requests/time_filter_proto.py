@@ -180,11 +180,11 @@ class TimeFilterFastProtoRequest:
                     )
 
         req.travelTime = self.travelTime
-        req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING
+        req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
 
         if self.withDistance:
             req.properties.extend(
-                [TimeFilterFastRequest_pb2.TimeFilterFastRequest.Property.DISTANCES]
+                [TimeFilterFastRequest_pb2.TimeFilterFastRequest.Property.DISTANCES]  # type: ignore
             )
 
         # Calculate and add location deltas

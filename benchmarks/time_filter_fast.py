@@ -2,21 +2,37 @@ import asyncio
 import time
 
 from benchmarks.common import generate_locations
-from traveltimepy import TravelTimeSdk, Transportation
+from traveltimepy import TransportationFast, Property
+from traveltimepy.async_client import AsyncClient
+from traveltimepy.dto.requests.time_filter_fast import (
+    TimeFilterFastArrivalSearches,
+    TimeFilterFastOneToMany,
+)
 
 
 async def generate_matrix(size: int):
-    sdk = TravelTimeSdk("APP_ID", "API_KEY")
+    async_client = AsyncClient("APP_ID", "API_KEY")
     locations = generate_locations(51.507609, -0.128315, 0.05, "Location", size)
     location_ids = [location.id for location in locations]
-    search_ids = [
-        (location_id, list(filter(lambda cur_id: cur_id != location_id, location_ids)))
+    searches = [
+        TimeFilterFastOneToMany(
+            id=location_id,
+            departure_location_id=location_id,
+            arrival_location_ids=list(
+                filter(lambda cur_id: cur_id != location_id, location_ids)
+            ),
+            transportation=TransportationFast.DRIVING,
+            travel_time=3600,
+            properties=[Property.TRAVEL_TIME],
+        )
         for location_id in location_ids
     ]
-    return await sdk.time_filter_fast_async(
+
+    return await async_client.time_filter_fast(
         locations=locations,
-        search_ids=dict(search_ids),
-        transportation=Transportation(type="driving"),
+        arrival_searches=TimeFilterFastArrivalSearches(
+            one_to_many=searches, many_to_one=[]
+        ),
     )
 
 

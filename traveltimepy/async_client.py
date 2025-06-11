@@ -117,7 +117,7 @@ class AsyncClient(AsyncBaseClient):
         departure_searches: List[TimeFilterDepartureSearch],
         arrival_searches: List[TimeFilterArrivalSearch],
     ) -> List[TimeFilterResult]:
-        resp = await self._api_call_post(
+        resp: TimeFilterResponse = await self._api_call_post(
             TimeFilterResponse,
             "time-filter",
             AcceptType.JSON,
@@ -132,7 +132,7 @@ class AsyncClient(AsyncBaseClient):
     async def time_filter_fast(
         self, locations: List[Location], arrival_searches: TimeFilterFastArrivalSearches
     ) -> List[TimeFilterFastResult]:
-        resp = await self._api_call_post(
+        resp: TimeFilterFastResponse = await self._api_call_post(
             TimeFilterFastResponse,
             "time-filter/fast",
             AcceptType.JSON,
@@ -165,7 +165,7 @@ class AsyncClient(AsyncBaseClient):
         )
 
     async def map_info(self) -> List[Map]:
-        res = await self._api_call_get(
+        res: MapInfoResponse = await self._api_call_get(
             MapInfoResponse, "map-info", AcceptType.JSON, None
         )
         return res.maps
@@ -209,7 +209,7 @@ class AsyncClient(AsyncBaseClient):
         self,
         locations: List[Location],
     ) -> SupportedLocationsResponse:
-        resp = await self._api_call_post(
+        resp: SupportedLocationsResponse = await self._api_call_post(
             SupportedLocationsResponse,
             "supported-locations",
             AcceptType.JSON,
@@ -224,7 +224,7 @@ class AsyncClient(AsyncBaseClient):
         unions: List[TimeMapUnion],
         intersections: List[TimeMapIntersection],
     ) -> List[TimeMapResult]:
-        resp = await self._api_call_post(
+        resp: TimeMapResponse = await self._api_call_post(
             TimeMapResponse,
             "time-map",
             AcceptType.JSON,
@@ -242,7 +242,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
     ) -> FeatureCollection:
-        resp = await self._api_call_post(
+        resp: FeatureCollection = await self._api_call_post(
             FeatureCollection,
             "time-map",
             AcceptType.GEO_JSON,
@@ -257,7 +257,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
     ) -> TimeMapWKTResponse:
-        resp = await self._api_call_post(
+        resp: TimeMapWKTResponse = await self._api_call_post(
             TimeMapWKTResponse,
             "time-map",
             AcceptType.WKT,
@@ -272,7 +272,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
     ) -> TimeMapWKTResponse:
-        resp = await self._api_call_post(
+        resp: TimeMapWKTResponse = await self._api_call_post(
             TimeMapWKTResponse,
             "time-map",
             AcceptType.WKT_NO_HOLES,
@@ -286,7 +286,7 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> List[TimeMapResult]:
-        resp = await self._api_call_post(
+        resp: TimeMapResponse = await self._api_call_post(
             TimeMapResponse,
             "time-map/fast",
             AcceptType.JSON,
@@ -298,7 +298,7 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> FeatureCollection:
-        resp = await self._api_call_post(
+        resp: FeatureCollection = await self._api_call_post(
             FeatureCollection,
             "time-map/fast",
             AcceptType.GEO_JSON,
@@ -310,7 +310,7 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> TimeMapWKTResponse:
-        resp = await self._api_call_post(
+        resp: TimeMapWKTResponse = await self._api_call_post(
             TimeMapWKTResponse,
             "time-map/fast",
             AcceptType.WKT,
@@ -322,7 +322,7 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> TimeMapWKTResponse:
-        resp = await self._api_call_post(
+        resp: TimeMapWKTResponse = await self._api_call_post(
             TimeMapWKTResponse,
             "time-map/fast",
             AcceptType.WKT_NO_HOLES,
@@ -339,7 +339,7 @@ class AsyncClient(AsyncBaseClient):
         unions: List[H3Union],
         intersections: List[H3Intersection],
     ) -> List[H3Result]:
-        resp = await self._api_call_post(
+        resp: H3Response = await self._api_call_post(
             H3Response,
             "h3",
             AcceptType.JSON,
@@ -360,7 +360,7 @@ class AsyncClient(AsyncBaseClient):
         properties: List[CellProperty],
         resolution: int,
     ) -> List[H3Result]:
-        resp = await self._api_call_post(
+        resp: H3Response = await self._api_call_post(
             H3Response,
             "h3/fast",
             AcceptType.JSON,
@@ -381,7 +381,7 @@ class AsyncClient(AsyncBaseClient):
         unions: List[GeoHashUnion],
         intersections: List[GeoHashIntersection],
     ) -> List[GeoHashResult]:
-        resp = await self._api_call_post(
+        resp: GeoHashResponse = await self._api_call_post(
             GeoHashResponse,
             "geohash",
             AcceptType.JSON,
@@ -402,7 +402,7 @@ class AsyncClient(AsyncBaseClient):
         properties: List[CellProperty],
         resolution: int,
     ) -> List[GeoHashResult]:
-        resp = await self._api_call_post(
+        resp: GeoHashResponse = await self._api_call_post(
             GeoHashResponse,
             "geohash/fast",
             AcceptType.JSON,
@@ -419,7 +419,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[PostcodeArrivalSearch],
         departure_searches: List[PostcodeDepartureSearch],
     ) -> List[PostcodesResult]:
-        resp = await self._api_call_post(
+        resp: PostcodesResponse = await self._api_call_post(
             PostcodesResponse,
             "time-filter/postcodes",
             AcceptType.JSON,
@@ -434,7 +434,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[PostcodeFilterArrivalSearch],
         departure_searches: List[PostcodeFilterDepartureSearch],
     ) -> List[PostcodesDistrictsResult]:
-        resp = await self._api_call_post(
+        resp: PostcodesDistrictsResponse = await self._api_call_post(
             PostcodesDistrictsResponse,
             "time-filter/postcode-districts",
             AcceptType.JSON,
@@ -449,7 +449,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[PostcodeFilterArrivalSearch],
         departure_searches: List[PostcodeFilterDepartureSearch],
     ) -> List[PostcodesSectorsResult]:
-        resp = await self._api_call_post(
+        resp: PostcodesSectorsResponse = await self._api_call_post(
             PostcodesSectorsResponse,
             "time-filter/postcode-sectors",
             AcceptType.JSON,
@@ -465,7 +465,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[RoutesArrivalSearch],
         departure_searches: List[RoutesDepartureSearch],
     ) -> List[RoutesResult]:
-        resp = await self._api_call_post(
+        resp: RoutesResponse = await self._api_call_post(
             RoutesResponse,
             "routes",
             AcceptType.JSON,
@@ -484,7 +484,7 @@ class AsyncClient(AsyncBaseClient):
         unions: List[DistanceMapUnion],
         intersections: List[DistanceMapIntersection],
     ) -> List[TimeMapResult]:
-        resp = await self._api_call_post(
+        resp: TimeMapResponse = await self._api_call_post(
             TimeMapResponse,
             "distance-map",
             AcceptType.JSON,

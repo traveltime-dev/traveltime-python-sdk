@@ -51,6 +51,7 @@ class AsyncBaseClient:
         else:
             self._split_size = max_rpm
 
+        # TODO: Rework Async Limiter, right now it doesn't enforce limits correctly
         self.async_limiter = AsyncLimiter(self.max_rpm // self._split_size)
 
     def _build_url(self, endpoint: str) -> str:
@@ -112,7 +113,7 @@ class AsyncBaseClient:
 
     async def _api_call_get(
         self,
-        response_class: Type[BaseModel],
+        response_class: Type[T],
         endpoint: str,
         accept_type: AcceptType,
         params: Optional[Dict[str, str]],
@@ -133,7 +134,9 @@ class AsyncBaseClient:
                 params=params,
             )
 
-    async def _api_call_proto(self, req: TimeFilterFastProtoRequest) -> T:
+    async def _api_call_proto(
+        self, req: TimeFilterFastProtoRequest
+    ) -> TimeFilterProtoResponse:
         session = await self._get_session()
 
         async with RetryClient(
@@ -172,7 +175,7 @@ class AsyncBaseClient:
                         raise ApiError(msg)
                     else:
                         response_body = (
-                            TimeFilterFastResponse_pb2.TimeFilterFastResponse()
+                            TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
                         )
                         response_body.ParseFromString(content)
                         return TimeFilterProtoResponse(

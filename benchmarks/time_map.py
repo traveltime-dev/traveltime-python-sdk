@@ -2,15 +2,29 @@ import asyncio
 import time
 from datetime import datetime
 
-from benchmarks.common import generate_coordinates
-from traveltimepy import TravelTimeSdk, Driving
+from benchmarks.common import generate_locations
+from traveltimepy import Driving
+from traveltimepy.async_client import AsyncClient
+from traveltimepy.dto.requests.time_map import TimeMapArrivalSearch
 
 
 async def generate_isochrones(size: int):
-    sdk = TravelTimeSdk("APP_ID", "API_KEY")
-    coordinates = generate_coordinates(51.507609, -0.128315, 0.05, size)
-    return await sdk.time_map_async(
-        coordinates=coordinates, transportation=Driving(), arrival_time=datetime.now()
+    async_client = AsyncClient("APP_ID", "API_KEY")
+    locations = generate_locations(51.507609, -0.128315, 0.05, "isochrones", size)
+    return await async_client.time_map(
+        arrival_searches=[
+            TimeMapArrivalSearch(
+                id=location.id,
+                coords=location.coords,
+                arrival_time=datetime.now(),
+                travel_time=3600,
+                transportation=Driving(),
+            )
+            for location in locations
+        ],
+        departure_searches=[],
+        unions=[],
+        intersections=[],
     )
 
 
