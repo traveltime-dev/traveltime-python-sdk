@@ -2,7 +2,7 @@ from typing import Optional, List
 
 from pydantic import BaseModel
 
-from traveltimepy import Rectangle
+from traveltimepy.requests.common import Rectangle
 from traveltimepy.itertools import join_opt
 
 

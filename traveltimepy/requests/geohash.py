@@ -4,8 +4,8 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy import (
-    Range,
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.requests.transportation import (
     PublicTransport,
     Driving,
     Ferry,
@@ -14,10 +14,15 @@ from traveltimepy import (
     DrivingTrain,
     CyclingPublicTransport,
 )
-from traveltimepy.dto.common import CellProperty, Coordinates, GeohashCentroid, Snapping
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.geohash import GeoHashResponse
+from traveltimepy.requests.common import (
+    CellProperty,
+    Coordinates,
+    GeohashCentroid,
+    Snapping,
+    Range,
+)
 from traveltimepy.itertools import split, flatten
+from traveltimepy.responses.geohash import GeoHashResponse
 
 
 class GeoHashDepartureSearch(BaseModel):

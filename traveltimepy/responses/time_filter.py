@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import Route, Fares
+from traveltimepy.requests.common import Route, Fares
 
 
 class DistanceBreakdown(BaseModel):

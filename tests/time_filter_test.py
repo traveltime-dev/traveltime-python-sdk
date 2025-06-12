@@ -2,12 +2,13 @@ from datetime import datetime
 
 import pytest
 
-from traveltimepy import Property, Driving
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.time_filter import (
+from traveltimepy.requests.common import Property
+from traveltimepy.requests.time_filter import (
     TimeFilterDepartureSearch,
     TimeFilterArrivalSearch,
 )
+from traveltimepy.requests.transportation import Driving
 
 
 @pytest.mark.asyncio

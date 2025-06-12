@@ -1,8 +1,8 @@
 from typing import List
 
-from traveltimepy.dto.common import Location
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
+from traveltimepy.requests.common import Location
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.responses.supported_locations import SupportedLocationsResponse
 from traveltimepy.itertools import flatten
 
 

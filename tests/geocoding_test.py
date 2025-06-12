@@ -1,6 +1,6 @@
 import pytest
 
-from traveltimepy.async_client import AsyncClient
+from traveltimepy import AsyncClient
 
 
 @pytest.mark.asyncio

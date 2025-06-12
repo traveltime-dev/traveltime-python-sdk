@@ -5,7 +5,10 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy import (
+from traveltimepy.requests.common import Snapping, PolygonsFilter
+from traveltimepy.requests.level_of_detail import LevelOfDetail
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.requests.transportation import (
     PublicTransport,
     Driving,
     Ferry,
@@ -13,12 +16,10 @@ from traveltimepy import (
     Cycling,
     DrivingTrain,
     CyclingPublicTransport,
-    LevelOfDetail,
 )
-from traveltimepy.dto.common import PolygonsFilter, Snapping, Coordinates
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
+from traveltimepy.requests.common import Coordinates
+from traveltimepy.responses.time_map import TimeMapResponse
 
 
 class DistanceMapDepartureSearch(BaseModel):

@@ -3,9 +3,10 @@ import time
 from datetime import datetime
 
 from benchmarks.common import generate_locations
-from traveltimepy import Driving, Property
+from traveltimepy.requests.common import Property
+from traveltimepy.requests.transportation import Driving
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.time_filter import TimeFilterDepartureSearch
+from traveltimepy.requests.time_filter import TimeFilterDepartureSearch
 
 
 async def generate_matrix(size: int):

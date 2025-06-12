@@ -3,11 +3,11 @@ from typing import List, Optional, Union
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import Location, FullRange, Property, Snapping
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.time_filter import TimeFilterResponse
+from traveltimepy.requests.common import Location, FullRange, Property, Snapping
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.responses.time_filter import TimeFilterResponse
 from traveltimepy.itertools import split, flatten
-from traveltimepy.dto.transportation import (
+from traveltimepy.requests.transportation import (
     PublicTransport,
     Driving,
     Ferry,

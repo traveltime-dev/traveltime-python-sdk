@@ -5,9 +5,8 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy import (
-    Coordinates,
-    Range,
+from traveltimepy.requests.level_of_detail import LevelOfDetail
+from traveltimepy.requests.transportation import (
     PublicTransport,
     Driving,
     Ferry,
@@ -15,11 +14,16 @@ from traveltimepy import (
     Cycling,
     DrivingTrain,
     CyclingPublicTransport,
-    LevelOfDetail,
 )
-from traveltimepy.dto.common import PolygonsFilter, RenderMode, Snapping
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.time_map import TimeMapResponse
+from traveltimepy.requests.common import (
+    PolygonsFilter,
+    RenderMode,
+    Snapping,
+    Coordinates,
+    Range,
+)
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
 
 

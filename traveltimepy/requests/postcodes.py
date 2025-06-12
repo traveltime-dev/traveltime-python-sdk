@@ -3,11 +3,11 @@ from typing import List, Union, Optional
 
 from pydantic import BaseModel
 
-from traveltimepy.dto.common import Coordinates, Property, FullRange
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.postcodes import PostcodesResponse
+from traveltimepy.requests.common import Coordinates, Property, FullRange
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.responses.postcodes import PostcodesResponse
 from traveltimepy.itertools import split, flatten
-from traveltimepy.dto.transportation import (
+from traveltimepy.requests.transportation import (
     PublicTransport,
     Driving,
     Ferry,

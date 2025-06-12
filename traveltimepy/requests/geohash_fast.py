@@ -1,31 +1,28 @@
 from typing import List, Optional
+import typing
 
 from pydantic import BaseModel, field_serializer
 
-from traveltimepy.dto.common import (
+from traveltimepy.requests.transportation import TransportationFast
+from traveltimepy.requests.common import (
+    CellProperty,
     Coordinates,
-    PolygonsFilter,
-    RenderMode,
+    GeohashCentroid,
     Snapping,
     ArrivalTimePeriod,
 )
-from traveltimepy import LevelOfDetail
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.time_map import TimeMapResponse
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.responses.geohash import GeoHashResponse
 from traveltimepy.itertools import split, flatten
-from traveltimepy.dto.requests.time_filter_fast import TransportationFast
 
 
-class TimeMapFastSearch(BaseModel):
+class GeoHashFastSearch(BaseModel):
     id: str
-    coords: Coordinates
+    coords: typing.Union[Coordinates, GeohashCentroid]
     transportation: TransportationFast
     travel_time: int
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
-    level_of_detail: Optional[LevelOfDetail] = None
     snapping: Optional[Snapping] = None
-    polygons_filter: Optional[PolygonsFilter] = None
-    render_mode: Optional[RenderMode] = None
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
     @field_serializer("transportation")
@@ -33,18 +30,22 @@ class TimeMapFastSearch(BaseModel):
         return {"type": value.value}
 
 
-class TimeMapFastArrivalSearches(BaseModel):
-    many_to_one: List[TimeMapFastSearch]
-    one_to_many: List[TimeMapFastSearch]
+class GeoHashFastArrivalSearches(BaseModel):
+    many_to_one: List[GeoHashFastSearch]
+    one_to_many: List[GeoHashFastSearch]
 
 
-class TimeMapFastRequest(TravelTimeRequest[TimeMapResponse]):
-    arrival_searches: TimeMapFastArrivalSearches
+class GeoHashFastRequest(TravelTimeRequest[GeoHashResponse]):
+    resolution: int
+    properties: List[CellProperty]
+    arrival_searches: GeoHashFastArrivalSearches
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         return [
-            TimeMapFastRequest(
-                arrival_searches=TimeMapFastArrivalSearches(
+            GeoHashFastRequest(
+                resolution=self.resolution,
+                properties=self.properties,
+                arrival_searches=GeoHashFastArrivalSearches(
                     one_to_many=one_to_many, many_to_one=many_to_one
                 ),
             )
@@ -55,7 +56,7 @@ class TimeMapFastRequest(TravelTimeRequest[TimeMapResponse]):
             )
         ]
 
-    def merge(self, responses: List[TimeMapResponse]) -> TimeMapResponse:
-        return TimeMapResponse(
+    def merge(self, responses: List[GeoHashResponse]) -> GeoHashResponse:
+        return GeoHashResponse(
             results=flatten([response.results for response in responses])
         )

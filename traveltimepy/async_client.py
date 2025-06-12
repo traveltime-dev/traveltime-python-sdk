@@ -4,104 +4,104 @@ from geojson_pydantic import FeatureCollection
 
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.async_base_client import AsyncBaseClient
-from traveltimepy.dto.common import (
+from traveltimepy.requests.common import (
     Location,
     Rectangle,
     CellProperty,
     Coordinates,
 )
-from traveltimepy.dto.requests.distance_map import (
+from traveltimepy.requests.distance_map import (
     DistanceMapDepartureSearch,
     DistanceMapArrivalSearch,
     DistanceMapUnion,
     DistanceMapIntersection,
     DistanceMapRequest,
 )
-from traveltimepy.dto.requests.geocoding import (
+from traveltimepy.requests.geocoding import (
     GeocodingRequest,
     ReverseGeocodingRequest,
 )
-from traveltimepy.dto.requests.geohash import (
+from traveltimepy.requests.geohash import (
     GeoHashDepartureSearch,
     GeoHashArrivalSearch,
     GeoHashUnion,
     GeoHashIntersection,
     GeoHashRequest,
 )
-from traveltimepy.dto.requests.geohash_fast import (
+from traveltimepy.requests.geohash_fast import (
     GeoHashFastArrivalSearches,
     GeoHashFastRequest,
 )
-from traveltimepy.dto.requests.h3 import (
+from traveltimepy.requests.h3 import (
     H3DepartureSearch,
     H3ArrivalSearch,
     H3Union,
     H3Intersection,
     H3Request,
 )
-from traveltimepy.dto.requests.h3_fast import H3FastRequest, H3FastArrivalSearches
-from traveltimepy.dto.requests.postcodes import (
+from traveltimepy.requests.h3_fast import H3FastRequest, H3FastArrivalSearches
+from traveltimepy.requests.postcodes import (
     PostcodesRequest,
     PostcodeArrivalSearch,
     PostcodeDepartureSearch,
 )
-from traveltimepy.dto.requests.postcodes_zones import (
+from traveltimepy.requests.postcodes_zones import (
     PostcodesDistrictsRequest,
     PostcodeFilterArrivalSearch,
     PostcodeFilterDepartureSearch,
     PostcodesSectorsRequest,
 )
-from traveltimepy.dto.requests.routes import (
+from traveltimepy.requests.routes import (
     RoutesArrivalSearch,
     RoutesDepartureSearch,
     RoutesRequest,
 )
-from traveltimepy.dto.requests.supported_locations import SupportedLocationsRequest
-from traveltimepy.dto.requests.time_filter import (
+from traveltimepy.requests.supported_locations import SupportedLocationsRequest
+from traveltimepy.requests.time_filter import (
     TimeFilterRequest,
     TimeFilterDepartureSearch,
     TimeFilterArrivalSearch,
 )
-from traveltimepy.dto.requests.time_filter_fast import (
+from traveltimepy.requests.time_filter_fast import (
     TimeFilterFastArrivalSearches,
     TimeFilterFastRequest,
 )
-from traveltimepy.dto.requests.time_filter_proto import (
+from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
     TimeFilterFastProtoTransportation,
     RequestType,
     ProtoCountry,
 )
-from traveltimepy.dto.requests.time_map import (
+from traveltimepy.requests.time_map import (
     TimeMapDepartureSearch,
     TimeMapArrivalSearch,
     TimeMapUnion,
     TimeMapIntersection,
     TimeMapRequest,
 )
-from traveltimepy.dto.requests.time_map_fast import (
+from traveltimepy.requests.time_map_fast import (
     TimeMapFastArrivalSearches,
     TimeMapFastRequest,
 )
-from traveltimepy.dto.requests.time_map_fast_geojson import TimeMapFastGeojsonRequest
-from traveltimepy.dto.requests.time_map_fast_wkt import TimeMapFastWKTRequest
-from traveltimepy.dto.requests.time_map_geojson import TimeMapGeojsonRequest
-from traveltimepy.dto.requests.time_map_wkt import TimeMapWktRequest
-from traveltimepy.dto.responses.geohash import GeoHashResult, GeoHashResponse
-from traveltimepy.dto.responses.h3 import H3Result, H3Response
-from traveltimepy.dto.responses.map_info import MapInfoResponse, Map
-from traveltimepy.dto.responses.postcodes import PostcodesResponse, PostcodesResult
-from traveltimepy.dto.responses.routes import RoutesResult, RoutesResponse
-from traveltimepy.dto.responses.supported_locations import SupportedLocationsResponse
-from traveltimepy.dto.responses.time_filter import TimeFilterResponse, TimeFilterResult
-from traveltimepy.dto.responses.time_filter_fast import (
+from traveltimepy.requests.time_map_fast_geojson import TimeMapFastGeojsonRequest
+from traveltimepy.requests.time_map_fast_wkt import TimeMapFastWKTRequest
+from traveltimepy.requests.time_map_geojson import TimeMapGeojsonRequest
+from traveltimepy.requests.time_map_wkt import TimeMapWktRequest
+from traveltimepy.responses.geohash import GeoHashResult, GeoHashResponse
+from traveltimepy.responses.h3 import H3Result, H3Response
+from traveltimepy.responses.map_info import MapInfoResponse, Map
+from traveltimepy.responses.postcodes import PostcodesResponse, PostcodesResult
+from traveltimepy.responses.routes import RoutesResult, RoutesResponse
+from traveltimepy.responses.supported_locations import SupportedLocationsResponse
+from traveltimepy.responses.time_filter import TimeFilterResponse, TimeFilterResult
+from traveltimepy.responses.time_filter_fast import (
     TimeFilterFastResult,
     TimeFilterFastResponse,
 )
-from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
-from traveltimepy.dto.responses.time_map import TimeMapResult, TimeMapResponse
-from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResponse
-from traveltimepy.dto.responses.zones import (
+from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.responses.time_map import TimeMapResult, TimeMapResponse
+from traveltimepy.responses.time_map_wkt import TimeMapWKTResponse
+from traveltimepy.responses.zones import (
     PostcodesDistrictsResult,
     PostcodesDistrictsResponse,
     PostcodesSectorsResult,
@@ -179,6 +179,37 @@ class AsyncClient(AsyncBaseClient):
         format_exclude_country: Optional[bool] = None,
         bounds: Optional[Rectangle] = None,
     ) -> FeatureCollection:
+        """
+        Match a query string to geographic coordinates using geocoding search.
+
+        Converts addresses, postcodes, or venue names into geographic coordinates
+        and location information. Supports filtering by country, bounding box.
+
+        Args:
+            query: A query to geocode. Can be an address, postcode, or venue name.
+                   Examples: "SW1A 0AA", "Victoria street, London"
+                   Including country/city improves accuracy.
+
+            limit: Maximum number of results to return.
+                   Must be between 1 and 50.
+
+            within_countries: List of ISO 3166-1 alpha-2 or alpha-3 country codes
+                             to limit results. Example: ["GB", "US"] or ["GBR", "USA"]
+
+            format_name: If True, formats the name field to a well-formatted,
+                        human-readable address. Experimental feature.
+
+            format_exclude_country: If True, excludes country from the formatted name field.
+                                   Only used when format_name is True.
+
+            bounds: Geographic bounding box to limit search results.
+                   Results will only include locations within this rectangle.
+
+        Returns:
+            FeatureCollection containing geocoding results with coordinates,
+            addresses, confidence scores, and location metadata.
+        """
+
         return await self._api_call_get(
             FeatureCollection,
             "geocoding/search",
@@ -198,6 +229,32 @@ class AsyncClient(AsyncBaseClient):
         lat: float,
         lng: float,
     ) -> FeatureCollection:
+        """
+        Convert geographic coordinates to an address using reverse geocoding.
+
+        Takes latitude and longitude coordinates and attempts to match them
+        to the nearest address or location information.
+
+        Args:
+            lat: Latitude coordinate in decimal degrees.
+                 Valid range: -90.0 to +90.0
+
+            lng: Longitude coordinate in decimal degrees.
+                 Valid range: -180.0 to +180.0
+
+        Returns:
+            FeatureCollection containing address information, confidence scores,
+            and location metadata for the specified coordinates.
+
+        Raises:
+            400 Bad Request: If coordinates are far from land (e.g., in ocean).
+                            Reverse search is only supported for points on land.
+
+        Note:
+            Results include formatted addresses, confidence scores indicating
+            match quality, and metadata about transportation support for the area.
+        """
+
         return await self._api_call_get(
             FeatureCollection,
             "geocoding/reverse",

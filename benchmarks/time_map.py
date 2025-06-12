@@ -3,9 +3,9 @@ import time
 from datetime import datetime
 
 from benchmarks.common import generate_locations
-from traveltimepy import Driving
+from traveltimepy.requests.transportation import Driving
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.time_map import TimeMapArrivalSearch
+from traveltimepy.requests.time_map import TimeMapArrivalSearch
 
 
 async def generate_isochrones(size: int):

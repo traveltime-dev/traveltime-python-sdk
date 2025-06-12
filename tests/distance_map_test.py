@@ -2,16 +2,18 @@ from datetime import datetime
 
 import pytest
 
-from traveltimepy import (
-    AsyncClient,
+from traveltimepy import AsyncClient
+from traveltimepy.requests.common import Coordinates
+from traveltimepy.requests.distance_map import (
     DistanceMapDepartureSearch,
-    Coordinates,
-    Driving,
+    DistanceMapArrivalSearch,
+)
+from traveltimepy.requests.level_of_detail import (
     LevelOfDetail,
     SimpleLevelOfDetail,
     Level,
-    DistanceMapArrivalSearch,
 )
+from traveltimepy.requests.transportation import Driving
 
 
 @pytest.mark.asyncio

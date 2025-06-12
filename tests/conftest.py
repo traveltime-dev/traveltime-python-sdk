@@ -3,8 +3,8 @@ from typing import List
 
 import pytest
 
-from traveltimepy import Location, Coordinates
 from traveltimepy.async_client import AsyncClient
+from traveltimepy.requests.common import Location, Coordinates
 
 
 @pytest.fixture

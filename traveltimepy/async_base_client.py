@@ -9,15 +9,23 @@ from aiolimiter import AsyncLimiter
 from pydantic import BaseModel
 
 import TimeFilterFastResponse_pb2  # type: ignore
-from traveltimepy import ProtoTransportation, __version__
 from traveltimepy.accept_type import AcceptType
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.requests.time_filter_proto import TimeFilterFastProtoRequest
-from traveltimepy.dto.responses.error import ResponseError
-from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.errors import ApiError
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.requests.time_filter_proto import (
+    TimeFilterFastProtoRequest,
+    ProtoTransportation,
+)
+from traveltimepy.responses.error import ResponseError
+from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
+from importlib.metadata import version, PackageNotFoundError
 
 T = TypeVar("T", bound=BaseModel)
+
+try:
+    __version__ = version(__name__)
+except PackageNotFoundError:
+    __version__ = "unknown"
 
 
 class AsyncBaseClient:

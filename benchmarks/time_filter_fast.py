@@ -2,9 +2,10 @@ import asyncio
 import time
 
 from benchmarks.common import generate_locations
-from traveltimepy import TransportationFast, Property
+from traveltimepy.requests.common import Property
+from traveltimepy.requests.transportation import TransportationFast
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.time_filter_fast import (
+from traveltimepy.requests.time_filter_fast import (
     TimeFilterFastArrivalSearches,
     TimeFilterFastOneToMany,
 )

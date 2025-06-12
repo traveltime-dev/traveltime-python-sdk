@@ -3,8 +3,8 @@ from typing import List, Optional, Union
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import Location, Property, FullRange, Snapping
-from traveltimepy.dto.transportation import (
+from traveltimepy.requests.common import Location, Property, FullRange, Snapping
+from traveltimepy.requests.transportation import (
     PublicTransport,
     Driving,
     Ferry,
@@ -13,8 +13,8 @@ from traveltimepy.dto.transportation import (
     DrivingTrain,
     CyclingPublicTransport,
 )
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.routes import RoutesResponse
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.responses.routes import RoutesResponse
 from traveltimepy.itertools import split, flatten
 
 

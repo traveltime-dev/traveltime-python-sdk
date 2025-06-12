@@ -1,12 +1,12 @@
 import pytest
 
-from traveltimepy import TransportationFast
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.common import Coordinates
-from traveltimepy.dto.requests.time_map_fast import (
+from traveltimepy.requests.common import Coordinates
+from traveltimepy.requests.time_map_fast import (
     TimeMapFastArrivalSearches,
     TimeMapFastSearch,
 )
+from traveltimepy.requests.transportation import TransportationFast
 
 
 @pytest.mark.asyncio

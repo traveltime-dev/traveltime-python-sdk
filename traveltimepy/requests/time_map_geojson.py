@@ -1,8 +1,8 @@
 from typing import List
 
 from geojson_pydantic import FeatureCollection
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.requests.time_map import (
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.requests.time_map import (
     TimeMapDepartureSearch,
     TimeMapArrivalSearch,
 )

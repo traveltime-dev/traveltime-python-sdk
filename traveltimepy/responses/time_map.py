@@ -2,7 +2,7 @@ from typing import List
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import Coordinates
+from traveltimepy.requests.common import Coordinates
 
 
 class Shape(BaseModel):

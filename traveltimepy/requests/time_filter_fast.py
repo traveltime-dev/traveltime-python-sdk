@@ -2,10 +2,10 @@ from typing import List, Optional
 
 from pydantic import BaseModel, field_serializer
 
-from traveltimepy import TransportationFast
-from traveltimepy.dto.common import Location, Property, Snapping, ArrivalTimePeriod
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.time_filter_fast import TimeFilterFastResponse
+from traveltimepy.requests.transportation import TransportationFast
+from traveltimepy.requests.common import Location, Property, Snapping, ArrivalTimePeriod
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.itertools import split, flatten
 
 

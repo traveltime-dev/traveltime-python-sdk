@@ -1,15 +1,20 @@
 import pytest
 from datetime import datetime
 
-from traveltimepy import Coordinates, Driving, LevelOfDetail, Range
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.level_of_detail import SimpleLevelOfDetail, Level
-from traveltimepy.dto.requests.time_map import (
+from traveltimepy.requests.common import Coordinates, Range
+from traveltimepy.requests.level_of_detail import (
+    SimpleLevelOfDetail,
+    Level,
+    LevelOfDetail,
+)
+from traveltimepy.requests.time_map import (
     TimeMapDepartureSearch,
     TimeMapArrivalSearch,
     TimeMapUnion,
     TimeMapIntersection,
 )
+from traveltimepy.requests.transportation import Driving
 
 
 @pytest.mark.asyncio

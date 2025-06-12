@@ -5,7 +5,7 @@ from typing_extensions import Literal
 from pydantic.main import BaseModel
 from pydantic import model_validator
 
-from traveltimepy.dto.common import DrivingTrafficModel
+from traveltimepy.requests.common import DrivingTrafficModel
 
 
 class MaxChanges(BaseModel):

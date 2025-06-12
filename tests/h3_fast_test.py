@@ -1,9 +1,9 @@
 import pytest
 
-from traveltimepy import TransportationFast
-from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.common import CellProperty, Coordinates, H3Centroid
-from traveltimepy.dto.requests.h3_fast import H3FastArrivalSearches, H3FastSearch
+from traveltimepy import AsyncClient
+from traveltimepy.requests.common import Coordinates, H3Centroid, CellProperty
+from traveltimepy.requests.h3_fast import H3FastArrivalSearches, H3FastSearch
+from traveltimepy.requests.transportation import TransportationFast
 
 
 @pytest.mark.asyncio

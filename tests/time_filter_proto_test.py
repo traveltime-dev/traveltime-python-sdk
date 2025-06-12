@@ -1,8 +1,8 @@
 import pytest
 
-from traveltimepy.dto.common import Coordinates
+from traveltimepy.requests.common import Coordinates
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.time_filter_proto import (
+from traveltimepy.requests.time_filter_proto import (
     ProtoDrivingAndPublicTransportWithDetails,
     ProtoTransportation,
     ProtoCountry,

@@ -123,10 +123,33 @@ class Fares(BaseModel):
 
 
 class Rectangle(BaseModel):
+    """
+    Represents a rectangular geographic bounding box defined by minimum and maximum latitude and longitude coordinates.
+    """
+
     min_lat: float
+    """
+    The minimum latitude (southern boundary) of the rectangle in decimal degrees.
+    Valid range: -90.0 to +90.0, where negative values represent the Southern Hemisphere.
+    """
+
     max_lat: float
+    """
+    The maximum latitude (northern boundary) of the rectangle in decimal degrees.
+    Valid range: -90.0 to +90.0, where positive values represent the Northern Hemisphere.
+    """
+
     min_lng: float
+    """
+    The minimum longitude (western boundary) of the rectangle in decimal degrees.
+    Valid range: -180.0 to +180.0, where negative values represent the Western Hemisphere.
+    """
+
     max_lng: float
+    """
+    The maximum longitude (eastern boundary) of the rectangle in decimal degrees.
+    Valid range: -180.0 to +180.0, where positive values represent the Eastern Hemisphere.
+    """
 
     def to_str(self):
         return f"{self.min_lat},{self.min_lng},{self.max_lat},{self.max_lng}"

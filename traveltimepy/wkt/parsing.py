@@ -12,7 +12,7 @@ from shapely.geometry import (
 )
 from shapely.geometry.base import BaseGeometry
 
-from traveltimepy import Coordinates
+from traveltimepy.requests.common import Coordinates
 from traveltimepy.wkt.geometries import (
     PointModel,
     LineStringModel,

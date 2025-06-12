@@ -2,16 +2,17 @@ from datetime import datetime
 
 import pytest
 
-from traveltimepy import Coordinates, PublicTransport
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.postcodes import (
+from traveltimepy.requests.common import Coordinates
+from traveltimepy.requests.postcodes import (
     PostcodeDepartureSearch,
     PostcodeArrivalSearch,
 )
-from traveltimepy.dto.requests.postcodes_zones import (
+from traveltimepy.requests.postcodes_zones import (
     PostcodeFilterDepartureSearch,
     PostcodeFilterArrivalSearch,
 )
+from traveltimepy.requests.transportation import PublicTransport
 
 
 @pytest.mark.asyncio

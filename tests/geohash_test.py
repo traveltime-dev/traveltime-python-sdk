@@ -2,15 +2,20 @@ from datetime import datetime
 
 import pytest
 
-from traveltimepy import Coordinates, Driving, Range, PublicTransport
-from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.common import CellProperty, GeohashCentroid
-from traveltimepy.dto.requests.geohash import (
+from traveltimepy import AsyncClient
+from traveltimepy.requests.common import (
+    Coordinates,
+    Range,
+    GeohashCentroid,
+    CellProperty,
+)
+from traveltimepy.requests.geohash import (
     GeoHashDepartureSearch,
     GeoHashArrivalSearch,
     GeoHashUnion,
     GeoHashIntersection,
 )
+from traveltimepy.requests.transportation import Driving, PublicTransport
 
 
 @pytest.mark.asyncio

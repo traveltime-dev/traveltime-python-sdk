@@ -1,10 +1,10 @@
 from typing import List
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.requests.time_map import (
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.requests.time_map import (
     TimeMapDepartureSearch,
     TimeMapArrivalSearch,
 )
-from traveltimepy.dto.responses.time_map_wkt import TimeMapWKTResponse
+from traveltimepy.responses.time_map_wkt import TimeMapWKTResponse
 from traveltimepy.itertools import split, flatten
 
 

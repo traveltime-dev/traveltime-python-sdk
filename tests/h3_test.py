@@ -2,15 +2,15 @@ from datetime import datetime
 
 import pytest
 
-from traveltimepy import Coordinates, Driving
-from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.common import CellProperty, H3Centroid
-from traveltimepy.dto.requests.h3 import (
+from traveltimepy import AsyncClient
+from traveltimepy.requests.common import Coordinates, H3Centroid, CellProperty
+from traveltimepy.requests.h3 import (
     H3DepartureSearch,
     H3ArrivalSearch,
     H3Union,
     H3Intersection,
 )
+from traveltimepy.requests.transportation import Driving
 
 
 @pytest.mark.asyncio

@@ -3,17 +3,17 @@ import typing
 
 from pydantic import BaseModel, field_serializer
 
-from traveltimepy.dto.common import (
+from traveltimepy.requests.common import (
     CellProperty,
     Coordinates,
     H3Centroid,
     Snapping,
     ArrivalTimePeriod,
 )
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.h3 import H3Response
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.responses.h3 import H3Response
 from traveltimepy.itertools import split, flatten
-from traveltimepy import TransportationFast
+from traveltimepy.requests.transportation import TransportationFast
 
 
 class H3FastSearch(BaseModel):

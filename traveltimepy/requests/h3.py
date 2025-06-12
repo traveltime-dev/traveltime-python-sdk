@@ -5,8 +5,7 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy import (
-    Range,
+from traveltimepy.requests.transportation import (
     PublicTransport,
     Driving,
     Ferry,
@@ -15,9 +14,15 @@ from traveltimepy import (
     DrivingTrain,
     CyclingPublicTransport,
 )
-from traveltimepy.dto.common import CellProperty, Coordinates, H3Centroid, Snapping
-from traveltimepy.dto.requests.request import TravelTimeRequest
-from traveltimepy.dto.responses.h3 import H3Response
+from traveltimepy.requests.common import (
+    CellProperty,
+    Coordinates,
+    H3Centroid,
+    Snapping,
+    Range,
+)
+from traveltimepy.requests.request import TravelTimeRequest
+from traveltimepy.responses.h3 import H3Response
 from traveltimepy.itertools import split, flatten
 
 

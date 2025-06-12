@@ -1,16 +1,12 @@
 import pytest
 
-from traveltimepy import TransportationFast
-from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.common import (
-    CellProperty,
-    Coordinates,
-    GeohashCentroid,
-)
-from traveltimepy.dto.requests.geohash_fast import (
-    GeoHashFastArrivalSearches,
+from traveltimepy import AsyncClient
+from traveltimepy.requests.common import Coordinates, GeohashCentroid, CellProperty
+from traveltimepy.requests.geohash_fast import (
     GeoHashFastSearch,
+    GeoHashFastArrivalSearches,
 )
+from traveltimepy.requests.transportation import TransportationFast
 
 
 @pytest.mark.asyncio

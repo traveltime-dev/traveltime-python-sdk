@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy.dto.common import Fares, Route
+from traveltimepy.requests.common import Fares, Route
 
 
 class RoutesProperty(BaseModel):

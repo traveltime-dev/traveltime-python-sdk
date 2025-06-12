@@ -92,7 +92,7 @@ class CoarseGridLevelOfDetail(BaseModel):
 class LevelOfDetail(BaseModel):
     scale_type: Union[
         SimpleLevelOfDetail, SimpleNumericLevelOfDetail, CoarseGridLevelOfDetail
-    ] = SimpleLevelOfDetail
+    ] = SimpleLevelOfDetail(level=Level.LOWEST)
 
     @model_serializer
     def serialize_model(self) -> Dict[str, Any]:

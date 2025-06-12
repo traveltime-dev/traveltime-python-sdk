@@ -3,15 +3,17 @@ from typing import List
 
 import pytest
 
-from traveltimepy import Driving, Location, Coordinates
 from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.common import (
+from traveltimepy.requests.common import (
     Snapping,
     SnappingAcceptRoads,
     SnappingPenalty,
     Property,
+    Location,
+    Coordinates,
 )
-from traveltimepy.dto.requests.routes import RoutesDepartureSearch, RoutesArrivalSearch
+from traveltimepy.requests.routes import RoutesDepartureSearch, RoutesArrivalSearch
+from traveltimepy.requests.transportation import Driving
 
 
 @pytest.mark.asyncio
