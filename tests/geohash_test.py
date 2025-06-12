@@ -20,7 +20,7 @@ from traveltimepy.requests.transportation import Driving, PublicTransport
 
 @pytest.mark.asyncio
 async def test_departures(async_client: AsyncClient):
-    results = await async_client.geohash(
+    response = await async_client.geohash(
         arrival_searches=[],
         departure_searches=[
             GeoHashDepartureSearch(
@@ -46,12 +46,12 @@ async def test_departures(async_client: AsyncClient):
         intersections=[],
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_arrivals(async_client: AsyncClient):
-    results = await async_client.geohash(
+    response = await async_client.geohash(
         departure_searches=[],
         arrival_searches=[
             GeoHashArrivalSearch(
@@ -77,12 +77,12 @@ async def test_arrivals(async_client: AsyncClient):
         intersections=[],
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_union_departures(async_client: AsyncClient):
-    results = await async_client.geohash(
+    response = await async_client.geohash(
         arrival_searches=[],
         departure_searches=[
             GeoHashDepartureSearch(
@@ -108,12 +108,12 @@ async def test_union_departures(async_client: AsyncClient):
         intersections=[],
     )
 
-    assert len(results) == 3
+    assert len(response.results) == 3
 
 
 @pytest.mark.asyncio
 async def test_intersection_arrivals(async_client: AsyncClient):
-    results = await async_client.geohash(
+    response = await async_client.geohash(
         departure_searches=[],
         arrival_searches=[
             GeoHashArrivalSearch(
@@ -141,4 +141,4 @@ async def test_intersection_arrivals(async_client: AsyncClient):
         ],
     )
 
-    assert len(results) == 3
+    assert len(response.results) == 3

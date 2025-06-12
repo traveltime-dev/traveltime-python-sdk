@@ -437,8 +437,43 @@ class AsyncClient(AsyncBaseClient):
         resolution: int,
         unions: List[GeoHashUnion],
         intersections: List[GeoHashIntersection],
-    ) -> List[GeoHashResult]:
-        resp: GeoHashResponse = await self._api_call_post(
+    ) -> GeoHashResponse:
+        """
+        Calculate travel times to geohash cells within travel time catchment areas.
+
+        Returns min, max, and mean travel times for each geohash cell. This is a more
+        configurable version of geohash-fast but with lower performance.
+
+        Args:
+            arrival_searches: List of arrival-based searches calculating travel times
+                             from geohash cells to specific destinations.
+
+            departure_searches: List of departure-based searches calculating travel times
+                               from specific origins to geohash cells.
+
+            properties: List of travel time properties to calculate for each cell.
+                       Options include minimum, maximum, and mean travel times.
+
+            resolution: Geohash resolution of results to be returned.
+                       Valid range: 1-6, where higher values provide more precise areas.
+
+            unions: List of union operations combining multiple searches to show
+                   total coverage across multiple access points.
+
+            intersections: List of intersection operations finding cells that satisfy
+                          multiple accessibility criteria simultaneously.
+
+        Returns:
+            GeoHashResponse containing travel time statistics for each geohash cell
+            within the reachable area.
+
+        Note:
+            All search IDs must be unique across departure_searches, arrival_searches,
+            unions, and intersections. Union and intersection operations reference
+            search IDs from departure_searches and arrival_searches.
+        """
+
+        return await self._api_call_post(
             GeoHashResponse,
             "geohash",
             AcceptType.JSON,
@@ -451,15 +486,37 @@ class AsyncClient(AsyncBaseClient):
                 intersections=intersections,
             ),
         )
-        return resp.results
 
     async def geohash_fast(
         self,
         arrival_searches: GeoHashFastArrivalSearches,
         properties: List[CellProperty],
         resolution: int,
-    ) -> List[GeoHashResult]:
-        resp: GeoHashResponse = await self._api_call_post(
+    ) -> GeoHashResponse:
+        """
+        High-performance version of geohash search with fewer configurable parameters
+        and more limited geographic coverage. Returns statistical travel time measures
+        for each geohash cell.
+
+        Args:
+            arrival_searches: Arrival-based search configurations containing
+                             many-to-one and one-to-many search definitions.
+
+            properties: List of travel time properties to calculate for each cell.
+                       Options include minimum, maximum, and mean travel times.
+
+            resolution: Geohash resolution of results to be returned.
+                       Valid range: 1-6, where higher values provide more precise areas.
+
+        Returns:
+            GeoHashResponse containing travel time statistics for each geohash cell
+            within the reachable area.
+
+        Note:
+            This endpoint has limited geographic coverage compared to the standard
+            geohash endpoint but offers significantly better performance.
+        """
+        return await self._api_call_post(
             GeoHashResponse,
             "geohash/fast",
             AcceptType.JSON,
@@ -469,7 +526,6 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches,
             ),
         )
-        return resp.results
 
     async def postcodes(
         self,
@@ -541,6 +597,36 @@ class AsyncClient(AsyncBaseClient):
         unions: List[DistanceMapUnion],
         intersections: List[DistanceMapIntersection],
     ) -> TimeMapResponse:
+        """
+        Generate distance maps (isodistance polygons) showing areas reachable within specified travel distances.
+
+        Creates polygon shapes representing all areas reachable within a travel distance limit
+        from departure points or areas that can reach arrival points within distance constraints.
+        Supports combining results through union and intersection operations.
+
+        Args:
+            arrival_searches: List of arrival-based searches showing areas that can reach
+                             specific destinations within travel distance limits.
+
+            departure_searches: List of departure-based searches showing areas reachable
+                               from specific starting points within travel distance limits.
+
+            unions: List of union operations combining multiple searches to show
+                   total coverage areas across multiple access points.
+
+            intersections: List of intersection operations finding areas that satisfy
+                          multiple accessibility criteria simultaneously.
+
+        Returns:
+            TimeMapResponse containing polygon shapes for each search operation,
+            with results sorted lexicographically by search_id.
+
+        Note:
+            All search IDs must be unique across departure_searches, arrival_searches,
+            unions, and intersections. Union and intersection operations reference
+            search IDs from departure_searches and arrival_searches.
+        """
+
         return await self._api_call_post(
             TimeMapResponse,
             "distance-map",

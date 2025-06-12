@@ -35,7 +35,17 @@ class Coordinates(BaseModel):
 
 
 class GeohashCentroid(BaseModel):
+    """
+    Represents a geographic location using a geohash centroid string.
+    """
+
     geohash_centroid: str
+    """
+    Geohash string representing the centroid of a geographic cell.
+
+    Used as an alternative to lat/lng coordinates for specifying departure
+    or arrival locations.
+    """
 
 
 class H3Centroid(BaseModel):
@@ -163,9 +173,18 @@ class Property(str, Enum):
 
 
 class CellProperty(str, Enum):
+    """
+    Travel time properties that can be calculated and returned for each geohash cell.
+    """
+
     MIN = "min"
+    """Minimum travel time to any point of interest within the geohash cell."""
+
     MAX = "max"
+    """Maximum travel time to any point of interest within the geohash cell."""
+
     MEAN = "mean"
+    """Average travel time to points of interest within the geohash cell."""
 
 
 class SnappingPenalty(str, Enum):
@@ -250,14 +269,88 @@ class ProtoProperty(int, Enum):
 
 
 class FullRange(BaseModel):
+    """
+    Configures time range search parameters for journey planning.
+
+    When enabled, allows searches to consider journeys within a specified
+    time window rather than at an exact time only, providing multiple journey options.
+    """
+
     enabled: bool
-    max_results: int
-    width: int
+    """
+    Controls whether the time range search is active.
+
+    When enabled, adds a time window to the specified departure or arrival time.
+    Journey results will include any options that depart/arrive within this window.
+
+    Note:
+    - Disabled by default
+    - Only supported for public transportation modes (public_transport, coach, bus,
+      train, driving+train, driving+public_transport, cycling+public_transport)
+    - Ignored for other transportation modes
+    """
+
+    max_results: int = Field(gt=0, le=5)
+    """
+    Maximum number of results to return. Limited to 5 results.
+    Must be greater than 0.
+    """
+
+    width: int = Field(gt=0, le=43200)
+    """
+    Defines the width of the time range window in seconds.
+
+    Behavior varies based on whether searching by departure or arrival time:
+    - For departure time: Window extends forward (e.g., 9:00am with 1-hour width
+      includes journeys departing 9:00am-10:00am)
+    - For arrival time: Window extends backward (e.g., 9:00am with 1-hour width
+      includes journeys arriving 8:00am-9:00am)
+
+    Must be greater than 0. Maximum allowed value: 43,200 seconds (12 hours).
+    """
 
 
 class Range(BaseModel):
+    """
+    Configures time range parameters for route searching.
+
+    When enabled, allows searching for routes departing or arriving within a time window
+    rather than at a single specific time, returning a combined result that represents
+    all possible journeys within that window.
+
+    Time range functionality is primarily applicable to scheduled transportation modes:
+    public_transport, coach, bus, train, and driving+train combinations.
+    For other transportation modes (walking, cycling, driving), these parameters are ignored.
+    """
+
     enabled: bool
+    """
+    Controls whether the time range functionality is active.
+
+    When True, the routing algorithm considers departures or arrivals within a window:
+    - For departure searches: starting between the specified departure time and 
+      'width' seconds in the future from that departure time
+    - For arrival searches: finishing between the specified arrival time and 
+      'width' seconds in the past from that arrival time
+
+    When False, only the exact departure or arrival time is considered, 
+    and the width parameter is ignored.
+    """
+
     width: int
+    """
+    Duration of the time window in seconds.
+
+    For departure searches: Window starts at departure time and extends forward.
+    Example: departure time 09:00 with width 3600 (1 hour) includes all journeys 
+    departing between 09:00 and 10:00.
+
+    For arrival searches: Window ends at arrival time and extends backward.
+    Example: arrival time 17:00 with width 3600 (1 hour) includes all journeys 
+    arriving between 16:00 and 17:00.
+
+    Must be positive. Maximum allowed value is 43200 (12 hours).
+    """
 
 
 class PolygonsFilter(BaseModel):

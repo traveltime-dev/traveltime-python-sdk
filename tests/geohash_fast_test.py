@@ -11,7 +11,7 @@ from traveltimepy.requests.transportation import TransportationFast
 
 @pytest.mark.asyncio
 async def test_one_to_many(async_client: AsyncClient):
-    results = await async_client.geohash_fast(
+    response = await async_client.geohash_fast(
         arrival_searches=GeoHashFastArrivalSearches(
             one_to_many=[
                 GeoHashFastSearch(
@@ -33,12 +33,12 @@ async def test_one_to_many(async_client: AsyncClient):
         resolution=6,
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_many_to_one(async_client: AsyncClient):
-    results = await async_client.geohash_fast(
+    response = await async_client.geohash_fast(
         arrival_searches=GeoHashFastArrivalSearches(
             one_to_many=[],
             many_to_one=[
@@ -60,4 +60,4 @@ async def test_many_to_one(async_client: AsyncClient):
         resolution=6,
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
