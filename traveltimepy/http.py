@@ -5,9 +5,9 @@ from typing import TypeVar, Type, Dict, Optional
 
 from aiohttp import ClientSession, ClientResponse, TCPConnector, ClientTimeout
 from pydantic import BaseModel
-from traveltimepy.dto.requests.request import TravelTimeRequest
+from traveltimepy.requests.request import TravelTimeRequest
 
-from traveltimepy.dto.responses.error import ResponseError
+from traveltimepy.responses.error import ResponseError
 from traveltimepy.errors import ApiError
 from aiohttp_retry import RetryClient, ExponentialRetry
 from aiolimiter import AsyncLimiter

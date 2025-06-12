@@ -1,6 +1,6 @@
 import pytest  # noqa
 
-from traveltimepy import Coordinates
+from traveltimepy.requests.common import Coordinates
 from traveltimepy.wkt import LineStringModel, PointModel
 
 mock_point1 = PointModel(coordinates=Coordinates(lat=10, lng=20))

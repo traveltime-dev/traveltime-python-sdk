@@ -3,18 +3,13 @@ from typing import List
 
 import pytest
 
-from traveltimepy import Location, Coordinates
-from traveltimepy.sdk import TravelTimeSdk
+from traveltimepy.async_client import AsyncClient
+from traveltimepy.requests.common import Location, Coordinates
 
 
 @pytest.fixture
-def sdk() -> TravelTimeSdk:
-    return TravelTimeSdk(os.environ["APP_ID"], os.environ["API_KEY"])
-
-
-@pytest.fixture
-def proto_sdk() -> TravelTimeSdk:
-    return TravelTimeSdk(os.environ["PROTO_APP_ID"], os.environ["PROTO_API_KEY"])
+def async_client() -> AsyncClient:
+    return AsyncClient(os.environ["APP_ID"], os.environ["API_KEY"])
 
 
 @pytest.fixture
