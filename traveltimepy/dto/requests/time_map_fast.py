@@ -4,12 +4,12 @@ from pydantic import BaseModel, field_serializer
 
 from traveltimepy.dto.common import (
     Coordinates,
-    LevelOfDetail,
     PolygonsFilter,
     RenderMode,
     Snapping,
     ArrivalTimePeriod,
 )
+from traveltimepy import LevelOfDetail
 from traveltimepy.dto.requests.request import TravelTimeRequest
 from traveltimepy.dto.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten

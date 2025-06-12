@@ -3,6 +3,7 @@ from datetime import datetime
 
 from traveltimepy import Coordinates, Driving, LevelOfDetail, Range
 from traveltimepy.async_client import AsyncClient
+from traveltimepy.dto.level_of_detail import SimpleLevelOfDetail, Level
 from traveltimepy.dto.requests.time_map import (
     TimeMapDepartureSearch,
     TimeMapArrivalSearch,
@@ -23,7 +24,9 @@ async def test_departures(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapDepartureSearch(
                 id="id 2",
@@ -32,7 +35,9 @@ async def test_departures(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
         unions=[],
@@ -53,7 +58,9 @@ async def test_departures_geojson(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapDepartureSearch(
                 id="id 2",
@@ -62,7 +69,9 @@ async def test_departures_geojson(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
     )
@@ -81,7 +90,9 @@ async def test_departures_wkt(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapDepartureSearch(
                 id="id 2",
@@ -90,7 +101,9 @@ async def test_departures_wkt(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
     )
@@ -109,7 +122,9 @@ async def test_departures_wkt_no_holes(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapDepartureSearch(
                 id="id 2",
@@ -118,7 +133,9 @@ async def test_departures_wkt_no_holes(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
     )
@@ -137,7 +154,9 @@ async def test_arrivals(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapArrivalSearch(
                 id="id 2",
@@ -146,7 +165,9 @@ async def test_arrivals(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
         unions=[],
@@ -167,7 +188,9 @@ async def test_arrivals_geojson(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapArrivalSearch(
                 id="id 2",
@@ -176,7 +199,9 @@ async def test_arrivals_geojson(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
     )
@@ -195,7 +220,9 @@ async def test_arrivals_wkt(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapArrivalSearch(
                 id="id 2",
@@ -204,7 +231,9 @@ async def test_arrivals_wkt(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
     )
@@ -223,7 +252,9 @@ async def test_arrivals_wkt_no_holes(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapArrivalSearch(
                 id="id 2",
@@ -232,7 +263,9 @@ async def test_arrivals_wkt_no_holes(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
     )
@@ -251,7 +284,9 @@ async def test_union_departures(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapDepartureSearch(
                 id="id 2",
@@ -260,7 +295,9 @@ async def test_union_departures(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
         unions=[TimeMapUnion(id="union", search_ids=["id", "id 2"])],
@@ -281,7 +318,9 @@ async def test_intersection_departures(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             TimeMapDepartureSearch(
                 id="id 2",
@@ -290,7 +329,9 @@ async def test_intersection_departures(async_client: AsyncClient):
                 travel_time=900,
                 transportation=Driving(),
                 range=Range(enabled=True, width=1800),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
         unions=[],

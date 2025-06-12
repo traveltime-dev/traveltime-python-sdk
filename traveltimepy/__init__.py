@@ -2,6 +2,12 @@
 
 from importlib.metadata import version, PackageNotFoundError
 
+from traveltimepy.async_client import AsyncClient
+from traveltimepy.dto.requests.distance_map import (
+    DistanceMapDepartureSearch,
+    DistanceMapArrivalSearch,
+)
+
 try:
     __version__ = version(__name__)
 except PackageNotFoundError:
@@ -34,9 +40,9 @@ from traveltimepy.dto.common import (
     FullRange,
     Range,
     Rectangle,
-    LevelOfDetail,
     DrivingTrafficModel,
 )
+from traveltimepy.dto.level_of_detail import LevelOfDetail, SimpleLevelOfDetail, Level
 
 from traveltimepy.dto.requests.postcodes_zones import ZonesProperty
 
@@ -64,7 +70,12 @@ __all__ = [
     "FullRange",
     "Range",
     "Rectangle",
-    "LevelOfDetail",
     "ZonesProperty",
     "DrivingTrafficModel",
+    "AsyncClient",
+    "DistanceMapDepartureSearch",
+    "DistanceMapArrivalSearch",
+    "LevelOfDetail",
+    "SimpleLevelOfDetail",
+    "Level",
 ]

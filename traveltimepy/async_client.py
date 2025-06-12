@@ -483,8 +483,8 @@ class AsyncClient(AsyncBaseClient):
         departure_searches: List[DistanceMapDepartureSearch],
         unions: List[DistanceMapUnion],
         intersections: List[DistanceMapIntersection],
-    ) -> List[TimeMapResult]:
-        resp: TimeMapResponse = await self._api_call_post(
+    ) -> TimeMapResponse:
+        return await self._api_call_post(
             TimeMapResponse,
             "distance-map",
             AcceptType.JSON,
@@ -495,4 +495,3 @@ class AsyncClient(AsyncBaseClient):
                 intersections=intersections,
             ),
         )
-        return resp.results

@@ -2,12 +2,20 @@ from datetime import datetime, time
 from enum import Enum
 from typing import List, Union, Optional
 
-from pydantic import field_validator
+from pydantic import field_validator, Field
 from typing_extensions import Literal
 from pydantic.main import BaseModel
 
 
 class Coordinates(BaseModel):
+    """
+    Represents geographical coordinates with latitude and longitude.
+
+    Attributes:
+        lat: Latitude coordinate (-90.0 to 90.0)
+        lng: Longitude coordinate (-180.0 to 180.0)
+    """
+
     lat: float
     lng: float
 
@@ -138,13 +146,46 @@ class CellProperty(str, Enum):
 
 
 class SnappingPenalty(str, Enum):
+    """
+    Determines how off-road distances are factored into journey calculations.
+    Controls whether the time/distance required to reach the actual road network is included in metrics.
+    """
+
     ENABLED = "enabled"
+    """
+    Walking time and distance from the departure location to the nearest road
+    and from the nearest road to the arrival location are added to the total travel time and distance of a journey.
+    This provides more realistic door-to-door journey metrics that include the "first and last mile" segments.
+    """
+
     DISABLED = "disabled"
+    """
+    Walking times and distances are not added to the total reported values
+    (i.e., the journey effectively starts and ends at the nearest points on the road network).
+    This approach focuses exclusively on the road network portion of a journey,
+    which may be preferred for vehicle-only routing or when endpoints are already on roads.
+    """
 
 
 class SnappingAcceptRoads(str, Enum):
+    """
+    Defines which road types are valid for journey start/end points based on their accessibility characteristics.
+    This affects where a journey can begin or terminate within the routing network.
+    """
+
     BOTH_DRIVABLE_AND_WALKABLE = "both_drivable_and_walkable"
+    """
+    Journey can only start or end on roads that are accessible by both cars and pedestrians.
+    This effectively means journeys cannot start/end on motorways, highways, or other vehicle-only roadways.
+    Ensures journey endpoints are accessible to pedestrians, which is important for first/last mile connectivity.
+    """
+
     ANY_DRIVABLE = "any_drivable"
+    """
+    Journey can start or end on any road accessible by a car (including motorways).
+    This option maximizes vehicle routing options by allowing connections to all drivable roads,
+    but may result in journey endpoints that are not accessible to pedestrians.
+    """
 
 
 class DrivingTrafficModel(str, Enum):
@@ -158,10 +199,27 @@ class ArrivalTimePeriod(str, Enum):
 
 
 class Snapping(BaseModel):
+    """
+    Configuration for how journey calculations handle connections between arbitrary points and the road network.
+
+    "Snapping" refers to the process of connecting departure/arrival locations to the nearest suitable roads
+    "Snapping" refers to the process of connecting departure/arrival locations to the nearest suitable roads
+    and determining how the off-road portions of journeys are calculated and reported.
+    """
+
     penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
+    """
+    Controls whether off-road walking distances are included in total journey metrics.
+    When enabled, includes "first and last mile" walking times/distances for more realistic door-to-door calculations.
+    """
+
     accept_roads: Optional[SnappingAcceptRoads] = (
         SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
     )
+    """
+    Defines which road types are valid as journey start/end points.
+    Determines whether journeys can snap to vehicle-only roads (like motorways) or only pedestrian-accessible roads.
+    """
 
 
 class ProtoProperty(int, Enum):
@@ -179,14 +237,16 @@ class Range(BaseModel):
     width: int
 
 
-class LevelOfDetail(BaseModel):
-    scale_type: Literal["simple", "simple_numeric", "coarse_grid"] = "simple"
-    level: Optional[Union[int, str]] = None
-    square_size: Optional[int] = None
-
-
 class PolygonsFilter(BaseModel):
-    limit: int
+    """
+    Specifies polygon filter configuration for limiting the number of polygons returned.
+
+    Attributes:
+        limit: Maximum number of largest polygons to return in a single shape.
+               Must be greater than 0.
+    """
+
+    limit: int = Field(gt=0)
 
 
 class RenderMode(str, Enum):

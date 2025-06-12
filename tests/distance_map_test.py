@@ -2,18 +2,21 @@ from datetime import datetime
 
 import pytest
 
-from traveltimepy import Driving
-from traveltimepy.dto.common import Coordinates, LevelOfDetail
-from traveltimepy.async_client import AsyncClient
-from traveltimepy.dto.requests.distance_map import (
+from traveltimepy import (
+    AsyncClient,
     DistanceMapDepartureSearch,
+    Coordinates,
+    Driving,
+    LevelOfDetail,
+    SimpleLevelOfDetail,
+    Level,
     DistanceMapArrivalSearch,
 )
 
 
 @pytest.mark.asyncio
 async def test_departures(async_client: AsyncClient):
-    results = await async_client.distance_map(
+    response = await async_client.distance_map(
         arrival_searches=[],
         departure_searches=[
             DistanceMapDepartureSearch(
@@ -22,7 +25,9 @@ async def test_departures(async_client: AsyncClient):
                 departure_time=datetime.now(),
                 travel_distance=900,
                 transportation=Driving(),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             DistanceMapDepartureSearch(
                 id="id 2",
@@ -30,18 +35,20 @@ async def test_departures(async_client: AsyncClient):
                 departure_time=datetime.now(),
                 travel_distance=900,
                 transportation=Driving(),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
         unions=[],
         intersections=[],
     )
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_arrivals(async_client: AsyncClient):
-    results = await async_client.distance_map(
+    response = await async_client.distance_map(
         arrival_searches=[
             DistanceMapArrivalSearch(
                 id="id",
@@ -49,7 +56,9 @@ async def test_arrivals(async_client: AsyncClient):
                 arrival_time=datetime.now(),
                 travel_distance=900,
                 transportation=Driving(),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
             DistanceMapArrivalSearch(
                 id="id 2",
@@ -57,11 +66,13 @@ async def test_arrivals(async_client: AsyncClient):
                 arrival_time=datetime.now(),
                 travel_distance=900,
                 transportation=Driving(),
-                level_of_detail=LevelOfDetail(scale_type="simple", level="lowest"),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleLevelOfDetail(level=Level.LOWEST)
+                ),
             ),
         ],
         departure_searches=[],
         unions=[],
         intersections=[],
     )
-    assert len(results) == 2
+    assert len(response.results) == 2
