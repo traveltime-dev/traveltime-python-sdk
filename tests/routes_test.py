@@ -29,10 +29,18 @@ async def test_departures(async_client: AsyncClient, locations):
                 departure_time=datetime.now(),
                 transportation=Driving(),
                 properties=[Property.TRAVEL_TIME],
-            )
+            ),
+            RoutesDepartureSearch(
+                id="id 2",
+                arrival_location_ids=["Hyde Park", "London center"],
+                departure_location_id="ZSL London Zoo",
+                departure_time=datetime.now(),
+                transportation=Driving(),
+                properties=[Property.TRAVEL_TIME],
+            ),
         ],
     )
-    assert len(response.results) == 1
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
@@ -48,10 +56,18 @@ async def test_arrivals(async_client: AsyncClient, locations):
                 arrival_time=datetime.now(),
                 transportation=Driving(),
                 properties=[Property.TRAVEL_TIME],
-            )
+            ),
+            RoutesArrivalSearch(
+                id="id 2",
+                arrival_location_id="ZSL London Zoo",
+                departure_location_ids=["Hyde Park", "London center"],
+                arrival_time=datetime.now(),
+                transportation=Driving(),
+                properties=[Property.TRAVEL_TIME],
+            ),
         ],
     )
-    assert len(response.results) == 1
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
