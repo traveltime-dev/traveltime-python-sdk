@@ -15,7 +15,7 @@ from traveltimepy.requests.transportation import Driving
 
 @pytest.mark.asyncio
 async def test_departures(async_client: AsyncClient):
-    results = await async_client.h3(
+    response = await async_client.h3(
         arrival_searches=[],
         departure_searches=[
             H3DepartureSearch(
@@ -39,12 +39,12 @@ async def test_departures(async_client: AsyncClient):
         intersections=[],
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_arrivals(async_client: AsyncClient):
-    results = await async_client.h3(
+    response = await async_client.h3(
         departure_searches=[],
         arrival_searches=[
             H3ArrivalSearch(
@@ -68,12 +68,12 @@ async def test_arrivals(async_client: AsyncClient):
         intersections=[],
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_union_departures(async_client: AsyncClient):
-    results = await async_client.h3(
+    response = await async_client.h3(
         departure_searches=[],
         arrival_searches=[
             H3ArrivalSearch(
@@ -97,12 +97,12 @@ async def test_union_departures(async_client: AsyncClient):
         intersections=[],
     )
 
-    assert len(results) == 3
+    assert len(response.results) == 3
 
 
 @pytest.mark.asyncio
 async def test_intersection_arrivals(async_client: AsyncClient):
-    results = await async_client.h3(
+    response = await async_client.h3(
         departure_searches=[],
         arrival_searches=[
             H3ArrivalSearch(
@@ -126,4 +126,4 @@ async def test_intersection_arrivals(async_client: AsyncClient):
         intersections=[H3Intersection(id="intersection", search_ids=["id", "id 2"])],
     )
 
-    assert len(results) == 3
+    assert len(response.results) == 3

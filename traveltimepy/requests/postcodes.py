@@ -19,6 +19,22 @@ from traveltimepy.requests.transportation import (
 
 
 class PostcodeArrivalSearch(BaseModel):
+    """
+    Arrival-based postcode search configuration.
+
+    Finds postcodes that can reach an arrival location within specified travel time.
+    Currently only supports United Kingdom postcodes.
+
+    Attributes:
+        id: Unique identifier for this search
+        coords: Arrival location coordinates (lat/lng)
+        travel_time: Maximum journey time in seconds (max 14,400 = 4 hours)
+        arrival_time: Specific arrival time
+        transportation: Transportation method (driving, public_transport, walking, etc.)
+        properties: Data to return for each postcode (travel_time, distance)
+        range: Optional arrival time window for multiple journey options
+    """
+
     id: str
     coords: Coordinates
     travel_time: int
@@ -37,6 +53,22 @@ class PostcodeArrivalSearch(BaseModel):
 
 
 class PostcodeDepartureSearch(BaseModel):
+    """
+    Departure-based postcode search configuration.
+
+    Finds reachable postcodes from a departure location within specified travel time.
+    Currently only supports United Kingdom postcodes.
+
+    Attributes:
+        id: Unique identifier for this search
+        coords: Departure location coordinates (lat/lng)
+        travel_time: Maximum journey time in seconds (max 14,400 = 4 hours)
+        departure_time: Specific departure time
+        transportation: Transportation method (driving, public_transport, walking, etc.)
+        properties: Data to return for each postcode (travel_time, distance)
+        range: Optional departure time window for multiple journey options
+    """
+
     id: str
     coords: Coordinates
     travel_time: int
@@ -55,6 +87,15 @@ class PostcodeDepartureSearch(BaseModel):
 
 
 class PostcodesRequest(TravelTimeRequest[PostcodesResponse]):
+    """
+    Finds reachable postcodes and returns travel statistics. Currently only supports
+    United Kingdom postcodes with higher travel time limits than H3 endpoints.
+
+    Attributes:
+        departure_searches: List of departure-based postcode searches (max 10)
+        arrival_searches: List of arrival-based postcode searches (max 10)
+    """
+
     departure_searches: List[PostcodeDepartureSearch]
     arrival_searches: List[PostcodeArrivalSearch]
 

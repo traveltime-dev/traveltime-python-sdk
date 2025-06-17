@@ -49,6 +49,13 @@ class GeohashCentroid(BaseModel):
 
 
 class H3Centroid(BaseModel):
+    """Geographic location using H3 hexagonal cell centroid.
+
+    Attributes:
+        h3_centroid (str): H3 index string identifying a hexagonal cell.
+            Typically, a 15-character hexadecimal value.
+    """
+
     h3_centroid: str
 
 
@@ -166,6 +173,17 @@ class Rectangle(BaseModel):
 
 
 class Property(str, Enum):
+    """
+    Defines what data should be returned in API responses. Different endpoints
+    support different combinations of these properties.
+
+    Attributes:
+        TRAVEL_TIME: Journey time in seconds
+        DISTANCE: Journey distance in meters
+        ROUTE: Detailed route information with turn-by-turn directions
+        FARES: Public transport fare information (where available)
+    """
+
     TRAVEL_TIME = "travel_time"
     DISTANCE = "distance"
     ROUTE = "route"
@@ -328,12 +346,12 @@ class Range(BaseModel):
     Controls whether the time range functionality is active.
 
     When True, the routing algorithm considers departures or arrivals within a window:
-    - For departure searches: starting between the specified departure time and 
+    - For departure searches: starting between the specified departure time and
       'width' seconds in the future from that departure time
-    - For arrival searches: finishing between the specified arrival time and 
+    - For arrival searches: finishing between the specified arrival time and
       'width' seconds in the past from that arrival time
 
-    When False, only the exact departure or arrival time is considered, 
+    When False, only the exact departure or arrival time is considered,
     and the width parameter is ignored.
     """
 
@@ -342,11 +360,11 @@ class Range(BaseModel):
     Duration of the time window in seconds.
 
     For departure searches: Window starts at departure time and extends forward.
-    Example: departure time 09:00 with width 3600 (1 hour) includes all journeys 
+    Example: departure time 09:00 with width 3600 (1 hour) includes all journeys
     departing between 09:00 and 10:00.
 
     For arrival searches: Window ends at arrival time and extends backward.
-    Example: arrival time 17:00 with width 3600 (1 hour) includes all journeys 
+    Example: arrival time 17:00 with width 3600 (1 hour) includes all journeys
     arriving between 16:00 and 17:00.
 
     Must be positive. Maximum allowed value is 43200 (12 hours).

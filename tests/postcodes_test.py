@@ -17,7 +17,7 @@ from traveltimepy.requests.transportation import PublicTransport
 
 @pytest.mark.asyncio
 async def test_departures(async_client: AsyncClient):
-    results = await async_client.postcodes(
+    response = await async_client.postcodes(
         departure_searches=[
             PostcodeDepartureSearch(
                 id="id",
@@ -30,12 +30,12 @@ async def test_departures(async_client: AsyncClient):
         ],
         arrival_searches=[],
     )
-    assert len(results) > 0
+    assert len(response.results) > 0
 
 
 @pytest.mark.asyncio
 async def test_arrivals(async_client: AsyncClient):
-    results = await async_client.postcodes(
+    response = await async_client.postcodes(
         arrival_searches=[
             PostcodeArrivalSearch(
                 id="id",
@@ -48,12 +48,12 @@ async def test_arrivals(async_client: AsyncClient):
         ],
         departure_searches=[],
     )
-    assert len(results) > 0
+    assert len(response.results) > 0
 
 
 @pytest.mark.asyncio
 async def test_districts_departure(async_client: AsyncClient):
-    results = await async_client.postcode_districts(
+    response = await async_client.postcode_districts(
         departure_searches=[
             PostcodeFilterDepartureSearch(
                 id="id",
@@ -66,12 +66,12 @@ async def test_districts_departure(async_client: AsyncClient):
         ],
         arrival_searches=[],
     )
-    assert len(results) > 0
+    assert len(response.results) > 0
 
 
 @pytest.mark.asyncio
 async def test_districts_arrival(async_client: AsyncClient):
-    results = await async_client.postcode_districts(
+    response = await async_client.postcode_districts(
         arrival_searches=[
             PostcodeFilterArrivalSearch(
                 id="id",
@@ -85,12 +85,12 @@ async def test_districts_arrival(async_client: AsyncClient):
         departure_searches=[],
     )
 
-    assert len(results) > 0
+    assert len(response.results) > 0
 
 
 @pytest.mark.asyncio
 async def test_sectors_departure(async_client: AsyncClient):
-    results = await async_client.postcode_sectors(
+    response = await async_client.postcode_sectors(
         departure_searches=[
             PostcodeFilterDepartureSearch(
                 id="id",
@@ -103,12 +103,12 @@ async def test_sectors_departure(async_client: AsyncClient):
         ],
         arrival_searches=[],
     )
-    assert len(results) > 0
+    assert len(response.results) > 0
 
 
 @pytest.mark.asyncio
 async def test_sectors_arrival(async_client: AsyncClient):
-    results = await async_client.postcode_sectors(
+    response = await async_client.postcode_sectors(
         arrival_searches=[
             PostcodeFilterArrivalSearch(
                 id="id",
@@ -122,4 +122,4 @@ async def test_sectors_arrival(async_client: AsyncClient):
         departure_searches=[],
     )
 
-    assert len(results) > 0
+    assert len(response.results) > 0

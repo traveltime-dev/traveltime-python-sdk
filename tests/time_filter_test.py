@@ -13,7 +13,7 @@ from traveltimepy.requests.transportation import Driving
 
 @pytest.mark.asyncio
 async def test_departures(async_client: AsyncClient, locations):
-    results = await async_client.time_filter(
+    response = await async_client.time_filter(
         locations=locations,
         departure_searches=[
             TimeFilterDepartureSearch(
@@ -37,12 +37,12 @@ async def test_departures(async_client: AsyncClient, locations):
         ],
         arrival_searches=[],
     )
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_arrivals(async_client: AsyncClient, locations):
-    results = await async_client.time_filter(
+    response = await async_client.time_filter(
         locations=locations,
         arrival_searches=[
             TimeFilterArrivalSearch(
@@ -66,4 +66,4 @@ async def test_arrivals(async_client: AsyncClient, locations):
         ],
         departure_searches=[],
     )
-    assert len(results) == 2
+    assert len(response.results) == 2

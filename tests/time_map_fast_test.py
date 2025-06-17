@@ -11,7 +11,7 @@ from traveltimepy.requests.transportation import TransportationFast
 
 @pytest.mark.asyncio
 async def test_one_to_many(async_client: AsyncClient):
-    results = await async_client.time_map_fast(
+    response = await async_client.time_map_fast(
         arrival_searches=TimeMapFastArrivalSearches(
             one_to_many=[
                 TimeMapFastSearch(
@@ -31,12 +31,12 @@ async def test_one_to_many(async_client: AsyncClient):
         )
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_many_to_one(async_client: AsyncClient):
-    results = await async_client.time_map_fast(
+    response = await async_client.time_map_fast(
         arrival_searches=TimeMapFastArrivalSearches(
             many_to_one=[
                 TimeMapFastSearch(
@@ -56,12 +56,12 @@ async def test_many_to_one(async_client: AsyncClient):
         )
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_one_to_many_geojson(async_client: AsyncClient):
-    results = await async_client.time_map_fast_geojson(
+    response = await async_client.time_map_fast_geojson(
         arrival_searches=TimeMapFastArrivalSearches(
             one_to_many=[
                 TimeMapFastSearch(
@@ -81,12 +81,12 @@ async def test_one_to_many_geojson(async_client: AsyncClient):
         )
     )
 
-    assert len(results.features) == 2
+    assert len(response.features) == 2
 
 
 @pytest.mark.asyncio
 async def test_many_to_one_geojson(async_client: AsyncClient):
-    results = await async_client.time_map_fast_geojson(
+    response = await async_client.time_map_fast_geojson(
         arrival_searches=TimeMapFastArrivalSearches(
             many_to_one=[
                 TimeMapFastSearch(
@@ -106,12 +106,12 @@ async def test_many_to_one_geojson(async_client: AsyncClient):
         )
     )
 
-    assert len(results.features) == 2
+    assert len(response.features) == 2
 
 
 @pytest.mark.asyncio
 async def test_one_to_many_wkt(async_client: AsyncClient):
-    results = await async_client.time_map_fast_wkt(
+    response = await async_client.time_map_fast_wkt(
         arrival_searches=TimeMapFastArrivalSearches(
             one_to_many=[
                 TimeMapFastSearch(
@@ -131,12 +131,12 @@ async def test_one_to_many_wkt(async_client: AsyncClient):
         )
     )
 
-    assert len(results.results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_many_to_one_wkt(async_client: AsyncClient):
-    results = await async_client.time_map_fast_wkt(
+    response = await async_client.time_map_fast_wkt(
         arrival_searches=TimeMapFastArrivalSearches(
             many_to_one=[
                 TimeMapFastSearch(
@@ -156,12 +156,12 @@ async def test_many_to_one_wkt(async_client: AsyncClient):
         )
     )
 
-    assert len(results.results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_one_to_many_wkt_no_holes(async_client: AsyncClient):
-    results = await async_client.time_map_fast_wkt_no_holes(
+    response = await async_client.time_map_fast_wkt_no_holes(
         arrival_searches=TimeMapFastArrivalSearches(
             one_to_many=[
                 TimeMapFastSearch(
@@ -181,12 +181,12 @@ async def test_one_to_many_wkt_no_holes(async_client: AsyncClient):
         )
     )
 
-    assert len(results.results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_many_to_one_wkt_no_holes(async_client: AsyncClient):
-    results = await async_client.time_map_fast_wkt_no_holes(
+    response = await async_client.time_map_fast_wkt_no_holes(
         arrival_searches=TimeMapFastArrivalSearches(
             many_to_one=[
                 TimeMapFastSearch(
@@ -206,4 +206,4 @@ async def test_many_to_one_wkt_no_holes(async_client: AsyncClient):
         )
     )
 
-    assert len(results.results) == 2
+    assert len(response.results) == 2

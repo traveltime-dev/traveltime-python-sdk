@@ -19,7 +19,7 @@ from traveltimepy.requests.transportation import Driving
 
 @pytest.mark.asyncio
 async def test_departures(async_client: AsyncClient):
-    results = await async_client.time_map(
+    response = await async_client.time_map(
         arrival_searches=[],
         departure_searches=[
             TimeMapDepartureSearch(
@@ -48,12 +48,12 @@ async def test_departures(async_client: AsyncClient):
         unions=[],
         intersections=[],
     )
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_departures_geojson(async_client: AsyncClient):
-    results = await async_client.time_map_geojson(
+    response = await async_client.time_map_geojson(
         arrival_searches=[],
         departure_searches=[
             TimeMapDepartureSearch(
@@ -80,12 +80,12 @@ async def test_departures_geojson(async_client: AsyncClient):
             ),
         ],
     )
-    assert len(results.features) == 2
+    assert len(response.features) == 2
 
 
 @pytest.mark.asyncio
 async def test_departures_wkt(async_client: AsyncClient):
-    results = await async_client.time_map_wkt(
+    response = await async_client.time_map_wkt(
         arrival_searches=[],
         departure_searches=[
             TimeMapDepartureSearch(
@@ -112,12 +112,12 @@ async def test_departures_wkt(async_client: AsyncClient):
             ),
         ],
     )
-    assert len(results.results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_departures_wkt_no_holes(async_client: AsyncClient):
-    results = await async_client.time_map_wkt_no_holes(
+    response = await async_client.time_map_wkt_no_holes(
         arrival_searches=[],
         departure_searches=[
             TimeMapDepartureSearch(
@@ -144,12 +144,12 @@ async def test_departures_wkt_no_holes(async_client: AsyncClient):
             ),
         ],
     )
-    assert len(results.results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_arrivals(async_client: AsyncClient):
-    results = await async_client.time_map(
+    response = await async_client.time_map(
         departure_searches=[],
         arrival_searches=[
             TimeMapArrivalSearch(
@@ -178,12 +178,12 @@ async def test_arrivals(async_client: AsyncClient):
         unions=[],
         intersections=[],
     )
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_arrivals_geojson(async_client: AsyncClient):
-    results = await async_client.time_map_geojson(
+    response = await async_client.time_map_geojson(
         departure_searches=[],
         arrival_searches=[
             TimeMapArrivalSearch(
@@ -210,12 +210,12 @@ async def test_arrivals_geojson(async_client: AsyncClient):
             ),
         ],
     )
-    assert len(results.features) == 2
+    assert len(response.features) == 2
 
 
 @pytest.mark.asyncio
 async def test_arrivals_wkt(async_client: AsyncClient):
-    results = await async_client.time_map_wkt(
+    response = await async_client.time_map_wkt(
         departure_searches=[],
         arrival_searches=[
             TimeMapArrivalSearch(
@@ -242,12 +242,12 @@ async def test_arrivals_wkt(async_client: AsyncClient):
             ),
         ],
     )
-    assert len(results.results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_arrivals_wkt_no_holes(async_client: AsyncClient):
-    results = await async_client.time_map_wkt_no_holes(
+    response = await async_client.time_map_wkt_no_holes(
         departure_searches=[],
         arrival_searches=[
             TimeMapArrivalSearch(
@@ -274,12 +274,12 @@ async def test_arrivals_wkt_no_holes(async_client: AsyncClient):
             ),
         ],
     )
-    assert len(results.results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_union_departures(async_client: AsyncClient):
-    results = await async_client.time_map(
+    response = await async_client.time_map(
         arrival_searches=[],
         departure_searches=[
             TimeMapDepartureSearch(
@@ -308,12 +308,12 @@ async def test_union_departures(async_client: AsyncClient):
         unions=[TimeMapUnion(id="union", search_ids=["id", "id 2"])],
         intersections=[],
     )
-    assert len(results[0].shapes) > 0
+    assert len(response.results[0].shapes) > 0
 
 
 @pytest.mark.asyncio
 async def test_intersection_departures(async_client: AsyncClient):
-    results = await async_client.time_map(
+    response = await async_client.time_map(
         arrival_searches=[],
         departure_searches=[
             TimeMapDepartureSearch(
@@ -342,4 +342,4 @@ async def test_intersection_departures(async_client: AsyncClient):
         unions=[],
         intersections=[TimeMapIntersection(id="union", search_ids=["id", "id 2"])],
     )
-    assert len(results[0].shapes) > 0
+    assert len(response.results[0].shapes) > 0

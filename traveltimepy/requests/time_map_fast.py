@@ -17,6 +17,22 @@ from traveltimepy.requests.time_filter_fast import TransportationFast
 
 
 class TimeMapFastSearch(BaseModel):
+    """
+    Creates travel time catchment areas (isochrones) showing all locations reachable
+    within specified travel time. Optimized for speed with limited configurability.
+
+    Attributes:
+        id: Unique identifier for this search
+        coords: Center point coordinates for the isochrone
+        transportation: Transportation mode
+        travel_time: Maximum journey time in seconds (max 10,800 = 3 hours)
+        arrival_time_period: Time period instead of specific time
+        level_of_detail: Optional polygon detail level (simple/coarse_grid)
+        snapping: Optional road network lookup settings
+        polygons_filter: Optional filtering for polygon complexity
+        render_mode: Optional rendering mode for polygon output
+    """
+
     id: str
     coords: Coordinates
     transportation: TransportationFast
@@ -34,11 +50,26 @@ class TimeMapFastSearch(BaseModel):
 
 
 class TimeMapFastArrivalSearches(BaseModel):
+    """
+    Attributes:
+        many_to_one: Searches showing areas that can reach a destination (convergence)
+        one_to_many: Searches showing areas reachable from an origin (divergence)
+    """
+
     many_to_one: List[TimeMapFastSearch]
     one_to_many: List[TimeMapFastSearch]
 
 
 class TimeMapFastRequest(TravelTimeRequest[TimeMapResponse]):
+    """
+    High-performance isochrone endpoint that creates travel time polygons showing
+    reachable areas within specified travel times. Optimized for speed with
+    limited configurability compared to the standard time-map endpoint.
+
+    Attributes:
+        arrival_searches: Isochrone search configurations for fast polygon generation
+    """
+
     arrival_searches: TimeMapFastArrivalSearches
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:

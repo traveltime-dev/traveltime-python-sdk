@@ -12,7 +12,7 @@ from traveltimepy.requests.transportation import TransportationFast
 
 @pytest.mark.asyncio
 async def test_one_to_many(async_client: AsyncClient, locations):
-    results = await async_client.time_filter_fast(
+    response = await async_client.time_filter_fast(
         locations=locations,
         arrival_searches=TimeFilterFastArrivalSearches(
             one_to_many=[
@@ -37,12 +37,12 @@ async def test_one_to_many(async_client: AsyncClient, locations):
         ),
     )
 
-    assert len(results) > 0
+    assert len(response.results) > 0
 
 
 @pytest.mark.asyncio
 async def test_many_to_one(async_client: AsyncClient, locations):
-    results = await async_client.time_filter_fast(
+    response = await async_client.time_filter_fast(
         locations=locations,
         arrival_searches=TimeFilterFastArrivalSearches(
             many_to_one=[
@@ -67,4 +67,4 @@ async def test_many_to_one(async_client: AsyncClient, locations):
         ),
     )
 
-    assert len(results) > 0
+    assert len(response.results) > 0

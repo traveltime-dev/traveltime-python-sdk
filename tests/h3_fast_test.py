@@ -8,7 +8,7 @@ from traveltimepy.requests.transportation import TransportationFast
 
 @pytest.mark.asyncio
 async def test_one_to_many(async_client: AsyncClient):
-    results = await async_client.h3_fast(
+    response = await async_client.h3_fast(
         arrival_searches=H3FastArrivalSearches(
             one_to_many=[
                 H3FastSearch(
@@ -30,12 +30,12 @@ async def test_one_to_many(async_client: AsyncClient):
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
 async def test_many_to_one(async_client: AsyncClient):
-    results = await async_client.h3_fast(
+    response = await async_client.h3_fast(
         arrival_searches=H3FastArrivalSearches(
             many_to_one=[
                 H3FastSearch(
@@ -57,4 +57,4 @@ async def test_many_to_one(async_client: AsyncClient):
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2

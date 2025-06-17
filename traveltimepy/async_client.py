@@ -87,24 +87,21 @@ from traveltimepy.requests.time_map_fast_geojson import TimeMapFastGeojsonReques
 from traveltimepy.requests.time_map_fast_wkt import TimeMapFastWKTRequest
 from traveltimepy.requests.time_map_geojson import TimeMapGeojsonRequest
 from traveltimepy.requests.time_map_wkt import TimeMapWktRequest
-from traveltimepy.responses.geohash import GeoHashResult, GeoHashResponse
-from traveltimepy.responses.h3 import H3Result, H3Response
+from traveltimepy.responses.geohash import GeoHashResponse
+from traveltimepy.responses.h3 import H3Response
 from traveltimepy.responses.map_info import MapInfoResponse, Map
-from traveltimepy.responses.postcodes import PostcodesResponse, PostcodesResult
-from traveltimepy.responses.routes import RoutesResult, RoutesResponse
+from traveltimepy.responses.postcodes import PostcodesResponse
+from traveltimepy.responses.routes import RoutesResponse
 from traveltimepy.responses.supported_locations import SupportedLocationsResponse
-from traveltimepy.responses.time_filter import TimeFilterResponse, TimeFilterResult
+from traveltimepy.responses.time_filter import TimeFilterResponse
 from traveltimepy.responses.time_filter_fast import (
-    TimeFilterFastResult,
     TimeFilterFastResponse,
 )
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
-from traveltimepy.responses.time_map import TimeMapResult, TimeMapResponse
+from traveltimepy.responses.time_map import TimeMapResponse
 from traveltimepy.responses.time_map_wkt import TimeMapWKTResponse
 from traveltimepy.responses.zones import (
-    PostcodesDistrictsResult,
     PostcodesDistrictsResponse,
-    PostcodesSectorsResult,
     PostcodesSectorsResponse,
 )
 
@@ -116,8 +113,26 @@ class AsyncClient(AsyncBaseClient):
         locations: List[Location],
         departure_searches: List[TimeFilterDepartureSearch],
         arrival_searches: List[TimeFilterArrivalSearch],
-    ) -> List[TimeFilterResult]:
-        resp: TimeFilterResponse = await self._api_call_post(
+    ) -> TimeFilterResponse:
+        """
+        Calculate comprehensive distance matrix with full configurability.
+
+        Full-featured endpoint supporting specific departure/arrival times, all transport
+        modes, range searches, and detailed routing information. Provides maximum
+        flexibility for complex travel time analysis.
+
+        Args:
+            locations: List of all locations referenced by ID in searches
+            departure_searches: Departure-based searches with specific departure times.
+                               Max 10 searches.
+            arrival_searches: Arrival-based searches with specific arrival times.
+                             Max 10 searches.
+
+        Returns:
+            TimeFilterResponse: Comprehensive travel time data including times, distances,
+                               routes, and fares based on requested properties.
+        """
+        return await self._api_call_post(
             TimeFilterResponse,
             "time-filter",
             AcceptType.JSON,
@@ -127,12 +142,27 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches,
             ),
         )
-        return resp.results
 
     async def time_filter_fast(
         self, locations: List[Location], arrival_searches: TimeFilterFastArrivalSearches
-    ) -> List[TimeFilterFastResult]:
-        resp: TimeFilterFastResponse = await self._api_call_post(
+    ) -> TimeFilterFastResponse:
+        """
+        Calculate high-performance distance matrix with up to 100,000 destinations.
+
+        Optimized endpoint for large-scale travel time calculations with extremely
+        low response times. Trades configurability for performance and scale.
+
+        Args:
+            locations: List of all locations referenced by ID in searches
+            arrival_searches: High-performance search configurations with one_to_many
+                             and many_to_one patterns. Max 10 searches total.
+
+        Returns:
+            TimeFilterFastResponse: Travel times and distances for reachable locations
+                                   based on requested properties.
+        """
+
+        return await self._api_call_post(
             TimeFilterFastResponse,
             "time-filter/fast",
             AcceptType.JSON,
@@ -140,7 +170,6 @@ class AsyncClient(AsyncBaseClient):
                 locations=locations, arrival_searches=arrival_searches
             ),
         )
-        return resp.results
 
     async def time_filter_proto(
         self,
@@ -152,6 +181,25 @@ class AsyncClient(AsyncBaseClient):
         country: ProtoCountry,
         with_distance: bool,
     ) -> TimeFilterProtoResponse:
+        """
+        Calculate ultra-high-performance distance matrix using Protocol Buffers.
+
+        Maximum performance endpoint using protobuf format for extremely large datasets.
+        Optimized for scenarios requiring millions of travel time calculations with
+        minimal latency and bandwidth usage.
+
+        Args:
+            origin_coordinate: Single origin coordinate (lat/lng)
+            destination_coordinates: List of destination coordinates
+            transportation: Transportation mode
+            travel_time: Maximum journey time in seconds
+            request_type: Type of request calculation
+            country: Specific country for the calculation
+            with_distance: Whether to include distance data in response
+
+        Returns:
+            TimeFilterProtoResponse: Response with travel times and optionally distances for reachable destinations.
+        """
         return await self._api_call_proto(
             TimeFilterFastProtoRequest(
                 origin_coordinate,
@@ -266,13 +314,12 @@ class AsyncClient(AsyncBaseClient):
         self,
         locations: List[Location],
     ) -> SupportedLocationsResponse:
-        resp: SupportedLocationsResponse = await self._api_call_post(
+        return await self._api_call_post(
             SupportedLocationsResponse,
             "supported-locations",
             AcceptType.JSON,
             SupportedLocationsRequest(locations=locations),
         )
-        return resp
 
     async def time_map(
         self,
@@ -280,8 +327,24 @@ class AsyncClient(AsyncBaseClient):
         departure_searches: List[TimeMapDepartureSearch],
         unions: List[TimeMapUnion],
         intersections: List[TimeMapIntersection],
-    ) -> List[TimeMapResult]:
-        resp: TimeMapResponse = await self._api_call_post(
+    ) -> TimeMapResponse:
+        """
+        Creates travel time catchment area polygons with specific departure/arrival times,
+        transport modes, and support for complex polygon operations.
+
+        Args:
+            arrival_searches: Arrival-based isochrone searches with specific arrival times.
+                             Max 10 searches.
+            departure_searches: Departure-based isochrone searches with specific departure times.
+                               Max 10 searches.
+            unions: Union operations combining multiple isochrone results
+            intersections: Intersection operations finding overlapping areas
+
+        Returns:
+            TimeMapResponse: Comprehensive polygon data in JSON format including
+                            individual isochrones, unions, and intersections.
+        """
+        return await self._api_call_post(
             TimeMapResponse,
             "time-map",
             AcceptType.JSON,
@@ -292,14 +355,29 @@ class AsyncClient(AsyncBaseClient):
                 intersections=intersections,
             ),
         )
-        return resp.results
 
     async def time_map_geojson(
         self,
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
     ) -> FeatureCollection:
-        resp: FeatureCollection = await self._api_call_post(
+        """
+        Generate comprehensive travel time isochrones in GeoJSON format.
+
+        Creates travel time catchment area polygons in GeoJSON format with full
+        configurability, optimized for mapping libraries and web applications.
+
+        Args:
+            arrival_searches: Arrival-based isochrone searches with specific arrival times.
+                             Max 10 searches.
+            departure_searches: Departure-based isochrone searches with specific departure times.
+                               Max 10 searches.
+
+        Returns:
+            FeatureCollection: GeoJSON FeatureCollection with detailed polygon geometries
+                              ready for mapping library integration.
+        """
+        return await self._api_call_post(
             FeatureCollection,
             "time-map",
             AcceptType.GEO_JSON,
@@ -307,14 +385,29 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches, departure_searches=departure_searches
             ),
         )
-        return resp
 
     async def time_map_wkt(
         self,
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
     ) -> TimeMapWKTResponse:
-        resp: TimeMapWKTResponse = await self._api_call_post(
+        """
+        Generate comprehensive travel time isochrones in WKT format.
+
+        Creates travel time catchment area polygons in Well-Known Text format with
+        full configurability, suitable for GIS applications and spatial databases.
+
+        Args:
+            arrival_searches: Arrival-based isochrone searches with specific arrival times.
+                             Max 10 searches.
+            departure_searches: Departure-based isochrone searches with specific departure times.
+                               Max 10 searches.
+
+        Returns:
+            TimeMapWKTResponse: Detailed polygon geometries in WKT format including
+                               holes and complex shapes for GIS processing.
+        """
+        return await self._api_call_post(
             TimeMapWKTResponse,
             "time-map",
             AcceptType.WKT,
@@ -322,14 +415,29 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches, departure_searches=departure_searches
             ),
         )
-        return resp
 
     async def time_map_wkt_no_holes(
         self,
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
     ) -> TimeMapWKTResponse:
-        resp: TimeMapWKTResponse = await self._api_call_post(
+        """
+        Generate comprehensive travel time isochrones in simplified WKT format.
+
+        Creates travel time catchment area polygons in WKT format without holes,
+        providing simplified geometries with full configurability.
+
+        Args:
+            arrival_searches: Arrival-based isochrone searches with specific arrival times.
+                             Max 10 searches.
+            departure_searches: Departure-based isochrone searches with specific departure times.
+                               Max 10 searches.
+
+        Returns:
+            TimeMapWKTResponse: Simplified polygon geometries in WKT format without
+                               holes or islands for easier processing.
+        """
+        return await self._api_call_post(
             TimeMapWKTResponse,
             "time-map",
             AcceptType.WKT_NO_HOLES,
@@ -337,55 +445,105 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches, departure_searches=departure_searches
             ),
         )
-        return resp
 
     async def time_map_fast(
         self,
         arrival_searches: TimeMapFastArrivalSearches,
-    ) -> List[TimeMapResult]:
-        resp: TimeMapResponse = await self._api_call_post(
+    ) -> TimeMapResponse:
+        """
+        Generate high-performance travel time isochrones in JSON format.
+
+        Creates travel time catchment area polygons showing all locations reachable
+        within specified travel times. Returns standard JSON response format.
+
+        Args:
+            arrival_searches: Isochrone search configurations with many_to_one and one_to_many patterns.
+                              Max 10 searches total.
+
+        Returns:
+            TimeMapResponse: Polygon coordinates and metadata in JSON format for map visualization and processing.
+        """
+        return await self._api_call_post(
             TimeMapResponse,
             "time-map/fast",
             AcceptType.JSON,
             TimeMapFastRequest(arrival_searches=arrival_searches),
         )
-        return resp.results
 
     async def time_map_fast_geojson(
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> FeatureCollection:
-        resp: FeatureCollection = await self._api_call_post(
+        """
+        Generate high-performance travel time isochrones in GeoJSON format.
+
+        Creates travel time catchment area polygons in GeoJSON format, optimized
+        for direct use with mapping libraries like Leaflet, Mapbox, and OpenLayers.
+
+        Args:
+            arrival_searches: Isochrone search configurations with many_to_one and
+                             one_to_many patterns. Max 10 searches total.
+
+        Returns:
+            FeatureCollection: GeoJSON FeatureCollection with polygon geometries
+                              ready for mapping library integration.
+        """
+        return await self._api_call_post(
             FeatureCollection,
             "time-map/fast",
             AcceptType.GEO_JSON,
             TimeMapFastGeojsonRequest(arrival_searches=arrival_searches),
         )
-        return resp
 
     async def time_map_fast_wkt(
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> TimeMapWKTResponse:
-        resp: TimeMapWKTResponse = await self._api_call_post(
+        """
+        Generate high-performance travel time isochrones in WKT format.
+
+        Creates travel time catchment area polygons in Well-Known Text format,
+        suitable for GIS applications and spatial databases.
+
+        Args:
+            arrival_searches: Isochrone search configurations with many_to_one and
+                             one_to_many patterns. Max 10 searches total.
+
+        Returns:
+            TimeMapWKTResponse: Polygon geometries in WKT format for GIS processing
+                               and spatial database storage.
+        """
+        return await self._api_call_post(
             TimeMapWKTResponse,
             "time-map/fast",
             AcceptType.WKT,
             TimeMapFastWKTRequest(arrival_searches=arrival_searches),
         )
-        return resp
 
     async def time_map_fast_wkt_no_holes(
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> TimeMapWKTResponse:
-        resp: TimeMapWKTResponse = await self._api_call_post(
+        """
+        Generate high-performance travel time isochrones in simplified WKT format.
+
+        Creates travel time catchment area polygons in WKT format without holes,
+        providing simplified geometries for applications that don't support complex polygons.
+
+        Args:
+            arrival_searches: Isochrone search configurations with many_to_one and
+                             one_to_many patterns. Max 10 searches total.
+
+        Returns:
+            TimeMapWKTResponse: Simplified polygon geometries in WKT format without
+                               holes or islands for easier processing.
+        """
+        return await self._api_call_post(
             TimeMapWKTResponse,
             "time-map/fast",
             AcceptType.WKT_NO_HOLES,
             TimeMapFastWKTRequest(arrival_searches=arrival_searches),
         )
-        return resp
 
     async def h3(
         self,
@@ -395,8 +553,29 @@ class AsyncClient(AsyncBaseClient):
         resolution: int,
         unions: List[H3Union],
         intersections: List[H3Intersection],
-    ) -> List[H3Result]:
-        resp: H3Response = await self._api_call_post(
+    ) -> H3Response:
+        """
+        Standard H3 endpoint with comprehensive features including specific departure/arrival
+        times, unions, and intersections of search results.
+
+        Args:
+            arrival_searches: Arrival-based searches with specific arrival times
+            departure_searches: Departure-based searches with specific departure times
+            properties: Statistical properties to calculate ('min', 'max', 'mean')
+            resolution: H3 resolution level (1-9, higher = more granular cells)
+            unions: Union operations combining multiple search results
+            intersections: Intersection operations finding overlapping areas
+
+        Returns:
+            Travel time statistics for H3 cells in catchment areas.
+
+        Note:
+            - More configurable than h3_fast but with slower performance
+            - Supports specific datetime-based searches
+            - Allows complex analysis through unions and intersections
+        """
+
+        return await self._api_call_post(
             H3Response,
             "h3",
             AcceptType.JSON,
@@ -409,15 +588,35 @@ class AsyncClient(AsyncBaseClient):
                 intersections=intersections,
             ),
         )
-        return resp.results
 
     async def h3_fast(
         self,
         arrival_searches: H3FastArrivalSearches,
         properties: List[CellProperty],
         resolution: int,
-    ) -> List[H3Result]:
-        resp: H3Response = await self._api_call_post(
+    ) -> H3Response:
+        """
+        Calculate travel times to H3 cells within travel time catchment areas.
+
+        High-performance endpoint that returns min/max/mean travel times for H3 hexagonal
+        cells based on arrival searches.
+
+        Args:
+            arrival_searches: Search configurations with arrival points and transportation methods.
+                              Max 10 searches per request.
+            properties: Statistical properties to calculate ('min', 'max', 'mean').
+            resolution: H3 resolution level (1-9). Higher = more granular cells.
+
+        Returns:
+            H3Response: Travel time statistics for H3 cells in catchment areas.
+
+        Note:
+            - Max travel time: 10,800 seconds (3 hours)
+            - Limited geographic coverage vs standard H3 API
+            - driving+public_transport limited to 30min driving
+        """
+
+        return await self._api_call_post(
             H3Response,
             "h3/fast",
             AcceptType.JSON,
@@ -427,7 +626,6 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches,
             ),
         )
-        return resp.results
 
     async def geohash(
         self,
@@ -531,8 +729,25 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: List[PostcodeArrivalSearch],
         departure_searches: List[PostcodeDepartureSearch],
-    ) -> List[PostcodesResult]:
-        resp: PostcodesResponse = await self._api_call_post(
+    ) -> PostcodesResponse:
+        """
+        Find reachable UK postcodes and get travel statistics.
+
+        Searches for postcodes within travel time catchments and returns travel time
+        and distance data. Currently only supports United Kingdom postcodes.
+
+        Args:
+            arrival_searches: Arrival-based searches finding postcodes that can reach
+                             specific destinations. Max 10 searches.
+            departure_searches: Departure-based searches finding postcodes reachable
+                               from specific origins. Max 10 searches.
+
+        Returns:
+            PostcodesResponse: Travel statistics for reachable postcodes including
+                              travel times and distances based on requested properties.
+        """
+
+        return await self._api_call_post(
             PostcodesResponse,
             "time-filter/postcodes",
             AcceptType.JSON,
@@ -540,14 +755,29 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches, departure_searches=departure_searches
             ),
         )
-        return resp.results
 
     async def postcode_districts(
         self,
         arrival_searches: List[PostcodeFilterArrivalSearch],
         departure_searches: List[PostcodeFilterDepartureSearch],
-    ) -> List[PostcodesDistrictsResult]:
-        resp: PostcodesDistrictsResponse = await self._api_call_post(
+    ) -> PostcodesDistrictsResponse:
+        """
+        Searches for postcode districts based on coverage thresholds (percentage of
+        reachable postcodes within districts). Districts are broader geographic areas
+        than sectors. Currently only supports United Kingdom.
+
+        Args:
+            arrival_searches: Arrival-based searches with coverage filtering for districts
+                             that can reach specific destinations. Max 10 searches.
+            departure_searches: Departure-based searches with coverage filtering for districts
+                               reachable from specific origins. Max 10 searches.
+
+        Returns:
+            PostcodesDistrictsResponse: Statistics for postcode districts including
+                                       travel times and coverage percentages.
+        """
+
+        return await self._api_call_post(
             PostcodesDistrictsResponse,
             "time-filter/postcode-districts",
             AcceptType.JSON,
@@ -555,14 +785,29 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches, departure_searches=departure_searches
             ),
         )
-        return resp.results
 
     async def postcode_sectors(
         self,
         arrival_searches: List[PostcodeFilterArrivalSearch],
         departure_searches: List[PostcodeFilterDepartureSearch],
-    ) -> List[PostcodesSectorsResult]:
-        resp: PostcodesSectorsResponse = await self._api_call_post(
+    ) -> PostcodesSectorsResponse:
+        """
+        Searches for postcode sectors based on coverage thresholds (percentage of
+        reachable postcodes within sectors). Sectors are more granular geographic
+        areas than districts. Currently only supports United Kingdom.
+
+        Args:
+            arrival_searches: Arrival-based searches with coverage filtering for sectors
+                             that can reach specific destinations. Max 10 searches.
+            departure_searches: Departure-based searches with coverage filtering for sectors
+                               reachable from specific origins. Max 10 searches.
+
+        Returns:
+            PostcodesSectorsResponse: Statistics for postcode sectors including
+                                     travel times and coverage percentages.
+        """
+
+        return await self._api_call_post(
             PostcodesSectorsResponse,
             "time-filter/postcode-sectors",
             AcceptType.JSON,
@@ -570,15 +815,29 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches, departure_searches=departure_searches
             ),
         )
-        return resp.results
 
     async def routes(
         self,
         locations: List[Location],
         arrival_searches: List[RoutesArrivalSearch],
         departure_searches: List[RoutesDepartureSearch],
-    ) -> List[RoutesResult]:
-        resp: RoutesResponse = await self._api_call_post(
+    ) -> RoutesResponse:
+        """
+        Calculate A to B routes with turn-by-turn directions.
+
+        Returns detailed routing information between specific locations including
+        turn-by-turn directions, travel times, distances, and fare information.
+
+        Args:
+            locations: List of all locations referenced by ID in searches
+            arrival_searches: Arrival-based searches from multiple origins to one destination. Max 10 searches.
+            departure_searches: Departure-based searches from one origin to multiple destinations. Max 10 searches.
+
+        Returns:
+            RoutesResponse: Detailed route information including turn-by-turn directions,
+                           travel times, distances, and fares based on requested properties.
+        """
+        return await self._api_call_post(
             RoutesResponse,
             "routes",
             AcceptType.JSON,
@@ -588,7 +847,6 @@ class AsyncClient(AsyncBaseClient):
                 arrival_searches=arrival_searches,
             ),
         )
-        return resp.results
 
     async def distance_map(
         self,

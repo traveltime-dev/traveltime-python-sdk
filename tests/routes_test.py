@@ -18,7 +18,7 @@ from traveltimepy.requests.transportation import Driving
 
 @pytest.mark.asyncio
 async def test_departures(async_client: AsyncClient, locations):
-    results = await async_client.routes(
+    response = await async_client.routes(
         locations=locations,
         arrival_searches=[],
         departure_searches=[
@@ -32,12 +32,12 @@ async def test_departures(async_client: AsyncClient, locations):
             )
         ],
     )
-    assert len(results) == 1
+    assert len(response.results) == 1
 
 
 @pytest.mark.asyncio
 async def test_arrivals(async_client: AsyncClient, locations):
-    results = await async_client.routes(
+    response = await async_client.routes(
         locations=locations,
         departure_searches=[],
         arrival_searches=[
@@ -51,7 +51,7 @@ async def test_arrivals(async_client: AsyncClient, locations):
             )
         ],
     )
-    assert len(results) == 1
+    assert len(response.results) == 1
 
 
 @pytest.mark.asyncio
@@ -75,7 +75,7 @@ async def test_snapping(async_client: AsyncClient):
         departure_searches=[],
     )
     traveltime_with_penalty = (
-        result_with_penalty[0].locations[0].properties[0].travel_time
+        result_with_penalty.results[0].locations[0].properties[0].travel_time
     )
     result_without_penalty = await async_client.routes(
         locations=locations,
@@ -96,7 +96,7 @@ async def test_snapping(async_client: AsyncClient):
         departure_searches=[],
     )
     traveltime_without_penalty = (
-        result_without_penalty[0].locations[0].properties[0].travel_time
+        result_without_penalty.results[0].locations[0].properties[0].travel_time
     )
     assert traveltime_with_penalty is not None
     assert traveltime_without_penalty is not None
