@@ -37,15 +37,14 @@ class Coordinates(BaseModel):
 class GeohashCentroid(BaseModel):
     """
     Represents a geographic location using a geohash centroid string.
+
+    Attributes:
+        geohash_centroid: Geohash string representing the centroid of a geographic cell.
+                         Used as an alternative to lat/lng coordinates for specifying
+                         departure or arrival locations.
     """
 
     geohash_centroid: str
-    """
-    Geohash string representing the centroid of a geographic cell.
-
-    Used as an alternative to lat/lng coordinates for specifying departure
-    or arrival locations.
-    """
 
 
 class H3Centroid(BaseModel):
@@ -142,31 +141,22 @@ class Fares(BaseModel):
 class Rectangle(BaseModel):
     """
     Represents a rectangular geographic bounding box defined by minimum and maximum latitude and longitude coordinates.
+
+    Attributes:
+        min_lat: The minimum latitude (southern boundary) of the rectangle in decimal degrees.
+                Valid range: -90.0 to +90.0, where negative values represent the Southern Hemisphere.
+        max_lat: The maximum latitude (northern boundary) of the rectangle in decimal degrees.
+                Valid range: -90.0 to +90.0, where positive values represent the Northern Hemisphere.
+        min_lng: The minimum longitude (western boundary) of the rectangle in decimal degrees.
+                Valid range: -180.0 to +180.0, where negative values represent the Western Hemisphere.
+        max_lng: The maximum longitude (eastern boundary) of the rectangle in decimal degrees.
+                Valid range: -180.0 to +180.0, where positive values represent the Eastern Hemisphere.
     """
 
     min_lat: float
-    """
-    The minimum latitude (southern boundary) of the rectangle in decimal degrees.
-    Valid range: -90.0 to +90.0, where negative values represent the Southern Hemisphere.
-    """
-
     max_lat: float
-    """
-    The maximum latitude (northern boundary) of the rectangle in decimal degrees.
-    Valid range: -90.0 to +90.0, where positive values represent the Northern Hemisphere.
-    """
-
     min_lng: float
-    """
-    The minimum longitude (western boundary) of the rectangle in decimal degrees.
-    Valid range: -180.0 to +180.0, where negative values represent the Western Hemisphere.
-    """
-
     max_lng: float
-    """
-    The maximum longitude (eastern boundary) of the rectangle in decimal degrees.
-    Valid range: -180.0 to +180.0, where positive values represent the Eastern Hemisphere.
-    """
 
     def to_str(self):
         return f"{self.min_lat},{self.min_lng},{self.max_lat},{self.max_lng}"
@@ -193,59 +183,48 @@ class Property(str, Enum):
 class CellProperty(str, Enum):
     """
     Travel time properties that can be calculated and returned for each geohash cell.
+
+    Attributes:
+        MIN: Minimum travel time to any point of interest within the geohash cell.
+        MAX: Maximum travel time to any point of interest within the geohash cell.
+        MEAN: Average travel time to points of interest within the geohash cell.
     """
 
     MIN = "min"
-    """Minimum travel time to any point of interest within the geohash cell."""
-
     MAX = "max"
-    """Maximum travel time to any point of interest within the geohash cell."""
-
     MEAN = "mean"
-    """Average travel time to points of interest within the geohash cell."""
 
 
 class SnappingPenalty(str, Enum):
     """
     Determines how off-road distances are factored into journey calculations.
     Controls whether the time/distance required to reach the actual road network is included in metrics.
+
+    Attributes:
+        ENABLED: Walking time and distance from departure to nearest road and from nearest road
+                to arrival are added to total travel time and distance. Provides realistic door-to-door metrics.
+        DISABLED: Walking times and distances are not added to reported values. Journey effectively
+                 starts and ends at nearest points on the road network.
     """
 
     ENABLED = "enabled"
-    """
-    Walking time and distance from the departure location to the nearest road
-    and from the nearest road to the arrival location are added to the total travel time and distance of a journey.
-    This provides more realistic door-to-door journey metrics that include the "first and last mile" segments.
-    """
-
     DISABLED = "disabled"
-    """
-    Walking times and distances are not added to the total reported values
-    (i.e., the journey effectively starts and ends at the nearest points on the road network).
-    This approach focuses exclusively on the road network portion of a journey,
-    which may be preferred for vehicle-only routing or when endpoints are already on roads.
-    """
 
 
 class SnappingAcceptRoads(str, Enum):
     """
     Defines which road types are valid for journey start/end points based on their accessibility characteristics.
     This affects where a journey can begin or terminate within the routing network.
+
+    Attributes:
+        BOTH_DRIVABLE_AND_WALKABLE: Journey can only start or end on roads accessible by both cars and pedestrians.
+                                   Effectively means journeys cannot start/end on motorways or vehicle-only roads.
+        ANY_DRIVABLE: Journey can start or end on any road accessible by a car (including motorways).
+                     Maximizes vehicle routing options but may result in pedestrian-inaccessible endpoints.
     """
 
     BOTH_DRIVABLE_AND_WALKABLE = "both_drivable_and_walkable"
-    """
-    Journey can only start or end on roads that are accessible by both cars and pedestrians.
-    This effectively means journeys cannot start/end on motorways, highways, or other vehicle-only roadways.
-    Ensures journey endpoints are accessible to pedestrians, which is important for first/last mile connectivity.
-    """
-
     ANY_DRIVABLE = "any_drivable"
-    """
-    Journey can start or end on any road accessible by a car (including motorways).
-    This option maximizes vehicle routing options by allowing connections to all drivable roads,
-    but may result in journey endpoints that are not accessible to pedestrians.
-    """
 
 
 class DrivingTrafficModel(str, Enum):
@@ -263,23 +242,19 @@ class Snapping(BaseModel):
     Configuration for how journey calculations handle connections between arbitrary points and the road network.
 
     "Snapping" refers to the process of connecting departure/arrival locations to the nearest suitable roads
-    "Snapping" refers to the process of connecting departure/arrival locations to the nearest suitable roads
     and determining how the off-road portions of journeys are calculated and reported.
+
+    Attributes:
+        penalty: Controls whether off-road walking distances are included in total journey metrics.
+                When enabled, includes "first and last mile" walking times/distances for realistic door-to-door calculations.
+        accept_roads: Defines which road types are valid as journey start/end points.
+                     Determines whether journeys can snap to vehicle-only roads or only pedestrian-accessible roads.
     """
 
     penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
-    """
-    Controls whether off-road walking distances are included in total journey metrics.
-    When enabled, includes "first and last mile" walking times/distances for more realistic door-to-door calculations.
-    """
-
     accept_roads: Optional[SnappingAcceptRoads] = (
         SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
     )
-    """
-    Defines which road types are valid as journey start/end points.
-    Determines whether journeys can snap to vehicle-only roads (like motorways) or only pedestrian-accessible roads.
-    """
 
 
 class ProtoProperty(int, Enum):

@@ -297,10 +297,6 @@ class AsyncClient(AsyncBaseClient):
         Raises:
             400 Bad Request: If coordinates are far from land (e.g., in ocean).
                             Reverse search is only supported for points on land.
-
-        Note:
-            Results include formatted addresses, confidence scores indicating
-            match quality, and metadata about transportation support for the area.
         """
 
         return await self._api_call_get(
@@ -568,11 +564,6 @@ class AsyncClient(AsyncBaseClient):
 
         Returns:
             Travel time statistics for H3 cells in catchment areas.
-
-        Note:
-            - More configurable than h3_fast but with slower performance
-            - Supports specific datetime-based searches
-            - Allows complex analysis through unions and intersections
         """
 
         return await self._api_call_post(
@@ -609,11 +600,6 @@ class AsyncClient(AsyncBaseClient):
 
         Returns:
             H3Response: Travel time statistics for H3 cells in catchment areas.
-
-        Note:
-            - Max travel time: 10,800 seconds (3 hours)
-            - Limited geographic coverage vs standard H3 API
-            - driving+public_transport limited to 30min driving
         """
 
         return await self._api_call_post(
@@ -664,11 +650,6 @@ class AsyncClient(AsyncBaseClient):
         Returns:
             GeoHashResponse containing travel time statistics for each geohash cell
             within the reachable area.
-
-        Note:
-            All search IDs must be unique across departure_searches, arrival_searches,
-            unions, and intersections. Union and intersection operations reference
-            search IDs from departure_searches and arrival_searches.
         """
 
         return await self._api_call_post(
@@ -709,10 +690,6 @@ class AsyncClient(AsyncBaseClient):
         Returns:
             GeoHashResponse containing travel time statistics for each geohash cell
             within the reachable area.
-
-        Note:
-            This endpoint has limited geographic coverage compared to the standard
-            geohash endpoint but offers significantly better performance.
         """
         return await self._api_call_post(
             GeoHashResponse,
@@ -878,11 +855,6 @@ class AsyncClient(AsyncBaseClient):
         Returns:
             TimeMapResponse containing polygon shapes for each search operation,
             with results sorted lexicographically by search_id.
-
-        Note:
-            All search IDs must be unique across departure_searches, arrival_searches,
-            unions, and intersections. Union and intersection operations reference
-            search IDs from departure_searches and arrival_searches.
         """
 
         return await self._api_call_post(
