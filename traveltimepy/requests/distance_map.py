@@ -30,43 +30,26 @@ class DistanceMapDepartureSearch(BaseModel):
     using the specified transportation method and departure time. The result is typically a polygon
     or set of polygons representing the reachable area.
 
-    Example:
-        Generate a map showing all areas within 5km walking distance from a city center:
-
-        search = DistanceMapDepartureSearch(
-            id="city_center_walk",
-            coords=Coordinates(lat=51.5074, lng=-0.1278),  # London
-            departure_time=datetime.now(),
-            travel_distance=5000,  # 5km in meters
-            transportation=Walking()
-        )
-
+    Attributes:
+        id: Unique identifier for this distance map search. Used to reference and track the search request.
+        coords: Starting location for the distance map calculation.
+                All reachable areas will be calculated from this departure point.
+        departure_time: Time of departure for the journey calculation.
+        travel_distance: Maximum travel distance in meters from the departure location.
+                         Defines the boundary of the reachable area.
+        transportation: Transportation mode to use for calculating reachable areas.
+        level_of_detail: Controls the precision and complexity of the returned polygon geometry.
+                         Higher detail provides more accurate boundaries.
+        snapping: Configuration for connecting the departure coordinates to the transportation network.
+        polygons_filter: Limits the number of polygons returned in the result.
+                         Useful when the reachable area consists of multiple disconnected regions.
+        no_holes: Enable to remove holes from returned polygons. Note that this will likely result in loss in accuracy.
     """
 
     id: str
-    """
-    Unique identifier for this distance map search.
-    Used to reference and track the search request.
-    """
-
     coords: Coordinates
-    """
-    Starting location for the distance map calculation.
-    All reachable areas will be calculated from this departure point.
-    """
-
     departure_time: datetime
-    """
-    Time of departure for the journey calculation.
-    """
-
     travel_distance: int
-    """
-    Maximum travel distance in meters from the departure location.
-    Defines the boundary of the reachable area - no point in the resulting polygon
-    will require more than this distance to reach from the departure coordinates.
-    """
-
     transportation: typing.Union[
         PublicTransport,
         Driving,
@@ -76,34 +59,10 @@ class DistanceMapDepartureSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    """
-    Transportation mode to use for calculating reachable areas.
-    """
-
     level_of_detail: Optional[LevelOfDetail] = None
-    """
-    Controls the precision and complexity of the returned polygon geometry.
-    Higher detail provides more accurate boundaries but increases computation time and response size.
-    """
-
     snapping: Optional[Snapping] = None
-    """
-    Configuration for connecting the departure coordinates to the transportation network.
-    Determines how off-road distances are handled and which road types are acceptable connection points.
-    """
-
     polygons_filter: Optional[PolygonsFilter] = None
-    """
-    Limits the number of polygons returned in the result.
-    Useful when the reachable area consists of multiple disconnected regions
-    and you only want the largest or most significant areas.
-    """
-
     no_holes: Optional[bool] = None
-    """
-    Enable to remove holes from returned polygons.
-    Note that this will likely result in loss in accuracy.
-    """
 
 
 class DistanceMapArrivalSearch(BaseModel):
@@ -115,44 +74,27 @@ class DistanceMapArrivalSearch(BaseModel):
     the inverse of a departure search - instead of "where can I go from here?", it answers
     "where can I come from to get here?".
 
-    Example:
-        Generate a map showing all areas within 3km cycling distance that can reach
-        a train station by 8:00 AM:
-
-        search = DistanceMapArrivalSearch(
-            id="station_catchment",
-            coords=Coordinates(lat=51.5074, lng=-0.1278),  # Train station
-            arrival_time=datetime(2024, 1, 15, 8, 0),  # 8:00 AM
-            travel_distance=3000,  # 3km in meters
-            transportation=Cycling()
-        )
+    Attributes:
+        id: Unique identifier for this distance map search. Used to reference and track the search request.
+        coords: Destination location for the distance map calculation.
+                All origin areas will be calculated based on their ability to reach this arrival point.
+        arrival_time: Required arrival time at the destination.
+                      The search finds areas that can reach the destination by this time.
+        travel_distance: Maximum travel distance in meters to the arrival location.
+                         Defines the boundary of the origin area.
+        transportation: Transportation mode to use for calculating origin areas.
+        level_of_detail: Controls the precision and complexity of the returned polygon geometry.
+                         Higher detail provides more accurate boundaries.
+        snapping: Configuration for connecting the arrival coordinates to the transportation network.
+        polygons_filter: Limits the number of polygons returned in the result.
+                         Useful when the reachable area consists of multiple disconnected regions.
+        no_holes: Enable to remove holes from returned polygons. Note that this will likely result in loss in accuracy.
     """
 
     id: str
-    """
-    Unique identifier for this distance map search.
-    Used to reference and track the search request.
-    """
-
     coords: Coordinates
-    """
-    Destination location for the distance map calculation.
-    All origin areas will be calculated based on their ability to reach this arrival point.
-    """
-
     arrival_time: datetime
-    """
-    Required arrival time at the destination.
-    The search finds areas that can reach the destination by this time.
-    """
-
     travel_distance: int
-    """
-    Maximum travel distance in meters to the arrival location.
-    Defines the boundary of the origin area - no point in the resulting polygon
-    will require more than this distance to reach the arrival coordinates.
-    """
-
     transportation: typing.Union[
         PublicTransport,
         Driving,
@@ -162,131 +104,69 @@ class DistanceMapArrivalSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    """
-    Transportation mode to use for calculating origin areas.
-    """
-
     level_of_detail: Optional[LevelOfDetail] = None
-    """
-    Controls the precision and complexity of the returned polygon geometry.
-    Higher detail provides more accurate boundaries but increases computation time and response size.
-    """
-
     snapping: Optional[Snapping] = None
-    """
-    Configuration for connecting the arrival coordinates to the transportation network.
-    Determines how off-road distances are handled and which road types are acceptable connection points.
-    """
-
     polygons_filter: Optional[PolygonsFilter] = None
-    """
-    Limits the number of polygons returned in the result.
-    Useful when the reachable area consists of multiple disconnected regions
-    and you only want the largest or most significant areas.
-    """
-
     no_holes: Optional[bool] = None
-    """
-    Enable to remove holes from returned polygons.
-    Note that this will likely result in loss in accuracy.
-    """
 
 
 class DistanceMapIntersection(BaseModel):
     """
-    Configuration for calculating the intersection of multiple distance map searches.
-
     An intersection operation finds areas that are reachable by ALL specified searches.
     This is useful for finding locations that satisfy multiple accessibility criteria simultaneously,
     such as areas within walking distance of both a train station and a shopping center.
 
-    Example:
-        Find areas within walking distance of both a train station and a hospital:
-
-        intersection = DistanceMapIntersection(
-            id="station_and_hospital",
-            search_ids=["train_station_walk", "hospital_walk"]
-        )
-
-        The result will only include areas that appear in both individual distance maps.
+    Attributes:
+        id: Unique identifier for this intersection operation.
+            Used to reference the intersection result in the response.
+        search_ids: List of distance map search IDs to intersect.
+                    Must reference valid departure or arrival search IDs within the same request.
+                    The intersection will only include areas that are reachable in ALL referenced searches.
+                    Requires at least 2 search IDs.
     """
 
     id: str
-    """
-    Unique identifier for this intersection operation.
-    Used to reference the intersection result in the response.
-    """
-
     search_ids: List[str]
-    """
-    List of distance map search IDs to intersect.
-    Must reference valid departure or arrival search IDs within the same request.
-    The intersection will only include areas that are reachable in ALL referenced searches.
-    Requires at least 2 search IDs to perform a meaningful intersection.
-    """
 
 
 class DistanceMapUnion(BaseModel):
     """
-    Configuration for calculating the union of multiple distance map searches.
-
     A union operation combines all areas that are reachable by ANY of the specified searches.
     This is useful for finding the total coverage area of multiple access points or transportation
     options, such as the combined catchment area of several bus stops or train stations.
 
-    Example:
-        Find the combined area within cycling distance of three bike share stations:
-
-        union = DistanceMapUnion(
-            id="bike_share_coverage",
-            search_ids=["station_a_cycle", "station_b_cycle", "station_c_cycle"]
-        )
-
-        The result will include all areas that appear in any of the individual distance maps.
+    Attributes:
+        id: Unique identifier for this union operation. Used to reference the union result in the response.
+        search_ids: List of distance map search IDs to combine.
+                    Must reference valid departure or arrival search IDs within the same request.
+                    The union will include areas that are reachable in ANY of the referenced searches.
+                    Requires at least 2 search IDs.
     """
 
     id: str
-    """
-    Unique identifier for this union operation.
-    Used to reference the union result in the response.
-    """
-
     search_ids: List[str]
-    """
-    List of distance map search IDs to combine.
-    Must reference valid departure or arrival search IDs within the same request.
-    The union will include areas that are reachable in ANY of the referenced searches.
-    Requires at least 2 search IDs to perform a meaningful union.
-    """
 
 
 class DistanceMapRequest(TravelTimeRequest[TimeMapResponse]):
+    """
+    Generates isodistance polygons showing areas reachable within specified travel distances
+    rather than travel times. Supports departure/arrival searches, unions, and intersections.
+
+    Attributes:
+        departure_searches: List of departure-based distance map searches.
+                            Each search calculates areas reachable FROM a specific starting point.
+        arrival_searches: List of arrival-based distance map searches.
+                          Each search calculates areas that can reach TO a specific destination.
+        unions: List of union operations to perform on the search results.
+                Each union combines multiple searches to show total coverage area.
+        intersections: List of intersection operations to perform on the search results.
+                       Each intersection finds overlapping areas between multiple searches.
+    """
 
     departure_searches: List[DistanceMapDepartureSearch]
-    """
-    List of departure-based distance map searches.
-    Each search calculates areas reachable FROM a specific starting point.
-    """
-
     arrival_searches: List[DistanceMapArrivalSearch]
-    """
-    List of arrival-based distance map searches.
-    Each search calculates areas that can reach TO a specific destination.
-    """
-
     unions: List[DistanceMapUnion]
-    """
-    List of union operations to perform on the search results.
-    Each union combines multiple searches to show total coverage area.
-    Search IDs must reference searches defined in departure_searches or arrival_searches.
-    """
-
     intersections: List[DistanceMapIntersection]
-    """
-    List of intersection operations to perform on the search results.
-    Each intersection finds overlapping areas between multiple searches.
-    Search IDs must reference searches defined in departure_searches or arrival_searches.
-    """
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         # Do not split request if unions/intersections are defined

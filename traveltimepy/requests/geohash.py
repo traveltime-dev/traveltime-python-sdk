@@ -29,20 +29,21 @@ from traveltimepy.responses.geohash import GeoHashResponse
 class GeoHashDepartureSearch(BaseModel):
     """
     Calculates travel times from a departure location to all geohash cells within a travel time catchment area.
+
+    Attributes:
+        id: Unique identifier for this search operation.
+        coords: Departure location using either lat/lng coordinates or geohash centroid.
+        departure_time: Leave departure location at no earlier than this time.
+        travel_time: Maximum journey time in seconds. Maximum value is 14400 (4 hours).
+        transportation: Transportation mode for the journey calculation.
+        range: Optional departure time window for range search functionality.
+        snapping: Configuration for connecting coordinates to the transportation network.
     """
 
     id: str
-    """Unique identifier for this search operation."""
-
     coords: typing.Union[Coordinates, GeohashCentroid]
-    """Departure location using either lat/lng coordinates or geohash centroid."""
-
     departure_time: datetime
-    """Leave departure location at no earlier than this time."""
-
-    travel_time: int
-    """Maximum journey time in seconds. Maximum value is 14400 (4 hours)."""
-
+    travel_time: int = Field(le=14400)
     transportation: typing.Union[
         PublicTransport,
         Driving,
@@ -52,32 +53,28 @@ class GeoHashDepartureSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    """Transportation mode for the journey calculation."""
-
     range: Optional[Range] = None
-    """Optional departure time window for range search functionality."""
-
     snapping: Optional[Snapping] = None
-    """Configuration for connecting coordinates to the transportation network."""
 
 
 class GeoHashArrivalSearch(BaseModel):
     """
     Calculates travel times from all geohash cells to an arrival location within a travel time catchment area.
+
+    Attributes:
+        id: Unique identifier for this search operation.
+        coords: Arrival location using either lat/lng coordinates or geohash centroid.
+        arrival_time: Arrive at destination location at no later than this time.
+        travel_time: Maximum journey time in seconds. Maximum value is 14400 (4 hours).
+        transportation: Transportation mode for the journey calculation.
+        range: Optional arrival time window for range search functionality.
+        snapping: Configuration for connecting coordinates to the transportation network.
     """
 
     id: str
-    """Unique identifier for this search operation."""
-
     coords: typing.Union[Coordinates, GeohashCentroid]
-    """Arrival location using either lat/lng coordinates or geohash centroid."""
-
     arrival_time: datetime
-    """Arrive at destination location at no later than this time."""
-
     travel_time: int = Field(le=14400)
-    """Maximum journey time in seconds. Maximum value is 14400 (4 hours)."""
-
     transportation: typing.Union[
         PublicTransport,
         Driving,
@@ -87,13 +84,8 @@ class GeoHashArrivalSearch(BaseModel):
         DrivingTrain,
         CyclingPublicTransport,
     ]
-    """Transportation mode for the journey calculation."""
-
     range: Optional[Range] = None
-    """Optional arrival time window for range search functionality."""
-
     snapping: Optional[Snapping] = None
-    """Configuration for connecting coordinates to the transportation network."""
 
 
 class GeoHashIntersection(BaseModel):
@@ -101,13 +93,14 @@ class GeoHashIntersection(BaseModel):
     Configuration for calculating intersection of geohash search results.
 
     Finds geohash cells that are reachable in ALL specified searches.
+
+    Attributes:
+        id: Unique identifier for this intersection operation.
+        search_ids: List of search IDs to intersect. Must reference valid departure or arrival searches.
     """
 
     id: str
-    """Unique identifier for this intersection operation."""
-
     search_ids: List[str]
-    """List of search IDs to intersect. Must reference valid departure or arrival searches."""
 
 
 class GeoHashUnion(BaseModel):
@@ -115,13 +108,14 @@ class GeoHashUnion(BaseModel):
     Configuration for calculating union of geohash search results.
 
     Combines geohash cells that are reachable in ANY of the specified searches.
+
+    Attributes:
+        id: Unique identifier for this union operation.
+        search_ids: List of search IDs to combine. Must reference valid departure or arrival searches.
     """
 
     id: str
-    """Unique identifier for this union operation."""
-
     search_ids: List[str]
-    """List of search IDs to combine. Must reference valid departure or arrival searches."""
 
 
 class GeoHashRequest(TravelTimeRequest[GeoHashResponse]):
@@ -131,25 +125,22 @@ class GeoHashRequest(TravelTimeRequest[GeoHashResponse]):
     Calculates travel times to geohash cells within travel time catchment areas,
     returning min, max, and mean travel times for each cell. More configurable
     than geohash-fast but with lower performance.
+
+    Attributes:
+        resolution: Geohash resolution of results. Valid range: 1-6.
+        properties: Properties to return for each cell. Options: min, max, mean travel times.
+        departure_searches: List of departure-based geohash searches.
+        arrival_searches: List of arrival-based geohash searches.
+        unions: List of union operations to perform on search results.
+        intersections: List of intersection operations to perform on search results.
     """
 
     resolution: int
-    """Geohash resolution of results. Valid range: 1-6."""
-
     properties: List[CellProperty]
-    """Properties to return for each cell. Options: min, max, mean travel times."""
-
     departure_searches: List[GeoHashDepartureSearch]
-    """List of departure-based geohash searches."""
-
     arrival_searches: List[GeoHashArrivalSearch]
-    """List of arrival-based geohash searches."""
-
     unions: List[GeoHashUnion]
-    """List of union operations to perform on search results."""
-
     intersections: List[GeoHashIntersection]
-    """List of intersection operations to perform on search results."""
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         # Do not split request if unions/intersections are defined
