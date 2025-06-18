@@ -8,7 +8,7 @@ from traveltimepy.requests.time_filter import (
     TimeFilterDepartureSearch,
     TimeFilterArrivalSearch,
 )
-from traveltimepy.requests.transportation import Driving
+from traveltimepy.requests.transportation import PublicTransport
 
 
 @pytest.mark.asyncio
@@ -21,7 +21,7 @@ async def test_departures(async_client: AsyncClient, locations):
                 departure_location_id="London center",
                 arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
                 departure_time=datetime.now(),
-                transportation=Driving(),
+                transportation=PublicTransport(),
                 travel_time=1800,
                 properties=[Property.TRAVEL_TIME],
             ),
@@ -30,7 +30,7 @@ async def test_departures(async_client: AsyncClient, locations):
                 departure_location_id="ZSL London Zoo",
                 arrival_location_ids=["Hyde Park", "London center"],
                 departure_time=datetime.now(),
-                transportation=Driving(),
+                transportation=PublicTransport(),
                 travel_time=1800,
                 properties=[Property.TRAVEL_TIME],
             ),
@@ -50,7 +50,7 @@ async def test_arrivals(async_client: AsyncClient, locations):
                 arrival_location_id="London center",
                 departure_location_ids=["Hyde Park", "ZSL London Zoo"],
                 arrival_time=datetime.now(),
-                transportation=Driving(),
+                transportation=PublicTransport(),
                 travel_time=1800,
                 properties=[Property.TRAVEL_TIME],
             ),
@@ -59,7 +59,7 @@ async def test_arrivals(async_client: AsyncClient, locations):
                 arrival_location_id="ZSL London Zoo",
                 departure_location_ids=["Hyde Park", "London center"],
                 arrival_time=datetime.now(),
-                transportation=Driving(),
+                transportation=PublicTransport(),
                 travel_time=1800,
                 properties=[Property.TRAVEL_TIME],
             ),

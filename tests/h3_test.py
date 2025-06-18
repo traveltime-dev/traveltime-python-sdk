@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 
 from traveltimepy import AsyncClient
-from traveltimepy.requests.common import Coordinates, H3Centroid, CellProperty
+from traveltimepy.requests.common import Coordinates, H3Centroid, CellProperty, Range
 from traveltimepy.requests.h3 import (
     H3DepartureSearch,
     H3ArrivalSearch,
@@ -24,6 +24,7 @@ async def test_departures(async_client: AsyncClient):
                 departure_time=datetime.now(),
                 travel_time=900,
                 transportation=Driving(),
+                range=Range(enabled=True, width=1800),
             ),
             H3DepartureSearch(
                 id="id 2",
@@ -31,6 +32,7 @@ async def test_departures(async_client: AsyncClient):
                 departure_time=datetime.now(),
                 travel_time=900,
                 transportation=Driving(),
+                range=Range(enabled=True, width=1800),
             ),
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
@@ -53,6 +55,7 @@ async def test_arrivals(async_client: AsyncClient):
                 arrival_time=datetime.now(),
                 travel_time=900,
                 transportation=Driving(),
+                range=Range(enabled=True, width=1800),
             ),
             H3ArrivalSearch(
                 id="id 2",
@@ -60,6 +63,7 @@ async def test_arrivals(async_client: AsyncClient):
                 arrival_time=datetime.now(),
                 travel_time=900,
                 transportation=Driving(),
+                range=Range(enabled=True, width=1800),
             ),
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
@@ -74,21 +78,23 @@ async def test_arrivals(async_client: AsyncClient):
 @pytest.mark.asyncio
 async def test_union_departures(async_client: AsyncClient):
     response = await async_client.h3(
-        departure_searches=[],
-        arrival_searches=[
-            H3ArrivalSearch(
+        arrival_searches=[],
+        departure_searches=[
+            H3DepartureSearch(
                 id="id",
                 coords=Coordinates(lat=51.507609, lng=-0.128315),
-                arrival_time=datetime.now(),
+                departure_time=datetime.now(),
                 travel_time=900,
                 transportation=Driving(),
+                range=Range(enabled=True, width=1800),
             ),
-            H3ArrivalSearch(
+            H3DepartureSearch(
                 id="id 2",
                 coords=H3Centroid(h3_centroid="87195da49ffffff"),
-                arrival_time=datetime.now(),
+                departure_time=datetime.now(),
                 travel_time=900,
                 transportation=Driving(),
+                range=Range(enabled=True, width=1800),
             ),
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
@@ -111,6 +117,7 @@ async def test_intersection_arrivals(async_client: AsyncClient):
                 arrival_time=datetime.now(),
                 travel_time=900,
                 transportation=Driving(),
+                range=Range(enabled=True, width=1800),
             ),
             H3ArrivalSearch(
                 id="id 2",
@@ -118,6 +125,7 @@ async def test_intersection_arrivals(async_client: AsyncClient):
                 arrival_time=datetime.now(),
                 travel_time=900,
                 transportation=Driving(),
+                range=Range(enabled=True, width=1800),
             ),
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],

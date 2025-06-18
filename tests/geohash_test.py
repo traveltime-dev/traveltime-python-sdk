@@ -33,7 +33,7 @@ async def test_departures(async_client: AsyncClient):
             ),
             GeoHashDepartureSearch(
                 id="id 2",
-                coords=GeohashCentroid(geohash_centroid="gcpvj3"),
+                coords=GeohashCentroid(geohash_centroid="gcpvhb"),
                 transportation=Driving(),
                 travel_time=900,
                 departure_time=datetime.now(),
@@ -64,7 +64,7 @@ async def test_arrivals(async_client: AsyncClient):
             ),
             GeoHashArrivalSearch(
                 id="id 2",
-                coords=GeohashCentroid(geohash_centroid="gcpvj3"),
+                coords=GeohashCentroid(geohash_centroid="gcpvhb"),
                 transportation=Driving(),
                 travel_time=900,
                 arrival_time=datetime.now(),
@@ -95,7 +95,7 @@ async def test_union_departures(async_client: AsyncClient):
             ),
             GeoHashDepartureSearch(
                 id="id 2",
-                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                coords=GeohashCentroid(geohash_centroid="gcpvhb"),
                 transportation=PublicTransport(),
                 travel_time=900,
                 departure_time=datetime.now(),
