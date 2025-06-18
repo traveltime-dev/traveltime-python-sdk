@@ -34,32 +34,31 @@ class ProtoTransportation(Enum):
 
 @dataclass
 class ProtoPublicTransportWithDetails:
+    """Public transport configuration with detailed parameters.
+    
+    Attributes:
+        walking_time_to_station: Limit on walking path duration. Must be > 0 and <= 1800.
+    """
 
     walking_time_to_station: Optional[int] = None
-    """Limit on walking path duration. Must be > 0 and <= 1800"""
-
     TYPE: ClassVar[ProtoTransportation] = ProtoTransportation.PUBLIC_TRANSPORT
 
 
 @dataclass
 class ProtoDrivingAndPublicTransportWithDetails:
+    """Driving and public transport configuration with detailed parameters.
+    
+    Attributes:
+        walking_time_to_station: Limit on walking path duration. Must be > 0 and <= 1800.
+        driving_time_to_station: Limit on driving path duration. Must be > 0 and <= 1800.
+        parking_time: Constant penalty to simulate finding a parking spot in seconds.
+            Cannot be negative. Must be less than the overall travel time limit.
+    """
 
     walking_time_to_station: Optional[int] = None
-    """Limit on walking path duration. Must be > 0 and <= 1800"""
-
     driving_time_to_station: Optional[int] = None
-    """Limit on driving path duration. Must be > 0 and <= 1800"""
-
     parking_time: Optional[int] = None
-    """
-    Constant penalty to simulate finding a parking spot in seconds.
-    Cannot be negative.
-    Must be less than the overall travel time limit.
-    """
-
-    TYPE: ClassVar[ProtoTransportation] = (
-        ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
-    )
+    TYPE: ClassVar[ProtoTransportation] = ProtoTransportation.DRIVING_AND_PUBLIC_TRANSPORT
 
 
 TimeFilterFastProtoTransportation = Union[

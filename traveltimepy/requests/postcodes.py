@@ -23,7 +23,6 @@ class PostcodeArrivalSearch(BaseModel):
     Arrival-based postcode search configuration.
 
     Finds postcodes that can reach an arrival location within specified travel time.
-    Currently only supports United Kingdom postcodes.
 
     Attributes:
         id: Unique identifier for this search
@@ -57,7 +56,6 @@ class PostcodeDepartureSearch(BaseModel):
     Departure-based postcode search configuration.
 
     Finds reachable postcodes from a departure location within specified travel time.
-    Currently only supports United Kingdom postcodes.
 
     Attributes:
         id: Unique identifier for this search
@@ -88,8 +86,7 @@ class PostcodeDepartureSearch(BaseModel):
 
 class PostcodesRequest(TravelTimeRequest[PostcodesResponse]):
     """
-    Finds reachable postcodes and returns travel statistics. Currently only supports
-    United Kingdom postcodes with higher travel time limits than H3 endpoints.
+    Finds reachable postcodes and returns travel statistics.
 
     Attributes:
         departure_searches: List of departure-based postcode searches (max 10)

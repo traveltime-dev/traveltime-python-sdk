@@ -182,12 +182,12 @@ class Property(str, Enum):
 
 class CellProperty(str, Enum):
     """
-    Travel time properties that can be calculated and returned for each geohash cell.
+    Travel time properties that can be calculated and returned for each cell.
 
     Attributes:
-        MIN: Minimum travel time to any point of interest within the geohash cell.
-        MAX: Maximum travel time to any point of interest within the geohash cell.
-        MEAN: Average travel time to points of interest within the geohash cell.
+        MIN: Minimum travel time to any point of interest within cell.
+        MAX: Maximum travel time to any point of interest within cell.
+        MEAN: Average travel time to points of interest within cell.
     """
 
     MIN = "min"
