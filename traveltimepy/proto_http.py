@@ -10,7 +10,7 @@ from aiohttp import (
 
 import TimeFilterFastResponse_pb2  # type: ignore
 import TimeFilterFastRequest_pb2  # type: ignore
-from traveltimepy.dto.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.errors import ApiError
 
 

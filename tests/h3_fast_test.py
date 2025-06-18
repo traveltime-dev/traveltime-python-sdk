@@ -1,37 +1,60 @@
 import pytest
 
-from traveltimepy import Transportation, TravelTimeSdk
-from traveltimepy.dto.common import CellProperty, Coordinates, H3Centroid
+from traveltimepy import AsyncClient
+from traveltimepy.requests.common import Coordinates, H3Centroid, CellProperty
+from traveltimepy.requests.h3_fast import H3FastArrivalSearches, H3FastSearch
+from traveltimepy.requests.transportation import TransportationFast
 
 
 @pytest.mark.asyncio
-async def test_one_to_many(sdk: TravelTimeSdk):
-    results = await sdk.h3_fast_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
-        ],
+async def test_one_to_many(async_client: AsyncClient):
+    response = await async_client.h3_fast(
+        arrival_searches=H3FastArrivalSearches(
+            one_to_many=[
+                H3FastSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.507609, lng=-0.128315),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    travel_time=900,
+                ),
+                H3FastSearch(
+                    id="id 2",
+                    coords=H3Centroid(h3_centroid="87195da49ffffff"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    travel_time=900,
+                ),
+            ],
+            many_to_one=[],
+        ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        travel_time=900,
-        transportation=Transportation(type="public_transport"),
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
 
 
 @pytest.mark.asyncio
-async def test_many_to_one(sdk: TravelTimeSdk):
-    results = await sdk.h3_fast_async(
-        coordinates=[
-            Coordinates(lat=51.507609, lng=-0.128315),
-            H3Centroid(h3_centroid="87195da49ffffff"),
-        ],
+async def test_many_to_one(async_client: AsyncClient):
+    response = await async_client.h3_fast(
+        arrival_searches=H3FastArrivalSearches(
+            many_to_one=[
+                H3FastSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.507609, lng=-0.128315),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    travel_time=900,
+                ),
+                H3FastSearch(
+                    id="id 2",
+                    coords=H3Centroid(h3_centroid="87195da49ffffff"),
+                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    travel_time=900,
+                ),
+            ],
+            one_to_many=[],
+        ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        travel_time=900,
-        transportation=Transportation(type="public_transport"),
-        one_to_many=False,
     )
 
-    assert len(results) == 2
+    assert len(response.results) == 2
