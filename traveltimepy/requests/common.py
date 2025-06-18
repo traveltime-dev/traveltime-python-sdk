@@ -187,7 +187,7 @@ class CellProperty(str, Enum):
     Attributes:
         MIN: Minimum travel time to any point of interest within cell.
         MAX: Maximum travel time to any point of interest within cell.
-        MEAN: Average travel time to points of interest within cell.
+        MEAN: Mean travel time to points of interest within cell.
     """
 
     MIN = "min"

@@ -13,7 +13,7 @@ class Properties(BaseModel):
     Attributes:
         min: Minimum travel time to any point of interest within the geohash cell, in seconds.
         max: Maximum travel time to any point of interest within the geohash cell, in seconds.
-        mean: Average travel time to points of interest within the geohash cell, in seconds.
+        mean: Mean travel time to points of interest within the geohash cell, in seconds.
     """
 
     min: Optional[int] = None

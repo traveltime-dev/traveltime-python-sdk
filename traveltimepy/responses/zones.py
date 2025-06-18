@@ -10,7 +10,7 @@ class TravelTime(BaseModel):
     Attributes:
         min: Minimum travel time.
         max: Maximum travel time.
-        mean: Average travel time.
+        mean: Mean travel time.
         median: Median travel time.
     """
 
