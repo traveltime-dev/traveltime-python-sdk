@@ -1,7 +1,7 @@
 import random
 from typing import List
 
-from traveltimepy import Location, Coordinates
+from traveltimepy.requests.common import Location, Coordinates
 
 
 def generate_float(value: float, radius: float) -> float:

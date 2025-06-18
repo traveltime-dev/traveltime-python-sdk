@@ -4,7 +4,7 @@ from typing import List
 
 from pydantic import field_validator, BaseModel
 
-from traveltimepy import Coordinates
+from traveltimepy.requests.common import Coordinates
 from traveltimepy.wkt.helper import print_indented
 
 

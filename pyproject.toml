@@ -21,7 +21,7 @@ dependencies = [
 	"aiohttp",
 	"aiolimiter",
 	"aiohttp-retry",
-	"protobuf==4.21.12",
+	"protobuf==4.25.8",
 	"types-protobuf",
 ]
 classifiers = [
