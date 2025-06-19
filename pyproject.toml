@@ -23,6 +23,8 @@ dependencies = [
 	"aiohttp-retry",
 	"protobuf==4.25.8",
 	"types-protobuf",
+	"requests",
+	"requests-ratelimiter",
 ]
 classifiers = [
 	"Programming Language :: Python :: 3",
