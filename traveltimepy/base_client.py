@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from importlib.metadata import version, PackageNotFoundError
-from typing import Optional, Dict, TypeVar, Type, Union, Coroutine, Any, Mapping
+from typing import Optional, Dict, TypeVar, Type, Union, Coroutine, Any
 
 from pydantic import BaseModel
 
@@ -9,7 +9,6 @@ from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
 )
-from traveltimepy.responses.error import ResponseError
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
 
 T = TypeVar("T", bound=BaseModel)
@@ -63,28 +62,6 @@ class BaseClient(ABC):
             "Content-Type": AcceptType.OCTET_STREAM.value,
             "User-Agent": f"Travel Time Python SDK {__version__}",
         }
-
-    def _build_proto_error_message(
-        self, status_code: int, headers: Mapping[str, str]
-    ) -> str:
-        error_code = headers.get("X-ERROR-CODE", "Unknown")
-        error_details = headers.get("X-ERROR-DETAILS", "No details provided")
-        error_message = headers.get("X-ERROR-MESSAGE", "No message provided")
-
-        return (
-            f"Travel Time API proto request failed with error code: {status_code}\n"
-            f"X-ERROR-CODE: {error_code}\n"
-            f"X-ERROR-DETAILS: {error_details}\n"
-            f"X-ERROR-MESSAGE: {error_message}"
-        )
-
-    def _build_api_error_message(self, parsed: ResponseError) -> str:
-        return (
-            f"Travel Time API request failed: {parsed.description}\n"
-            f"Error code: {parsed.error_code}\n"
-            f"Additional info: {parsed.additional_info}\n"
-            f"<{parsed.documentation_link}>\n"
-        )
 
     @abstractmethod
     def _api_call_post(

@@ -12,7 +12,7 @@ from urllib3.util.retry import Retry
 import TimeFilterFastResponse_pb2  # type: ignore
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import BaseClient, __version__
-from traveltimepy.errors import ApiError
+from traveltimepy.errors import TravelTimeApiError
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
@@ -215,10 +215,18 @@ class SyncBaseClient(BaseClient):
         )
 
         if response.status_code != 200:
-            msg = self._build_proto_error_message(
-                response.status_code, response.headers
+            raise TravelTimeApiError(
+                status_code=response.status_code,
+                error_code=response.headers.get("X-ERROR-CODE", "Unknown"),
+                additional_info={
+                    "X-ERROR-DETAILS": [
+                        response.headers.get("X-ERROR-DETAILS", "No details provided")
+                    ],
+                    "X-ERROR-MESSAGE": [
+                        response.headers.get("X-ERROR-MESSAGE", "No message provided")
+                    ],
+                },
             )
-            raise ApiError(msg)
         else:
             response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
             response_body.ParseFromString(response.content)
@@ -236,9 +244,16 @@ class SyncBaseClient(BaseClient):
             json_data = {"error": "Invalid JSON response"}
 
         if response.status_code != 200:
-            parsed = ResponseError.model_validate_json(json.dumps(json_data))
-            msg = self._build_api_error_message(parsed)
-            raise ApiError(msg)
+            error = ResponseError.model_validate_json(json.dumps(json_data))
+            raise TravelTimeApiError(
+                status_code=response.status_code,
+                error_code=str(error.error_code),
+                additional_info={
+                    **error.additional_info,
+                    error.description: [error.description],
+                    error.documentation_link: [error.documentation_link],
+                },
+            )
         else:
             return response_class.model_validate(json_data)
 

@@ -11,7 +11,7 @@ from aiohttp import (
 import TimeFilterFastResponse_pb2  # type: ignore
 import TimeFilterFastRequest_pb2  # type: ignore
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
-from traveltimepy.errors import ApiError
+from traveltimepy.errors import TravelTimeClientError
 
 
 async def send_proto_async(
@@ -48,7 +48,7 @@ async def _process_response(response: ClientResponse) -> TimeFilterProtoResponse
             f"X-ERROR-MESSAGE: {error_message}"
         )
 
-        raise ApiError(msg)
+        raise TravelTimeClientError(msg)
     else:
         response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
         response_body.ParseFromString(content)
