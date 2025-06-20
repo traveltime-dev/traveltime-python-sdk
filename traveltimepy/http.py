@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from traveltimepy.requests.request import TravelTimeRequest
 
 from traveltimepy.responses.error import ResponseError
-from traveltimepy.errors import ApiError
+from traveltimepy.errors import TravelTimeClientError
 from aiohttp_retry import RetryClient, ExponentialRetry
 from aiolimiter import AsyncLimiter
 
@@ -117,6 +117,6 @@ async def _process_response(response_class: Type[T], response: ClientResponse) -
             f"Additional info: {parsed.additional_info}\n"
             f"<{parsed.documentation_link}>\n"
         )
-        raise ApiError(msg)
+        raise TravelTimeClientError(msg)
     else:
         return response_class.model_validate(json_data)
