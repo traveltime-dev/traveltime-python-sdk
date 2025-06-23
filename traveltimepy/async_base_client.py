@@ -199,7 +199,7 @@ class AsyncBaseClient(BaseClient):
             error = ResponseError.model_validate_json(json.dumps(json_data))
             raise TravelTimeJsonError(
                 status_code=response.status,
-                error_code=error.error_code,
+                error_code=str(error.error_code),
                 description=error.description,
                 documentation_link=error.documentation_link,
                 additional_info=error.additional_info,

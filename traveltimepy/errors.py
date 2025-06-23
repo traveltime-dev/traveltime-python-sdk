@@ -26,7 +26,7 @@ class TravelTimeApiError(TravelTimeClientError):
 
 class TravelTimeJsonError(TravelTimeApiError):
     status_code: int
-    error_code: int
+    error_code: str
     description: str
     documentation_link: str
     additional_info: Dict[str, List[str]]
@@ -34,7 +34,7 @@ class TravelTimeJsonError(TravelTimeApiError):
     def __init__(
         self,
         status_code: int,
-        error_code: int,
+        error_code: str,
         description: str,
         documentation_link: str,
         additional_info: Dict[str, List[str]],
@@ -47,7 +47,7 @@ class TravelTimeJsonError(TravelTimeApiError):
 
         super(TravelTimeJsonError, self).__init__(
             self.status_code,
-            str(self.error_code),
+            self.error_code,
             {
                 **self.additional_info,
                 self.description: [self.description],
