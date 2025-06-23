@@ -20,7 +20,7 @@ async def test_async_client_10_requests_throttled(async_client_low_rpm: AsyncCli
 
     elapsed_time = time.time() - start_time
 
-    assert elapsed_time >= 60  # At least 1 minute due to rate limiting
+    assert 60 <= elapsed_time < 65  # At least 1 minute due to rate limiting
 
 
 def test_sync_client_10_requests_throttled(client_low_rpm: Client):
@@ -31,4 +31,4 @@ def test_sync_client_10_requests_throttled(client_low_rpm: Client):
 
     elapsed_time = time.time() - start_time
 
-    assert elapsed_time >= 60  # At least 1 minute due to rate limiting
+    assert 60 <= elapsed_time < 65  # At least 1 minute due to rate limiting
