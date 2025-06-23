@@ -11,7 +11,7 @@ from pydantic import BaseModel
 import TimeFilterFastResponse_pb2  # type: ignore
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import BaseClient, __version__
-from traveltimepy.errors import TravelTimeApiError
+from traveltimepy.errors import TravelTimeJsonError, TravelTimeProtoError
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
@@ -170,21 +170,15 @@ class AsyncBaseClient(BaseClient):
                 ) as response:
                     content = await response.read()
                     if response.status != 200:
-                        raise TravelTimeApiError(
+                        raise TravelTimeProtoError(
                             status_code=response.status,
                             error_code=response.headers.get("X-ERROR-CODE", "Unknown"),
-                            additional_info={
-                                "X-ERROR-DETAILS": [
-                                    response.headers.get(
-                                        "X-ERROR-DETAILS", "No details provided"
-                                    )
-                                ],
-                                "X-ERROR-MESSAGE": [
-                                    response.headers.get(
-                                        "X-ERROR-MESSAGE", "No message provided"
-                                    )
-                                ],
-                            },
+                            error_details=response.headers.get(
+                                "X-ERROR-DETAILS", "No details provided"
+                            ),
+                            error_message=response.headers.get(
+                                "X-ERROR-MESSAGE", "No message provided"
+                            ),
                         )
                     else:
                         response_body = (
@@ -203,14 +197,12 @@ class AsyncBaseClient(BaseClient):
         json_data = json.loads(text)
         if response.status != 200:
             error = ResponseError.model_validate_json(json.dumps(json_data))
-            raise TravelTimeApiError(
+            raise TravelTimeJsonError(
                 status_code=response.status,
-                error_code=str(error.error_code),
-                additional_info={
-                    **error.additional_info,
-                    error.description: [error.description],
-                    error.documentation_link: [error.documentation_link],
-                },
+                error_code=error.error_code,
+                description=error.description,
+                documentation_link=error.documentation_link,
+                additional_info=error.additional_info,
             )
         else:
             return response_class.model_validate(json_data)
