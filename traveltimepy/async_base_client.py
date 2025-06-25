@@ -3,8 +3,7 @@ import json
 from typing import Optional, Dict, TypeVar, Type
 
 import aiohttp
-from aiohttp import ClientSession, ClientResponse, TCPConnector, BasicAuth
-from aiohttp_retry import RetryClient, ExponentialRetry
+from aiohttp import ClientSession, ClientResponse, BasicAuth, TCPConnector
 from aiolimiter import AsyncLimiter
 from pydantic import BaseModel
 
@@ -29,9 +28,7 @@ class AsyncBaseClient(BaseClient):
         app_id: Your TravelTime API application ID
         api_key: Your TravelTime API key
         timeout: Request timeout in seconds (default: 300)
-        retry_attempts: Number of retry attempts for failed requests (default: 3)
         max_rpm: Maximum requests per minute for rate limiting (default: 60)
-        session: Optional existing aiohttp ClientSession to use
         use_ssl: Whether to use SSL for connections (default: True)
         split_large_requests: Split large requests into smaller requests for performance (default: True)
         _host: API host (default: "api.traveltimeapp.com")
@@ -44,9 +41,7 @@ class AsyncBaseClient(BaseClient):
         app_id: str,
         api_key: str,
         timeout: int = 300,
-        retry_attempts: int = 3,
         max_rpm: int = 60,
-        session: Optional[ClientSession] = None,
         use_ssl: bool = True,
         split_large_requests: bool = True,
         _host: str = "api.traveltimeapp.com",
@@ -57,7 +52,6 @@ class AsyncBaseClient(BaseClient):
             app_id=app_id,
             api_key=api_key,
             timeout=timeout,
-            retry_attempts=retry_attempts,
             max_rpm=max_rpm,
             use_ssl=use_ssl,
             split_large_requests=split_large_requests,
@@ -65,22 +59,26 @@ class AsyncBaseClient(BaseClient):
             _proto_host=_proto_host,
             _user_agent=_user_agent,
         )
-        self.session = session
+        self._session: Optional[ClientSession] = None
         self.async_limiter = AsyncLimiter(max_rate=self.max_rpm, time_period=60)
 
-    async def _get_session(self):
-        use_running_session = self.session and not self.session.closed
-        if use_running_session:
-            return self.session
-        else:
-            return aiohttp.ClientSession(
+    async def close(self):
+        """Close the aiohttp session if it exists."""
+        if self._session and not self._session.closed:
+            await self._session.close()
+            self._session = None
+
+    async def _get_session(self) -> ClientSession:
+        if self._session is None or self._session.closed:
+            self._session = aiohttp.ClientSession(
                 timeout=aiohttp.ClientTimeout(total=self.timeout),
                 connector=TCPConnector(ssl=self.use_ssl),
             )
+        return self._session
+
 
     async def _make_request(
         self,
-        client: RetryClient,
         method: str,
         url: str,
         headers: Dict[str, str],
@@ -88,8 +86,9 @@ class AsyncBaseClient(BaseClient):
         data: Optional[str] = None,
         params: Optional[Dict[str, str]] = None,
     ) -> T:
+        session = await self._get_session()
         async with self.async_limiter:
-            async with client.request(
+            async with session.request(
                 method=method, url=url, headers=headers, data=data, params=params
             ) as response:
                 return await self._handle_response(response, response_class)
@@ -101,28 +100,22 @@ class AsyncBaseClient(BaseClient):
         accept_type: AcceptType,
         request: TravelTimeRequest,
     ) -> T:
-        session = await self._get_session()
         url = self._build_url(endpoint)
 
-        async with RetryClient(
-            client_session=session,
-            retry_options=ExponentialRetry(attempts=self.retry_attempts),
-        ) as client:
-            split_size = 10 if self.split_large_requests else 1
+        split_size = 10 if self.split_large_requests else 1
 
-            tasks = [
-                self._make_request(
-                    client,
-                    "POST",
-                    url,
-                    self._get_json_headers(accept_type),
-                    response_class,
-                    data=part.model_dump_json(),
-                )
-                for part in request.split_searches(split_size)
-            ]
-            responses = await asyncio.gather(*tasks)
-            return request.merge(responses)
+        tasks = [
+            self._make_request(
+                "POST",
+                url,
+                self._get_json_headers(accept_type),
+                response_class,
+                data=part.model_dump_json(),
+            )
+            for part in request.split_searches(split_size)
+        ]
+        responses = await asyncio.gather(*tasks)
+        return request.merge(responses)
 
     async def _api_call_get(
         self,
@@ -131,64 +124,53 @@ class AsyncBaseClient(BaseClient):
         accept_type: AcceptType,
         params: Optional[Dict[str, str]],
     ) -> T:
-        session = await self._get_session()
         url = self._build_url(endpoint)
 
-        async with RetryClient(
-            client_session=session,
-            retry_options=ExponentialRetry(attempts=self.retry_attempts),
-        ) as client:
-            return await self._make_request(
-                client,
-                "GET",
-                url,
-                self._get_json_headers(accept_type),
-                response_class,
-                params=params,
-            )
+        return await self._make_request(
+            "GET",
+            url,
+            self._get_json_headers(accept_type),
+            response_class,
+            params=params,
+        )
 
     async def _api_call_proto(
         self, req: TimeFilterFastProtoRequest
     ) -> TimeFilterProtoResponse:
         session = await self._get_session()
+        async with self.async_limiter:
+            if isinstance(req.transportation, ProtoTransportation):
+                transportation_mode = req.transportation.value.name
+            else:
+                transportation_mode = req.transportation.TYPE.value.name
 
-        async with RetryClient(
-            client_session=session,
-            retry_options=ExponentialRetry(attempts=self.retry_attempts),
-        ) as client:
-            async with self.async_limiter:
-                if isinstance(req.transportation, ProtoTransportation):
-                    transportation_mode = req.transportation.value.name
+            async with session.post(
+                url=f"https://{self._proto_host}/api/v2/{req.country.value}/time-filter/fast/{transportation_mode}",
+                headers=self._get_proto_headers(),
+                data=req.get_request().SerializeToString(),
+                auth=BasicAuth(self.app_id, self.api_key),
+            ) as response:
+                content = await response.read()
+                if response.status != 200:
+                    raise TravelTimeProtoError(
+                        status_code=response.status,
+                        error_code=response.headers.get("X-ERROR-CODE", "Unknown"),
+                        error_details=response.headers.get(
+                            "X-ERROR-DETAILS", "No details provided"
+                        ),
+                        error_message=response.headers.get(
+                            "X-ERROR-MESSAGE", "No message provided"
+                        ),
+                    )
                 else:
-                    transportation_mode = req.transportation.TYPE.value.name
-
-                async with client.post(
-                    url=f"https://{self._proto_host}/api/v2/{req.country.value}/time-filter/fast/{transportation_mode}",
-                    headers=self._get_proto_headers(),
-                    data=req.get_request().SerializeToString(),
-                    auth=BasicAuth(self.app_id, self.api_key),
-                ) as response:
-                    content = await response.read()
-                    if response.status != 200:
-                        raise TravelTimeProtoError(
-                            status_code=response.status,
-                            error_code=response.headers.get("X-ERROR-CODE", "Unknown"),
-                            error_details=response.headers.get(
-                                "X-ERROR-DETAILS", "No details provided"
-                            ),
-                            error_message=response.headers.get(
-                                "X-ERROR-MESSAGE", "No message provided"
-                            ),
-                        )
-                    else:
-                        response_body = (
-                            TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
-                        )
-                        response_body.ParseFromString(content)
-                        return TimeFilterProtoResponse(
-                            travel_times=response_body.properties.travelTimes[:],
-                            distances=response_body.properties.distances[:],
-                        )
+                    response_body = (
+                        TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
+                    )
+                    response_body.ParseFromString(content)
+                    return TimeFilterProtoResponse(
+                        travel_times=response_body.properties.travelTimes[:],
+                        distances=response_body.properties.distances[:],
+                    )
 
     async def _handle_response(
         self, response: ClientResponse, response_class: Type[T]

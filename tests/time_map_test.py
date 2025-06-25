@@ -341,7 +341,7 @@ async def test_intersection_departures(async_client: AsyncClient):
             ),
         ],
         unions=[],
-        intersections=[TimeMapIntersection(id="union", search_ids=["id", "id 2"])],
+        intersections=[TimeMapIntersection(id="intersection", search_ids=["id", "id 2"])],
     )
     assert len(response.results[0].shapes) > 0
 
@@ -659,6 +659,6 @@ def test_intersection_departures_sync(client: Client):
             ),
         ],
         unions=[],
-        intersections=[TimeMapIntersection(id="union", search_ids=["id", "id 2"])],
+        intersections=[TimeMapIntersection(id="intersection", search_ids=["id", "id 2"])],
     )
     assert len(response.results[0].shapes) > 0

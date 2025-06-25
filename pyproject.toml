@@ -20,7 +20,6 @@ dependencies = [
 	"certifi>=2021.5.30",
 	"aiohttp",
 	"aiolimiter",
-	"aiohttp-retry",
 	"protobuf==4.25.8",
 	"types-protobuf",
 	"requests",

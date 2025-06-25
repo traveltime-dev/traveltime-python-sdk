@@ -26,7 +26,6 @@ class BaseClient(ABC):
         app_id: str,
         api_key: str,
         timeout: int = 300,
-        retry_attempts: int = 3,
         max_rpm: int = 60,
         use_ssl: bool = True,
         split_large_requests: bool = True,
@@ -37,7 +36,6 @@ class BaseClient(ABC):
         self.app_id = app_id
         self.api_key = api_key
         self.timeout = timeout
-        self.retry_attempts = retry_attempts
         self.max_rpm = max_rpm
         self.use_ssl = use_ssl
         self.split_large_requests = split_large_requests

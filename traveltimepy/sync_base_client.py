@@ -7,7 +7,6 @@ from pydantic import BaseModel
 from requests.adapters import HTTPAdapter
 from requests.auth import HTTPBasicAuth
 from requests_ratelimiter import LimiterSession
-from urllib3.util.retry import Retry
 
 import TimeFilterFastResponse_pb2  # type: ignore
 from traveltimepy.accept_type import AcceptType
@@ -33,9 +32,7 @@ class SyncBaseClient(BaseClient):
         app_id: Your TravelTime API application ID
         api_key: Your TravelTime API key
         timeout: Request timeout in seconds (default: 300)
-        retry_attempts: Number of retry attempts for failed requests (default: 3)
         max_rpm: Maximum requests per minute for rate limiting (default: 60)
-        session: Optional existing aiohttp ClientSession to use
         use_ssl: Whether to use SSL for connections (default: True)
         split_large_requests: Split large requests into smaller requests for performance (default: True)
         _host: API host (default: "api.traveltimeapp.com")
@@ -48,9 +45,7 @@ class SyncBaseClient(BaseClient):
         app_id: str,
         api_key: str,
         timeout: int = 300,
-        retry_attempts: int = 3,
         max_rpm: int = 60,
-        session: Optional[requests.Session] = None,
         use_ssl: bool = True,
         split_large_requests: bool = True,
         _host: str = "api.traveltimeapp.com",
@@ -62,7 +57,6 @@ class SyncBaseClient(BaseClient):
             app_id=app_id,
             api_key=api_key,
             timeout=timeout,
-            retry_attempts=retry_attempts,
             max_rpm=max_rpm,
             use_ssl=use_ssl,
             split_large_requests=split_large_requests,
@@ -71,10 +65,12 @@ class SyncBaseClient(BaseClient):
             _user_agent=_user_agent,
         )
 
-        if session:
-            self.session = session
-        else:
-            self.session = self._create_rate_limited_session(max_rpm)
+        self._session = self._create_rate_limited_session(max_rpm)
+
+    def close(self):
+        """Close the requests session if it exists."""
+        if self._session:
+            self._session.close()
 
     def _create_rate_limited_session(
         self,
@@ -87,17 +83,7 @@ class SyncBaseClient(BaseClient):
             per_host=True,
         )
 
-        retry_strategy = Retry(
-            total=self.retry_attempts,
-            backoff_factor=1,
-            status_forcelist=[
-                500,
-                503,
-                504,
-            ],  # Don't retry 429 - let rate limiter handle it
-        )
-
-        adapter = HTTPAdapter(max_retries=retry_strategy)
+        adapter = HTTPAdapter()
         session.mount("http://", adapter)
         session.mount("https://", adapter)
 
@@ -113,7 +99,7 @@ class SyncBaseClient(BaseClient):
         params: Optional[Dict[str, str]] = None,
         auth: Optional[HTTPBasicAuth] = None,
     ) -> T:
-        response = self.session.request(
+        response = self._session.request(
             method=method,
             url=url,
             headers=headers,
@@ -208,7 +194,7 @@ class SyncBaseClient(BaseClient):
         auth = HTTPBasicAuth(self.app_id, self.api_key)
         data = req.get_request().SerializeToString()
 
-        response = self.session.post(
+        response = self._session.post(
             url=url,
             headers=headers,
             data=data,
@@ -255,7 +241,3 @@ class SyncBaseClient(BaseClient):
             )
         else:
             return response_class.model_validate(json_data)
-
-    def close(self):
-        if hasattr(self, "session"):
-            self.session.close()
