@@ -72,6 +72,12 @@ class SyncBaseClient(BaseClient):
         if self._session:
             self._session.close()
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.close()
+
     def _create_rate_limited_session(
         self,
         per_minute: float = 0,

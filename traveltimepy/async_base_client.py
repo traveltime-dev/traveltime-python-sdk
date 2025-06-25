@@ -66,14 +66,21 @@ class AsyncBaseClient(BaseClient):
         """Close the aiohttp session if it exists."""
         if self._session and not self._session.closed:
             await self._session.close()
-            self._session = None
+
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb):
+        await self.close()
 
     async def _get_session(self) -> ClientSession:
-        if self._session is None or self._session.closed:
+        if self._session is None:
             self._session = aiohttp.ClientSession(
                 timeout=aiohttp.ClientTimeout(total=self.timeout),
                 connector=TCPConnector(ssl=self.use_ssl),
             )
+        elif self._session.closed:
+            raise RuntimeError("Session is closed")
         return self._session
 
     async def _make_request(
