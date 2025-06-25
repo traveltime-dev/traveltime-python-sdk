@@ -1,11 +1,16 @@
 from typing import Dict, List
 
 
-class TravelTimeClientError(Exception):
+class TravelTimeError(Exception):
     pass
 
 
-class TravelTimeApiError(TravelTimeClientError):
+class TravelTimeServerError(TravelTimeError):
+    def __init__(self, error: str):
+        super(TravelTimeServerError, self).__init__(error)
+
+
+class TravelTimeApiError(TravelTimeError):
     status_code: int
     error_code: str
     additional_info: Dict[str, List[str]]

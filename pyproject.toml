@@ -20,6 +20,7 @@ dependencies = [
 	"certifi>=2021.5.30",
 	"aiohttp",
 	"aiolimiter",
+	"tenacity",
 	"protobuf==4.25.8",
 	"types-protobuf",
 	"requests",

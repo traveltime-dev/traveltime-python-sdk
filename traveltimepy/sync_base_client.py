@@ -7,6 +7,12 @@ from pydantic import BaseModel
 from requests.adapters import HTTPAdapter
 from requests.auth import HTTPBasicAuth
 from requests_ratelimiter import LimiterSession
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_none,
+    retry_if_exception_type,
+)
 
 import TimeFilterFastResponse_pb2  # type: ignore
 from traveltimepy.accept_type import AcceptType
@@ -14,6 +20,7 @@ from traveltimepy.base_client import BaseClient, __version__
 from traveltimepy.errors import (
     TravelTimeJsonError,
     TravelTimeProtoError,
+    TravelTimeServerError,
 )
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.time_filter_proto import (
@@ -32,6 +39,7 @@ class SyncBaseClient(BaseClient):
         app_id: Your TravelTime API application ID
         api_key: Your TravelTime API key
         timeout: Request timeout in seconds (default: 300)
+        retry_attempts: Number of retry attempts for 5xx server errors (default: 3)
         max_rpm: Maximum requests per minute for rate limiting (default: 60)
         use_ssl: Whether to use SSL for connections (default: True)
         split_large_requests: Split large requests into smaller requests for performance (default: True)
@@ -45,6 +53,7 @@ class SyncBaseClient(BaseClient):
         app_id: str,
         api_key: str,
         timeout: int = 300,
+        retry_attempts: int = 3,
         max_rpm: int = 60,
         use_ssl: bool = True,
         split_large_requests: bool = True,
@@ -57,6 +66,7 @@ class SyncBaseClient(BaseClient):
             app_id=app_id,
             api_key=api_key,
             timeout=timeout,
+            retry_attempts=retry_attempts,
             max_rpm=max_rpm,
             use_ssl=use_ssl,
             split_large_requests=split_large_requests,
@@ -105,18 +115,25 @@ class SyncBaseClient(BaseClient):
         params: Optional[Dict[str, str]] = None,
         auth: Optional[HTTPBasicAuth] = None,
     ) -> T:
-        response = self._session.request(
-            method=method,
-            url=url,
-            headers=headers,
-            data=data,
-            params=params,
-            auth=auth,
-            timeout=self.timeout,
-            verify=self.use_ssl,
+        @retry(
+            retry=retry_if_exception_type(TravelTimeServerError),
+            stop=stop_after_attempt(self.retry_attempts),
+            wait=wait_none(),  # No wait between retries
         )
+        def _make_request_with_retry():
+            response = self._session.request(
+                method=method,
+                url=url,
+                headers=headers,
+                data=data,
+                params=params,
+                auth=auth,
+                timeout=self.timeout,
+                verify=self.use_ssl,
+            )
+            return self._handle_response(response, response_class)
 
-        return self._handle_response(response, response_class)
+        return _make_request_with_retry()
 
     def _api_call_post(
         self,
@@ -190,43 +207,54 @@ class SyncBaseClient(BaseClient):
     def _api_call_proto(
         self, req: TimeFilterFastProtoRequest
     ) -> TimeFilterProtoResponse:
-        if isinstance(req.transportation, ProtoTransportation):
-            transportation_mode = req.transportation.value.name
-        else:
-            transportation_mode = req.transportation.TYPE.value.name
-
-        url = f"https://{self._proto_host}/api/v2/{req.country.value}/time-filter/fast/{transportation_mode}"
-        headers = self._get_proto_headers()
-        auth = HTTPBasicAuth(self.app_id, self.api_key)
-        data = req.get_request().SerializeToString()
-
-        response = self._session.post(
-            url=url,
-            headers=headers,
-            data=data,
-            auth=auth,
-            timeout=self.timeout,
-            verify=self.use_ssl,
+        @retry(
+            retry=retry_if_exception_type(TravelTimeServerError),
+            stop=stop_after_attempt(self.retry_attempts),
+            wait=wait_none(),  # No wait between retries
         )
+        def _make_proto_request():
+            if isinstance(req.transportation, ProtoTransportation):
+                transportation_mode = req.transportation.value.name
+            else:
+                transportation_mode = req.transportation.TYPE.value.name
 
-        if response.status_code != 200:
-            raise TravelTimeProtoError(
-                status_code=response.status_code,
-                error_code=response.headers.get("X-ERROR-CODE", "Unknown"),
-                error_details=response.headers.get(
-                    "X-ERROR-DETAILS", "No details provided"
-                ),
-                error_message=response.headers.get(
-                    "X-ERROR-MESSAGE", "No message provided"
-                ),
+            url = f"https://{self._proto_host}/api/v2/{req.country.value}/time-filter/fast/{transportation_mode}"
+            headers = self._get_proto_headers()
+            auth = HTTPBasicAuth(self.app_id, self.api_key)
+            data = req.get_request().SerializeToString()
+
+            response = self._session.post(
+                url=url,
+                headers=headers,
+                data=data,
+                auth=auth,
+                timeout=self.timeout,
+                verify=self.use_ssl,
             )
-        else:
-            response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
-            response_body.ParseFromString(response.content)
-            return TimeFilterProtoResponse(
-                travel_times=response_body.properties.travelTimes[:],
-                distances=response_body.properties.distances[:],
-            )
+
+            if response.status_code != 200:
+                if response.status_code >= 500:
+                    raise TravelTimeServerError("Internal server error")
+                else:
+                    raise TravelTimeProtoError(
+                        status_code=response.status_code,
+                        error_code=response.headers.get("X-ERROR-CODE", "Unknown"),
+                        error_details=response.headers.get(
+                            "X-ERROR-DETAILS", "No details provided"
+                        ),
+                        error_message=response.headers.get(
+                            "X-ERROR-MESSAGE", "No message provided"
+                        ),
+                    )
+            else:
+                response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
+                response_body.ParseFromString(response.content)
+                return TimeFilterProtoResponse(
+                    travel_times=response_body.properties.travelTimes[:],
+                    distances=response_body.properties.distances[:],
+                )
+
+        return _make_proto_request()
 
     def _handle_response(
         self, response: requests.Response, response_class: Type[T]
@@ -238,12 +266,15 @@ class SyncBaseClient(BaseClient):
 
         if response.status_code != 200:
             error = ResponseError.model_validate_json(json.dumps(json_data))
-            raise TravelTimeJsonError(
-                status_code=response.status_code,
-                error_code=str(error.error_code),
-                description=error.description,
-                documentation_link=error.documentation_link,
-                additional_info=error.additional_info,
-            )
+            if response.status_code >= 500:
+                raise TravelTimeServerError(error.description)
+            else:
+                raise TravelTimeJsonError(
+                    status_code=response.status_code,
+                    error_code=str(error.error_code),
+                    description=error.description,
+                    documentation_link=error.documentation_link,
+                    additional_info=error.additional_info,
+                )
         else:
             return response_class.model_validate(json_data)
