@@ -76,7 +76,6 @@ class AsyncBaseClient(BaseClient):
             )
         return self._session
 
-
     async def _make_request(
         self,
         method: str,
