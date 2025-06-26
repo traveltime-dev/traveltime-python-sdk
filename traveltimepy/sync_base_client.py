@@ -117,7 +117,9 @@ class SyncBaseClient(BaseClient):
     ) -> T:
         @retry(
             retry=retry_if_exception_type(TravelTimeServerError),
-            stop=stop_after_attempt(self.retry_attempts),
+            stop=stop_after_attempt(
+                self.retry_attempts + 1
+            ),  # First attempt is not a retry, that's why `+1`
             wait=wait_none(),  # No wait between retries
         )
         def _make_request_with_retry():
@@ -209,7 +211,9 @@ class SyncBaseClient(BaseClient):
     ) -> TimeFilterProtoResponse:
         @retry(
             retry=retry_if_exception_type(TravelTimeServerError),
-            stop=stop_after_attempt(self.retry_attempts),
+            stop=stop_after_attempt(
+                self.retry_attempts + 1
+            ),  # First attempt is not a retry, that's why `+1`
             wait=wait_none(),  # No wait between retries
         )
         def _make_proto_request():

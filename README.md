@@ -84,7 +84,7 @@ try:
 except TravelTimeApiError as e:
     print(e)
 finally:
-    client.close()  # Optional: manually close session
+    client.close()  # Manually close session
 
 # Option 2: Context manager (automatic session cleanup)
 with Client(app_id="YOUR_APP_ID", api_key="YOUR_API_KEY") as client:
@@ -158,7 +158,7 @@ async def main():
     except TravelTimeApiError as e:
         print(e)
     finally:
-        await client.close()  # Optional: manually close session
+        await client.close()  # Manually close session
 
 # Option 2: Async context manager (automatic session cleanup)
 async def main_with_context():
@@ -297,7 +297,7 @@ client = Client(
 client = Client(
     app_id="YOUR_APP_ID", 
     api_key="YOUR_API_KEY",
-    retry_attempts=1  # No retries, fail immediately
+    retry_attempts=0  # No retries, fail immediately
 )
 ```
 
