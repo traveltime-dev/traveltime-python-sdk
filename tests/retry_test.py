@@ -20,83 +20,87 @@ class TestRetryLogic:
 
     @pytest.mark.asyncio
     async def test_async_server_error_retries(self):
-        client = AsyncClient("test", "test", retry_attempts=2)
-
-        with patch.object(
-            client, "_get_session", return_value=self._mock_async_session()
-        ):
+        async with AsyncClient("test", "test", retry_attempts=2) as client:
             with patch.object(
-                client,
-                "_handle_response",
-                side_effect=TravelTimeServerError("Server error"),
-            ) as mock_handle:
-                with pytest.raises(RetryError):
-                    await client._make_request("GET", "https://test.com", {}, Mock)
+                client, "_get_session", return_value=self._mock_async_session()
+            ):
+                with patch.object(
+                    client,
+                    "_handle_response",
+                    side_effect=TravelTimeServerError("Server error"),
+                ) as mock_handle:
+                    with pytest.raises(RetryError):
+                        await client._make_request("GET", "https://test.com", {}, Mock)
 
-                assert mock_handle.call_count == 3  # initial + 2 retries
+                    assert mock_handle.call_count == 3  # initial + 2 retries
 
     def test_sync_server_error_retries(self):
-        client = Client("test", "test", retry_attempts=2)
+        with Client("test", "test", retry_attempts=2) as client:
+            with patch.object(client._session, "request", return_value=Mock()):
+                with patch.object(
+                    client,
+                    "_handle_response",
+                    side_effect=TravelTimeServerError("Server error"),
+                ) as mock_handle:
+                    with pytest.raises(RetryError):
+                        client._make_request("GET", "https://test.com", {}, Mock)
 
-        with patch.object(client._session, "request", return_value=Mock()):
-            with patch.object(
-                client,
-                "_handle_response",
-                side_effect=TravelTimeServerError("Server error"),
-            ) as mock_handle:
-                with pytest.raises(RetryError):
-                    client._make_request("GET", "https://test.com", {}, Mock)
-
-                assert mock_handle.call_count == 3  # initial + 2 retries
+                    assert mock_handle.call_count == 3  # initial + 2 retries
 
     @pytest.mark.asyncio
     async def test_async_client_error_no_retry(self):
-        client = AsyncClient("test", "test", retry_attempts=3)
-        error = TravelTimeJsonError(400, "CLIENT_ERROR", "Bad request", "", {})
+        async with AsyncClient("test", "test", retry_attempts=3) as client:
+            error = TravelTimeJsonError(400, "CLIENT_ERROR", "Bad request", "", {})
 
-        with patch.object(client, "_make_request", side_effect=error) as mock_request:
-            with pytest.raises(TravelTimeJsonError):
-                await client._make_request("GET", "https://test.com", {}, Mock)
+            with patch.object(
+                client, "_make_request", side_effect=error
+            ) as mock_request:
+                with pytest.raises(TravelTimeJsonError):
+                    await client._make_request("GET", "https://test.com", {}, Mock)
 
-            assert mock_request.call_count == 1  # no retries for client errors
+                assert mock_request.call_count == 1  # no retries for client errors
 
     def test_sync_client_error_no_retry(self):
-        client = Client("test", "test", retry_attempts=3)
-        error = TravelTimeJsonError(400, "CLIENT_ERROR", "Bad request", "", {})
+        with Client("test", "test", retry_attempts=3) as client:
+            error = TravelTimeJsonError(400, "CLIENT_ERROR", "Bad request", "", {})
 
-        with patch.object(client, "_make_request", side_effect=error) as mock_request:
-            with pytest.raises(TravelTimeJsonError):
-                client._make_request("GET", "https://test.com", {}, Mock)
+            with patch.object(
+                client, "_make_request", side_effect=error
+            ) as mock_request:
+                with pytest.raises(TravelTimeJsonError):
+                    client._make_request("GET", "https://test.com", {}, Mock)
 
-            assert mock_request.call_count == 1  # no retries for client errors
+                assert mock_request.call_count == 1  # no retries for client errors
 
     @pytest.mark.asyncio
     async def test_async_server_error_no_retries_when_disabled(self):
-        client = AsyncClient("test", "test", retry_attempts=0)
-
-        with patch.object(
-            client, "_get_session", return_value=self._mock_async_session()
-        ):
+        async with AsyncClient("test", "test", retry_attempts=0) as client:
             with patch.object(
-                client,
-                "_handle_response",
-                side_effect=TravelTimeServerError("Server error"),
-            ) as mock_handle:
-                with pytest.raises(RetryError):
-                    await client._make_request("GET", "https://test.com", {}, Mock)
+                client, "_get_session", return_value=self._mock_async_session()
+            ):
+                with patch.object(
+                    client,
+                    "_handle_response",
+                    side_effect=TravelTimeServerError("Server error"),
+                ) as mock_handle:
+                    with pytest.raises(RetryError):
+                        await client._make_request("GET", "https://test.com", {}, Mock)
 
-                assert mock_handle.call_count == 1  # only initial attempt, no retries
+                    assert (
+                        mock_handle.call_count == 1
+                    )  # only initial attempt, no retries
 
     def test_sync_server_error_no_retries_when_disabled(self):
-        client = Client("test", "test", retry_attempts=0)
+        with Client("test", "test", retry_attempts=0) as client:
+            with patch.object(client._session, "request", return_value=Mock()):
+                with patch.object(
+                    client,
+                    "_handle_response",
+                    side_effect=TravelTimeServerError("Server error"),
+                ) as mock_handle:
+                    with pytest.raises(RetryError):
+                        client._make_request("GET", "https://test.com", {}, Mock)
 
-        with patch.object(client._session, "request", return_value=Mock()):
-            with patch.object(
-                client,
-                "_handle_response",
-                side_effect=TravelTimeServerError("Server error"),
-            ) as mock_handle:
-                with pytest.raises(RetryError):
-                    client._make_request("GET", "https://test.com", {}, Mock)
-
-                assert mock_handle.call_count == 1  # only initial attempt, no retries
+                    assert (
+                        mock_handle.call_count == 1
+                    )  # only initial attempt, no retries
