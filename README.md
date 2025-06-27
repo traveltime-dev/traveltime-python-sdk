@@ -19,7 +19,7 @@ The TravelTime Python SDK provides a simple and efficient way to access the [Tra
 
 ## Requirements
 
-- Python 3.8 or higher
+- Python 3.9 or higher
 
 To check your Python version:
 ```bash
