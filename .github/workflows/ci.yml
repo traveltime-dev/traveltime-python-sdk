@@ -7,7 +7,6 @@ on:
   push:
     branches: [master]
   pull_request:
-    branches: [master, new_sdk_version]
 
 jobs:
   build:
@@ -17,11 +16,11 @@ jobs:
       max-parallel: 1
       matrix:
         python-version:
-          - "3.8"
           - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -37,7 +36,7 @@ jobs:
           pip install -e ".[test]"
       - name: Lint with flake8
         run: |
-          flake8 --max-line-length=127
+          flake8 --max-line-length=127 --ignore=E203
       - name: Formatting check with black
         run: |
           black . --check --diff
