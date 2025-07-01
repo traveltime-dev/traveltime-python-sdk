@@ -95,10 +95,10 @@ def main():
                 total_walking_time += walking_time
 
                 print(
-                    f"  {landmarks[i]} → {landmarks[i+1]}: {walking_minutes} min walk"
+                    f"  {landmarks[i]} → {landmarks[i + 1]}: {walking_minutes} min walk"
                 )
             else:
-                print(f"  {landmarks[i]} → {landmarks[i+1]}: Route not found")
+                print(f"  {landmarks[i]} → {landmarks[i + 1]}: Route not found")
 
         # Calculate total tour time
         stop_time = 30 * len(locations)  # 30 min at each landmark
