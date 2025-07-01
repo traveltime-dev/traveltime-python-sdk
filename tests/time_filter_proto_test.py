@@ -14,7 +14,7 @@ from traveltimepy.requests.time_filter_proto import (
 
 @pytest.mark.asyncio
 async def test_one_to_many(async_client: AsyncClient):
-    response = await async_client.time_filter_proto(
+    response = await async_client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -31,7 +31,7 @@ async def test_one_to_many(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_many_to_one(async_client: AsyncClient):
-    response = await async_client.time_filter_proto(
+    response = await async_client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -48,7 +48,7 @@ async def test_many_to_one(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_one_to_many_with_distances(async_client: AsyncClient):
-    response = await async_client.time_filter_proto(
+    response = await async_client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -65,7 +65,7 @@ async def test_one_to_many_with_distances(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_many_to_one_with_distances(async_client: AsyncClient):
-    response = await async_client.time_filter_proto(
+    response = await async_client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -82,7 +82,7 @@ async def test_many_to_one_with_distances(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_one_to_many_pt_with_params(async_client: AsyncClient):
-    response = await async_client.time_filter_proto(
+    response = await async_client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -99,7 +99,7 @@ async def test_one_to_many_pt_with_params(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_many_to_one_pt_with_params(async_client: AsyncClient):
-    response = await async_client.time_filter_proto(
+    response = await async_client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -116,7 +116,7 @@ async def test_many_to_one_pt_with_params(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_one_to_many_driving_and_pt_with_params(async_client: AsyncClient):
-    response = await async_client.time_filter_proto(
+    response = await async_client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -135,7 +135,7 @@ async def test_one_to_many_driving_and_pt_with_params(async_client: AsyncClient)
 
 @pytest.mark.asyncio
 async def test_many_to_one_driving_and_pt_with_params(async_client: AsyncClient):
-    response = await async_client.time_filter_proto(
+    response = await async_client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -153,7 +153,7 @@ async def test_many_to_one_driving_and_pt_with_params(async_client: AsyncClient)
 
 
 def test_one_to_many_sync(client: Client):
-    response = client.time_filter_proto(
+    response = client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),
@@ -169,7 +169,7 @@ def test_one_to_many_sync(client: Client):
 
 
 def test_many_to_one_sync(client: Client):
-    response = client.time_filter_proto(
+    response = client.time_filter_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         destination_coordinates=[
             Coordinates(lat=51.348605, lng=-0.314783),

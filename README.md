@@ -301,6 +301,11 @@ client = Client(
 )
 ```
 
+## Examples
+
+The `examples/` directory contains practical examples.
+See [examples/README.md](examples/README.md) for setup instructions and detailed descriptions.
+
 ## Performance Tips
 
 - Use `*_fast()` methods for high-volume use cases
