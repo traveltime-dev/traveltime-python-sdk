@@ -25,7 +25,7 @@ async def main():
         print(
             "Error: Please set TRAVELTIME_APP_ID and TRAVELTIME_API_KEY environment variables"
         )
-        return
+        exit(1)
 
     origin = Coordinates(lat=51.4107, lng=-0.1554)
 

@@ -24,7 +24,7 @@ def main():
         print(
             "Error: Please set TRAVELTIME_APP_ID and TRAVELTIME_API_KEY environment variables"
         )
-        return
+        exit(1)
 
     # London landmarks for walking tour
     landmarks = [
