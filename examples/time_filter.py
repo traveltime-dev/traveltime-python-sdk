@@ -17,12 +17,12 @@ from traveltimepy.requests.transportation import PublicTransport
 
 
 async def main():
+    app_id = os.environ.get("TRAVELTIME_APP_ID")
     api_key = os.environ.get("TRAVELTIME_API_KEY")
-    api_secret = os.environ.get("TRAVELTIME_API_SECRET")
 
-    if not api_key or not api_secret:
+    if not app_id or not api_key:
         print(
-            "Error: Please set TRAVELTIME_API_KEY and TRAVELTIME_API_SECRET environment variables"
+            "Error: Please set TRAVELTIME_APP_ID and TRAVELTIME_API_KEY environment variables"
         )
         return
 
@@ -48,7 +48,7 @@ async def main():
 
     departure_time = datetime.now().replace(hour=8, minute=0, second=0, microsecond=0)
 
-    async with AsyncClient(api_key, api_secret) as client:
+    async with AsyncClient(app_id, api_key) as client:
         # Create concurrent searches for each area
         tasks = []
         for i, area in enumerate(areas):

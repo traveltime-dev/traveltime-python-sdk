@@ -17,12 +17,12 @@ from traveltimepy.requests.transportation import Walking
 
 
 def main():
+    app_id = os.environ.get("TRAVELTIME_APP_ID")
     api_key = os.environ.get("TRAVELTIME_API_KEY")
-    api_secret = os.environ.get("TRAVELTIME_API_SECRET")
 
-    if not api_key or not api_secret:
+    if not app_id or not api_key:
         print(
-            "Error: Please set TRAVELTIME_API_KEY and TRAVELTIME_API_SECRET environment variables"
+            "Error: Please set TRAVELTIME_APP_ID and TRAVELTIME_API_KEY environment variables"
         )
         return
 
@@ -35,7 +35,7 @@ def main():
         "Buckingham Palace, London",
     ]
 
-    with Client(api_key, api_secret) as client:
+    with Client(app_id, api_key) as client:
 
         print("London Walking Tour Planner")
         print("Geocoding landmarks...")

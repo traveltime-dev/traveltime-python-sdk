@@ -18,12 +18,12 @@ from traveltimepy.requests.time_filter_proto import (
 
 
 async def main():
+    app_id = os.environ.get("TRAVELTIME_APP_ID")
     api_key = os.environ.get("TRAVELTIME_API_KEY")
-    api_secret = os.environ.get("TRAVELTIME_API_SECRET")
 
-    if not api_key or not api_secret:
+    if not app_id or not api_key:
         print(
-            "Error: Please set TRAVELTIME_API_KEY and TRAVELTIME_API_SECRET environment variables"
+            "Error: Please set TRAVELTIME_APP_ID and TRAVELTIME_API_KEY environment variables"
         )
         return
 
@@ -38,7 +38,7 @@ async def main():
             Coordinates(lat=origin.lat + lat_offset, lng=origin.lng + lng_offset)
         )
 
-    async with AsyncClient(api_key, api_secret) as client:
+    async with AsyncClient(app_id, api_key) as client:
         # Find travel times using Proto API for maximum performance
         response = await client.time_filter_fast_proto(
             origin_coordinate=origin,

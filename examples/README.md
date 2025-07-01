@@ -13,8 +13,8 @@ Before running the examples, you need to:
 
 2. Set your API credentials as environment variables:
    ```bash
+   export TRAVELTIME_APP_ID="your_app_id"
    export TRAVELTIME_API_KEY="your_api_key"
-   export TRAVELTIME_API_SECRET="your_api_secret"
    ```
    Get your API credentials from [TravelTime API Dashboard](https://docs.traveltime.com/api/overview/getting-keys)
 
