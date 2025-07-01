@@ -11,10 +11,10 @@ from traveltimepy.requests.transportation import Driving
 
 @pytest.mark.asyncio
 async def test_unauthorized():
-    invalid_client = AsyncClient("invalid", "invalid")
-    with pytest.raises(TravelTimeApiError) as e:
-        await invalid_client.map_info()
-    assert e.value.status_code == 401
+    async with AsyncClient("invalid", "invalid") as client:
+        with pytest.raises(TravelTimeApiError) as e:
+            await client.map_info()
+        assert e.value.status_code == 401
 
 
 @pytest.mark.asyncio
