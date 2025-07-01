@@ -171,7 +171,7 @@ class Client(SyncBaseClient):
             ),
         )
 
-    def time_filter_proto(
+    def time_filter_fast_proto(
         self,
         origin_coordinate: Coordinates,
         destination_coordinates: List[Coordinates],

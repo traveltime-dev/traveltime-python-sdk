@@ -175,7 +175,7 @@ class AsyncClient(AsyncBaseClient):
             ),
         )
 
-    async def time_filter_proto(
+    async def time_filter_fast_proto(
         self,
         origin_coordinate: Coordinates,
         destination_coordinates: List[Coordinates],
