@@ -56,7 +56,7 @@ class SimpleNumericLevelOfDetail(BaseModel):
     level: int = Field(ge=-20, le=2)
 
     def get_type_name(self) -> str:
-        return "numeric"
+        return "simple_numeric"
 
 
 class CoarseGridLevelOfDetail(BaseModel):
@@ -86,7 +86,7 @@ class CoarseGridLevelOfDetail(BaseModel):
     square_size: int = Field(ge=600)
 
     def get_type_name(self) -> str:
-        return "grid"
+        return "coarse_grid"
 
 
 class LevelOfDetail(BaseModel):
