@@ -60,7 +60,6 @@ class SyncBaseClient(BaseClient):
         _host: str = "api.traveltimeapp.com",
         _proto_host: str = "proto.api.traveltimeapp.com",
         _user_agent: str = f"Travel Time Python SDK {__version__}",
-        _split_size: int = 10,  # Splits requests to improve performance
     ):
         super().__init__(
             app_id=app_id,
