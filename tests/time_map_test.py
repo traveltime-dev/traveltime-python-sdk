@@ -6,6 +6,8 @@ from traveltimepy.client import Client
 from traveltimepy.requests.common import Coordinates, Range
 from traveltimepy.requests.level_of_detail import (
     SimpleLevelOfDetail,
+    SimpleNumericLevelOfDetail,
+    CoarseGridLevelOfDetail,
     Level,
     LevelOfDetail,
 )
@@ -346,6 +348,52 @@ async def test_intersection_departures(async_client: AsyncClient):
         ],
     )
     assert len(response.results[0].shapes) > 0
+
+
+@pytest.mark.asyncio
+async def test_departures_simple_numeric_level_of_detail(async_client: AsyncClient):
+    response = await async_client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            TimeMapDepartureSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                departure_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving(),
+                range=Range(enabled=True, width=1800),
+                level_of_detail=LevelOfDetail(
+                    scale_type=SimpleNumericLevelOfDetail(level=-5)
+                ),
+            ),
+        ],
+        unions=[],
+        intersections=[],
+    )
+    assert len(response.results) == 1
+
+
+@pytest.mark.asyncio
+async def test_departures_coarse_grid_level_of_detail(async_client: AsyncClient):
+    response = await async_client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            TimeMapDepartureSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                departure_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving(),
+                range=Range(enabled=True, width=1800),
+                level_of_detail=LevelOfDetail(
+                    scale_type=CoarseGridLevelOfDetail(square_size=1000)
+                ),
+            ),
+        ],
+        unions=[],
+        intersections=[],
+    )
+    assert len(response.results) == 1
 
 
 def test_departures_sync(client: Client):
