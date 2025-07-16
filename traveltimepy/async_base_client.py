@@ -182,7 +182,7 @@ class AsyncBaseClient(BaseClient):
                     transportation_mode = req.transportation.TYPE.value.name
 
                 async with session.post(
-                    url=f"https://{self._proto_host}/api/v2/{req.country.value}/time-filter/fast/{transportation_mode}",
+                    url=f"https://{self._proto_host}/api/v3/{req.country.value}/time-filter/fast/{transportation_mode}",
                     headers=self._get_proto_headers(),
                     data=req.get_request().SerializeToString(),
                     auth=BasicAuth(self.app_id, self.api_key),
