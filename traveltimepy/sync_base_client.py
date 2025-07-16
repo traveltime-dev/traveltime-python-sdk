@@ -221,7 +221,7 @@ class SyncBaseClient(BaseClient):
             else:
                 transportation_mode = req.transportation.TYPE.value.name
 
-            url = f"https://{self._proto_host}/api/v2/{req.country.value}/time-filter/fast/{transportation_mode}"
+            url = f"https://{self._proto_host}/api/v3/{req.country.value}/time-filter/fast/{transportation_mode}"
             headers = self._get_proto_headers()
             auth = HTTPBasicAuth(self.app_id, self.api_key)
             data = req.get_request().SerializeToString()
