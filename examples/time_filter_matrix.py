@@ -9,7 +9,7 @@ between all pairs of locations for route optimization.
 Example output:
 Travel Time Matrix (in seconds):
 [[   0 1204 1856]   # From London center to all locations
- [1150    0 2134]   # From Hyde Park to all locations  
+ [1150    0 2134]   # From Hyde Park to all locations
  [1789 2067    0]]  # From ZSL London Zoo to all locations
 
 The diagonal is always 0 (travel time from a location to itself).
@@ -37,17 +37,17 @@ def define_locations():
 
 def create_departure_searches(locations, properties=None):
     """Create departure searches for each location.
-    
+
     Args:
         locations: List of Location objects to search from
         properties: List of Property objects to request (defaults to [Property.TRAVEL_TIME])
-    
+
     Returns:
         List of TimeFilterDepartureSearch objects
     """
     if properties is None:
         properties = [Property.TRAVEL_TIME]
-        
+
     location_ids = [loc.id for loc in locations]
     return [
         TimeFilterDepartureSearch(
@@ -65,28 +65,28 @@ def create_departure_searches(locations, properties=None):
 
 def build_matrix(results, locations, property_type=Property.TRAVEL_TIME):
     """Build a matrix from the API results for the specified property.
-    
+
     Creates a symmetric matrix showing the requested property (travel time or distance)
     between all pairs of locations. The diagonal is filled with zeros since the
     travel time/distance from a location to itself is zero.
-    
+
     Args:
         results: TimeFilterResponse object containing the API results
         locations: List of Location objects used in the search
         property_type: Property enum value specifying which property to extract:
             - Property.TRAVEL_TIME: Extract travel time in seconds (default)
             - Property.DISTANCE: Extract distance in meters
-            
+
     Returns:
         numpy.ndarray: A symmetric matrix where matrix[i][j] represents the
                       requested property from location i to location j.
                       Unreachable destinations are marked with -1.
                       Diagonal elements are 0 (same location).
-                      
+
     Example:
         For 3 locations with travel times:
         [[   0, 1200, 1800],  # From location 0 to all locations
-         [1150,    0, 2100],  # From location 1 to all locations  
+         [1150,    0, 2100],  # From location 1 to all locations
          [1750, 2050,    0]]  # From location 2 to all locations
     """
     # Create a list of all location IDs for easy index lookup later
