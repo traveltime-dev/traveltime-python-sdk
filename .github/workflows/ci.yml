@@ -33,7 +33,7 @@ jobs:
       - name: Install Package with dependencies
         run: |
           pip install -U setuptools
-          pip install -e ".[test]"
+          pip install -e ".[test,proto]"
       - name: Lint with flake8
         run: |
           flake8 --max-line-length=127 --ignore=E203
