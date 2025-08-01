@@ -21,8 +21,6 @@ dependencies = [
 	"aiohttp",
 	"aiolimiter",
 	"tenacity",
-	"protobuf==4.25.8",
-	"types-protobuf",
 	"requests",
 	"requests-ratelimiter",
 ]
@@ -37,6 +35,10 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
+proto = [
+	"protobuf==4.25.8",
+	"types-protobuf",
+]
 test = [
 	"pytest",
 	"pytest-asyncio",
