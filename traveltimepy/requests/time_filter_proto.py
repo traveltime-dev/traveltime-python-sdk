@@ -3,8 +3,15 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import ClassVar, Optional, List, Union
 
-import RequestsCommon_pb2  # type: ignore
-import TimeFilterFastRequest_pb2  # type: ignore
+try:
+    import RequestsCommon_pb2  # type: ignore
+    import TimeFilterFastRequest_pb2  # type: ignore
+    PROTOBUF_AVAILABLE = True
+except ImportError:
+    PROTOBUF_AVAILABLE = False
+    RequestsCommon_pb2 = None  # type: ignore
+    TimeFilterFastRequest_pb2 = None  # type: ignore
+
 from traveltimepy.requests.common import Coordinates
 
 
@@ -136,7 +143,12 @@ class TimeFilterFastProtoRequest:
         self.country = country
         self.withDistance = with_distance
 
-    def get_request(self) -> TimeFilterFastRequest_pb2.TimeFilterFastRequest:  # type: ignore
+    def get_request(self) -> "TimeFilterFastRequest_pb2.TimeFilterFastRequest":  # type: ignore
+        if not PROTOBUF_AVAILABLE:
+            raise ImportError(
+                "protobuf is required for TimeFilterFastProtoRequest. "
+                "Install it with: pip install 'traveltimepy[proto]'"
+            )
         request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()  # type: ignore
 
         if self.requestType.ONE_TO_MANY:

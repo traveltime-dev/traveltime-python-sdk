@@ -13,7 +13,12 @@ from tenacity import (
     retry_if_exception_type,
 )
 
-import TimeFilterFastResponse_pb2  # type: ignore
+try:
+    import TimeFilterFastResponse_pb2  # type: ignore
+    PROTOBUF_AVAILABLE = True
+except ImportError:
+    PROTOBUF_AVAILABLE = False
+    TimeFilterFastResponse_pb2 = None  # type: ignore
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import BaseClient, __version__
 from traveltimepy.errors import (
@@ -166,6 +171,12 @@ class AsyncBaseClient(BaseClient):
     async def _api_call_proto(
         self, req: TimeFilterFastProtoRequest
     ) -> TimeFilterProtoResponse:
+        if not PROTOBUF_AVAILABLE:
+            raise ImportError(
+                "protobuf is required for proto API calls. "
+                "Install it with: pip install 'traveltimepy[proto]'"
+            )
+
         @retry(
             retry=retry_if_exception_type(TravelTimeServerError),
             stop=stop_after_attempt(

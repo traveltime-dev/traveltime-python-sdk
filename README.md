@@ -34,6 +34,14 @@ Install the TravelTime Python SDK using pip:
 pip install traveltimepy
 ```
 
+### Optional Dependencies
+
+For protocol buffer (protobuf) support (required for TimeFilterFastProto endpoints):
+
+```bash
+pip install 'traveltimepy[proto]'
+```
+
 ## Getting Started
 
 ### Authentication
@@ -201,7 +209,7 @@ The SDK provides both synchronous (`Client`) and asynchronous (`AsyncClient`) ve
 
 - [`time_filter()`](https://docs.traveltime.com/api/reference/travel-time-distance-matrix) - Calculate travel times between locations
 - [`time_filter_fast()`](https://docs.traveltime.com/api/reference/time-filter-fast) - High-performance version for large datasets
-- [`time_filter_proto()`](https://docs.traveltime.com/api/start/travel-time-distance-matrix-proto) - Ultra-fast protocol buffer implementation
+- [`time_filter_proto()`](https://docs.traveltime.com/api/start/travel-time-distance-matrix-proto) - Ultra-fast protocol buffer implementation (requires `pip install 'traveltimepy[proto]'`)
 
 ### Isochrone Generation
 
@@ -309,7 +317,7 @@ See [examples/README.md](examples/README.md) for setup instructions and detailed
 ## Performance Tips
 
 - Use `*_fast()` methods for high-volume use cases
-- Use `time_filter_proto()` for maximum performance with large datasets
+- Use `time_filter_proto()` for maximum performance with large datasets (install with `pip install 'traveltimepy[proto]'`)
 - Use async methods for I/O-bound applications
 
 ## Documentation
