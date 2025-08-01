@@ -6,6 +6,7 @@ from typing import ClassVar, Optional, List, Union
 try:
     import RequestsCommon_pb2  # type: ignore
     import TimeFilterFastRequest_pb2  # type: ignore
+
     PROTOBUF_AVAILABLE = True
 except ImportError:
     PROTOBUF_AVAILABLE = False

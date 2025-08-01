@@ -16,6 +16,7 @@ from tenacity import (
 
 try:
     import TimeFilterFastResponse_pb2  # type: ignore
+
     PROTOBUF_AVAILABLE = True
 except ImportError:
     PROTOBUF_AVAILABLE = False
