@@ -159,11 +159,13 @@ def main():
     )
 
     # Or you can specify custom points of interests instead. Uncomment the lines below if you wish to do so.
-    # locations = [
-    # Location(id="London center", coords=Coordinates(lat=51.508930, lng=-0.131387)),
-    # Location(id="Hyde Park", coords=Coordinates(lat=51.508824, lng=-0.167093)),
-    # Location(id="ZSL London Zoo", coords=Coordinates(lat=51.536067, lng=-0.153596)),
-    # ]
+    """
+    locations = [
+        Location(id="London center", coords=Coordinates(lat=51.508930, lng=-0.131387)),
+        Location(id="Hyde Park", coords=Coordinates(lat=51.508824, lng=-0.167093)),
+        Location(id="ZSL London Zoo", coords=Coordinates(lat=51.536067, lng=-0.153596)),
+    ]
+    """
 
     matrix_property = Property.TRAVEL_TIME
     departure_searches = create_departure_searches(locations, [matrix_property])
