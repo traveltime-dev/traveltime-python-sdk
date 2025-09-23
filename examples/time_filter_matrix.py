@@ -57,6 +57,15 @@ def generate_input_locations(
     ]
 
 
+def define_locations():
+    """Define custom tourist attractions to analyze."""
+    return [
+        Location(id="London center", coords=Coordinates(lat=51.508930, lng=-0.131387)),
+        Location(id="Hyde Park", coords=Coordinates(lat=51.508824, lng=-0.167093)),
+        Location(id="ZSL London Zoo", coords=Coordinates(lat=51.536067, lng=-0.153596)),
+    ]
+
+
 def create_departure_searches(locations, properties=None):
     """Create departure searches for each location.
 
@@ -158,14 +167,8 @@ def main():
         lat=51.507609, lng=-0.128315, radius=0.05, amount=MATRIX_SIZE
     )
 
-    # Or you can specify custom points of interests instead. Uncomment the lines below if you wish to do so.
-    """
-    locations = [
-        Location(id="London center", coords=Coordinates(lat=51.508930, lng=-0.131387)),
-        Location(id="Hyde Park", coords=Coordinates(lat=51.508824, lng=-0.167093)),
-        Location(id="ZSL London Zoo", coords=Coordinates(lat=51.536067, lng=-0.153596)),
-    ]
-    """
+    # Or you can specify custom points of interests instead. Uncomment the line below if you wish to do so.
+    # locations = define_locations()
 
     matrix_property = Property.TRAVEL_TIME
     departure_searches = create_departure_searches(locations, [matrix_property])
