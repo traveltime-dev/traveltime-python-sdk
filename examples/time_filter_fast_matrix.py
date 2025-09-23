@@ -36,7 +36,7 @@ from traveltimepy.requests.transportation import TransportationFast
 import numpy as np
 
 
-def generate_input_locations(
+def generate_locations(
     lat: float, lng: float, radius: float, amount: int
 ) -> List[Location]:
     """Generate a list of random locations around a given point.
@@ -171,7 +171,7 @@ def main():
 
     """Generate a specified amount of random locations around a point."""
     MATRIX_SIZE = 3
-    locations = generate_input_locations(
+    locations = generate_locations(
         lat=51.507609, lng=-0.128315, radius=0.05, amount=MATRIX_SIZE
     )
 
