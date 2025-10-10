@@ -13,7 +13,7 @@ from traveltimepy.requests.level_of_detail import LevelOfDetail
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
-from traveltimepy.requests.time_filter_fast import TransportationFast
+from traveltimepy.requests.transportation import TransportationFast, FastTrafficModel
 
 
 class TimeMapFastSearch(BaseModel):
@@ -31,6 +31,7 @@ class TimeMapFastSearch(BaseModel):
         snapping: Optional road network lookup settings
         polygons_filter: Optional filtering for polygon complexity
         render_mode: Optional rendering mode for polygon output
+        traffic_model: Traffic model for driving journeys (peak/off_peak)
     """
 
     id: str
@@ -42,6 +43,7 @@ class TimeMapFastSearch(BaseModel):
     snapping: Optional[Snapping] = None
     polygons_filter: Optional[PolygonsFilter] = None
     render_mode: Optional[RenderMode] = None
+    traffic_model: FastTrafficModel = FastTrafficModel.PEAK
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
     @field_serializer("transportation")

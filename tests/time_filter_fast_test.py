@@ -7,6 +7,7 @@ from traveltimepy.requests.time_filter_fast import (
     TimeFilterFastArrivalSearches,
     TimeFilterFastOneToMany,
     TimeFilterFastManyToOne,
+    FastTrafficModel,
 )
 from traveltimepy.requests.transportation import TransportationFast
 
@@ -120,6 +121,96 @@ def test_many_to_one_sync(client: Client, locations):
                     transportation=TransportationFast.PUBLIC_TRANSPORT,
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
+                ),
+            ],
+            one_to_many=[],
+        ),
+    )
+
+    assert len(response.results) > 0
+
+
+@pytest.mark.asyncio
+async def test_one_to_many_with_traffic_model(async_client: AsyncClient, locations):
+    response = await async_client.time_filter_fast(
+        locations=locations,
+        arrival_searches=TimeFilterFastArrivalSearches(
+            one_to_many=[
+                TimeFilterFastOneToMany(
+                    id="London center",
+                    departure_location_id="London center",
+                    arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                    transportation=TransportationFast.DRIVING,
+                    travel_time=1800,
+                    properties=[Property.TRAVEL_TIME],
+                    traffic_model=FastTrafficModel.PEAK,
+                ),
+            ],
+            many_to_one=[],
+        ),
+    )
+
+    assert len(response.results) > 0
+
+
+@pytest.mark.asyncio
+async def test_many_to_one_with_traffic_model(async_client: AsyncClient, locations):
+    response = await async_client.time_filter_fast(
+        locations=locations,
+        arrival_searches=TimeFilterFastArrivalSearches(
+            many_to_one=[
+                TimeFilterFastManyToOne(
+                    id="London center",
+                    arrival_location_id="London center",
+                    departure_location_ids=["Hyde Park", "ZSL London Zoo"],
+                    transportation=TransportationFast.DRIVING,
+                    travel_time=1800,
+                    properties=[Property.TRAVEL_TIME],
+                    traffic_model=FastTrafficModel.OFF_PEAK,
+                ),
+            ],
+            one_to_many=[],
+        ),
+    )
+
+    assert len(response.results) > 0
+
+
+def test_one_to_many_with_traffic_model_sync(client: Client, locations):
+    response = client.time_filter_fast(
+        locations=locations,
+        arrival_searches=TimeFilterFastArrivalSearches(
+            one_to_many=[
+                TimeFilterFastOneToMany(
+                    id="London center",
+                    departure_location_id="London center",
+                    arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                    transportation=TransportationFast.DRIVING,
+                    travel_time=1800,
+                    properties=[Property.TRAVEL_TIME],
+                    traffic_model=FastTrafficModel.PEAK,
+                ),
+            ],
+            many_to_one=[],
+        ),
+    )
+
+    assert len(response.results) > 0
+
+
+def test_many_to_one_with_traffic_model_sync(client: Client, locations):
+    response = client.time_filter_fast(
+        locations=locations,
+        arrival_searches=TimeFilterFastArrivalSearches(
+            many_to_one=[
+                TimeFilterFastManyToOne(
+                    id="London center",
+                    arrival_location_id="London center",
+                    departure_location_ids=["Hyde Park", "ZSL London Zoo"],
+                    transportation=TransportationFast.DRIVING,
+                    travel_time=1800,
+                    properties=[Property.TRAVEL_TIME],
+                    traffic_model=FastTrafficModel.OFF_PEAK,
                 ),
             ],
             one_to_many=[],
