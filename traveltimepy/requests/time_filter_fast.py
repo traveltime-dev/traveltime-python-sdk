@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from pydantic import BaseModel, field_serializer
 
-from traveltimepy.requests.transportation import TransportationFast
+from traveltimepy.requests.transportation import TransportationFast, FastTrafficModel
 from traveltimepy.requests.common import Location, Property, Snapping, ArrivalTimePeriod
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.time_filter_fast import TimeFilterFastResponse
@@ -25,6 +25,7 @@ class TimeFilterFastOneToMany(BaseModel):
         properties: Data to return (travel_time, distance, fares)
         arrival_time_period: Time period instead of specific time
         snapping: Optional road network lookup settings
+        traffic_model: Traffic model for driving journeys (peak/off_peak)
     """
 
     id: str
@@ -35,6 +36,7 @@ class TimeFilterFastOneToMany(BaseModel):
     properties: List[Property]
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
+    traffic_model: FastTrafficModel = FastTrafficModel.PEAK
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
     @field_serializer("transportation")
@@ -58,6 +60,7 @@ class TimeFilterFastManyToOne(BaseModel):
         properties: Data to return (travel_time, distance, fares)
         arrival_time_period: Time period instead of specific time
         snapping: Optional road network lookup settings
+        traffic_model: Traffic model for driving journeys (peak/off_peak)
     """
 
     id: str
@@ -68,6 +71,7 @@ class TimeFilterFastManyToOne(BaseModel):
     properties: List[Property]
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
+    traffic_model: FastTrafficModel = FastTrafficModel.PEAK
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
     @field_serializer("transportation")

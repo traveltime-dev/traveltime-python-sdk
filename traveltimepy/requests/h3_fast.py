@@ -13,7 +13,7 @@ from traveltimepy.requests.common import (
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.h3 import H3Response
 from traveltimepy.itertools import split, flatten
-from traveltimepy.requests.transportation import TransportationFast
+from traveltimepy.requests.transportation import TransportationFast, FastTrafficModel
 
 
 class H3FastSearch(BaseModel):
@@ -27,6 +27,7 @@ class H3FastSearch(BaseModel):
         travel_time: Maximum journey time in seconds (max 10800s)
         arrival_time_period: Time period for the search
         snapping: Optional settings for adjusting road network lookup behavior
+        traffic_model: Traffic model for driving journeys (peak/off_peak)
     """
 
     id: str
@@ -35,6 +36,7 @@ class H3FastSearch(BaseModel):
     travel_time: int
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
+    traffic_model: FastTrafficModel = FastTrafficModel.PEAK
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
     @field_serializer("transportation")

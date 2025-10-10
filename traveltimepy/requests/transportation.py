@@ -77,3 +77,16 @@ class TransportationFast(str, Enum):
     CYCLING_FERRY = "cycling+ferry"
     DRIVING_FERRY = "driving+ferry"
     DRIVING_PUBLIC_TRANSPORT = "driving+public_transport"
+
+
+class FastTrafficModel(str, Enum):
+    """
+    Only applicable with driving and driving+ferry transportation types.
+
+    Attributes:
+        PEAK: Represents typical traffic conditions for a midweek morning (default)
+        OFF_PEAK: Represents typical traffic conditions at nighttime
+    """
+
+    PEAK = "peak"
+    OFF_PEAK = "off_peak"
