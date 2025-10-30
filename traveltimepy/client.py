@@ -544,7 +544,7 @@ class Client(SyncBaseClient):
             arrival_searches: Arrival-based searches with specific arrival times
             departure_searches: Departure-based searches with specific departure times
             properties: Statistical properties to calculate ('min', 'max', 'mean')
-            resolution: H3 resolution level (1-9, higher = more granular cells)
+            resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time`)
             unions: Union operations combining multiple search results
             intersections: Intersection operations finding overlapping areas
 
@@ -581,7 +581,7 @@ class Client(SyncBaseClient):
             arrival_searches: Search configurations with arrival points and transportation methods.
                               Max 10 searches per request.
             properties: Statistical properties to calculate ('min', 'max', 'mean').
-            resolution: H3 resolution level (1-9). Higher = more granular cells.
+            resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time`).
 
         Returns:
             H3Response: Travel time statistics for H3 cells in catchment areas.
@@ -622,8 +622,8 @@ class Client(SyncBaseClient):
             properties: List of travel time properties to calculate for each cell.
                        Options include minimum, maximum, and mean travel times.
 
-            resolution: Geohash resolution of results to be returned.
-                       Valid range: 1-6, where higher values provide more precise areas.
+            resolution: Geohash resolution of results to be returned
+                       (higher = more granular cells, allowed values differ based on `travel_time`).
 
             unions: List of union operations combining multiple searches to show
                    total coverage across multiple access points.
@@ -667,8 +667,8 @@ class Client(SyncBaseClient):
             properties: List of travel time properties to calculate for each cell.
                        Options include minimum, maximum, and mean travel times.
 
-            resolution: Geohash resolution of results to be returned.
-                       Valid range: 1-6, where higher values provide more precise areas.
+            resolution: Geohash resolution of results to be returned
+                       (higher = more granular cells, allowed values differ based on `travel_time`).
 
         Returns:
             GeoHashResponse containing travel time statistics for each geohash cell
