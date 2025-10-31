@@ -69,7 +69,7 @@ class GeoHashFastRequest(TravelTimeRequest[GeoHashResponse]):
     Uses time periods instead of specific times and supports fewer transportation options.
 
     Attributes:
-        resolution: Geohash resolution of results (higher = more granular cells, allowed values differ based on `travel_time`).
+        resolution: Geohash resolution of results. Valid range: 1-6.
         properties: Properties to return for each cell. Options: min, max, mean travel times.
         arrival_searches: Arrival-based search configurations for fast geohash processing.
 

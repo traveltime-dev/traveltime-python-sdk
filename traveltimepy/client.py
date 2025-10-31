@@ -622,8 +622,8 @@ class Client(SyncBaseClient):
             properties: List of travel time properties to calculate for each cell.
                        Options include minimum, maximum, and mean travel times.
 
-            resolution: Geohash resolution of results to be returned
-                       (higher = more granular cells, allowed values differ based on `travel_time`).
+            resolution: Geohash resolution of results to be returned.
+                       Valid range: 1-6, where higher values provide more precise areas.
 
             unions: List of union operations combining multiple searches to show
                    total coverage across multiple access points.
@@ -667,8 +667,8 @@ class Client(SyncBaseClient):
             properties: List of travel time properties to calculate for each cell.
                        Options include minimum, maximum, and mean travel times.
 
-            resolution: Geohash resolution of results to be returned
-                       (higher = more granular cells, allowed values differ based on `travel_time`).
+            resolution: Geohash resolution of results to be returned.
+                       Valid range: 1-6, where higher values provide more precise areas.
 
         Returns:
             GeoHashResponse containing travel time statistics for each geohash cell
