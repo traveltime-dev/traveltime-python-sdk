@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Code generation script to create async_client.py from client.py
+"""Code generation script to create async_client.py from client.py.
 
 This script automatically generates the async client code based on the sync client,
 ensuring consistency between the two implementations.

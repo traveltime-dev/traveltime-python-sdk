@@ -27,8 +27,8 @@ from traveltimepy.responses.geohash import GeoHashResponse
 
 
 class GeoHashDepartureSearch(BaseModel):
-    """
-    Calculates travel times from a departure location to all geohash cells within a travel time catchment area.
+    """Calculates travel times from a departure location to all geohash cells within a
+    travel time catchment area.
 
     Attributes:
         id: Unique identifier for this search operation.
@@ -58,8 +58,8 @@ class GeoHashDepartureSearch(BaseModel):
 
 
 class GeoHashArrivalSearch(BaseModel):
-    """
-    Calculates travel times from all geohash cells to an arrival location within a travel time catchment area.
+    """Calculates travel times from all geohash cells to an arrival location within a
+    travel time catchment area.
 
     Attributes:
         id: Unique identifier for this search operation.
@@ -89,8 +89,7 @@ class GeoHashArrivalSearch(BaseModel):
 
 
 class GeoHashIntersection(BaseModel):
-    """
-    Configuration for calculating intersection of geohash search results.
+    """Configuration for calculating intersection of geohash search results.
 
     Finds geohash cells that are reachable in ALL specified searches.
 
@@ -104,8 +103,7 @@ class GeoHashIntersection(BaseModel):
 
 
 class GeoHashUnion(BaseModel):
-    """
-    Configuration for calculating union of geohash search results.
+    """Configuration for calculating union of geohash search results.
 
     Combines geohash cells that are reachable in ANY of the specified searches.
 
@@ -119,8 +117,7 @@ class GeoHashUnion(BaseModel):
 
 
 class GeoHashRequest(TravelTimeRequest[GeoHashResponse]):
-    """
-    Request for geohash travel time analysis.
+    """Request for geohash travel time analysis.
 
     Calculates travel times to geohash cells within travel time catchment areas,
     returning min, max, and mean travel times for each cell. More configurable

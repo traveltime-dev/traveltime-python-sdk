@@ -6,8 +6,7 @@ from traveltimepy.requests.common import Route, Fares
 
 
 class DistanceBreakdown(BaseModel):
-    """
-    Distance breakdown by transportation mode.
+    """Distance breakdown by transportation mode.
 
     Attributes:
         mode: Transportation mode (e.g., walking, driving).
@@ -19,8 +18,7 @@ class DistanceBreakdown(BaseModel):
 
 
 class TimeFilterProperty(BaseModel):
-    """
-    Travel statistics for a distance matrix destination.
+    """Travel statistics for a distance matrix destination.
 
     Attributes:
         travel_time: Journey time in seconds.
@@ -38,8 +36,7 @@ class TimeFilterProperty(BaseModel):
 
 
 class Location(BaseModel):
-    """
-    Destination location with travel statistics.
+    """Destination location with travel statistics.
 
     Attributes:
         id: Location identifier from the original request.
@@ -51,8 +48,7 @@ class Location(BaseModel):
 
 
 class TimeFilterResult(BaseModel):
-    """
-    Distance matrix results for a single search operation.
+    """Distance matrix results for a single search operation.
 
     Attributes:
         search_id: Search identifier from the original request.
@@ -66,8 +62,7 @@ class TimeFilterResult(BaseModel):
 
 
 class TimeFilterResponse(BaseModel):
-    """
-    Results for all distance matrix searches with travel times and distances.
+    """Results for all distance matrix searches with travel times and distances.
 
     Attributes:
         results: List of distance matrix results, one per search operation.

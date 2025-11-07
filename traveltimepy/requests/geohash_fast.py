@@ -17,8 +17,8 @@ from traveltimepy.itertools import split, flatten
 
 
 class GeoHashFastSearch(BaseModel):
-    """
-    High-performance search that calculates travel times to geohash cells within a travel time catchment area.
+    """High-performance search that calculates travel times to geohash cells within a
+    travel time catchment area.
 
     Optimized for speed with limited configurability compared to the standard geohash endpoint.
     Uses time periods instead of specific departure/arrival times for better performance.
@@ -47,8 +47,7 @@ class GeoHashFastSearch(BaseModel):
 
 
 class GeoHashFastArrivalSearches(BaseModel):
-    """
-    Container for high-performance geohash arrival search patterns.
+    """Container for high-performance geohash arrival search patterns.
 
     Groups different search configurations for the Geohash Fast API to calculate
     travel times to geohash cells with optimized performance.
@@ -63,8 +62,8 @@ class GeoHashFastArrivalSearches(BaseModel):
 
 
 class GeoHashFastRequest(TravelTimeRequest[GeoHashResponse]):
-    """
-    High-performance geohash travel time analysis with limited parameters and geographic coverage.
+    """High-performance geohash travel time analysis with limited parameters and
+    geographic coverage.
 
     Optimized version of the geohash endpoint that trades configurability for speed and performance.
     Uses time periods instead of specific times and supports fewer transportation options.

@@ -19,8 +19,7 @@ from traveltimepy.requests.transportation import (
 
 
 class PostcodeArrivalSearch(BaseModel):
-    """
-    Arrival-based postcode search configuration.
+    """Arrival-based postcode search configuration.
 
     Finds postcodes that can reach an arrival location within specified travel time.
 
@@ -52,8 +51,7 @@ class PostcodeArrivalSearch(BaseModel):
 
 
 class PostcodeDepartureSearch(BaseModel):
-    """
-    Departure-based postcode search configuration.
+    """Departure-based postcode search configuration.
 
     Finds reachable postcodes from a departure location within specified travel time.
 
@@ -85,8 +83,7 @@ class PostcodeDepartureSearch(BaseModel):
 
 
 class PostcodesRequest(TravelTimeRequest[PostcodesResponse]):
-    """
-    Finds reachable postcodes and returns travel statistics.
+    """Finds reachable postcodes and returns travel statistics.
 
     Attributes:
         departure_searches: List of departure-based postcode searches (max 10)

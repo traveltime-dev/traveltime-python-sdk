@@ -6,8 +6,7 @@ from traveltimepy.requests.common import Fares, Route
 
 
 class RoutesProperty(BaseModel):
-    """
-    Travel statistics and route information for an A to B journey.
+    """Travel statistics and route information for an A to B journey.
 
     Attributes:
         travel_time: Journey time in seconds.
@@ -23,8 +22,7 @@ class RoutesProperty(BaseModel):
 
 
 class Location(BaseModel):
-    """
-    Destination location with route properties.
+    """Destination location with route properties.
 
     Attributes:
         id: Location identifier from the original request.
@@ -36,8 +34,7 @@ class Location(BaseModel):
 
 
 class RoutesResult(BaseModel):
-    """
-    A to B route analysis results for a single search operation.
+    """A to B route analysis results for a single search operation.
 
     Attributes:
         search_id: Search identifier from the original request.
@@ -51,8 +48,7 @@ class RoutesResult(BaseModel):
 
 
 class RoutesResponse(BaseModel):
-    """
-    Results for all A to B route searches with turn-by-turn directions.
+    """Results for all A to B route searches with turn-by-turn directions.
 
     Attributes:
         results: List of route analysis results, one per search operation.

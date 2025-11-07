@@ -27,8 +27,7 @@ from traveltimepy.itertools import split, flatten
 
 
 class H3DepartureSearch(BaseModel):
-    """
-    Departure-based travel time search for H3 cells.
+    """Departure-based travel time search for H3 cells.
 
     Calculates reachable H3 cells from a departure location within specified travel time.
 
@@ -60,8 +59,7 @@ class H3DepartureSearch(BaseModel):
 
 
 class H3ArrivalSearch(BaseModel):
-    """
-    Arrival-based travel time search for H3 cells.
+    """Arrival-based travel time search for H3 cells.
 
     Calculates H3 cells that can reach an arrival location within specified travel time.
 
@@ -93,8 +91,7 @@ class H3ArrivalSearch(BaseModel):
 
 
 class H3Intersection(BaseModel):
-    """
-    Defines intersection of multiple H3 search results.
+    """Defines intersection of multiple H3 search results.
 
     Creates a new shape containing only H3 cells that appear in ALL referenced searches.
     Useful for finding areas accessible from multiple locations or transport modes.
@@ -109,8 +106,7 @@ class H3Intersection(BaseModel):
 
 
 class H3Union(BaseModel):
-    """
-    Defines union of multiple H3 search results.
+    """Defines union of multiple H3 search results.
 
     Creates a new shape containing H3 cells that appear in ANY of the referenced searches.
     Useful for combining coverage areas from multiple searches.
@@ -125,8 +121,7 @@ class H3Union(BaseModel):
 
 
 class H3Request(TravelTimeRequest[H3Response]):
-    """
-    Provides comprehensive H3 analysis with full configurability including specific
+    """Provides comprehensive H3 analysis with full configurability including specific
     departure/arrival times, unions, and intersections of search results.
 
     Attributes:

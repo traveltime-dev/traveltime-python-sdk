@@ -17,8 +17,7 @@ from traveltimepy.requests.transportation import TransportationFast, FastTraffic
 
 
 class H3FastSearch(BaseModel):
-    """
-    Represents a single travel time search configuration for the H3 Fast API.
+    """Represents a single travel time search configuration for the H3 Fast API.
 
     Attributes:
         id: Unique identifier for this search - must be unique across all searches in a request
@@ -45,8 +44,8 @@ class H3FastSearch(BaseModel):
 
 
 class H3FastArrivalSearches(BaseModel):
-    """
-    The H3 Fast API supports two main search patterns for calculating travel time catchments.
+    """The H3 Fast API supports two main search patterns for calculating travel time
+    catchments.
 
     Attributes:
         many_to_one: Searches that calculate travel times from multiple origins to one destination.
@@ -58,8 +57,7 @@ class H3FastArrivalSearches(BaseModel):
 
 
 class H3FastRequest(TravelTimeRequest[H3Response]):
-    """
-    Request calculates travel times to all H3 hexagonal cells within a travel time
+    """Request calculates travel times to all H3 hexagonal cells within a travel time
     catchment area and returns min/max/mean travel times for each cell.
 
     H3 is hexagonal hierarchical spatial indexing system that divides

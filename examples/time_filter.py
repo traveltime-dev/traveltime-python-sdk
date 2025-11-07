@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""
-Public transport accessibility analysis
+"""Public transport accessibility analysis.
 
-Check if essential services are reachable within 1 hour by public transport
-from different residential areas.
+Check if essential services are reachable within 1 hour by public transport from
+different residential areas.
 """
 
 import asyncio

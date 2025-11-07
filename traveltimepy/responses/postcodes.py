@@ -4,8 +4,7 @@ from pydantic import BaseModel
 
 
 class PostcodeProperty(BaseModel):
-    """
-    Travel statistics for a postcode.
+    """Travel statistics for a postcode.
 
     Contains optional travel time and distance data for reaching or departing from a specific postcode.
 
@@ -19,8 +18,7 @@ class PostcodeProperty(BaseModel):
 
 
 class Postcode(BaseModel):
-    """
-    Represents a single postcode with its travel statistics.
+    """Represents a single postcode with its travel statistics.
 
     Attributes:
         code: postcode string identifier (e.g., "SW1A 1AA").
@@ -33,8 +31,7 @@ class Postcode(BaseModel):
 
 
 class PostcodesResult(BaseModel):
-    """
-    Contains postcode analysis results for a single search operation.
+    """Contains postcode analysis results for a single search operation.
 
     Each result corresponds to one search (departure or arrival) and contains
     all reachable postcodes within the travel time catchment area for that search.
@@ -51,8 +48,7 @@ class PostcodesResult(BaseModel):
 
 
 class PostcodesResponse(BaseModel):
-    """
-    Contains results for all postcode searches requested in a single analysis call.
+    """Contains results for all postcode searches requested in a single analysis call.
 
     The response includes travel time and distance data for postcodes within catchment areas.
 

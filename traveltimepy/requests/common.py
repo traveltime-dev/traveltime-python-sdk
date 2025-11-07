@@ -8,8 +8,7 @@ from pydantic.main import BaseModel
 
 
 class Coordinates(BaseModel):
-    """
-    Represents geographical coordinates with latitude and longitude.
+    """Represents geographical coordinates with latitude and longitude.
 
     Attributes:
         lat: Latitude coordinate (-90.0 to 90.0)
@@ -35,8 +34,7 @@ class Coordinates(BaseModel):
 
 
 class GeohashCentroid(BaseModel):
-    """
-    Represents a geographic location using a geohash centroid string.
+    """Represents a geographic location using a geohash centroid string.
 
     Attributes:
         geohash_centroid: Geohash string representing the centroid of a geographic cell.
@@ -139,8 +137,8 @@ class Fares(BaseModel):
 
 
 class Rectangle(BaseModel):
-    """
-    Represents a rectangular geographic bounding box defined by minimum and maximum latitude and longitude coordinates.
+    """Represents a rectangular geographic bounding box defined by minimum and maximum
+    latitude and longitude coordinates.
 
     Attributes:
         min_lat: The minimum latitude (southern boundary) of the rectangle in decimal degrees.
@@ -163,8 +161,7 @@ class Rectangle(BaseModel):
 
 
 class Property(str, Enum):
-    """
-    Defines what data should be returned in API responses. Different endpoints
+    """Defines what data should be returned in API responses. Different endpoints
     support different combinations of these properties.
 
     Attributes:
@@ -181,8 +178,7 @@ class Property(str, Enum):
 
 
 class CellProperty(str, Enum):
-    """
-    Travel time properties that can be calculated and returned for each cell.
+    """Travel time properties that can be calculated and returned for each cell.
 
     Attributes:
         MIN: Minimum travel time to any point of interest within cell.
@@ -196,9 +192,9 @@ class CellProperty(str, Enum):
 
 
 class SnappingPenalty(str, Enum):
-    """
-    Determines how off-road distances are factored into journey calculations.
-    Controls whether the time/distance required to reach the actual road network is included in metrics.
+    """Determines how off-road distances are factored into journey calculations.
+    Controls whether the time/distance required to reach the actual road network is
+    included in metrics.
 
     Attributes:
         ENABLED: Walking time and distance from departure to nearest road and from nearest road
@@ -212,9 +208,9 @@ class SnappingPenalty(str, Enum):
 
 
 class SnappingAcceptRoads(str, Enum):
-    """
-    Defines which road types are valid for journey start/end points based on their accessibility characteristics.
-    This affects where a journey can begin or terminate within the routing network.
+    """Defines which road types are valid for journey start/end points based on their
+    accessibility characteristics. This affects where a journey can begin or terminate
+    within the routing network.
 
     Attributes:
         BOTH_DRIVABLE_AND_WALKABLE: Journey can only start or end on roads accessible by both cars and pedestrians.
@@ -238,8 +234,8 @@ class ArrivalTimePeriod(str, Enum):
 
 
 class Snapping(BaseModel):
-    """
-    Configuration for how journey calculations handle connections between arbitrary points and the road network.
+    """Configuration for how journey calculations handle connections between arbitrary
+    points and the road network.
 
     "Snapping" refers to the process of connecting departure/arrival locations to the nearest suitable roads
     and determining how the off-road portions of journeys are calculated and reported.
@@ -262,16 +258,14 @@ class ProtoProperty(int, Enum):
 
 
 class FullRange(BaseModel):
-    """
-    Configures time range search parameters for journey planning.
+    """Configures time range search parameters for journey planning.
 
-    When enabled, allows searches to consider journeys within a specified
-    time window rather than at an exact time only, providing multiple journey options.
+    When enabled, allows searches to consider journeys within a specified time window
+    rather than at an exact time only, providing multiple journey options.
     """
 
     enabled: bool
-    """
-    Controls whether the time range search is active.
+    """Controls whether the time range search is active.
 
     When enabled, adds a time window to the specified departure or arrival time.
     Journey results will include any options that depart/arrive within this window.
@@ -284,14 +278,13 @@ class FullRange(BaseModel):
     """
 
     max_results: int = Field(gt=0, le=5)
-    """
-    Maximum number of results to return. Limited to 5 results.
-    Must be greater than 0.
+    """Maximum number of results to return.
+
+    Limited to 5 results. Must be greater than 0.
     """
 
     width: int = Field(gt=0, le=43200)
-    """
-    Defines the width of the time range window in seconds.
+    """Defines the width of the time range window in seconds.
 
     Behavior varies based on whether searching by departure or arrival time:
     - For departure time: Window extends forward (e.g., 9:00am with 1-hour width
@@ -304,8 +297,7 @@ class FullRange(BaseModel):
 
 
 class Range(BaseModel):
-    """
-    Configures time range parameters for route searching.
+    """Configures time range parameters for route searching.
 
     When enabled, allows searching for routes departing or arriving within a time window
     rather than at a single specific time, returning a combined result that represents
@@ -317,8 +309,7 @@ class Range(BaseModel):
     """
 
     enabled: bool
-    """
-    Controls whether the time range functionality is active.
+    """Controls whether the time range functionality is active.
 
     When True, the routing algorithm considers departures or arrivals within a window:
     - For departure searches: starting between the specified departure time and
@@ -331,8 +322,7 @@ class Range(BaseModel):
     """
 
     width: int
-    """
-    Duration of the time window in seconds.
+    """Duration of the time window in seconds.
 
     For departure searches: Window starts at departure time and extends forward.
     Example: departure time 09:00 with width 3600 (1 hour) includes all journeys
@@ -347,8 +337,8 @@ class Range(BaseModel):
 
 
 class PolygonsFilter(BaseModel):
-    """
-    Specifies polygon filter configuration for limiting the number of polygons returned.
+    """Specifies polygon filter configuration for limiting the number of polygons
+    returned.
 
     Attributes:
         limit: Maximum number of largest polygons to return in a single shape.

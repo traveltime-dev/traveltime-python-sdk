@@ -4,8 +4,7 @@ from pydantic.main import BaseModel
 
 
 class Properties(BaseModel):
-    """
-    Travel time statistics for an H3 hexagonal cell.
+    """Travel time statistics for an H3 hexagonal cell.
 
     Contains optional minimum, maximum, and mean travel times in seconds
     for points of interest within the H3 cell. H3 is hexagonal
@@ -23,8 +22,7 @@ class Properties(BaseModel):
 
 
 class Cell(BaseModel):
-    """
-    Represents a single H3 hexagonal cell with its travel time statistics.
+    """Represents a single H3 hexagonal cell with its travel time statistics.
 
     Attributes:
         id: H3 cell identifier string for this hexagonal geographic cell.
@@ -36,8 +34,7 @@ class Cell(BaseModel):
 
 
 class H3Result(BaseModel):
-    """
-    Contains H3 hexagonal cell analysis results for a single search operation.
+    """Contains H3 hexagonal cell analysis results for a single search operation.
 
     Each result corresponds to one search (departure, arrival, intersection, or union)
     and contains all H3 cells within the travel time catchment area for that search.
@@ -54,8 +51,8 @@ class H3Result(BaseModel):
 
 
 class H3Response(BaseModel):
-    """
-    Contains results for all H3 searches, intersections, and unions requested in a single analysis call.
+    """Contains results for all H3 searches, intersections, and unions requested in a
+    single analysis call.
 
     The response includes travel time data for H3 hexagonal cells within catchment areas,
     with statistical information (min/max/mean) for each cell based on the requested properties.

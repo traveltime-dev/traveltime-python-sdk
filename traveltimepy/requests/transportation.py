@@ -80,8 +80,7 @@ class TransportationFast(str, Enum):
 
 
 class FastTrafficModel(str, Enum):
-    """
-    Only applicable with driving and driving+ferry transportation types.
+    """Only applicable with driving and driving+ferry transportation types.
 
     Attributes:
         PEAK: Represents typical traffic conditions for a midweek morning (default)

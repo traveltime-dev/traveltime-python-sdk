@@ -19,8 +19,7 @@ from traveltimepy.requests.transportation import (
 
 
 class TimeFilterArrivalSearch(BaseModel):
-    """
-    Calculates travel times from multiple departure locations to a single arrival
+    """Calculates travel times from multiple departure locations to a single arrival
     location with specific arrival time and comprehensive transport options.
 
     Attributes:
@@ -55,8 +54,7 @@ class TimeFilterArrivalSearch(BaseModel):
 
 
 class TimeFilterDepartureSearch(BaseModel):
-    """
-    Calculates travel times from a single departure location to multiple arrival
+    """Calculates travel times from a single departure location to multiple arrival
     locations with specific departure time and comprehensive transport options.
 
     Attributes:
@@ -91,8 +89,7 @@ class TimeFilterDepartureSearch(BaseModel):
 
 
 class TimeFilterRequest(TravelTimeRequest[TimeFilterResponse]):
-    """
-    Full-featured distance matrix endpoint with comprehensive configurability
+    """Full-featured distance matrix endpoint with comprehensive configurability
     including specific departure/arrival times, range searches, and all transport modes.
 
     Attributes:

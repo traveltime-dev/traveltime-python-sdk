@@ -19,8 +19,7 @@ from traveltimepy.itertools import split, flatten
 
 
 class RoutesArrivalSearch(BaseModel):
-    """
-    Arrival-based route search for A to B routing with turn-by-turn directions.
+    """Arrival-based route search for A to B routing with turn-by-turn directions.
 
     Calculates routes from multiple departure locations to a single arrival location,
     returning detailed routing information including turn-by-turn directions.
@@ -55,8 +54,7 @@ class RoutesArrivalSearch(BaseModel):
 
 
 class RoutesDepartureSearch(BaseModel):
-    """
-    Departure-based route search for A to B routing with turn-by-turn directions.
+    """Departure-based route search for A to B routing with turn-by-turn directions.
 
     Calculates routes from a single departure location to multiple arrival locations,
     returning detailed routing information including turn-by-turn directions.
@@ -91,8 +89,7 @@ class RoutesDepartureSearch(BaseModel):
 
 
 class RoutesRequest(TravelTimeRequest[RoutesResponse]):
-    """
-    Calculates A to B routes with turn-by-turn directions between specific locations.
+    """Calculates A to B routes with turn-by-turn directions between specific locations.
     Best used for navigation and route visualization rather than catchment analysis.
 
     Attributes:

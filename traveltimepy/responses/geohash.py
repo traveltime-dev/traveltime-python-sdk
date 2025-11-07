@@ -4,8 +4,7 @@ from pydantic.main import BaseModel
 
 
 class Properties(BaseModel):
-    """
-    Travel time statistics for a geohash cell.
+    """Travel time statistics for a geohash cell.
 
     Contains optional minimum, maximum, and mean travel times in seconds
     for points of interest within the geohash cell.
@@ -22,8 +21,7 @@ class Properties(BaseModel):
 
 
 class Cell(BaseModel):
-    """
-    Represents a single geohash cell with its travel time statistics.
+    """Represents a single geohash cell with its travel time statistics.
 
     Attributes:
         id: Geohash string identifier for this geographic cell.
@@ -35,8 +33,7 @@ class Cell(BaseModel):
 
 
 class GeoHashResult(BaseModel):
-    """
-    Contains geohash analysis results for a single search operation.
+    """Contains geohash analysis results for a single search operation.
 
     Attributes:
         search_id: Identifier matching the search ID from the original request.
@@ -50,8 +47,8 @@ class GeoHashResult(BaseModel):
 
 
 class GeoHashResponse(BaseModel):
-    """
-    Contains results for all searches, intersections, and unions requested in a single geohash analysis call.
+    """Contains results for all searches, intersections, and unions requested in a
+    single geohash analysis call.
 
     Attributes:
         results: List of all geohash analysis results. Contains one result per search operation

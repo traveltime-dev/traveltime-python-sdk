@@ -3,8 +3,7 @@ from pydantic import BaseModel
 
 
 class Ticket(BaseModel):
-    """
-    Public transport ticket information.
+    """Public transport ticket information.
 
     Attributes:
         type: Ticket type (e.g., single, day, week).
@@ -18,8 +17,7 @@ class Ticket(BaseModel):
 
 
 class Fares(BaseModel):
-    """
-    Public transport fare breakdown.
+    """Public transport fare breakdown.
 
     Attributes:
         tickets_total: List of tickets required for the journey.
@@ -29,8 +27,7 @@ class Fares(BaseModel):
 
 
 class Properties(BaseModel):
-    """
-    Travel statistics for a high-performance distance matrix destination.
+    """Travel statistics for a high-performance distance matrix destination.
 
     Attributes:
         travel_time: Journey time in seconds.
@@ -44,8 +41,7 @@ class Properties(BaseModel):
 
 
 class Location(BaseModel):
-    """
-    Destination location with travel statistics.
+    """Destination location with travel statistics.
 
     Attributes:
         id: Location identifier from the original request.
@@ -57,8 +53,7 @@ class Location(BaseModel):
 
 
 class TimeFilterFastResult(BaseModel):
-    """
-    High-performance distance matrix results for a single search operation.
+    """High-performance distance matrix results for a single search operation.
 
     Attributes:
         search_id: Search identifier from the original request.

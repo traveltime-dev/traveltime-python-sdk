@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fast tourist route optimization analysis
+"""Fast tourist route optimization analysis.
 
 Calculate travel times between popular London attractions using the high-performance
 time_filter_fast endpoint. This endpoint is optimized for large datasets with faster
