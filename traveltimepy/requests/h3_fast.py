@@ -65,7 +65,7 @@ class H3FastRequest(TravelTimeRequest[H3Response]):
 
     Attributes:
         resolution: H3 resolution level for results
-                         (higher = more granular cells, allowed values differ based on `travel_time`).
+                         (higher = more granular cells, allowed values differ based on `travel_time`). Resolutions table: https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime).
         properties: Properties to return for each H3 cell (min, max, mean travel times).
         arrival_searches: Arrival-based search configurations containing the actual search
                          definitions that will be executed.
