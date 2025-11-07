@@ -6,8 +6,7 @@ from traveltimepy.requests.common import Coordinates
 
 
 class Shape(BaseModel):
-    """
-    Polygon shape representing a reachable area within a catchment analysis result.
+    """Polygon shape representing a reachable area within a catchment analysis result.
 
     Attributes:
         shell: Outer boundary coordinates forming the main polygon perimeter.
@@ -19,8 +18,7 @@ class Shape(BaseModel):
 
 
 class TimeMapResult(BaseModel):
-    """
-    Catchment area calculation result for a single search operation.
+    """Catchment area calculation result for a single search operation.
 
     Attributes:
         search_id: Search identifier from the original request.

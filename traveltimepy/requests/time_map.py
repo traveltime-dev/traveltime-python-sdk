@@ -28,9 +28,8 @@ from traveltimepy.itertools import split, flatten
 
 
 class TimeMapDepartureSearch(BaseModel):
-    """
-    Creates travel time catchment area polygons showing all locations reachable
-    from a departure point with specific departure time and comprehensive transport options.
+    """Creates travel time catchment area polygons showing all locations reachable from
+    a departure point with specific departure time and comprehensive transport options.
 
     Attributes:
         id: Unique identifier for this search
@@ -68,9 +67,8 @@ class TimeMapDepartureSearch(BaseModel):
 
 
 class TimeMapArrivalSearch(BaseModel):
-    """
-    Creates travel time catchment area polygons showing all locations that can
-    reach an arrival point with specific arrival time and comprehensive transport options.
+    """Creates travel time catchment area polygons showing all locations that can reach
+    an arrival point with specific arrival time and comprehensive transport options.
 
     Attributes:
         id: Unique identifier for this search
@@ -108,8 +106,7 @@ class TimeMapArrivalSearch(BaseModel):
 
 
 class TimeMapIntersection(BaseModel):
-    """
-    Defines intersection of multiple isochrone search results.
+    """Defines intersection of multiple isochrone search results.
 
     Creates a new polygon containing only areas that appear in ALL referenced
     isochrone searches. Useful for finding mutually accessible areas.
@@ -124,8 +121,7 @@ class TimeMapIntersection(BaseModel):
 
 
 class TimeMapUnion(BaseModel):
-    """
-    Defines union of multiple isochrone search results.
+    """Defines union of multiple isochrone search results.
 
     Creates a new polygon containing areas that appear in ANY of the referenced
     isochrone searches. Useful for combining multiple catchment areas.
@@ -140,8 +136,7 @@ class TimeMapUnion(BaseModel):
 
 
 class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
-    """
-    Full-featured isochrone endpoint with comprehensive configurability including
+    """Full-featured isochrone endpoint with comprehensive configurability including
     specific departure/arrival times, range searches, unions, and intersections.
 
     Attributes:

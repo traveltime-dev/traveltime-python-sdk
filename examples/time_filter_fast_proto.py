@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Find closest shops by driving time using Protocol Buffers API
+"""Find closest shops by driving time using Protocol Buffers API.
 
 High-performance distance matrix calculation to find nearest stores.
 """

@@ -10,8 +10,7 @@ from traveltimepy.itertools import split, flatten
 
 
 class TimeFilterFastOneToMany(BaseModel):
-    """
-    One-to-many travel time search for high-performance distance matrix calculation.
+    """One-to-many travel time search for high-performance distance matrix calculation.
 
     Calculates travel times from a single departure location to multiple arrival
     locations with optimized performance for large datasets.
@@ -45,8 +44,7 @@ class TimeFilterFastOneToMany(BaseModel):
 
 
 class TimeFilterFastManyToOne(BaseModel):
-    """
-    Many-to-one travel time search for high-performance distance matrix calculation.
+    """Many-to-one travel time search for high-performance distance matrix calculation.
 
     Calculates travel times from multiple departure locations to a single arrival
     location with optimized performance for large datasets.
@@ -91,10 +89,9 @@ class TimeFilterFastArrivalSearches(BaseModel):
 
 
 class TimeFilterFastRequest(TravelTimeRequest[TimeFilterFastResponse]):
-    """
-    High-performance distance matrix endpoint optimized for large datasets with
-    fewer configurable parameters but extremely low response times. Can handle
-    up to 100,000 destinations in a single request.
+    """High-performance distance matrix endpoint optimized for large datasets with fewer
+    configurable parameters but extremely low response times. Can handle up to 100,000
+    destinations in a single request.
 
     Attributes:
         locations: List of all locations referenced by ID in searches

@@ -23,8 +23,8 @@ from traveltimepy.responses.time_map import TimeMapResponse
 
 
 class DistanceMapDepartureSearch(BaseModel):
-    """
-    Configuration for generating a distance map (isodistance polygon) from a departure location.
+    """Configuration for generating a distance map (isodistance polygon) from a
+    departure location.
 
     A distance map shows all areas reachable within a specified travel distance from a starting point,
     using the specified transportation method and departure time. The result is typically a polygon
@@ -66,8 +66,8 @@ class DistanceMapDepartureSearch(BaseModel):
 
 
 class DistanceMapArrivalSearch(BaseModel):
-    """
-    Configuration for generating a reverse distance map (isodistance polygon) to an arrival location.
+    """Configuration for generating a reverse distance map (isodistance polygon) to an
+    arrival location.
 
     A reverse distance map shows all areas from which you can reach a destination within a specified
     travel distance, arriving by a certain time using the specified transportation method. This is
@@ -111,10 +111,10 @@ class DistanceMapArrivalSearch(BaseModel):
 
 
 class DistanceMapIntersection(BaseModel):
-    """
-    An intersection operation finds areas that are reachable by ALL specified searches.
-    This is useful for finding locations that satisfy multiple accessibility criteria simultaneously,
-    such as areas within walking distance of both a train station and a shopping center.
+    """An intersection operation finds areas that are reachable by ALL specified
+    searches. This is useful for finding locations that satisfy multiple accessibility
+    criteria simultaneously, such as areas within walking distance of both a train
+    station and a shopping center.
 
     Attributes:
         id: Unique identifier for this intersection operation.
@@ -130,10 +130,10 @@ class DistanceMapIntersection(BaseModel):
 
 
 class DistanceMapUnion(BaseModel):
-    """
-    A union operation combines all areas that are reachable by ANY of the specified searches.
-    This is useful for finding the total coverage area of multiple access points or transportation
-    options, such as the combined catchment area of several bus stops or train stations.
+    """A union operation combines all areas that are reachable by ANY of the specified
+    searches. This is useful for finding the total coverage area of multiple access
+    points or transportation options, such as the combined catchment area of several bus
+    stops or train stations.
 
     Attributes:
         id: Unique identifier for this union operation. Used to reference the union result in the response.
@@ -148,9 +148,9 @@ class DistanceMapUnion(BaseModel):
 
 
 class DistanceMapRequest(TravelTimeRequest[TimeMapResponse]):
-    """
-    Generates isodistance polygons showing areas reachable within specified travel distances
-    rather than travel times. Supports departure/arrival searches, unions, and intersections.
+    """Generates isodistance polygons showing areas reachable within specified travel
+    distances rather than travel times. Supports departure/arrival searches, unions, and
+    intersections.
 
     Attributes:
         departure_searches: List of departure-based distance map searches.

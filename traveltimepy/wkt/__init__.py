@@ -1,4 +1,4 @@
-"""Module with WKT wrapper for shapely"""
+"""Module with WKT wrapper for shapely."""
 
 from traveltimepy.wkt.parsing import (
     parse_wkt,

@@ -1,1 +1,1 @@
-"""Module with traveltime responses models"""
+"""Module with traveltime responses models."""

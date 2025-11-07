@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""
-London walking tour planner
+"""London walking tour planner.
 
-Plan a walking tour of famous London landmarks. Geocode the locations
-to get coordinates, then calculate total walking time including
-30-minute stops at each location.
+Plan a walking tour of famous London landmarks. Geocode the locations to get
+coordinates, then calculate total walking time including 30-minute stops at each
+location.
 """
 
 import os

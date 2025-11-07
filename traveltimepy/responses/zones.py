@@ -4,8 +4,7 @@ from pydantic import BaseModel
 
 
 class TravelTime(BaseModel):
-    """
-    Travel time statistics in seconds.
+    """Travel time statistics in seconds.
 
     Attributes:
         min: Minimum travel time.
@@ -21,8 +20,7 @@ class TravelTime(BaseModel):
 
 
 class Properties(BaseModel):
-    """
-    Travel time statistics and coverage for a postcode zone.
+    """Travel time statistics and coverage for a postcode zone.
 
     Attributes:
         travel_time_reachable: Statistics for reachable postcodes within the zone.
@@ -36,8 +34,7 @@ class Properties(BaseModel):
 
 
 class Zone(BaseModel):
-    """
-    Postcode sector or district with travel statistics.
+    """Postcode sector or district with travel statistics.
 
     Attributes:
         code: Postcode sector or district code.
@@ -49,8 +46,7 @@ class Zone(BaseModel):
 
 
 class PostcodesSectorsResult(BaseModel):
-    """
-    Postcode sectors analysis result for a single search operation.
+    """Postcode sectors analysis result for a single search operation.
 
     Attributes:
         search_id: Search identifier from the original request.
@@ -62,8 +58,7 @@ class PostcodesSectorsResult(BaseModel):
 
 
 class PostcodesDistrictsResult(BaseModel):
-    """
-    Postcode districts analysis result for a single search operation.
+    """Postcode districts analysis result for a single search operation.
 
     Attributes:
         search_id: Search identifier from the original request.
@@ -75,8 +70,7 @@ class PostcodesDistrictsResult(BaseModel):
 
 
 class PostcodesSectorsResponse(BaseModel):
-    """
-    Results for all postcode sectors searches with coverage filtering.
+    """Results for all postcode sectors searches with coverage filtering.
 
     Attributes:
         results: List of sector analysis results, one per search operation.
@@ -86,8 +80,7 @@ class PostcodesSectorsResponse(BaseModel):
 
 
 class PostcodesDistrictsResponse(BaseModel):
-    """
-    Results for all postcode districts searches with coverage filtering.
+    """Results for all postcode districts searches with coverage filtering.
 
     Attributes:
         results: List of district analysis results, one per search operation.

@@ -17,8 +17,7 @@ from traveltimepy.requests.transportation import TransportationFast, FastTraffic
 
 
 class TimeMapFastSearch(BaseModel):
-    """
-    Creates travel time catchment areas (isochrones) showing all locations reachable
+    """Creates travel time catchment areas (isochrones) showing all locations reachable
     within specified travel time. Optimized for speed with limited configurability.
 
     Attributes:
@@ -63,10 +62,9 @@ class TimeMapFastArrivalSearches(BaseModel):
 
 
 class TimeMapFastRequest(TravelTimeRequest[TimeMapResponse]):
-    """
-    High-performance isochrone endpoint that creates travel time polygons showing
-    reachable areas within specified travel times. Optimized for speed with
-    limited configurability compared to the standard time-map endpoint.
+    """High-performance isochrone endpoint that creates travel time polygons showing
+    reachable areas within specified travel times. Optimized for speed with limited
+    configurability compared to the standard time-map endpoint.
 
     Attributes:
         arrival_searches: Isochrone search configurations for fast polygon generation

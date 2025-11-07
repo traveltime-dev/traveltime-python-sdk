@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Tourist route optimization analysis
+"""Tourist route optimization analysis.
 
 Calculate travel times between popular London attractions to help tourists
 plan efficient routes. Creates a symmetric matrix showing travel durations

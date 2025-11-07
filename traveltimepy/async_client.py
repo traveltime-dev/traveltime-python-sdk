@@ -118,8 +118,7 @@ class AsyncClient(AsyncBaseClient):
         departure_searches: List[TimeFilterDepartureSearch],
         arrival_searches: List[TimeFilterArrivalSearch],
     ) -> TimeFilterResponse:
-        """
-        Calculate comprehensive distance matrix with full configurability.
+        """Calculate comprehensive distance matrix with full configurability.
 
         Full-featured endpoint supporting specific departure/arrival times, all transport
         modes, range searches, and detailed routing information. Provides maximum
@@ -150,8 +149,7 @@ class AsyncClient(AsyncBaseClient):
     async def time_filter_fast(
         self, locations: List[Location], arrival_searches: TimeFilterFastArrivalSearches
     ) -> TimeFilterFastResponse:
-        """
-        Calculate high-performance distance matrix with up to 100,000 destinations.
+        """Calculate high-performance distance matrix with up to 100,000 destinations.
 
         Optimized endpoint for large-scale travel time calculations with extremely
         low response times. Trades configurability for performance and scale.
@@ -185,8 +183,7 @@ class AsyncClient(AsyncBaseClient):
         country: ProtoCountry,
         with_distance: bool,
     ) -> TimeFilterProtoResponse:
-        """
-        Calculate ultra-high-performance distance matrix using Protocol Buffers.
+        """Calculate ultra-high-performance distance matrix using Protocol Buffers.
 
         Maximum performance endpoint using protobuf format for extremely large datasets.
         Optimized for scenarios requiring millions of travel time calculations with
@@ -231,8 +228,7 @@ class AsyncClient(AsyncBaseClient):
         format_exclude_country: Optional[bool] = None,
         bounds: Optional[Rectangle] = None,
     ) -> FeatureCollection:
-        """
-        Match a query string to geographic coordinates using geocoding search.
+        """Match a query string to geographic coordinates using geocoding search.
 
         Converts addresses, postcodes, or venue names into geographic coordinates
         and location information. Supports filtering by country, bounding box.
@@ -281,8 +277,7 @@ class AsyncClient(AsyncBaseClient):
         lat: float,
         lng: float,
     ) -> FeatureCollection:
-        """
-        Convert geographic coordinates to an address using reverse geocoding.
+        """Convert geographic coordinates to an address using reverse geocoding.
 
         Takes latitude and longitude coordinates and attempts to match them
         to the nearest address or location information.
@@ -328,9 +323,8 @@ class AsyncClient(AsyncBaseClient):
         unions: List[TimeMapUnion],
         intersections: List[TimeMapIntersection],
     ) -> TimeMapResponse:
-        """
-        Creates travel time catchment area polygons with specific departure/arrival times,
-        transport modes, and support for complex polygon operations.
+        """Creates travel time catchment area polygons with specific departure/arrival
+        times, transport modes, and support for complex polygon operations.
 
         Args:
             arrival_searches: Arrival-based isochrone searches with specific arrival times.
@@ -361,8 +355,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
     ) -> FeatureCollection:
-        """
-        Generate comprehensive travel time isochrones in GeoJSON format.
+        """Generate comprehensive travel time isochrones in GeoJSON format.
 
         Creates travel time catchment area polygons in GeoJSON format with full
         configurability, optimized for mapping libraries and web applications.
@@ -391,8 +384,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
     ) -> TimeMapWKTResponse:
-        """
-        Generate comprehensive travel time isochrones in WKT format.
+        """Generate comprehensive travel time isochrones in WKT format.
 
         Creates travel time catchment area polygons in Well-Known Text format with
         full configurability, suitable for GIS applications and spatial databases.
@@ -421,8 +413,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
     ) -> TimeMapWKTResponse:
-        """
-        Generate comprehensive travel time isochrones in simplified WKT format.
+        """Generate comprehensive travel time isochrones in simplified WKT format.
 
         Creates travel time catchment area polygons in WKT format without holes,
         providing simplified geometries with full configurability.
@@ -450,8 +441,7 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> TimeMapResponse:
-        """
-        Generate high-performance travel time isochrones in JSON format.
+        """Generate high-performance travel time isochrones in JSON format.
 
         Creates travel time catchment area polygons showing all locations reachable
         within specified travel times. Returns standard JSON response format.
@@ -474,8 +464,7 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> FeatureCollection:
-        """
-        Generate high-performance travel time isochrones in GeoJSON format.
+        """Generate high-performance travel time isochrones in GeoJSON format.
 
         Creates travel time catchment area polygons in GeoJSON format, optimized
         for direct use with mapping libraries like Leaflet, Mapbox, and OpenLayers.
@@ -499,8 +488,7 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> TimeMapWKTResponse:
-        """
-        Generate high-performance travel time isochrones in WKT format.
+        """Generate high-performance travel time isochrones in WKT format.
 
         Creates travel time catchment area polygons in Well-Known Text format,
         suitable for GIS applications and spatial databases.
@@ -524,8 +512,7 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: TimeMapFastArrivalSearches,
     ) -> TimeMapWKTResponse:
-        """
-        Generate high-performance travel time isochrones in simplified WKT format.
+        """Generate high-performance travel time isochrones in simplified WKT format.
 
         Creates travel time catchment area polygons in WKT format without holes,
         providing simplified geometries for applications that don't support complex polygons.
@@ -554,9 +541,8 @@ class AsyncClient(AsyncBaseClient):
         unions: List[H3Union],
         intersections: List[H3Intersection],
     ) -> H3Response:
-        """
-        Standard H3 endpoint with comprehensive features including specific departure/arrival
-        times, unions, and intersections of search results.
+        """Standard H3 endpoint with comprehensive features including specific
+        departure/arrival times, unions, and intersections of search results.
 
         Args:
             arrival_searches: Arrival-based searches with specific arrival times
@@ -590,8 +576,7 @@ class AsyncClient(AsyncBaseClient):
         properties: List[CellProperty],
         resolution: int,
     ) -> H3Response:
-        """
-        Calculate travel times to H3 cells within travel time catchment areas.
+        """Calculate travel times to H3 cells within travel time catchment areas.
 
         High-performance endpoint that returns min/max/mean travel times for H3 hexagonal
         cells based on arrival searches.
@@ -626,8 +611,7 @@ class AsyncClient(AsyncBaseClient):
         unions: List[GeoHashUnion],
         intersections: List[GeoHashIntersection],
     ) -> GeoHashResponse:
-        """
-        Calculate travel times to geohash cells within travel time catchment areas.
+        """Calculate travel times to geohash cells within travel time catchment areas.
 
         Returns min, max, and mean travel times for each geohash cell. This is a more
         configurable version of geohash-fast but with lower performance.
@@ -676,8 +660,7 @@ class AsyncClient(AsyncBaseClient):
         properties: List[CellProperty],
         resolution: int,
     ) -> GeoHashResponse:
-        """
-        High-performance version of geohash search with fewer configurable parameters
+        """High-performance version of geohash search with fewer configurable parameters
         and more limited geographic coverage. Returns statistical travel time measures
         for each geohash cell.
 
@@ -711,8 +694,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[PostcodeArrivalSearch],
         departure_searches: List[PostcodeDepartureSearch],
     ) -> PostcodesResponse:
-        """
-        Find reachable UK postcodes and get travel statistics.
+        """Find reachable UK postcodes and get travel statistics.
 
         Searches for postcodes within travel time catchments and returns travel time
         and distance data. Currently only supports United Kingdom postcodes.
@@ -742,8 +724,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[PostcodeFilterArrivalSearch],
         departure_searches: List[PostcodeFilterDepartureSearch],
     ) -> PostcodesDistrictsResponse:
-        """
-        Searches for postcode districts based on coverage thresholds (percentage of
+        """Searches for postcode districts based on coverage thresholds (percentage of
         reachable postcodes within districts). Districts are broader geographic areas
         than sectors. Currently only supports United Kingdom.
 
@@ -772,10 +753,9 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[PostcodeFilterArrivalSearch],
         departure_searches: List[PostcodeFilterDepartureSearch],
     ) -> PostcodesSectorsResponse:
-        """
-        Searches for postcode sectors based on coverage thresholds (percentage of
-        reachable postcodes within sectors). Sectors are more granular geographic
-        areas than districts. Currently only supports United Kingdom.
+        """Searches for postcode sectors based on coverage thresholds (percentage of
+        reachable postcodes within sectors). Sectors are more granular geographic areas
+        than districts. Currently only supports United Kingdom.
 
         Args:
             arrival_searches: Arrival-based searches with coverage filtering for sectors
@@ -803,8 +783,7 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: List[RoutesArrivalSearch],
         departure_searches: List[RoutesDepartureSearch],
     ) -> RoutesResponse:
-        """
-        Calculate A to B routes with turn-by-turn directions.
+        """Calculate A to B routes with turn-by-turn directions.
 
         Returns detailed routing information between specific locations including
         turn-by-turn directions, travel times, distances, and fare information.
@@ -836,8 +815,8 @@ class AsyncClient(AsyncBaseClient):
         unions: List[DistanceMapUnion],
         intersections: List[DistanceMapIntersection],
     ) -> TimeMapResponse:
-        """
-        Generate distance maps (isodistance polygons) showing areas reachable within specified travel distances.
+        """Generate distance maps (isodistance polygons) showing areas reachable within
+        specified travel distances.
 
         Creates polygon shapes representing all areas reachable within a travel distance limit
         from departure points or areas that can reach arrival points within distance constraints.

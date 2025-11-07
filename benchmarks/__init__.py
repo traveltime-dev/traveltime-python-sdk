@@ -1,1 +1,1 @@
-"""Module for benchmarks"""
+"""Module for benchmarks."""
