@@ -125,7 +125,9 @@ class H3Request(TravelTimeRequest[H3Response]):
     departure/arrival times, unions, and intersections of search results.
 
     Attributes:
-        resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time`). Resolutions table: https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime).
+        resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time`).
+                         Resolutions table:
+                         https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime).
         properties: Statistical properties to calculate for each H3 cell
         departure_searches: List of departure-based searches
         arrival_searches: List of arrival-based searches
