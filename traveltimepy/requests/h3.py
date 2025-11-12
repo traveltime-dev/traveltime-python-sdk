@@ -35,7 +35,10 @@ class H3DepartureSearch(BaseModel):
         id: Unique identifier for this search
         coords: Departure location coordinates or H3 cell centroid
         departure_time: Specific departure time for the journey
-        travel_time: Maximum journey time in seconds
+        travel_time: Maximum journey time in seconds.
+                         Maximum value depends on resolution parameter.
+                         Limitations can be found here:
+                         https://docs.traveltime.com/api/reference/h3#limits-of-resolution-and-traveltime.
         transportation: Transportation method (public_transport, driving, walking, etc.)
         range: Optional distance/time range constraints
         snapping: Optional road network lookup settings
@@ -125,7 +128,9 @@ class H3Request(TravelTimeRequest[H3Response]):
     departure/arrival times, unions, and intersections of search results.
 
     Attributes:
-        resolution: H3 resolution level (1-9, higher = more granular cells)
+        resolution: H3 resolution level (higher = more granular cells).
+                         Limitations can be found here:
+                         https://docs.traveltime.com/api/reference/h3#limits-of-resolution-and-traveltime.
         properties: Statistical properties to calculate for each H3 cell
         departure_searches: List of departure-based searches
         arrival_searches: List of arrival-based searches

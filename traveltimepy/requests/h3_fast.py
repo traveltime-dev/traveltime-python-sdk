@@ -23,7 +23,10 @@ class H3FastSearch(BaseModel):
         id: Unique identifier for this search - must be unique across all searches in a request
         coords: Starting/ending coordinates - can be lat/lng coordinates or H3 cell centroid
         transportation: Transportation method (public_transport, walking+ferry, cycling+ferry, etc.)
-        travel_time: Maximum journey time in seconds (max 10800s)
+        travel_time: Maximum journey time in seconds (max 10800s).
+                         Maximum value depends on resolution parameter.
+                         Limitations can be found here:
+                         https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime.
         arrival_time_period: Time period for the search
         snapping: Optional settings for adjusting road network lookup behavior
         traffic_model: Traffic model for driving journeys (peak/off_peak)
@@ -64,7 +67,9 @@ class H3FastRequest(TravelTimeRequest[H3Response]):
     the Earth's surface into hexagonal cells at different resolutions.
 
     Attributes:
-        resolution: H3 resolution level for results (1-9, where higher = more granular/smaller cells).
+        resolution: H3 resolution level (higher = more granular cells).
+                         Limitations can be found here:
+                         https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime.
         properties: Properties to return for each H3 cell (min, max, mean travel times).
         arrival_searches: Arrival-based search configurations containing the actual search
                          definitions that will be executed.
