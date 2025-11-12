@@ -548,9 +548,9 @@ class AsyncClient(AsyncBaseClient):
             arrival_searches: Arrival-based searches with specific arrival times
             departure_searches: Departure-based searches with specific departure times
             properties: Statistical properties to calculate ('min', 'max', 'mean')
-            resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time`).
-                         Resolutions table:
-                         https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime).
+            resolution: H3 resolution level (higher = more granular cells).
+                         Limitations can be found here:
+                         https://docs.traveltime.com/api/reference/h3#limits-of-resolution-and-traveltime.
             unions: Union operations combining multiple search results
             intersections: Intersection operations finding overlapping areas
 
@@ -587,9 +587,9 @@ class AsyncClient(AsyncBaseClient):
             arrival_searches: Search configurations with arrival points and transportation methods.
                               Max 10 searches per request.
             properties: Statistical properties to calculate ('min', 'max', 'mean').
-            resolution: H3 resolution level (higher = more granular cells, allowed values differ based on `travel_time`).
-                         Resolutions table:
-                         https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime).
+            resolution: H3 resolution level (higher = more granular cells).
+                         Limitations can be found here:
+                         https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime.
 
         Returns:
             H3Response: Travel time statistics for H3 cells in catchment areas.
