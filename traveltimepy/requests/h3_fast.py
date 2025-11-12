@@ -26,7 +26,7 @@ class H3FastSearch(BaseModel):
         travel_time: Maximum journey time in seconds (max 10800s).
                          Maximum value depends on resolution parameter.
                          Limitations can be found here:
-                         https://docs.traveltime.com/api/reference/h3-fast#request-body-json-attributes.
+                         https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime.
         arrival_time_period: Time period for the search
         snapping: Optional settings for adjusting road network lookup behavior
         traffic_model: Traffic model for driving journeys (peak/off_peak)
@@ -69,7 +69,7 @@ class H3FastRequest(TravelTimeRequest[H3Response]):
     Attributes:
         resolution: H3 resolution level (higher = more granular cells).
                          Limitations can be found here:
-                         https://docs.traveltime.com/api/reference/h3-fast#request-body-json-attributes.
+                         https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime.
         properties: Properties to return for each H3 cell (min, max, mean travel times).
         arrival_searches: Arrival-based search configurations containing the actual search
                          definitions that will be executed.
