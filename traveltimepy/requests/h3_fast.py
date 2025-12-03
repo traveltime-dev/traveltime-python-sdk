@@ -59,6 +59,36 @@ class H3FastArrivalSearches(BaseModel):
     one_to_many: List[H3FastSearch]
 
 
+class H3FastIntersection(BaseModel):
+    """Defines intersection of multiple H3 Fast search results.
+
+    Creates a new shape containing only H3 cells that appear in ALL referenced searches.
+    Useful for finding areas accessible from multiple locations or transport modes.
+
+    Attributes:
+        id: Unique identifier for this intersection
+        search_ids: List of search IDs to intersect
+    """
+
+    id: str
+    search_ids: List[str]
+
+
+class H3FastUnion(BaseModel):
+    """Defines union of multiple H3 Fast search results.
+
+    Creates a new shape containing H3 cells that appear in ANY of the referenced searches.
+    Useful for combining coverage areas from multiple searches.
+
+    Attributes:
+        id: Unique identifier for this union
+        search_ids: List of search IDs to combine
+    """
+
+    id: str
+    search_ids: List[str]
+
+
 class H3FastRequest(TravelTimeRequest[H3Response]):
     """Request calculates travel times to all H3 hexagonal cells within a travel time
     catchment area and returns min/max/mean travel times for each cell.
@@ -73,27 +103,42 @@ class H3FastRequest(TravelTimeRequest[H3Response]):
         properties: Properties to return for each H3 cell (min, max, mean travel times).
         arrival_searches: Arrival-based search configurations containing the actual search
                          definitions that will be executed.
+        unions: List of union operations on search results
+        intersections: List of intersection operations on search results
     """
 
     resolution: int
     properties: List[CellProperty]
     arrival_searches: H3FastArrivalSearches
+    unions: List[H3FastUnion]
+    intersections: List[H3FastIntersection]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
-        return [
-            H3FastRequest(
-                resolution=self.resolution,
-                properties=self.properties,
-                arrival_searches=H3FastArrivalSearches(
-                    one_to_many=one_to_many, many_to_one=many_to_one
-                ),
-            )
-            for one_to_many, many_to_one in split(
-                self.arrival_searches.one_to_many,
-                self.arrival_searches.many_to_one,
-                window_size,
-            )
-        ]
+        # Do not split request if unions/intersections are defined
+        if len(self.unions) > 0 or len(self.intersections) > 0:
+            return [self]
+        else:
+            return [
+                H3FastRequest(
+                    resolution=self.resolution,
+                    properties=self.properties,
+                    arrival_searches=H3FastArrivalSearches(
+                        one_to_many=one_to_many, many_to_one=many_to_one
+                    ),
+                    unions=self.unions,
+                    intersections=self.intersections,
+                )
+                for one_to_many, many_to_one in split(
+                    self.arrival_searches.one_to_many,
+                    self.arrival_searches.many_to_one,
+                    window_size,
+                )
+            ]
 
     def merge(self, responses: List[H3Response]) -> H3Response:
-        return H3Response(results=flatten([response.results for response in responses]))
+        return H3Response(
+            results=sorted(
+                flatten([response.results for response in responses]),
+                key=lambda res: res.search_id,
+            )
+        )

@@ -42,7 +42,12 @@ from traveltimepy.requests.h3 import (
     H3Intersection,
     H3Request,
 )
-from traveltimepy.requests.h3_fast import H3FastRequest, H3FastArrivalSearches
+from traveltimepy.requests.h3_fast import (
+    H3FastRequest,
+    H3FastArrivalSearches,
+    H3FastUnion,
+    H3FastIntersection,
+)
 from traveltimepy.requests.postcodes import (
     PostcodesRequest,
     PostcodeArrivalSearch,
@@ -577,6 +582,8 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: H3FastArrivalSearches,
         properties: List[CellProperty],
         resolution: int,
+        unions: List[H3FastUnion],
+        intersections: List[H3FastIntersection],
     ) -> H3Response:
         """Calculate travel times to H3 cells within travel time catchment areas.
 
@@ -590,6 +597,8 @@ class AsyncClient(AsyncBaseClient):
             resolution: H3 resolution level (higher = more granular cells).
                          Limitations can be found here:
                          https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime.
+            unions: Union operations combining multiple search results
+            intersections: Intersection operations finding overlapping areas
 
         Returns:
             H3Response: Travel time statistics for H3 cells in catchment areas.
@@ -603,6 +612,8 @@ class AsyncClient(AsyncBaseClient):
                 resolution=resolution,
                 properties=properties,
                 arrival_searches=arrival_searches,
+                unions=unions,
+                intersections=intersections,
             ),
         )
 
