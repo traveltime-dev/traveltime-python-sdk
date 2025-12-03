@@ -34,6 +34,8 @@ from traveltimepy.requests.geohash import (
 from traveltimepy.requests.geohash_fast import (
     GeoHashFastArrivalSearches,
     GeoHashFastRequest,
+    GeoHashFastUnion,
+    GeoHashFastIntersection,
 )
 from traveltimepy.requests.h3 import (
     H3DepartureSearch,
@@ -674,6 +676,8 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: GeoHashFastArrivalSearches,
         properties: List[CellProperty],
         resolution: int,
+        unions: List[GeoHashFastUnion],
+        intersections: List[GeoHashFastIntersection],
     ) -> GeoHashResponse:
         """High-performance version of geohash search with fewer configurable parameters
         and more limited geographic coverage. Returns statistical travel time measures
@@ -689,6 +693,9 @@ class AsyncClient(AsyncBaseClient):
             resolution: Geohash resolution of results to be returned.
                        Valid range: 1-6, where higher values provide more precise areas.
 
+            unions: Union operations combining multiple search results
+            intersections: Intersection operations finding overlapping areas
+
         Returns:
             GeoHashResponse containing travel time statistics for each geohash cell
             within the reachable area.
@@ -701,6 +708,8 @@ class AsyncClient(AsyncBaseClient):
                 resolution=resolution,
                 properties=properties,
                 arrival_searches=arrival_searches,
+                unions=unions,
+                intersections=intersections,
             ),
         )
 
