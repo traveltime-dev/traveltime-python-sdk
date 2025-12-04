@@ -272,7 +272,9 @@ async def test_intersection_many_to_one(async_client: AsyncClient):
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         unions=[],
-        intersections=[H3FastIntersection(id="intersection", search_ids=["id", "id 2"])],
+        intersections=[
+            H3FastIntersection(id="intersection", search_ids=["id", "id 2"])
+        ],
     )
 
     assert len(response.results) == 3
@@ -328,7 +330,9 @@ def test_intersection_many_to_one_sync(client: Client):
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         unions=[],
-        intersections=[H3FastIntersection(id="intersection", search_ids=["id", "id 2"])],
+        intersections=[
+            H3FastIntersection(id="intersection", search_ids=["id", "id 2"])
+        ],
     )
 
     assert len(response.results) == 3
