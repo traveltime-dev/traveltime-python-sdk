@@ -61,6 +61,36 @@ class GeoHashFastArrivalSearches(BaseModel):
     one_to_many: List[GeoHashFastSearch]
 
 
+class GeoHashFastIntersection(BaseModel):
+    """Defines intersection of multiple Geohash Fast search results.
+
+    Creates a new shape containing only geohash cells that appear in ALL referenced searches.
+    Useful for finding areas accessible from multiple locations or transport modes.
+
+    Attributes:
+        id: Unique identifier for this intersection
+        search_ids: List of search IDs to intersect
+    """
+
+    id: str
+    search_ids: List[str]
+
+
+class GeoHashFastUnion(BaseModel):
+    """Defines union of multiple Geohash Fast search results.
+
+    Creates a new shape containing geohash cells that appear in ANY of the referenced searches.
+    Useful for combining coverage areas from multiple searches.
+
+    Attributes:
+        id: Unique identifier for this union
+        search_ids: List of search IDs to combine
+    """
+
+    id: str
+    search_ids: List[str]
+
+
 class GeoHashFastRequest(TravelTimeRequest[GeoHashResponse]):
     """High-performance geohash travel time analysis with limited parameters and
     geographic coverage.
@@ -72,6 +102,8 @@ class GeoHashFastRequest(TravelTimeRequest[GeoHashResponse]):
         resolution: Geohash resolution of results. Valid range: 1-6.
         properties: Properties to return for each cell. Options: min, max, mean travel times.
         arrival_searches: Arrival-based search configurations for fast geohash processing.
+        unions: List of union operations on search results
+        intersections: List of intersection operations on search results
 
     Note:
         - High performance: optimized for speed over configurability
@@ -83,24 +115,35 @@ class GeoHashFastRequest(TravelTimeRequest[GeoHashResponse]):
     resolution: int
     properties: List[CellProperty]
     arrival_searches: GeoHashFastArrivalSearches
+    unions: List[GeoHashFastUnion]
+    intersections: List[GeoHashFastIntersection]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
-        return [
-            GeoHashFastRequest(
-                resolution=self.resolution,
-                properties=self.properties,
-                arrival_searches=GeoHashFastArrivalSearches(
-                    one_to_many=one_to_many, many_to_one=many_to_one
-                ),
-            )
-            for one_to_many, many_to_one in split(
-                self.arrival_searches.one_to_many,
-                self.arrival_searches.many_to_one,
-                window_size,
-            )
-        ]
+        # Do not split request if unions/intersections are defined
+        if len(self.unions) > 0 or len(self.intersections) > 0:
+            return [self]
+        else:
+            return [
+                GeoHashFastRequest(
+                    resolution=self.resolution,
+                    properties=self.properties,
+                    arrival_searches=GeoHashFastArrivalSearches(
+                        one_to_many=one_to_many, many_to_one=many_to_one
+                    ),
+                    unions=self.unions,
+                    intersections=self.intersections,
+                )
+                for one_to_many, many_to_one in split(
+                    self.arrival_searches.one_to_many,
+                    self.arrival_searches.many_to_one,
+                    window_size,
+                )
+            ]
 
     def merge(self, responses: List[GeoHashResponse]) -> GeoHashResponse:
         return GeoHashResponse(
-            results=flatten([response.results for response in responses])
+            results=sorted(
+                flatten([response.results for response in responses]),
+                key=lambda res: res.search_id,
+            )
         )

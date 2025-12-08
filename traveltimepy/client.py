@@ -30,6 +30,8 @@ from traveltimepy.requests.geohash import (
 from traveltimepy.requests.geohash_fast import (
     GeoHashFastArrivalSearches,
     GeoHashFastRequest,
+    GeoHashFastUnion,
+    GeoHashFastIntersection,
 )
 from traveltimepy.requests.h3 import (
     H3DepartureSearch,
@@ -38,7 +40,12 @@ from traveltimepy.requests.h3 import (
     H3Intersection,
     H3Request,
 )
-from traveltimepy.requests.h3_fast import H3FastRequest, H3FastArrivalSearches
+from traveltimepy.requests.h3_fast import (
+    H3FastRequest,
+    H3FastArrivalSearches,
+    H3FastUnion,
+    H3FastIntersection,
+)
 from traveltimepy.requests.postcodes import (
     PostcodesRequest,
     PostcodeArrivalSearch,
@@ -573,11 +580,13 @@ class Client(SyncBaseClient):
         arrival_searches: H3FastArrivalSearches,
         properties: List[CellProperty],
         resolution: int,
+        unions: List[H3FastUnion],
+        intersections: List[H3FastIntersection],
     ) -> H3Response:
         """Calculate travel times to H3 cells within travel time catchment areas.
 
         High-performance endpoint that returns min/max/mean travel times for H3 hexagonal
-        cells based on arrival searches.
+        cells based on arrival searches with support for unions and intersections.
 
         Args:
             arrival_searches: Search configurations with arrival points and transportation methods.
@@ -586,6 +595,8 @@ class Client(SyncBaseClient):
             resolution: H3 resolution level (higher = more granular cells).
                          Limitations can be found here:
                          https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime.
+            unions: Union operations combining multiple search results
+            intersections: Intersection operations finding overlapping areas
 
         Returns:
             H3Response: Travel time statistics for H3 cells in catchment areas.
@@ -599,6 +610,8 @@ class Client(SyncBaseClient):
                 resolution=resolution,
                 properties=properties,
                 arrival_searches=arrival_searches,
+                unions=unions,
+                intersections=intersections,
             ),
         )
 
@@ -659,6 +672,8 @@ class Client(SyncBaseClient):
         arrival_searches: GeoHashFastArrivalSearches,
         properties: List[CellProperty],
         resolution: int,
+        unions: List[GeoHashFastUnion],
+        intersections: List[GeoHashFastIntersection],
     ) -> GeoHashResponse:
         """High-performance version of geohash search with fewer configurable parameters
         and more limited geographic coverage. Returns statistical travel time measures
@@ -674,6 +689,9 @@ class Client(SyncBaseClient):
             resolution: Geohash resolution of results to be returned.
                        Valid range: 1-6, where higher values provide more precise areas.
 
+            unions: Union operations combining multiple search results
+            intersections: Intersection operations finding overlapping areas
+
         Returns:
             GeoHashResponse containing travel time statistics for each geohash cell
             within the reachable area.
@@ -686,6 +704,8 @@ class Client(SyncBaseClient):
                 resolution=resolution,
                 properties=properties,
                 arrival_searches=arrival_searches,
+                unions=unions,
+                intersections=intersections,
             ),
         )
 
