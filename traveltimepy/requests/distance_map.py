@@ -5,7 +5,7 @@ from typing import List, Optional
 
 from pydantic.main import BaseModel
 
-from traveltimepy.requests.common import Snapping, PolygonsFilter
+from traveltimepy.requests.common import RenderMode, Snapping, PolygonsFilter
 from traveltimepy.requests.level_of_detail import LevelOfDetail
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.transportation import (
@@ -44,6 +44,13 @@ class DistanceMapDepartureSearch(BaseModel):
         polygons_filter: Limits the number of polygons returned in the result.
                          Useful when the reachable area consists of multiple disconnected regions.
         no_holes: Enable to remove holes from returned polygons. Note that this will likely result in loss in accuracy.
+        render_mode: Optional rendering mode for polygon output optimization
+        buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
+                - When `render_mode=approximate_time_filter` - controls how far from the reached road
+                  network the isochrone generation algorithm may consider locations as reachable.
+                - when `render_mode=road_buffering` - controls how far the final polygon is expanded
+                  outward from the reached roads. This behaves like applying a positive geometric offset
+                  to the collection of lines derived from the reached road segments.
     """
 
     id: str
@@ -63,6 +70,8 @@ class DistanceMapDepartureSearch(BaseModel):
     snapping: Optional[Snapping] = None
     polygons_filter: Optional[PolygonsFilter] = None
     no_holes: Optional[bool] = None
+    render_mode: Optional[RenderMode] = None
+    buffer_distance: Optional[int] = None
 
 
 class DistanceMapArrivalSearch(BaseModel):
@@ -89,6 +98,13 @@ class DistanceMapArrivalSearch(BaseModel):
         polygons_filter: Limits the number of polygons returned in the result.
                          Useful when the reachable area consists of multiple disconnected regions.
         no_holes: Enable to remove holes from returned polygons. Note that this will likely result in loss in accuracy.
+        render_mode: Optional rendering mode for polygon output optimization
+        buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
+                - When `render_mode=approximate_time_filter` - controls how far from the reached road
+                  network the isochrone generation algorithm may consider locations as reachable.
+                - when `render_mode=road_buffering` - controls how far the final polygon is expanded
+                  outward from the reached roads. This behaves like applying a positive geometric offset
+                  to the collection of lines derived from the reached road segments.
     """
 
     id: str
@@ -108,6 +124,8 @@ class DistanceMapArrivalSearch(BaseModel):
     snapping: Optional[Snapping] = None
     polygons_filter: Optional[PolygonsFilter] = None
     no_holes: Optional[bool] = None
+    render_mode: Optional[RenderMode] = None
+    buffer_distance: Optional[int] = None
 
 
 class DistanceMapIntersection(BaseModel):

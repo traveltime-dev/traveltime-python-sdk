@@ -43,6 +43,12 @@ class TimeMapDepartureSearch(BaseModel):
         polygons_filter: Optional filtering for polygon complexity and size
         remove_water_bodies: Optional flag to exclude water areas from polygons
         render_mode: Optional rendering mode for polygon output optimization
+        buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
+                - When `render_mode=approximate_time_filter` - controls how far from the reached road
+                  network the isochrone generation algorithm may consider locations as reachable.
+                - when `render_mode=road_buffering` - controls how far the final polygon is expanded
+                  outward from the reached roads. This behaves like applying a positive geometric offset
+                  to the collection of lines derived from the reached road segments.
     """
 
     id: str
@@ -64,6 +70,7 @@ class TimeMapDepartureSearch(BaseModel):
     polygons_filter: Optional[PolygonsFilter] = None
     remove_water_bodies: Optional[bool] = None
     render_mode: Optional[RenderMode] = None
+    buffer_distance: Optional[int] = None
 
 
 class TimeMapArrivalSearch(BaseModel):
@@ -82,6 +89,12 @@ class TimeMapArrivalSearch(BaseModel):
         polygons_filter: Optional filtering for polygon complexity and size
         remove_water_bodies: Optional flag to exclude water areas from polygons
         render_mode: Optional rendering mode for polygon output optimization
+        buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
+                - When `render_mode=approximate_time_filter` - controls how far from the reached road
+                  network the isochrone generation algorithm may consider locations as reachable.
+                - when `render_mode=road_buffering` - controls how far the final polygon is expanded
+                  outward from the reached roads. This behaves like applying a positive geometric offset
+                  to the collection of lines derived from the reached road segments.
     """
 
     id: str
@@ -103,6 +116,7 @@ class TimeMapArrivalSearch(BaseModel):
     polygons_filter: Optional[PolygonsFilter] = None
     remove_water_bodies: Optional[bool] = None
     render_mode: Optional[RenderMode] = None
+    buffer_distance: Optional[int] = None
 
 
 class TimeMapIntersection(BaseModel):

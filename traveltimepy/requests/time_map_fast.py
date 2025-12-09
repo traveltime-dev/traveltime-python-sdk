@@ -31,6 +31,12 @@ class TimeMapFastSearch(BaseModel):
         polygons_filter: Optional filtering for polygon complexity
         render_mode: Optional rendering mode for polygon output
         traffic_model: Traffic model for driving journeys (peak/off_peak)
+        buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
+                - When `render_mode=approximate_time_filter` - controls how far from the reached road
+                  network the isochrone generation algorithm may consider locations as reachable.
+                - when `render_mode=road_buffering` - controls how far the final polygon is expanded
+                  outward from the reached roads. This behaves like applying a positive geometric offset
+                  to the collection of lines derived from the reached road segments.
     """
 
     id: str
@@ -42,6 +48,7 @@ class TimeMapFastSearch(BaseModel):
     snapping: Optional[Snapping] = None
     polygons_filter: Optional[PolygonsFilter] = None
     render_mode: Optional[RenderMode] = None
+    buffer_distance: Optional[int] = None
     traffic_model: FastTrafficModel = FastTrafficModel.PEAK
 
     # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
