@@ -1,6 +1,6 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel
 
 from traveltimepy.requests.common import (
     Coordinates,
@@ -13,7 +13,16 @@ from traveltimepy.requests.level_of_detail import LevelOfDetail
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
-from traveltimepy.requests.transportation import TransportationFast, FastTrafficModel
+from traveltimepy.requests.transportation import (
+    PublicTransportFast,
+    DrivingFast,
+    CyclingFast,
+    WalkingFast,
+    WalkingFerryFast,
+    CyclingFerryFast,
+    DrivingFerryFast,
+    DrivingPublicTransportFast,
+)
 
 
 class TimeMapFastSearch(BaseModel):
@@ -30,7 +39,6 @@ class TimeMapFastSearch(BaseModel):
         snapping: Optional road network lookup settings
         polygons_filter: Optional filtering for polygon complexity
         render_mode: Optional rendering mode for polygon output
-        traffic_model: Traffic model for driving journeys (peak/off_peak)
         buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
                 - When `render_mode=approximate_time_filter` - controls how far from the reached road
                   network the isochrone generation algorithm may consider locations as reachable.
@@ -41,7 +49,16 @@ class TimeMapFastSearch(BaseModel):
 
     id: str
     coords: Coordinates
-    transportation: TransportationFast
+    transportation: Union[
+        PublicTransportFast,
+        DrivingFast,
+        CyclingFast,
+        WalkingFast,
+        WalkingFerryFast,
+        CyclingFerryFast,
+        DrivingFerryFast,
+        DrivingPublicTransportFast,
+    ]
     travel_time: int
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     level_of_detail: Optional[LevelOfDetail] = None
@@ -49,12 +66,6 @@ class TimeMapFastSearch(BaseModel):
     polygons_filter: Optional[PolygonsFilter] = None
     render_mode: Optional[RenderMode] = None
     buffer_distance: Optional[int] = None
-    traffic_model: FastTrafficModel = FastTrafficModel.PEAK
-
-    # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
-    @field_serializer("transportation")
-    def serialize_transportation(self, value: TransportationFast) -> dict:
-        return {"type": value.value}
 
 
 class TimeMapFastArrivalSearches(BaseModel):
