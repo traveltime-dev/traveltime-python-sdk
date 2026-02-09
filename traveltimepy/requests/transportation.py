@@ -68,7 +68,7 @@ class CyclingPublicTransport(BaseModel):
     max_changes: Optional[MaxChanges] = None
 
 
-class TransportationFast(str, Enum):
+class TransportationFastType(str, Enum):
     PUBLIC_TRANSPORT = "public_transport"
     DRIVING = "driving"
     CYCLING = "cycling"
@@ -89,3 +89,37 @@ class FastTrafficModel(str, Enum):
 
     PEAK = "peak"
     OFF_PEAK = "off_peak"
+
+
+class PublicTransportFast(BaseModel):
+    type: Literal["public_transport"] = "public_transport"
+
+
+class WalkingFast(BaseModel):
+    type: Literal["walking"] = "walking"
+
+
+class CyclingFast(BaseModel):
+    type: Literal["cycling"] = "cycling"
+
+
+class DrivingFast(BaseModel):
+    type: Literal["driving"] = "driving"
+    traffic_model: Optional[FastTrafficModel] = None
+
+
+class WalkingFerryFast(BaseModel):
+    type: Literal["walking+ferry"] = "walking+ferry"
+
+
+class CyclingFerryFast(BaseModel):
+    type: Literal["cycling+ferry"] = "cycling+ferry"
+
+
+class DrivingFerryFast(BaseModel):
+    type: Literal["driving+ferry"] = "driving+ferry"
+    traffic_model: Optional[FastTrafficModel] = None
+
+
+class DrivingPublicTransportFast(BaseModel):
+    type: Literal["driving+public_transport"] = "driving+public_transport"

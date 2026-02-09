@@ -7,9 +7,12 @@ from traveltimepy.requests.time_filter_fast import (
     TimeFilterFastArrivalSearches,
     TimeFilterFastOneToMany,
     TimeFilterFastManyToOne,
+)
+from traveltimepy.requests.transportation import (
+    DrivingFerryFast,
+    PublicTransportFast,
     FastTrafficModel,
 )
-from traveltimepy.requests.transportation import TransportationFast
 
 
 @pytest.mark.asyncio
@@ -22,7 +25,7 @@ async def test_one_to_many(async_client: AsyncClient, locations):
                     id="London center",
                     departure_location_id="London center",
                     arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
                 ),
@@ -30,7 +33,7 @@ async def test_one_to_many(async_client: AsyncClient, locations):
                     id="ZSL London Zoo",
                     departure_location_id="ZSL London Zoo",
                     arrival_location_ids=["Hyde Park", "London center"],
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
                 ),
@@ -52,7 +55,7 @@ async def test_many_to_one(async_client: AsyncClient, locations):
                     id="London center",
                     arrival_location_id="London center",
                     departure_location_ids=["Hyde Park", "ZSL London Zoo"],
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
                 ),
@@ -60,7 +63,7 @@ async def test_many_to_one(async_client: AsyncClient, locations):
                     id="ZSL London Zoo",
                     arrival_location_id="ZSL London Zoo",
                     departure_location_ids=["Hyde Park", "London center"],
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
                 ),
@@ -81,7 +84,7 @@ def test_one_to_many_sync(client: Client, locations):
                     id="London center",
                     departure_location_id="London center",
                     arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
                 ),
@@ -89,7 +92,7 @@ def test_one_to_many_sync(client: Client, locations):
                     id="ZSL London Zoo",
                     departure_location_id="ZSL London Zoo",
                     arrival_location_ids=["Hyde Park", "London center"],
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
                 ),
@@ -110,7 +113,7 @@ def test_many_to_one_sync(client: Client, locations):
                     id="London center",
                     arrival_location_id="London center",
                     departure_location_ids=["Hyde Park", "ZSL London Zoo"],
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
                 ),
@@ -118,7 +121,7 @@ def test_many_to_one_sync(client: Client, locations):
                     id="ZSL London Zoo",
                     arrival_location_id="ZSL London Zoo",
                     departure_location_ids=["Hyde Park", "London center"],
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
                 ),
@@ -140,10 +143,11 @@ async def test_one_to_many_with_traffic_model(async_client: AsyncClient, locatio
                     id="London center",
                     departure_location_id="London center",
                     arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
-                    transportation=TransportationFast.DRIVING,
+                    transportation=DrivingFerryFast(
+                        traffic_model=FastTrafficModel.PEAK
+                    ),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
-                    traffic_model=FastTrafficModel.PEAK,
                 ),
             ],
             many_to_one=[],
@@ -163,10 +167,11 @@ async def test_many_to_one_with_traffic_model(async_client: AsyncClient, locatio
                     id="London center",
                     arrival_location_id="London center",
                     departure_location_ids=["Hyde Park", "ZSL London Zoo"],
-                    transportation=TransportationFast.DRIVING,
+                    transportation=DrivingFerryFast(
+                        traffic_model=FastTrafficModel.OFF_PEAK
+                    ),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
-                    traffic_model=FastTrafficModel.OFF_PEAK,
                 ),
             ],
             one_to_many=[],
@@ -185,10 +190,11 @@ def test_one_to_many_with_traffic_model_sync(client: Client, locations):
                     id="London center",
                     departure_location_id="London center",
                     arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
-                    transportation=TransportationFast.DRIVING,
+                    transportation=DrivingFerryFast(
+                        traffic_model=FastTrafficModel.PEAK
+                    ),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
-                    traffic_model=FastTrafficModel.PEAK,
                 ),
             ],
             many_to_one=[],
@@ -207,10 +213,11 @@ def test_many_to_one_with_traffic_model_sync(client: Client, locations):
                     id="London center",
                     arrival_location_id="London center",
                     departure_location_ids=["Hyde Park", "ZSL London Zoo"],
-                    transportation=TransportationFast.DRIVING,
+                    transportation=DrivingFerryFast(
+                        traffic_model=FastTrafficModel.PEAK
+                    ),
                     travel_time=1800,
                     properties=[Property.TRAVEL_TIME],
-                    traffic_model=FastTrafficModel.OFF_PEAK,
                 ),
             ],
             one_to_many=[],

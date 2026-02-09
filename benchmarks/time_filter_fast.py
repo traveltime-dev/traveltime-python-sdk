@@ -3,12 +3,12 @@ import time
 
 from benchmarks.common import generate_locations
 from traveltimepy.requests.common import Property
-from traveltimepy.requests.transportation import TransportationFast
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.requests.time_filter_fast import (
     TimeFilterFastArrivalSearches,
     TimeFilterFastOneToMany,
 )
+from traveltimepy.requests.transportation import DrivingFerryFast, FastTrafficModel
 
 
 async def generate_matrix(size: int):
@@ -22,7 +22,7 @@ async def generate_matrix(size: int):
                 arrival_location_ids=list(
                     filter(lambda cur_id: cur_id != location_id, location_ids)
                 ),
-                transportation=TransportationFast.DRIVING,
+                transportation=DrivingFerryFast(traffic_model=FastTrafficModel.PEAK),
                 travel_time=3600,
                 properties=[Property.TRAVEL_TIME],
             )
