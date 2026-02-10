@@ -7,6 +7,7 @@ ensuring consistency between the two implementations.
 Usage:
     python scripts/generate_async_client.py
 """
+
 import re
 import sys
 from pathlib import Path
