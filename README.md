@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/traveltimepy.svg)](https://badge.fury.io/py/traveltimepy)
 [![Unit Tests](https://github.com/traveltime-dev/traveltime-python-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/traveltime-dev/traveltime-python-sdk/actions/workflows/ci.yml)
-[![Python support](https://img.shields.io/badge/python-3.9+-blue.svg)](https://img.shields.io/badge/python-3.9+-blue)
+[![Python support](https://img.shields.io/badge/python-3.10+-blue.svg)](https://img.shields.io/badge/python-3.10+-blue)
 
 The TravelTime Python SDK provides a simple and efficient way to access the [TravelTime API](https://docs.traveltime.com/api/overview/introduction), enabling you to calculate travel times and distances, generate isochrones, and perform location-based queries using real-world transportation data.
 
@@ -19,7 +19,7 @@ The TravelTime Python SDK provides a simple and efficient way to access the [Tra
 
 ## Requirements
 
-- Python 3.9 or higher
+- Python 3.10 or higher
 
 To check your Python version:
 ```bash

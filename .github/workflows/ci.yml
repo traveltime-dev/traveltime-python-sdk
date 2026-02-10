@@ -16,11 +16,11 @@ jobs:
       max-parallel: 1
       matrix:
         python-version:
-          - "3.9"
           - "3.10"
           - "3.11"
           - "3.12"
           - "3.13"
+          - "3.14"
     steps:
       - uses: actions/checkout@v6
         with:
@@ -51,7 +51,7 @@ jobs:
       - name: Set up protoc
         uses: arduino/setup-protoc@v3
         with:
-          version: '3.x'
+          version: '25.x'
 
       - name: Generate proto files
         run: |
