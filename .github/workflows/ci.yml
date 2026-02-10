@@ -40,9 +40,10 @@ jobs:
       - name: Formatting check with black
         run: |
           black . --check --diff
-      - name: Docstring formatting check with docformatter
-        run: |
-          docformatter --check --recursive --wrap-summaries 88 --wrap-descriptions 88 .
+      # Dockformatter doesn't work on python3.14 yet
+      #- name: Docstring formatting check with docformatter
+        #run: |
+          #docformatter --check --recursive --wrap-summaries 88 --wrap-descriptions 88 .
       - name: Type check with mypy
         run: |
           mypy --install-types --non-interactive .

@@ -47,7 +47,7 @@ test = [
 	"mypy",
 	"black",
 	"types-shapely",
-	"docformatter",
+	# "docformatter", # Doesn't work on python3.14 yet
 ]
 
 [tool.setuptools]
