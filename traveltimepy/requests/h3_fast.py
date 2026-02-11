@@ -1,7 +1,7 @@
 from typing import List, Optional
 import typing
 
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel
 
 from traveltimepy.requests.common import (
     CellProperty,
@@ -13,7 +13,16 @@ from traveltimepy.requests.common import (
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.h3 import H3Response
 from traveltimepy.itertools import split, flatten
-from traveltimepy.requests.transportation import TransportationFast, FastTrafficModel
+from traveltimepy.requests.transportation import (
+    PublicTransportFast,
+    DrivingFast,
+    CyclingFast,
+    WalkingFast,
+    WalkingFerryFast,
+    CyclingFerryFast,
+    DrivingFerryFast,
+    DrivingPublicTransportFast,
+)
 
 
 class H3FastSearch(BaseModel):
@@ -22,28 +31,30 @@ class H3FastSearch(BaseModel):
     Attributes:
         id: Unique identifier for this search - must be unique across all searches in a request
         coords: Starting/ending coordinates - can be lat/lng coordinates or H3 cell centroid
-        transportation: Transportation method (public_transport, walking+ferry, cycling+ferry, etc.)
+        transportation: Transportation method (use DrivingFast or DrivingFerryFast for traffic_model)
         travel_time: Maximum journey time in seconds (max 10800s).
                          Maximum value depends on resolution parameter.
                          Limitations can be found here:
                          https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime.
         arrival_time_period: Time period for the search
         snapping: Optional settings for adjusting road network lookup behavior
-        traffic_model: Traffic model for driving journeys (peak/off_peak)
     """
 
     id: str
     coords: typing.Union[Coordinates, H3Centroid]
-    transportation: TransportationFast
+    transportation: typing.Union[
+        PublicTransportFast,
+        DrivingFast,
+        CyclingFast,
+        WalkingFast,
+        WalkingFerryFast,
+        CyclingFerryFast,
+        DrivingFerryFast,
+        DrivingPublicTransportFast,
+    ]
     travel_time: int
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
-    traffic_model: FastTrafficModel = FastTrafficModel.PEAK
-
-    # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
-    @field_serializer("transportation")
-    def serialize_transportation(self, value: TransportationFast) -> dict:
-        return {"type": value.value}
 
 
 class H3FastArrivalSearches(BaseModel):

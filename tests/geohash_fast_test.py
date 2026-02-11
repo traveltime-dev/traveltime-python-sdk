@@ -9,7 +9,11 @@ from traveltimepy.requests.geohash_fast import (
     GeoHashFastUnion,
     GeoHashFastIntersection,
 )
-from traveltimepy.requests.transportation import TransportationFast, FastTrafficModel
+from traveltimepy.requests.transportation import (
+    DrivingFerryFast,
+    FastTrafficModel,
+    PublicTransportFast,
+)
 
 
 @pytest.mark.asyncio
@@ -20,13 +24,13 @@ async def test_one_to_many(async_client: AsyncClient):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
             ],
@@ -50,13 +54,13 @@ async def test_many_to_one(async_client: AsyncClient):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
             ],
@@ -77,13 +81,13 @@ def test_one_to_many_sync(client: Client):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
             ],
@@ -106,13 +110,13 @@ def test_many_to_one_sync(client: Client):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
             ],
@@ -134,9 +138,10 @@ async def test_one_to_many_with_traffic_model(async_client: AsyncClient):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.DRIVING,
+                    transportation=DrivingFerryFast(
+                        traffic_model=FastTrafficModel.PEAK
+                    ),
                     travel_time=900,
-                    traffic_model=FastTrafficModel.PEAK,
                 ),
             ],
             many_to_one=[],
@@ -159,9 +164,10 @@ async def test_many_to_one_with_traffic_model(async_client: AsyncClient):
                 GeoHashFastSearch(
                     id="id",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.DRIVING_FERRY,
+                    transportation=DrivingFerryFast(
+                        traffic_model=FastTrafficModel.PEAK
+                    ),
                     travel_time=900,
-                    traffic_model=FastTrafficModel.OFF_PEAK,
                 ),
             ],
         ),
@@ -181,9 +187,10 @@ def test_one_to_many_with_traffic_model_sync(client: Client):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.DRIVING,
+                    transportation=DrivingFerryFast(
+                        traffic_model=FastTrafficModel.PEAK
+                    ),
                     travel_time=900,
-                    traffic_model=FastTrafficModel.PEAK,
                 ),
             ],
             many_to_one=[],
@@ -205,9 +212,10 @@ def test_many_to_one_with_traffic_model_sync(client: Client):
                 GeoHashFastSearch(
                     id="id",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.DRIVING_FERRY,
+                    transportation=DrivingFerryFast(
+                        traffic_model=FastTrafficModel.PEAK
+                    ),
                     travel_time=900,
-                    traffic_model=FastTrafficModel.OFF_PEAK,
                 ),
             ],
         ),
@@ -228,13 +236,13 @@ async def test_union_one_to_many(async_client: AsyncClient):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
             ],
@@ -257,13 +265,13 @@ async def test_intersection_many_to_one(async_client: AsyncClient):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
             ],
@@ -287,13 +295,13 @@ def test_union_one_to_many_sync(client: Client):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
             ],
@@ -315,13 +323,13 @@ def test_intersection_many_to_one_sync(client: Client):
                 GeoHashFastSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
                 GeoHashFastSearch(
                     id="id 2",
                     coords=GeohashCentroid(geohash_centroid="gcpvj3"),
-                    transportation=TransportationFast.PUBLIC_TRANSPORT,
+                    transportation=PublicTransportFast(),
                     travel_time=900,
                 ),
             ],
