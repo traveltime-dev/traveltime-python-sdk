@@ -1,11 +1,11 @@
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 from typing_extensions import Literal
 
 from pydantic.main import BaseModel
 from pydantic import model_validator
 
-from traveltimepy.requests.common import DrivingTrafficModel
+from traveltimepy.requests.common import DrivingTrafficModel, IncludeRoad
 
 
 class MaxChanges(BaseModel):
@@ -17,6 +17,7 @@ class Driving(BaseModel):
     type: Literal["driving"] = "driving"
     disable_border_crossing: Optional[bool] = None
     traffic_model: Optional[DrivingTrafficModel] = None
+    include_roads: Optional[List[IncludeRoad]] = None
 
 
 class Walking(BaseModel):
@@ -31,12 +32,17 @@ class Ferry(BaseModel):
     type: Literal["ferry", "cycling+ferry", "driving+ferry"] = "ferry"
     boarding_time: Optional[int] = None
     traffic_model: Optional[DrivingTrafficModel] = None
+    include_roads: Optional[List[IncludeRoad]] = None
 
     @model_validator(mode="after")
-    def check_traffic_model(self):
+    def check_driving_ferry_fields(self):
         if self.type != "driving+ferry" and self.traffic_model:
             raise ValueError(
                 '"traffic_model" cannot be specified when type is not "driving+ferry"'
+            )
+        if self.type != "driving+ferry" and self.include_roads:
+            raise ValueError(
+                '"include_roads" cannot be specified when type is not "driving+ferry"'
             )
         return self
 

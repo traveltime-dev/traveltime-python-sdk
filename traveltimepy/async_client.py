@@ -590,7 +590,7 @@ class AsyncClient(AsyncBaseClient):
         """Calculate travel times to H3 cells within travel time catchment areas.
 
         High-performance endpoint that returns min/max/mean travel times for H3 hexagonal
-        cells based on arrival searches.
+        cells based on arrival searches with support for unions and intersections.
 
         Args:
             arrival_searches: Search configurations with arrival points and transportation methods.

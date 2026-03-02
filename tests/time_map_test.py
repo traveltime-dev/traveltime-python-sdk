@@ -3,7 +3,7 @@ from datetime import datetime
 
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.client import Client
-from traveltimepy.requests.common import Coordinates, Range
+from traveltimepy.requests.common import Coordinates, IncludeRoad, Range
 from traveltimepy.requests.level_of_detail import (
     SimpleLevelOfDetail,
     SimpleNumericLevelOfDetail,
@@ -17,7 +17,7 @@ from traveltimepy.requests.time_map import (
     TimeMapUnion,
     TimeMapIntersection,
 )
-from traveltimepy.requests.transportation import Driving
+from traveltimepy.requests.transportation import Driving, Ferry
 
 
 @pytest.mark.asyncio
@@ -714,3 +714,109 @@ def test_intersection_departures_sync(client: Client):
         ],
     )
     assert len(response.results[0].shapes) > 0
+
+
+def _total_shell_coords(response) -> int:
+    return sum(
+        len(shape.shell) for result in response.results for shape in result.shapes
+    )
+
+
+def _assert_include_roads_expands(response_without, response_with):
+    assert response_with.results[0].search_id == "with"
+    assert len(response_with.results[0].shapes) > 0
+    assert _total_shell_coords(response_with) >= _total_shell_coords(response_without)
+
+
+def _include_roads_search(search_id, transportation):
+    return TimeMapDepartureSearch(
+        id=search_id,
+        coords=Coordinates(lat=51.507609, lng=-0.128315),
+        departure_time=datetime.now(),
+        travel_time=900,
+        transportation=transportation,
+    )
+
+
+@pytest.mark.asyncio
+async def test_include_roads_driving(async_client: AsyncClient):
+    response_without = await async_client.time_map(
+        arrival_searches=[],
+        departure_searches=[_include_roads_search("without", Driving())],
+        unions=[],
+        intersections=[],
+    )
+    response_with = await async_client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            _include_roads_search("with", Driving(include_roads=[IncludeRoad.TRACK]))
+        ],
+        unions=[],
+        intersections=[],
+    )
+    _assert_include_roads_expands(response_without, response_with)
+
+
+@pytest.mark.asyncio
+async def test_include_roads_driving_ferry(async_client: AsyncClient):
+    response_without = await async_client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            _include_roads_search("without", Ferry(type="driving+ferry"))
+        ],
+        unions=[],
+        intersections=[],
+    )
+    response_with = await async_client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            _include_roads_search(
+                "with",
+                Ferry(type="driving+ferry", include_roads=[IncludeRoad.TRACK]),
+            )
+        ],
+        unions=[],
+        intersections=[],
+    )
+    _assert_include_roads_expands(response_without, response_with)
+
+
+def test_include_roads_driving_sync(client: Client):
+    response_without = client.time_map(
+        arrival_searches=[],
+        departure_searches=[_include_roads_search("without", Driving())],
+        unions=[],
+        intersections=[],
+    )
+    response_with = client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            _include_roads_search("with", Driving(include_roads=[IncludeRoad.TRACK]))
+        ],
+        unions=[],
+        intersections=[],
+    )
+    _assert_include_roads_expands(response_without, response_with)
+
+
+def test_include_roads_driving_ferry_sync(client: Client):
+    response_without = client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            _include_roads_search("without", Ferry(type="driving+ferry"))
+        ],
+        unions=[],
+        intersections=[],
+    )
+    response_with = client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            _include_roads_search(
+                "with",
+                Ferry(type="driving+ferry", include_roads=[IncludeRoad.TRACK]),
+            )
+        ],
+        unions=[],
+        intersections=[],
+    )
+    _assert_include_roads_expands(response_without, response_with)

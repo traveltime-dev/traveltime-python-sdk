@@ -229,6 +229,11 @@ class DrivingTrafficModel(str, Enum):
     PESSIMISTIC = "pessimistic"
 
 
+class IncludeRoad(str, Enum):
+    TRACK = "track"
+    RESTRICTED = "restricted"
+
+
 class ArrivalTimePeriod(str, Enum):
     WEEKDAY_MORNING = "weekday_morning"
 
