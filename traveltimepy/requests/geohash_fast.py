@@ -1,9 +1,17 @@
-from typing import List, Optional
-import typing
+from typing import List, Optional, Union
 
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel
 
-from traveltimepy.requests.transportation import TransportationFast, FastTrafficModel
+from traveltimepy.requests.transportation import (
+    PublicTransportFast,
+    DrivingFast,
+    CyclingFast,
+    WalkingFast,
+    WalkingFerryFast,
+    CyclingFerryFast,
+    DrivingFerryFast,
+    DrivingPublicTransportFast,
+)
 from traveltimepy.requests.common import (
     CellProperty,
     Coordinates,
@@ -26,24 +34,27 @@ class GeoHashFastSearch(BaseModel):
     Attributes:
         id: Unique identifier for this search operation.
         coords: Location coordinates using either lat/lng or geohash centroid.
-        transportation: Transportation mode for the journey calculation (limited options for performance).
+        transportation: Transportation mode.
         travel_time: Maximum journey time in seconds. Maximum value is 10800 (3 hours).
         arrival_time_period: Time period for the search instead of specific time.
         snapping: Configuration for connecting coordinates to the transportation network.
-        traffic_model: Traffic model for driving journeys (peak/off_peak).
     """
 
     id: str
-    coords: typing.Union[Coordinates, GeohashCentroid]
-    transportation: TransportationFast
+    coords: Union[Coordinates, GeohashCentroid]
+    transportation: Union[
+        PublicTransportFast,
+        DrivingFast,
+        CyclingFast,
+        WalkingFast,
+        WalkingFerryFast,
+        CyclingFerryFast,
+        DrivingFerryFast,
+        DrivingPublicTransportFast,
+    ]
     travel_time: int
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
-    traffic_model: FastTrafficModel = FastTrafficModel.PEAK
-
-    @field_serializer("transportation")
-    def serialize_transportation(self, value: TransportationFast) -> dict:
-        return {"type": value.value}
 
 
 class GeoHashFastArrivalSearches(BaseModel):

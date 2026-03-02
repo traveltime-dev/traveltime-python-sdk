@@ -1,8 +1,17 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
-from pydantic import BaseModel, field_serializer
+from pydantic import BaseModel
 
-from traveltimepy.requests.transportation import TransportationFast, FastTrafficModel
+from traveltimepy.requests.transportation import (
+    PublicTransportFast,
+    DrivingFast,
+    CyclingFast,
+    WalkingFast,
+    WalkingFerryFast,
+    CyclingFerryFast,
+    DrivingFerryFast,
+    DrivingPublicTransportFast,
+)
 from traveltimepy.requests.common import Location, Property, Snapping, ArrivalTimePeriod
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.time_filter_fast import TimeFilterFastResponse
@@ -24,23 +33,25 @@ class TimeFilterFastOneToMany(BaseModel):
         properties: Data to return (travel_time, distance, fares)
         arrival_time_period: Time period instead of specific time
         snapping: Optional road network lookup settings
-        traffic_model: Traffic model for driving journeys (peak/off_peak)
     """
 
     id: str
     departure_location_id: str
     arrival_location_ids: List[str]
-    transportation: TransportationFast
+    transportation: Union[
+        PublicTransportFast,
+        DrivingFast,
+        CyclingFast,
+        WalkingFast,
+        WalkingFerryFast,
+        CyclingFerryFast,
+        DrivingFerryFast,
+        DrivingPublicTransportFast,
+    ]
     travel_time: int
     properties: List[Property]
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
-    traffic_model: FastTrafficModel = FastTrafficModel.PEAK
-
-    # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
-    @field_serializer("transportation")
-    def serialize_transportation(self, value: TransportationFast) -> dict:
-        return {"type": value.value}
 
 
 class TimeFilterFastManyToOne(BaseModel):
@@ -58,23 +69,25 @@ class TimeFilterFastManyToOne(BaseModel):
         properties: Data to return (travel_time, distance, fares)
         arrival_time_period: Time period instead of specific time
         snapping: Optional road network lookup settings
-        traffic_model: Traffic model for driving journeys (peak/off_peak)
     """
 
     id: str
     arrival_location_id: str
     departure_location_ids: List[str]
-    transportation: TransportationFast
+    transportation: Union[
+        PublicTransportFast,
+        DrivingFast,
+        CyclingFast,
+        WalkingFast,
+        WalkingFerryFast,
+        CyclingFerryFast,
+        DrivingFerryFast,
+        DrivingPublicTransportFast,
+    ]
     travel_time: int
     properties: List[Property]
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
-    traffic_model: FastTrafficModel = FastTrafficModel.PEAK
-
-    # JSON expects `"transportation": { "type": "public_transport" }` and not `"transportation": "public_transport"`
-    @field_serializer("transportation")
-    def serialize_transportation(self, value: TransportationFast) -> dict:
-        return {"type": value.value}
 
 
 class TimeFilterFastArrivalSearches(BaseModel):

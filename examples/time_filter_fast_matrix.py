@@ -30,7 +30,7 @@ from traveltimepy.requests.time_filter_fast import (
     TimeFilterFastArrivalSearches,
     TimeFilterFastOneToMany,
 )
-from traveltimepy.requests.transportation import TransportationFast
+from traveltimepy.requests.transportation import PublicTransportFast
 
 import numpy as np
 
@@ -93,7 +93,7 @@ def create_fast_searches(locations, properties=None):
             departure_location_id=origin.id,
             arrival_location_ids=location_ids,
             travel_time=7200,
-            transportation=TransportationFast.PUBLIC_TRANSPORT,
+            transportation=PublicTransportFast(),
             properties=properties,
             arrival_time_period=ArrivalTimePeriod.WEEKDAY_MORNING,
         )
