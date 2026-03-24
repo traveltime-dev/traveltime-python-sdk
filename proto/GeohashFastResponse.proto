@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package com.igeolise.traveltime.rabbitmq.responses;
+
+message GeohashFastResponse {
+  message Cells {
+    repeated string ids = 1;
+    repeated sint32 minTravelTimes = 2;
+    repeated sint32 maxTravelTimes = 3;
+    repeated sint32 meanTravelTimes = 4;
+  }
+
+  Cells cells = 1;
+}
