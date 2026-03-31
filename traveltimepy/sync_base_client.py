@@ -27,13 +27,11 @@ from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import BaseClient, __version__
 from traveltimepy.errors import (
     TravelTimeJsonError,
-    TravelTimeProtoError,
     TravelTimeServerError,
 )
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
-    ProtoTransportation,
 )
 from traveltimepy.requests.geohash_fast_proto import (
     GeohashFastProtoRequest,
@@ -234,10 +232,7 @@ class SyncBaseClient(BaseClient):
             wait=wait_none(),  # No wait between retries
         )
         def _make_proto_request():
-            if isinstance(req.transportation, ProtoTransportation):
-                transportation_mode = req.transportation.value.name
-            else:
-                transportation_mode = req.transportation.TYPE.value.name
+            transportation_mode = self._get_transportation_mode(req.transportation)
 
             url = f"https://{self._proto_host}/api/v3/{req.country.value}/time-filter/fast/{transportation_mode}"
             headers = self._get_proto_headers()
@@ -254,19 +249,7 @@ class SyncBaseClient(BaseClient):
             )
 
             if response.status_code != 200:
-                if response.status_code >= 500:
-                    raise TravelTimeServerError("Internal server error")
-                else:
-                    raise TravelTimeProtoError(
-                        status_code=response.status_code,
-                        error_code=response.headers.get("X-ERROR-CODE", "Unknown"),
-                        error_details=response.headers.get(
-                            "X-ERROR-DETAILS", "No details provided"
-                        ),
-                        error_message=response.headers.get(
-                            "X-ERROR-MESSAGE", "No message provided"
-                        ),
-                    )
+                self._handle_proto_error(response.status_code, response.headers)
             else:
                 response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
                 response_body.ParseFromString(response.content)
@@ -294,10 +277,7 @@ class SyncBaseClient(BaseClient):
             wait=wait_none(),  # No wait between retries
         )
         def _make_geohash_proto_request():
-            if isinstance(req.transportation, ProtoTransportation):
-                transportation_mode = req.transportation.value.name
-            else:
-                transportation_mode = req.transportation.TYPE.value.name
+            transportation_mode = self._get_transportation_mode(req.transportation)
 
             url = f"https://{self._proto_host}/api/v3/{req.country.value}/geohash/fast/{transportation_mode}"
             headers = self._get_proto_headers()
@@ -314,19 +294,7 @@ class SyncBaseClient(BaseClient):
             )
 
             if response.status_code != 200:
-                if response.status_code >= 500:
-                    raise TravelTimeServerError("Internal server error")
-                else:
-                    raise TravelTimeProtoError(
-                        status_code=response.status_code,
-                        error_code=response.headers.get("X-ERROR-CODE", "Unknown"),
-                        error_details=response.headers.get(
-                            "X-ERROR-DETAILS", "No details provided"
-                        ),
-                        error_message=response.headers.get(
-                            "X-ERROR-MESSAGE", "No message provided"
-                        ),
-                    )
+                self._handle_proto_error(response.status_code, response.headers)
             else:
                 response_body = GeohashFastResponse_pb2.GeohashFastResponse()  # type: ignore
                 response_body.ParseFromString(response.content)

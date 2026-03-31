@@ -26,13 +26,11 @@ from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import BaseClient, __version__
 from traveltimepy.errors import (
     TravelTimeJsonError,
-    TravelTimeProtoError,
     TravelTimeServerError,
 )
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
-    ProtoTransportation,
 )
 from traveltimepy.requests.geohash_fast_proto import (
     GeohashFastProtoRequest,
@@ -194,10 +192,7 @@ class AsyncBaseClient(BaseClient):
         async def _make_proto_request():
             session = await self._get_session()
             async with self.async_limiter:
-                if isinstance(req.transportation, ProtoTransportation):
-                    transportation_mode = req.transportation.value.name
-                else:
-                    transportation_mode = req.transportation.TYPE.value.name
+                transportation_mode = self._get_transportation_mode(req.transportation)
 
                 async with session.post(
                     url=f"https://{self._proto_host}/api/v3/{req.country.value}/time-filter/fast/{transportation_mode}",
@@ -207,21 +202,7 @@ class AsyncBaseClient(BaseClient):
                 ) as response:
                     content = await response.read()
                     if response.status != 200:
-                        if response.status >= 500:
-                            raise TravelTimeServerError("Internal server error")
-                        else:
-                            raise TravelTimeProtoError(
-                                status_code=response.status,
-                                error_code=response.headers.get(
-                                    "X-ERROR-CODE", "Unknown"
-                                ),
-                                error_details=response.headers.get(
-                                    "X-ERROR-DETAILS", "No details provided"
-                                ),
-                                error_message=response.headers.get(
-                                    "X-ERROR-MESSAGE", "No message provided"
-                                ),
-                            )
+                        self._handle_proto_error(response.status, response.headers)
                     else:
                         response_body = (
                             TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
@@ -253,10 +234,7 @@ class AsyncBaseClient(BaseClient):
         async def _make_geohash_proto_request():
             session = await self._get_session()
             async with self.async_limiter:
-                if isinstance(req.transportation, ProtoTransportation):
-                    transportation_mode = req.transportation.value.name
-                else:
-                    transportation_mode = req.transportation.TYPE.value.name
+                transportation_mode = self._get_transportation_mode(req.transportation)
 
                 async with session.post(
                     url=f"https://{self._proto_host}/api/v3/{req.country.value}/geohash/fast/{transportation_mode}",
@@ -266,21 +244,7 @@ class AsyncBaseClient(BaseClient):
                 ) as response:
                     content = await response.read()
                     if response.status != 200:
-                        if response.status >= 500:
-                            raise TravelTimeServerError("Internal server error")
-                        else:
-                            raise TravelTimeProtoError(
-                                status_code=response.status,
-                                error_code=response.headers.get(
-                                    "X-ERROR-CODE", "Unknown"
-                                ),
-                                error_details=response.headers.get(
-                                    "X-ERROR-DETAILS", "No details provided"
-                                ),
-                                error_message=response.headers.get(
-                                    "X-ERROR-MESSAGE", "No message provided"
-                                ),
-                            )
+                        self._handle_proto_error(response.status, response.headers)
                     else:
                         response_body = (
                             GeohashFastResponse_pb2.GeohashFastResponse()  # type: ignore
