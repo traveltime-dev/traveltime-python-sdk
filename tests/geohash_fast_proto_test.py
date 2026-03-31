@@ -52,7 +52,11 @@ async def test_all_properties(async_client: AsyncClient):
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
         resolution=6,
-        properties=[ProtoCellProperty.MIN, ProtoCellProperty.MAX, ProtoCellProperty.MEAN],
+        properties=[
+            ProtoCellProperty.MIN,
+            ProtoCellProperty.MAX,
+            ProtoCellProperty.MEAN,
+        ],
     )
     assert len(response.ids) > 0
     assert len(response.min_travel_times) == len(response.ids)

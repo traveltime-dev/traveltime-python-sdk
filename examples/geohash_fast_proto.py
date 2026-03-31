@@ -36,7 +36,11 @@ async def main():
             request_type=RequestType.ONE_TO_MANY,
             country=ProtoCountry.UNITED_KINGDOM,
             resolution=4,
-            properties=[ProtoCellProperty.MIN, ProtoCellProperty.MAX, ProtoCellProperty.MEAN],
+            properties=[
+                ProtoCellProperty.MIN,
+                ProtoCellProperty.MAX,
+                ProtoCellProperty.MEAN,
+            ],
         )
 
         print(f"Found {len(response.ids)} reachable geohash cells")

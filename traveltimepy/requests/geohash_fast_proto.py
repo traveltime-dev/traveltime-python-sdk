@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import ClassVar, Optional, List, Union
+from typing import List, Union
 
 try:
     import RequestsCommon_pb2  # type: ignore
@@ -13,7 +13,6 @@ except ImportError:
 
 from traveltimepy.requests.common import Coordinates
 from traveltimepy.requests.time_filter_proto import (
-    TransportationInfo,
     ProtoTransportation,
     ProtoPublicTransportWithDetails,
     ProtoDrivingAndPublicTransportWithDetails,
