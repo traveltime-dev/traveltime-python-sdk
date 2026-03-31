@@ -82,6 +82,11 @@ from traveltimepy.requests.time_filter_proto import (
     RequestType,
     ProtoCountry,
 )
+from traveltimepy.requests.geohash_fast_proto import (
+    GeohashFastProtoRequest,
+    GeohashFastProtoTransportation,
+    ProtoCellProperty,
+)
 from traveltimepy.requests.time_map import (
     TimeMapDepartureSearch,
     TimeMapArrivalSearch,
@@ -108,6 +113,7 @@ from traveltimepy.responses.time_filter_fast import (
     TimeFilterFastResponse,
 )
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.responses.geohash_fast_proto import GeohashFastProtoResponse
 from traveltimepy.responses.time_map import TimeMapResponse
 from traveltimepy.responses.time_map_wkt import TimeMapWKTResponse
 from traveltimepy.responses.zones import (
@@ -217,6 +223,45 @@ class AsyncClient(AsyncBaseClient):
                 request_type,
                 country,
                 with_distance,
+            )
+        )
+
+    async def geohash_fast_proto(
+        self,
+        origin_coordinate: Coordinates,
+        transportation: GeohashFastProtoTransportation,
+        travel_time: int,
+        request_type: RequestType,
+        country: ProtoCountry,
+        resolution: int,
+        properties: List[ProtoCellProperty],
+    ) -> GeohashFastProtoResponse:
+        """Calculate travel times to geohash cells using Protocol Buffers.
+
+        High-performance endpoint using protobuf format for geohash-based
+        travel time calculations.
+
+        Args:
+            origin_coordinate: Single origin coordinate (lat/lng)
+            transportation: Transportation mode
+            travel_time: Maximum journey time in seconds
+            request_type: Type of request calculation
+            country: Specific country for the calculation
+            resolution: Geohash resolution level
+            properties: Statistical properties to calculate (min, max, mean)
+
+        Returns:
+            GeohashFastProtoResponse: Response with geohash cell IDs and travel time statistics.
+        """
+        return await self._api_call_geohash_proto(
+            GeohashFastProtoRequest(
+                origin_coordinate,
+                transportation,
+                travel_time,
+                request_type,
+                country,
+                resolution,
+                properties,
             )
         )
 
@@ -590,7 +635,7 @@ class AsyncClient(AsyncBaseClient):
         """Calculate travel times to H3 cells within travel time catchment areas.
 
         High-performance endpoint that returns min/max/mean travel times for H3 hexagonal
-        cells based on arrival searches.
+        cells based on arrival searches with support for unions and intersections.
 
         Args:
             arrival_searches: Search configurations with arrival points and transportation methods.

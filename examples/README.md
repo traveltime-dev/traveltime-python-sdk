@@ -34,6 +34,13 @@ Find the 3 closest shops by driving time using the Protocol Buffers API for maxi
 python examples/time_filter_fast_proto.py
 ```
 
+### geohash_fast_proto.py - Geohash Travel Time Analysis
+High-performance geohash-based travel time calculation using the Protocol Buffers API. Finds reachable geohash cells within a travel time limit and returns min/max/mean travel times per cell.
+
+```bash
+python examples/geohash_fast_proto.py
+```
+
 ### geocoding.py - London Walking Tour Planner
 Plan a walking tour of famous London landmarks. Uses geocoding to get coordinates, then calculates total walking time including 30-minute stops at each location.
 
@@ -48,6 +55,7 @@ Each example can be run directly from the project root:
 ```bash
 PYTHONPATH=. python examples/time_filter.py
 PYTHONPATH=. python examples/time_filter_fast_proto.py
+PYTHONPATH=. python examples/geohash_fast_proto.py
 PYTHONPATH=. python examples/geocoding.py
 ```
 

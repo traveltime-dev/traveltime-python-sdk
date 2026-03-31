@@ -235,6 +235,7 @@ The SDK provides both synchronous (`Client`) and asynchronous (`AsyncClient`) ve
 - [`h3_fast()`](https://docs.traveltime.com/api/reference/h3-fast) - Fast H3 analysis
 - [`geohash()`](https://docs.traveltime.com/api/reference/geohash) - Geohash analysis
 - [`geohash_fast()`](https://docs.traveltime.com/api/reference/geohash-fast) - Fast geohash analysis
+- [`geohash_fast_proto()`](https://docs.traveltime.com/api/reference/geohash-fast) - Ultra-fast protocol buffer geohash analysis (requires `pip install 'traveltimepy[proto]'`)
 - [`postcodes()`](https://docs.traveltime.com/api/reference/postcode-search) - UK postcode analysis
 - [`postcode_districts()`](https://docs.traveltime.com/api/reference/postcode-district-filter) - UK postcode district analysis
 - [`postcode_sectors()`](https://docs.traveltime.com/api/reference/postcode-sector-filter) - UK postcode sector analysis
@@ -317,7 +318,7 @@ See [examples/README.md](examples/README.md) for setup instructions and detailed
 ## Performance Tips
 
 - Use `*_fast()` methods for high-volume use cases
-- Use `time_filter_proto()` for maximum performance with large datasets (install with `pip install 'traveltimepy[proto]'`)
+- Use `time_filter_proto()` and `geohash_fast_proto()` for maximum performance with large datasets (install with `pip install 'traveltimepy[proto]'`)
 - Use async methods for I/O-bound applications
 
 ## Documentation

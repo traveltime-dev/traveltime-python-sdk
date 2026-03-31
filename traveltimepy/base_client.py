@@ -1,15 +1,21 @@
 from abc import ABC, abstractmethod
 from importlib.metadata import version, PackageNotFoundError
-from typing import Optional, Dict, TypeVar, Type, Union, Coroutine, Any
+from typing import Optional, Dict, Mapping, TypeVar, Type, Union, Coroutine, Any
 
 from pydantic import BaseModel
 
 from traveltimepy.accept_type import AcceptType
+from traveltimepy.errors import TravelTimeProtoError, TravelTimeServerError
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
+    ProtoTransportation,
+)
+from traveltimepy.requests.geohash_fast_proto import (
+    GeohashFastProtoRequest,
 )
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.responses.geohash_fast_proto import GeohashFastProtoResponse
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -63,6 +69,27 @@ class BaseClient(ABC):
             "User-Agent": f"Travel Time Python SDK {__version__}",
         }
 
+    @staticmethod
+    def _get_transportation_mode(
+        transportation: Union[ProtoTransportation, Any],
+    ) -> str:
+        if isinstance(transportation, ProtoTransportation):
+            return transportation.value.name
+        else:
+            return transportation.TYPE.value.name
+
+    @staticmethod
+    def _handle_proto_error(status_code: int, headers: Mapping[str, str]) -> None:
+        if status_code >= 500:
+            raise TravelTimeServerError("Internal server error")
+        else:
+            raise TravelTimeProtoError(
+                status_code=status_code,
+                error_code=headers.get("X-ERROR-CODE", "Unknown"),
+                error_details=headers.get("X-ERROR-DETAILS", "No details provided"),
+                error_message=headers.get("X-ERROR-MESSAGE", "No message provided"),
+            )
+
     @abstractmethod
     def _api_call_post(
         self,
@@ -87,4 +114,10 @@ class BaseClient(ABC):
     def _api_call_proto(
         self, req: TimeFilterFastProtoRequest
     ) -> Union[TimeFilterProtoResponse, Coroutine[Any, Any, TimeFilterProtoResponse]]:
+        pass
+
+    @abstractmethod
+    def _api_call_geohash_proto(
+        self, req: GeohashFastProtoRequest
+    ) -> Union[GeohashFastProtoResponse, Coroutine[Any, Any, GeohashFastProtoResponse]]:
         pass

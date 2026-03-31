@@ -15,25 +15,29 @@ from tenacity import (
 
 try:
     import TimeFilterFastResponse_pb2  # type: ignore
+    import GeohashFastResponse_pb2  # type: ignore
 
     PROTOBUF_AVAILABLE = True
 except ImportError:
     PROTOBUF_AVAILABLE = False
     TimeFilterFastResponse_pb2 = None  # type: ignore
+    GeohashFastResponse_pb2 = None  # type: ignore
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import BaseClient, __version__
 from traveltimepy.errors import (
     TravelTimeJsonError,
-    TravelTimeProtoError,
     TravelTimeServerError,
 )
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
-    ProtoTransportation,
+)
+from traveltimepy.requests.geohash_fast_proto import (
+    GeohashFastProtoRequest,
 )
 from traveltimepy.responses.error import ResponseError
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.responses.geohash_fast_proto import GeohashFastProtoResponse
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -188,10 +192,7 @@ class AsyncBaseClient(BaseClient):
         async def _make_proto_request():
             session = await self._get_session()
             async with self.async_limiter:
-                if isinstance(req.transportation, ProtoTransportation):
-                    transportation_mode = req.transportation.value.name
-                else:
-                    transportation_mode = req.transportation.TYPE.value.name
+                transportation_mode = self._get_transportation_mode(req.transportation)
 
                 async with session.post(
                     url=f"https://{self._proto_host}/api/v3/{req.country.value}/time-filter/fast/{transportation_mode}",
@@ -201,21 +202,7 @@ class AsyncBaseClient(BaseClient):
                 ) as response:
                     content = await response.read()
                     if response.status != 200:
-                        if response.status >= 500:
-                            raise TravelTimeServerError("Internal server error")
-                        else:
-                            raise TravelTimeProtoError(
-                                status_code=response.status,
-                                error_code=response.headers.get(
-                                    "X-ERROR-CODE", "Unknown"
-                                ),
-                                error_details=response.headers.get(
-                                    "X-ERROR-DETAILS", "No details provided"
-                                ),
-                                error_message=response.headers.get(
-                                    "X-ERROR-MESSAGE", "No message provided"
-                                ),
-                            )
+                        self._handle_proto_error(response.status, response.headers)
                     else:
                         response_body = (
                             TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
@@ -227,6 +214,50 @@ class AsyncBaseClient(BaseClient):
                         )
 
         return await _make_proto_request()
+
+    async def _api_call_geohash_proto(
+        self, req: GeohashFastProtoRequest
+    ) -> GeohashFastProtoResponse:
+        if not PROTOBUF_AVAILABLE:
+            raise ImportError(
+                "protobuf is required for proto API calls. "
+                "Install it with: pip install 'traveltimepy[proto]'"
+            )
+
+        @retry(
+            retry=retry_if_exception_type(TravelTimeServerError),
+            stop=stop_after_attempt(
+                self.retry_attempts + 1
+            ),  # First attempt is not a retry, that's why `+1`
+            wait=wait_none(),  # No wait between retries
+        )
+        async def _make_geohash_proto_request():
+            session = await self._get_session()
+            async with self.async_limiter:
+                transportation_mode = self._get_transportation_mode(req.transportation)
+
+                async with session.post(
+                    url=f"https://{self._proto_host}/api/v3/{req.country.value}/geohash/fast/{transportation_mode}",
+                    headers=self._get_proto_headers(),
+                    data=req.get_request().SerializeToString(),
+                    auth=BasicAuth(self.app_id, self.api_key),
+                ) as response:
+                    content = await response.read()
+                    if response.status != 200:
+                        self._handle_proto_error(response.status, response.headers)
+                    else:
+                        response_body = (
+                            GeohashFastResponse_pb2.GeohashFastResponse()  # type: ignore
+                        )
+                        response_body.ParseFromString(content)
+                        return GeohashFastProtoResponse(
+                            ids=response_body.cells.ids[:],
+                            min_travel_times=response_body.cells.minTravelTimes[:],
+                            max_travel_times=response_body.cells.maxTravelTimes[:],
+                            mean_travel_times=response_body.cells.meanTravelTimes[:],
+                        )
+
+        return await _make_geohash_proto_request()
 
     async def _handle_response(
         self, response: ClientResponse, response_class: Type[T]

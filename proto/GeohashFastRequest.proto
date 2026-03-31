@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package com.igeolise.traveltime.rabbitmq.requests;
+
+import "RequestsCommon.proto";
+
+message GeohashFastRequest {
+  message OneToMany {
+    Coords departureLocation = 1;
+    Transportation transportation = 2;
+    TimePeriod arrivalTimePeriod = 3;
+    sint32 travelTime = 4;
+    uint32 resolution = 5;
+    repeated CellPropertyType properties = 6;
+  }
+
+  message ManyToOne {
+    Coords arrivalLocation = 1;
+    Transportation transportation = 2;
+    TimePeriod arrivalTimePeriod = 3;
+    sint32 travelTime = 4;
+    uint32 resolution = 5;
+    repeated CellPropertyType properties = 6;
+  }
+
+  OneToMany oneToManyRequest = 1;
+  ManyToOne manyToOneRequest = 2;
+}
