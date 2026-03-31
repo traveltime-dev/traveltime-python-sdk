@@ -9,7 +9,11 @@ from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
 )
+from traveltimepy.requests.geohash_fast_proto import (
+    GeohashFastProtoRequest,
+)
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.responses.geohash_fast_proto import GeohashFastProtoResponse
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -87,4 +91,10 @@ class BaseClient(ABC):
     def _api_call_proto(
         self, req: TimeFilterFastProtoRequest
     ) -> Union[TimeFilterProtoResponse, Coroutine[Any, Any, TimeFilterProtoResponse]]:
+        pass
+
+    @abstractmethod
+    def _api_call_geohash_proto(
+        self, req: GeohashFastProtoRequest
+    ) -> Union[GeohashFastProtoResponse, Coroutine[Any, Any, GeohashFastProtoResponse]]:
         pass
