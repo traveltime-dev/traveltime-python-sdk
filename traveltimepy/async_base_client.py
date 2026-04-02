@@ -5,7 +5,7 @@ from typing import Optional, Dict, TypeVar, Type
 import aiohttp
 from aiohttp import ClientSession, ClientResponse, BasicAuth, TCPConnector
 from aiolimiter import AsyncLimiter
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from tenacity import (
     retry,
     stop_after_attempt,
@@ -25,6 +25,7 @@ except ImportError:
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import BaseClient, __version__
 from traveltimepy.errors import (
+    TravelTimeError,
     TravelTimeJsonError,
     TravelTimeServerError,
 )
@@ -265,7 +266,13 @@ class AsyncBaseClient(BaseClient):
         text = await response.text()
         json_data = json.loads(text)
         if response.status != 200:
-            error = ResponseError.model_validate_json(json.dumps(json_data))
+            try:
+                error = ResponseError.model_validate_json(json.dumps(json_data))
+            except ValidationError:
+                raise TravelTimeError(
+                    f"Server returned status code {response.status} "
+                    f"with unexpected response: {json_data}"
+                )
             if response.status >= 500:
                 raise TravelTimeServerError(error.description)
             else:

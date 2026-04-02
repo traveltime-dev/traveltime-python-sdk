@@ -3,7 +3,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Optional, Dict, TypeVar, Type, List, cast
 
 import requests
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 from requests.adapters import HTTPAdapter
 from requests.auth import HTTPBasicAuth
 from requests_ratelimiter import LimiterSession
@@ -26,6 +26,7 @@ except ImportError:
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import BaseClient, __version__
 from traveltimepy.errors import (
+    TravelTimeError,
     TravelTimeJsonError,
     TravelTimeServerError,
 )
@@ -316,7 +317,13 @@ class SyncBaseClient(BaseClient):
             json_data = {"error": "Invalid JSON response"}
 
         if response.status_code != 200:
-            error = ResponseError.model_validate_json(json.dumps(json_data))
+            try:
+                error = ResponseError.model_validate_json(json.dumps(json_data))
+            except ValidationError:
+                raise TravelTimeError(
+                    f"Server returned status code {response.status_code} "
+                    f"with unexpected response: {json_data}"
+                )
             if response.status_code >= 500:
                 raise TravelTimeServerError(error.description)
             else:
