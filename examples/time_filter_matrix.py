@@ -159,7 +159,6 @@ def main():
             "Error: Please set TRAVELTIME_APP_ID and TRAVELTIME_API_KEY environment variables"
         )
         exit(1)
-
     """Generate a specified amount of random locations around a point."""
     MATRIX_SIZE = 3
     locations = generate_locations(

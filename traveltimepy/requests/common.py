@@ -161,8 +161,9 @@ class Rectangle(BaseModel):
 
 
 class Property(str, Enum):
-    """Defines what data should be returned in API responses. Different endpoints
-    support different combinations of these properties.
+    """Defines what data should be returned in API responses.
+
+    Different endpoints support different combinations of these properties.
 
     Attributes:
         TRAVEL_TIME: Journey time in seconds
