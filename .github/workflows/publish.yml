@@ -1,4 +1,4 @@
-# This workflows will upload a Python Package using Twine when a release is created
+# This workflow will upload a Python Package using Twine when a release is created
 # For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
 
 name: Build & Upload package
@@ -23,7 +23,7 @@ jobs:
       - name: Set up protoc
         uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b # v3.0.0
         with:
-          version: '3.x'
+          version: '25.x'
 
       - name: Generate proto files
         run: |
@@ -39,12 +39,16 @@ jobs:
           python -m build
 
       - name: Smoke test built wheel
+        # Runs from /tmp so the repo source tree isn't picked up via sys.path[0]
+        working-directory: /tmp
         run: |
-          python -m venv .smoke
-          WHEEL=$(ls dist/*.whl)
-          .smoke/bin/pip install --upgrade pip
-          .smoke/bin/pip install "${WHEEL}[proto]"
-          .smoke/bin/python -c "
+          WHEEL="$(ls "$GITHUB_WORKSPACE"/dist/*.whl)"
+
+          # With [proto] extra: protobuf modules import, PROTOBUF_AVAILABLE is True.
+          python -m venv smoke
+          smoke/bin/pip install --upgrade pip
+          smoke/bin/pip install "${WHEEL}[proto]"
+          smoke/bin/python -c "
           from traveltimepy.proto import (
               RequestsCommon_pb2,
               TimeFilterFastRequest_pb2,
@@ -55,6 +59,16 @@ jobs:
           from traveltimepy.async_base_client import PROTOBUF_AVAILABLE as async_ok
           from traveltimepy.sync_base_client import PROTOBUF_AVAILABLE as sync_ok
           assert async_ok and sync_ok, 'PROTOBUF_AVAILABLE should be True with [proto] extra'
+          "
+
+          # Without extras: SDK still imports, PROTOBUF_AVAILABLE is False.
+          python -m venv smoke-bare
+          smoke-bare/bin/pip install --upgrade pip
+          smoke-bare/bin/pip install "${WHEEL}"
+          smoke-bare/bin/python -c "
+          from traveltimepy.async_base_client import PROTOBUF_AVAILABLE as async_ok
+          from traveltimepy.sync_base_client import PROTOBUF_AVAILABLE as sync_ok
+          assert not async_ok and not sync_ok, 'PROTOBUF_AVAILABLE should be False without [proto] extra'
           "
 
       - name: Publish
