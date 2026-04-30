@@ -15,8 +15,8 @@ from tenacity import (
 )
 
 try:
-    import TimeFilterFastResponse_pb2  # type: ignore
-    import GeohashFastResponse_pb2  # type: ignore
+    from traveltimepy.proto import TimeFilterFastResponse_pb2  # type: ignore
+    from traveltimepy.proto import GeohashFastResponse_pb2  # type: ignore
 
     PROTOBUF_AVAILABLE = True
 except ImportError:

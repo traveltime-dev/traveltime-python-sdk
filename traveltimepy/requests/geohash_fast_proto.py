@@ -2,8 +2,8 @@ from enum import Enum
 from typing import List, Union
 
 try:
-    import RequestsCommon_pb2  # type: ignore
-    import GeohashFastRequest_pb2  # type: ignore
+    from traveltimepy.proto import RequestsCommon_pb2  # type: ignore
+    from traveltimepy.proto import GeohashFastRequest_pb2  # type: ignore
 
     PROTOBUF_AVAILABLE = True
 except ImportError:

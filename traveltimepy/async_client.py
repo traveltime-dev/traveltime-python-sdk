@@ -176,7 +176,6 @@ class AsyncClient(AsyncBaseClient):
             TimeFilterFastResponse: Travel times and distances for reachable locations
                                    based on requested properties.
         """
-
         return await self._api_call_post(
             TimeFilterFastResponse,
             "time-filter/fast",
@@ -309,7 +308,6 @@ class AsyncClient(AsyncBaseClient):
             FeatureCollection containing geocoding results with coordinates,
             addresses, confidence scores, and location metadata.
         """
-
         return await self._api_call_get(
             FeatureCollection,
             "geocoding/search",
@@ -349,7 +347,6 @@ class AsyncClient(AsyncBaseClient):
             400 Bad Request: If coordinates are far from land (e.g., in ocean).
                             Reverse search is only supported for points on land.
         """
-
         return await self._api_call_get(
             FeatureCollection,
             "geocoding/reverse",
@@ -701,7 +698,6 @@ class AsyncClient(AsyncBaseClient):
             GeoHashResponse containing travel time statistics for each geohash cell
             within the reachable area.
         """
-
         return await self._api_call_post(
             GeoHashResponse,
             "geohash",
@@ -778,7 +774,6 @@ class AsyncClient(AsyncBaseClient):
             PostcodesResponse: Travel statistics for reachable postcodes including
                               travel times and distances based on requested properties.
         """
-
         return await self._api_call_post(
             PostcodesResponse,
             "time-filter/postcodes",
@@ -807,7 +802,6 @@ class AsyncClient(AsyncBaseClient):
             PostcodesDistrictsResponse: Statistics for postcode districts including
                                        travel times and coverage percentages.
         """
-
         return await self._api_call_post(
             PostcodesDistrictsResponse,
             "time-filter/postcode-districts",
@@ -836,7 +830,6 @@ class AsyncClient(AsyncBaseClient):
             PostcodesSectorsResponse: Statistics for postcode sectors including
                                      travel times and coverage percentages.
         """
-
         return await self._api_call_post(
             PostcodesSectorsResponse,
             "time-filter/postcode-sectors",
@@ -908,7 +901,6 @@ class AsyncClient(AsyncBaseClient):
             TimeMapResponse containing polygon shapes for each search operation,
             with results sorted lexicographically by search_id.
         """
-
         return await self._api_call_post(
             TimeMapResponse,
             "distance-map",

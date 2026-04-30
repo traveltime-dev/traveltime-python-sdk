@@ -161,8 +161,9 @@ class Rectangle(BaseModel):
 
 
 class Property(str, Enum):
-    """Defines what data should be returned in API responses. Different endpoints
-    support different combinations of these properties.
+    """Defines what data should be returned in API responses.
+
+    Different endpoints support different combinations of these properties.
 
     Attributes:
         TRAVEL_TIME: Journey time in seconds
@@ -283,17 +284,16 @@ class FullRange(BaseModel):
     Limited to 5 results. Must be greater than 0.
     """
 
-    width: int = Field(gt=0, le=43200)
-    """Defines the width of the time range window in seconds.
-
-    Behavior varies based on whether searching by departure or arrival time:
-    - For departure time: Window extends forward (e.g., 9:00am with 1-hour width
-      includes journeys departing 9:00am-10:00am)
-    - For arrival time: Window extends backward (e.g., 9:00am with 1-hour width
-      includes journeys arriving 8:00am-9:00am)
-
-    Must be greater than 0. Maximum allowed value: 43,200 seconds (12 hours).
-    """
+    width: int = Field(
+        gt=0,
+        le=43200,
+        description=(
+            "Width of the time range window in seconds. For departure time the "
+            "window extends forward (e.g. 9:00am with 1-hour width includes "
+            "journeys departing 9:00am-10:00am); for arrival time it extends "
+            "backward. Maximum 43,200 seconds (12 hours)."
+        ),
+    )
 
 
 class Range(BaseModel):
