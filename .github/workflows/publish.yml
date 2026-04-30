@@ -27,17 +27,39 @@ jobs:
 
       - name: Generate proto files
         run: |
-          protoc -I=proto/ --python_out=. proto/*.proto
+          protoc -I=. --python_out=. traveltimepy/proto/*.proto
 
       - name: Install setuptools
         run: |
           python -m pip install --upgrade pip
           pip install build setuptools twine
 
-      - name: Build and publish
+      - name: Build
+        run: |
+          python -m build
+
+      - name: Smoke test built wheel
+        run: |
+          python -m venv .smoke
+          WHEEL=$(ls dist/*.whl)
+          .smoke/bin/pip install --upgrade pip
+          .smoke/bin/pip install "${WHEEL}[proto]"
+          .smoke/bin/python -c "
+          from traveltimepy.proto import (
+              RequestsCommon_pb2,
+              TimeFilterFastRequest_pb2,
+              TimeFilterFastResponse_pb2,
+              GeohashFastRequest_pb2,
+              GeohashFastResponse_pb2,
+          )
+          from traveltimepy.async_base_client import PROTOBUF_AVAILABLE as async_ok
+          from traveltimepy.sync_base_client import PROTOBUF_AVAILABLE as sync_ok
+          assert async_ok and sync_ok, 'PROTOBUF_AVAILABLE should be True with [proto] extra'
+          "
+
+      - name: Publish
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         run: |
-          python -m build
           twine upload dist/*

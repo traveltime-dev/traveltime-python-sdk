@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package com.igeolise.traveltime.rabbitmq.requests;
 
-import "RequestsCommon.proto";
+import "traveltimepy/proto/RequestsCommon.proto";
 
 message GeohashFastRequest {
   message OneToMany {
