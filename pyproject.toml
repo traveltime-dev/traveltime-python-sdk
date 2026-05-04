@@ -30,14 +30,13 @@ classifiers = [
 	"Programming Language :: Python :: 3.11",
 	"Programming Language :: Python :: 3.12",
 	"Programming Language :: Python :: 3.13",
-	# Our current protobuf version is not compatible with 3.14.
-	#"Programming Language :: Python :: 3.14",
+	"Programming Language :: Python :: 3.14",
 	"License :: OSI Approved :: MIT License",
 ]
 
 [project.optional-dependencies]
 proto = [
-	"protobuf==4.25.8",
+	"protobuf==5.29.6",
 	"types-protobuf",
 ]
 test = [
