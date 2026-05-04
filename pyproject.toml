@@ -37,7 +37,7 @@ classifiers = [
 
 [project.optional-dependencies]
 proto = [
-	"protobuf==4.25.8",
+	"protobuf==5.29.6",
 	"types-protobuf",
 ]
 test = [
