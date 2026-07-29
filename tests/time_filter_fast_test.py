@@ -2,7 +2,7 @@ import pytest
 
 from traveltimepy import AsyncClient
 from traveltimepy.client import Client
-from traveltimepy.requests.common import Property
+from traveltimepy.requests.common import Property, Snapping
 from traveltimepy.requests.time_filter_fast import (
     TimeFilterFastArrivalSearches,
     TimeFilterFastOneToMany,
@@ -221,6 +221,53 @@ def test_many_to_one_with_traffic_model_sync(client: Client, locations):
                 ),
             ],
             one_to_many=[],
+        ),
+    )
+
+    assert len(response.results) > 0
+
+
+@pytest.mark.asyncio
+async def test_many_to_one_with_snapping_threshold(
+    async_client: AsyncClient, locations
+):
+    response = await async_client.time_filter_fast(
+        locations=locations,
+        arrival_searches=TimeFilterFastArrivalSearches(
+            many_to_one=[
+                TimeFilterFastManyToOne(
+                    id="London center",
+                    arrival_location_id="London center",
+                    departure_location_ids=["Hyde Park", "ZSL London Zoo"],
+                    transportation=PublicTransportFast(),
+                    travel_time=1800,
+                    properties=[Property.TRAVEL_TIME],
+                    snapping=Snapping(threshold=500),
+                ),
+            ],
+            one_to_many=[],
+        ),
+    )
+
+    assert len(response.results) > 0
+
+
+def test_one_to_many_with_snapping_threshold_sync(client: Client, locations):
+    response = client.time_filter_fast(
+        locations=locations,
+        arrival_searches=TimeFilterFastArrivalSearches(
+            one_to_many=[
+                TimeFilterFastOneToMany(
+                    id="London center",
+                    departure_location_id="London center",
+                    arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                    transportation=PublicTransportFast(),
+                    travel_time=1800,
+                    properties=[Property.TRAVEL_TIME],
+                    snapping=Snapping(threshold=500),
+                ),
+            ],
+            many_to_one=[],
         ),
     )
 
