@@ -9,7 +9,11 @@ from traveltimepy.requests.time_filter import (
     TimeFilterDepartureSearch,
     TimeFilterArrivalSearch,
 )
-from traveltimepy.requests.transportation import PublicTransport
+from traveltimepy.requests.transportation import (
+    Driving,
+    IncludeRoads,
+    PublicTransport,
+)
 
 
 @pytest.mark.asyncio
@@ -124,3 +128,46 @@ def test_arrivals_sync(client: Client, locations):
         departure_searches=[],
     )
     assert len(response.results) == 2
+
+
+@pytest.mark.asyncio
+async def test_departures_with_include_roads(async_client: AsyncClient, locations):
+    response = await async_client.time_filter(
+        locations=locations,
+        departure_searches=[
+            TimeFilterDepartureSearch(
+                id="London center",
+                departure_location_id="London center",
+                arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                departure_time=datetime.now(),
+                transportation=Driving(
+                    include_roads=[IncludeRoads.TRACK, IncludeRoads.RESTRICTED]
+                ),
+                travel_time=1800,
+                properties=[Property.TRAVEL_TIME],
+            ),
+        ],
+        arrival_searches=[],
+    )
+    assert len(response.results) == 1
+
+
+def test_departures_with_include_roads_sync(client: Client, locations):
+    response = client.time_filter(
+        locations=locations,
+        departure_searches=[
+            TimeFilterDepartureSearch(
+                id="London center",
+                departure_location_id="London center",
+                arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                departure_time=datetime.now(),
+                transportation=Driving(
+                    include_roads=[IncludeRoads.TRACK, IncludeRoads.RESTRICTED]
+                ),
+                travel_time=1800,
+                properties=[Property.TRAVEL_TIME],
+            ),
+        ],
+        arrival_searches=[],
+    )
+    assert len(response.results) == 1
