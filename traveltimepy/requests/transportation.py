@@ -14,8 +14,9 @@ class MaxChanges(BaseModel):
 
 
 class IncludeRoads(str, Enum):
-    """Additional road types to include when executing a search. By default all of
-    these roads are excluded.
+    """Additional road types to include when executing a search.
+
+    By default all of these roads are excluded.
 
     Attributes:
         TRACK: Unpaved roads that only allow very slow driving speed or may require
