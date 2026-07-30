@@ -246,12 +246,16 @@ class Snapping(BaseModel):
                 When enabled, includes "first and last mile" walking times/distances for realistic door-to-door calculations.
         accept_roads: Defines which road types are valid as journey start/end points.
                      Determines whether journeys can snap to vehicle-only roads or only pedestrian-accessible roads.
+        threshold: Maximum distance in meters between locations and the nearest accessible road.
+                  Defaults to 1000 meters. Departure locations exceeding this return errors,
+                  arrival locations return unreachable results.
     """
 
     penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
     accept_roads: Optional[SnappingAcceptRoads] = (
         SnappingAcceptRoads.BOTH_DRIVABLE_AND_WALKABLE
     )
+    threshold: Optional[int] = None
 
 
 class ProtoProperty(int, Enum):

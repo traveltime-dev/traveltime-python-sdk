@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional
+from typing import List, Optional
 from typing_extensions import Literal
 
 from pydantic.main import BaseModel
@@ -13,10 +13,26 @@ class MaxChanges(BaseModel):
     limit: int
 
 
+class IncludeRoads(str, Enum):
+    """Additional road types to include when executing a search.
+
+    By default all of these roads are excluded.
+
+    Attributes:
+        TRACK: Unpaved roads that only allow very slow driving speed or may require
+               an off-road capable vehicle.
+        RESTRICTED: Roads that are not publicly accessible and may require a special permit.
+    """
+
+    TRACK = "track"
+    RESTRICTED = "restricted"
+
+
 class Driving(BaseModel):
     type: Literal["driving"] = "driving"
     disable_border_crossing: Optional[bool] = None
     traffic_model: Optional[DrivingTrafficModel] = None
+    include_roads: Optional[List[IncludeRoads]] = None
 
 
 class Walking(BaseModel):
@@ -31,12 +47,21 @@ class Ferry(BaseModel):
     type: Literal["ferry", "cycling+ferry", "driving+ferry"] = "ferry"
     boarding_time: Optional[int] = None
     traffic_model: Optional[DrivingTrafficModel] = None
+    include_roads: Optional[List[IncludeRoads]] = None
 
     @model_validator(mode="after")
     def check_traffic_model(self):
         if self.type != "driving+ferry" and self.traffic_model:
             raise ValueError(
                 '"traffic_model" cannot be specified when type is not "driving+ferry"'
+            )
+        return self
+
+    @model_validator(mode="after")
+    def check_include_roads(self):
+        if self.type != "driving+ferry" and self.include_roads:
+            raise ValueError(
+                '"include_roads" cannot be specified when type is not "driving+ferry"'
             )
         return self
 
