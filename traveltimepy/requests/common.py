@@ -248,7 +248,7 @@ class Snapping(BaseModel):
                      Determines whether journeys can snap to vehicle-only roads or only pedestrian-accessible roads.
         threshold: Maximum distance in meters between locations and the nearest accessible road.
                   Defaults to 1000 meters. Departure locations exceeding this return errors,
-                  arrival locations return unreachable results. Not supported by H3 and geohash endpoints.
+                  arrival locations return unreachable results.
     """
 
     penalty: Optional[SnappingPenalty] = SnappingPenalty.ENABLED
