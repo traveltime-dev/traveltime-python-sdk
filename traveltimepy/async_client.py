@@ -369,8 +369,8 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: List[TimeMapArrivalSearch],
         departure_searches: List[TimeMapDepartureSearch],
-        unions: List[TimeMapUnion],
-        intersections: List[TimeMapIntersection],
+        unions: Optional[List[TimeMapUnion]] = None,
+        intersections: Optional[List[TimeMapIntersection]] = None,
     ) -> TimeMapResponse:
         """Creates travel time catchment area polygons with specific departure/arrival
         times, transport modes, and support for complex polygon operations.
@@ -587,8 +587,8 @@ class AsyncClient(AsyncBaseClient):
         departure_searches: List[H3DepartureSearch],
         properties: List[CellProperty],
         resolution: int,
-        unions: List[H3Union],
-        intersections: List[H3Intersection],
+        unions: Optional[List[H3Union]] = None,
+        intersections: Optional[List[H3Intersection]] = None,
     ) -> H3Response:
         """Standard H3 endpoint with comprehensive features including specific
         departure/arrival times, unions, and intersections of search results.
@@ -626,8 +626,8 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: H3FastArrivalSearches,
         properties: List[CellProperty],
         resolution: int,
-        unions: List[H3FastUnion],
-        intersections: List[H3FastIntersection],
+        unions: Optional[List[H3FastUnion]] = None,
+        intersections: Optional[List[H3FastIntersection]] = None,
     ) -> H3Response:
         """Calculate travel times to H3 cells within travel time catchment areas.
 
@@ -667,8 +667,8 @@ class AsyncClient(AsyncBaseClient):
         departure_searches: List[GeoHashDepartureSearch],
         properties: List[CellProperty],
         resolution: int,
-        unions: List[GeoHashUnion],
-        intersections: List[GeoHashIntersection],
+        unions: Optional[List[GeoHashUnion]] = None,
+        intersections: Optional[List[GeoHashIntersection]] = None,
     ) -> GeoHashResponse:
         """Calculate travel times to geohash cells within travel time catchment areas.
 
@@ -717,8 +717,8 @@ class AsyncClient(AsyncBaseClient):
         arrival_searches: GeoHashFastArrivalSearches,
         properties: List[CellProperty],
         resolution: int,
-        unions: List[GeoHashFastUnion],
-        intersections: List[GeoHashFastIntersection],
+        unions: Optional[List[GeoHashFastUnion]] = None,
+        intersections: Optional[List[GeoHashFastIntersection]] = None,
     ) -> GeoHashResponse:
         """High-performance version of geohash search with fewer configurable parameters
         and more limited geographic coverage. Returns statistical travel time measures
@@ -874,8 +874,8 @@ class AsyncClient(AsyncBaseClient):
         self,
         arrival_searches: List[DistanceMapArrivalSearch],
         departure_searches: List[DistanceMapDepartureSearch],
-        unions: List[DistanceMapUnion],
-        intersections: List[DistanceMapIntersection],
+        unions: Optional[List[DistanceMapUnion]] = None,
+        intersections: Optional[List[DistanceMapIntersection]] = None,
     ) -> TimeMapResponse:
         """Generate distance maps (isodistance polygons) showing areas reachable within
         specified travel distances.

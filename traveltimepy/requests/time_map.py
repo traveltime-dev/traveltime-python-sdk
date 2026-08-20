@@ -162,12 +162,12 @@ class TimeMapRequest(TravelTimeRequest[TimeMapResponse]):
 
     departure_searches: List[TimeMapDepartureSearch]
     arrival_searches: List[TimeMapArrivalSearch]
-    unions: List[TimeMapUnion]
-    intersections: List[TimeMapIntersection]
+    unions: Optional[List[TimeMapUnion]]
+    intersections: Optional[List[TimeMapIntersection]]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         # Do not split request if unions/intersections are defined
-        if len(self.unions) > 0 or len(self.intersections) > 0:
+        if self.unions or self.intersections:
             return [self]
 
         return [

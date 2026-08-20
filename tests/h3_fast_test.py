@@ -38,8 +38,6 @@ async def test_one_to_many(async_client: AsyncClient):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 2
@@ -67,8 +65,6 @@ async def test_many_to_one(async_client: AsyncClient):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 2
@@ -95,8 +91,6 @@ def test_one_to_many_sync(client: Client):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 2
@@ -123,8 +117,6 @@ def test_many_to_one_sync(client: Client):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 2
@@ -148,8 +140,6 @@ async def test_one_to_many_with_traffic_model(async_client: AsyncClient):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 1
@@ -173,8 +163,6 @@ async def test_many_to_one_with_traffic_model(async_client: AsyncClient):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 1
@@ -197,8 +185,6 @@ def test_one_to_many_with_traffic_model_sync(client: Client):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 1
@@ -221,8 +207,6 @@ def test_many_to_one_with_traffic_model_sync(client: Client):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 1
@@ -251,7 +235,6 @@ async def test_union_one_to_many(async_client: AsyncClient):
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         unions=[H3FastUnion(id="union", search_ids=["id", "id 2"])],
-        intersections=[],
     )
 
     assert len(response.results) == 3
@@ -279,7 +262,6 @@ async def test_intersection_many_to_one(async_client: AsyncClient):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
         intersections=[
             H3FastIntersection(id="intersection", search_ids=["id", "id 2"])
         ],
@@ -310,7 +292,6 @@ def test_union_one_to_many_sync(client: Client):
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         unions=[H3FastUnion(id="union", search_ids=["id", "id 2"])],
-        intersections=[],
     )
 
     assert len(response.results) == 3
@@ -337,7 +318,6 @@ def test_intersection_many_to_one_sync(client: Client):
         ),
         resolution=7,
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
-        unions=[],
         intersections=[
             H3FastIntersection(id="intersection", search_ids=["id", "id 2"])
         ],

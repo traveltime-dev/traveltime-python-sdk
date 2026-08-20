@@ -48,8 +48,6 @@ async def test_departures(async_client: AsyncClient):
                 ),
             ),
         ],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 2
 
@@ -178,8 +176,6 @@ async def test_arrivals(async_client: AsyncClient):
                 ),
             ),
         ],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 2
 
@@ -309,7 +305,6 @@ async def test_union_departures(async_client: AsyncClient):
             ),
         ],
         unions=[TimeMapUnion(id="union", search_ids=["id", "id 2"])],
-        intersections=[],
     )
     assert len(response.results[0].shapes) > 0
 
@@ -342,7 +337,6 @@ async def test_intersection_departures(async_client: AsyncClient):
                 ),
             ),
         ],
-        unions=[],
         intersections=[
             TimeMapIntersection(id="intersection", search_ids=["id", "id 2"])
         ],
@@ -367,8 +361,6 @@ async def test_departures_simple_numeric_level_of_detail(async_client: AsyncClie
                 ),
             ),
         ],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 1
 
@@ -390,8 +382,6 @@ async def test_departures_coarse_grid_level_of_detail(async_client: AsyncClient)
                 ),
             ),
         ],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 1
 
@@ -423,8 +413,6 @@ def test_departures_sync(client: Client):
                 ),
             ),
         ],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 2
 
@@ -549,8 +537,6 @@ def test_arrivals_sync(client: Client):
                 ),
             ),
         ],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 2
 
@@ -676,7 +662,6 @@ def test_union_departures_sync(client: Client):
             ),
         ],
         unions=[TimeMapUnion(id="union", search_ids=["id", "id 2"])],
-        intersections=[],
     )
     assert len(response.results[0].shapes) > 0
 
@@ -708,7 +693,6 @@ def test_intersection_departures_sync(client: Client):
                 ),
             ),
         ],
-        unions=[],
         intersections=[
             TimeMapIntersection(id="intersection", search_ids=["id", "id 2"])
         ],
