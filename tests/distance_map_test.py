@@ -43,8 +43,6 @@ async def test_departures(async_client: AsyncClient):
                 ),
             ),
         ],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 2
 
@@ -74,8 +72,6 @@ def test_departures_sync(client: Client):
                 ),
             ),
         ],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 2
 
@@ -106,8 +102,6 @@ async def test_arrivals(async_client: AsyncClient):
             ),
         ],
         departure_searches=[],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 2
 
@@ -137,7 +131,5 @@ def test_arrivals_sync(client: Client):
             ),
         ],
         departure_searches=[],
-        unions=[],
-        intersections=[],
     )
     assert len(response.results) == 2

@@ -34,8 +34,6 @@ async def test_invalid_request(async_client: AsyncClient):
                     transportation=Driving(),
                 )
             ],
-            unions=[],
-            intersections=[],
         )
     assert e.value.status_code == 422
 
@@ -62,8 +60,6 @@ def test_invalid_request_sync(client: Client):
                     transportation=Driving(),
                 )
             ],
-            unions=[],
-            intersections=[],
         )
     assert e.value.status_code == 422
 

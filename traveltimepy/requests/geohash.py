@@ -136,12 +136,12 @@ class GeoHashRequest(TravelTimeRequest[GeoHashResponse]):
     properties: List[CellProperty]
     departure_searches: List[GeoHashDepartureSearch]
     arrival_searches: List[GeoHashArrivalSearch]
-    unions: List[GeoHashUnion]
-    intersections: List[GeoHashIntersection]
+    unions: Optional[List[GeoHashUnion]]
+    intersections: Optional[List[GeoHashIntersection]]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         # Do not split request if unions/intersections are defined
-        if len(self.unions) > 0 or len(self.intersections) > 0:
+        if self.unions or self.intersections:
             return [self]
         else:
             chunks = split(self.departure_searches, self.arrival_searches, window_size)

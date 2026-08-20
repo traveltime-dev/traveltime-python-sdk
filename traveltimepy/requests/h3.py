@@ -142,12 +142,12 @@ class H3Request(TravelTimeRequest[H3Response]):
     properties: List[CellProperty]
     departure_searches: List[H3DepartureSearch]
     arrival_searches: List[H3ArrivalSearch]
-    unions: List[H3Union]
-    intersections: List[H3Intersection]
+    unions: Optional[List[H3Union]]
+    intersections: Optional[List[H3Intersection]]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
         # Do not split request if unions/intersections are defined
-        if len(self.unions) > 0 or len(self.intersections) > 0:
+        if self.unions or self.intersections:
             return [self]
         else:
             chunks = split(self.departure_searches, self.arrival_searches, window_size)

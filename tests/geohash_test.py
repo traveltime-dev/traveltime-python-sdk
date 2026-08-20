@@ -43,8 +43,6 @@ async def test_departures(async_client: AsyncClient):
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 2
@@ -74,8 +72,6 @@ async def test_arrivals(async_client: AsyncClient):
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 2
@@ -106,7 +102,6 @@ async def test_union_departures(async_client: AsyncClient):
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
         unions=[GeoHashUnion(id="union", search_ids=["id", "id 2"])],
-        intersections=[],
     )
 
     assert len(response.results) == 3
@@ -136,7 +131,6 @@ async def test_intersection_arrivals(async_client: AsyncClient):
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
-        unions=[],
         intersections=[
             GeoHashIntersection(id="intersection", search_ids=["id", "id 2"])
         ],
@@ -168,8 +162,6 @@ def test_departures_sync(client: Client):
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 2
@@ -198,8 +190,6 @@ def test_arrivals_sync(client: Client):
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
-        unions=[],
-        intersections=[],
     )
 
     assert len(response.results) == 2
@@ -229,7 +219,6 @@ def test_union_departures_sync(client: Client):
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
         unions=[GeoHashUnion(id="union", search_ids=["id", "id 2"])],
-        intersections=[],
     )
 
     assert len(response.results) == 3
@@ -258,7 +247,6 @@ def test_intersection_arrivals_sync(client: Client):
         ],
         properties=[CellProperty.MIN, CellProperty.MAX, CellProperty.MEAN],
         resolution=6,
-        unions=[],
         intersections=[
             GeoHashIntersection(id="intersection", search_ids=["id", "id 2"])
         ],
