@@ -6,6 +6,8 @@ from traveltimepy.requests.common import Coordinates
 from traveltimepy.requests.time_map_fast import (
     TimeMapFastArrivalSearches,
     TimeMapFastSearch,
+    TimeMapFastUnion,
+    TimeMapFastIntersection,
 )
 from traveltimepy.requests.transportation import (
     DrivingFerryFast,
@@ -446,6 +448,112 @@ async def test_many_to_one_with_traffic_model(async_client: AsyncClient):
     )
 
     assert len(response.results) == 1
+
+
+@pytest.mark.asyncio
+async def test_union_one_to_many(async_client: AsyncClient):
+    response = await async_client.time_map_fast(
+        arrival_searches=TimeMapFastArrivalSearches(
+            one_to_many=[
+                TimeMapFastSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.507609, lng=-0.128315),
+                    transportation=PublicTransportFast(),
+                    travel_time=900,
+                ),
+                TimeMapFastSearch(
+                    id="id 2",
+                    coords=Coordinates(lat=51.517609, lng=-0.138315),
+                    transportation=PublicTransportFast(),
+                    travel_time=900,
+                ),
+            ],
+            many_to_one=[],
+        ),
+        unions=[TimeMapFastUnion(id="union", search_ids=["id", "id 2"])],
+    )
+
+    assert len(response.results) == 3
+
+
+@pytest.mark.asyncio
+async def test_intersection_many_to_one(async_client: AsyncClient):
+    response = await async_client.time_map_fast(
+        arrival_searches=TimeMapFastArrivalSearches(
+            many_to_one=[
+                TimeMapFastSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.507609, lng=-0.128315),
+                    transportation=PublicTransportFast(),
+                    travel_time=900,
+                ),
+                TimeMapFastSearch(
+                    id="id 2",
+                    coords=Coordinates(lat=51.517609, lng=-0.138315),
+                    transportation=PublicTransportFast(),
+                    travel_time=900,
+                ),
+            ],
+            one_to_many=[],
+        ),
+        intersections=[
+            TimeMapFastIntersection(id="intersection", search_ids=["id", "id 2"])
+        ],
+    )
+
+    assert len(response.results) == 3
+
+
+def test_union_one_to_many_sync(client: Client):
+    response = client.time_map_fast(
+        arrival_searches=TimeMapFastArrivalSearches(
+            one_to_many=[
+                TimeMapFastSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.507609, lng=-0.128315),
+                    transportation=PublicTransportFast(),
+                    travel_time=900,
+                ),
+                TimeMapFastSearch(
+                    id="id 2",
+                    coords=Coordinates(lat=51.517609, lng=-0.138315),
+                    transportation=PublicTransportFast(),
+                    travel_time=900,
+                ),
+            ],
+            many_to_one=[],
+        ),
+        unions=[TimeMapFastUnion(id="union", search_ids=["id", "id 2"])],
+    )
+
+    assert len(response.results) == 3
+
+
+def test_intersection_many_to_one_sync(client: Client):
+    response = client.time_map_fast(
+        arrival_searches=TimeMapFastArrivalSearches(
+            many_to_one=[
+                TimeMapFastSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.507609, lng=-0.128315),
+                    transportation=PublicTransportFast(),
+                    travel_time=900,
+                ),
+                TimeMapFastSearch(
+                    id="id 2",
+                    coords=Coordinates(lat=51.517609, lng=-0.138315),
+                    transportation=PublicTransportFast(),
+                    travel_time=900,
+                ),
+            ],
+            one_to_many=[],
+        ),
+        intersections=[
+            TimeMapFastIntersection(id="intersection", search_ids=["id", "id 2"])
+        ],
+    )
+
+    assert len(response.results) == 3
 
 
 def test_one_to_many_with_traffic_model_sync(client: Client):

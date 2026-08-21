@@ -79,6 +79,36 @@ class TimeMapFastArrivalSearches(BaseModel):
     one_to_many: List[TimeMapFastSearch]
 
 
+class TimeMapFastIntersection(BaseModel):
+    """Defines intersection of multiple Time Map Fast search results.
+
+    Creates a new shape containing only the area that appears in ALL referenced searches.
+    Useful for finding areas accessible from multiple locations or transport modes.
+
+    Attributes:
+        id: Unique identifier for this intersection
+        search_ids: List of search IDs to intersect
+    """
+
+    id: str
+    search_ids: List[str]
+
+
+class TimeMapFastUnion(BaseModel):
+    """Defines union of multiple Time Map Fast search results.
+
+    Creates a new shape containing the area that appears in ANY of the referenced searches.
+    Useful for combining coverage areas from multiple searches.
+
+    Attributes:
+        id: Unique identifier for this union
+        search_ids: List of search IDs to combine
+    """
+
+    id: str
+    search_ids: List[str]
+
+
 class TimeMapFastRequest(TravelTimeRequest[TimeMapResponse]):
     """High-performance isochrone endpoint that creates travel time polygons showing
     reachable areas within specified travel times. Optimized for speed with limited
@@ -86,25 +116,38 @@ class TimeMapFastRequest(TravelTimeRequest[TimeMapResponse]):
 
     Attributes:
         arrival_searches: Isochrone search configurations for fast polygon generation
+        unions: List of union operations on search results
+        intersections: List of intersection operations on search results
     """
 
     arrival_searches: TimeMapFastArrivalSearches
+    unions: Optional[List[TimeMapFastUnion]]
+    intersections: Optional[List[TimeMapFastIntersection]]
 
     def split_searches(self, window_size: int) -> List[TravelTimeRequest]:
-        return [
-            TimeMapFastRequest(
-                arrival_searches=TimeMapFastArrivalSearches(
-                    one_to_many=one_to_many, many_to_one=many_to_one
-                ),
-            )
-            for one_to_many, many_to_one in split(
-                self.arrival_searches.one_to_many,
-                self.arrival_searches.many_to_one,
-                window_size,
-            )
-        ]
+        # Do not split request if unions/intersections are defined
+        if self.unions or self.intersections:
+            return [self]
+        else:
+            return [
+                TimeMapFastRequest(
+                    arrival_searches=TimeMapFastArrivalSearches(
+                        one_to_many=one_to_many, many_to_one=many_to_one
+                    ),
+                    unions=self.unions,
+                    intersections=self.intersections,
+                )
+                for one_to_many, many_to_one in split(
+                    self.arrival_searches.one_to_many,
+                    self.arrival_searches.many_to_one,
+                    window_size,
+                )
+            ]
 
     def merge(self, responses: List[TimeMapResponse]) -> TimeMapResponse:
         return TimeMapResponse(
-            results=flatten([response.results for response in responses])
+            results=sorted(
+                flatten([response.results for response in responses]),
+                key=lambda res: res.search_id,
+            )
         )

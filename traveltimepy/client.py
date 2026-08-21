@@ -93,6 +93,8 @@ from traveltimepy.requests.time_map import (
 from traveltimepy.requests.time_map_fast import (
     TimeMapFastArrivalSearches,
     TimeMapFastRequest,
+    TimeMapFastUnion,
+    TimeMapFastIntersection,
 )
 from traveltimepy.requests.time_map_fast_geojson import TimeMapFastGeojsonRequest
 from traveltimepy.requests.time_map_fast_wkt import TimeMapFastWKTRequest
@@ -485,6 +487,8 @@ class Client(SyncBaseClient):
     def time_map_fast(
         self,
         arrival_searches: TimeMapFastArrivalSearches,
+        unions: Optional[List[TimeMapFastUnion]] = None,
+        intersections: Optional[List[TimeMapFastIntersection]] = None,
     ) -> TimeMapResponse:
         """Generate high-performance travel time isochrones in JSON format.
 
@@ -494,6 +498,8 @@ class Client(SyncBaseClient):
         Args:
             arrival_searches: Isochrone search configurations with many_to_one and one_to_many patterns.
                               Max 10 searches total.
+            unions: Union operations combining multiple isochrone results
+            intersections: Intersection operations finding overlapping areas
 
         Returns:
             TimeMapResponse: Polygon coordinates and metadata in JSON format for map visualization and processing.
@@ -502,7 +508,11 @@ class Client(SyncBaseClient):
             TimeMapResponse,
             "time-map/fast",
             AcceptType.JSON,
-            TimeMapFastRequest(arrival_searches=arrival_searches),
+            TimeMapFastRequest(
+                arrival_searches=arrival_searches,
+                unions=unions,
+                intersections=intersections,
+            ),
         )
 
     def time_map_fast_geojson(
