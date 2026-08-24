@@ -1,8 +1,9 @@
+import warnings
 from datetime import datetime
 from enum import Enum
 from typing import List, Union, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from traveltimepy.requests.common import Coordinates, FullRange
 from traveltimepy.requests.request import TravelTimeRequest
@@ -28,6 +29,17 @@ class ZonesProperty(str, Enum):
     COVERAGE = "coverage"
 
 
+def _warn_range_deprecated(value: Optional[FullRange]) -> Optional[FullRange]:
+    if value is not None:
+        warnings.warn(
+            "`range` is ignored by the postcode districts/sectors endpoints "
+            "and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+    return value
+
+
 class PostcodeFilterArrivalSearch(BaseModel):
     id: str
     coords: Coordinates
@@ -45,6 +57,8 @@ class PostcodeFilterArrivalSearch(BaseModel):
     properties: List[ZonesProperty]
     reachable_postcodes_threshold: float = 0
     range: Optional[FullRange] = None
+
+    _range_deprecated = field_validator("range")(_warn_range_deprecated)
 
 
 class PostcodeFilterDepartureSearch(BaseModel):
@@ -64,6 +78,8 @@ class PostcodeFilterDepartureSearch(BaseModel):
     properties: List[ZonesProperty]
     reachable_postcodes_threshold: float = 0
     range: Optional[FullRange] = None
+
+    _range_deprecated = field_validator("range")(_warn_range_deprecated)
 
 
 class PostcodesSectorsRequest(TravelTimeRequest[PostcodesSectorsResponse]):

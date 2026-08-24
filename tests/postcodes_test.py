@@ -1,10 +1,11 @@
+import warnings
 from datetime import datetime
 
 import pytest
 
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.client import Client
-from traveltimepy.requests.common import Coordinates
+from traveltimepy.requests.common import Coordinates, FullRange
 from traveltimepy.requests.postcodes import (
     PostcodeDepartureSearch,
     PostcodeArrivalSearch,
@@ -228,3 +229,29 @@ def test_sectors_arrival_sync(client: Client):
     )
 
     assert len(response.results) > 0
+
+
+def test_zones_range_emits_deprecation_warning():
+    with pytest.warns(DeprecationWarning, match="range"):
+        PostcodeFilterDepartureSearch(
+            id="id",
+            coords=Coordinates(lat=51.507609, lng=-0.128315),
+            travel_time=900,
+            departure_time=datetime.now(),
+            transportation=PublicTransport(),
+            properties=[],
+            range=FullRange(enabled=True, max_results=3, width=600),
+        )
+
+
+def test_zones_without_range_emits_no_warning():
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        PostcodeFilterArrivalSearch(
+            id="id",
+            coords=Coordinates(lat=51.507609, lng=-0.128315),
+            travel_time=900,
+            arrival_time=datetime.now(),
+            transportation=PublicTransport(),
+            properties=[],
+        )
