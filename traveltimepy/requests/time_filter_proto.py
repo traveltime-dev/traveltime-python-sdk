@@ -152,7 +152,7 @@ class TimeFilterFastProtoRequest:
             )
         request = TimeFilterFastRequest_pb2.TimeFilterFastRequest()  # type: ignore
 
-        if self.requestType.ONE_TO_MANY:
+        if self.requestType == RequestType.ONE_TO_MANY:
             req = request.oneToManyRequest
 
             req.departureLocation.lat = self.originCoordinate.lat
