@@ -2,7 +2,6 @@ import typing
 from datetime import datetime
 from typing import List, Optional
 
-from pydantic import Field
 from pydantic.main import BaseModel
 
 from traveltimepy.requests.request import TravelTimeRequest
@@ -34,7 +33,8 @@ class GeoHashDepartureSearch(BaseModel):
         id: Unique identifier for this search operation.
         coords: Departure location using either lat/lng coordinates or geohash centroid.
         departure_time: Leave departure location at no earlier than this time.
-        travel_time: Maximum journey time in seconds. Maximum value is 14400 (4 hours).
+        travel_time: Maximum journey time in seconds. Maximum value is 14400 (4 hours)
+            as standard; higher limits are available per account.
         transportation: Transportation mode for the journey calculation.
         range: Optional departure time window for range search functionality.
         snapping: Configuration for connecting coordinates to the transportation network.
@@ -43,7 +43,7 @@ class GeoHashDepartureSearch(BaseModel):
     id: str
     coords: typing.Union[Coordinates, GeohashCentroid]
     departure_time: datetime
-    travel_time: int = Field(le=14400)
+    travel_time: int
     transportation: typing.Union[
         PublicTransport,
         Driving,
@@ -65,7 +65,8 @@ class GeoHashArrivalSearch(BaseModel):
         id: Unique identifier for this search operation.
         coords: Arrival location using either lat/lng coordinates or geohash centroid.
         arrival_time: Arrive at destination location at no later than this time.
-        travel_time: Maximum journey time in seconds. Maximum value is 14400 (4 hours).
+        travel_time: Maximum journey time in seconds. Maximum value is 14400 (4 hours)
+            as standard; higher limits are available per account.
         transportation: Transportation mode for the journey calculation.
         range: Optional arrival time window for range search functionality.
         snapping: Configuration for connecting coordinates to the transportation network.
@@ -74,7 +75,7 @@ class GeoHashArrivalSearch(BaseModel):
     id: str
     coords: typing.Union[Coordinates, GeohashCentroid]
     arrival_time: datetime
-    travel_time: int = Field(le=14400)
+    travel_time: int
     transportation: typing.Union[
         PublicTransport,
         Driving,
