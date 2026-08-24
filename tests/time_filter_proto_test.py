@@ -9,7 +9,32 @@ from traveltimepy.requests.time_filter_proto import (
     ProtoCountry,
     ProtoPublicTransportWithDetails,
     RequestType,
+    TimeFilterFastProtoRequest,
 )
+
+
+def build_proto_request(request_type: RequestType):
+    return TimeFilterFastProtoRequest(
+        origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
+        destination_coordinates=[Coordinates(lat=51.348605, lng=-0.314783)],
+        transportation=ProtoTransportation.DRIVING_FERRY,
+        travel_time=7200,
+        request_type=request_type,
+        country=ProtoCountry.UNITED_KINGDOM,
+        with_distance=False,
+    ).get_request()
+
+
+def test_one_to_many_builds_one_to_many_message():
+    request = build_proto_request(RequestType.ONE_TO_MANY)
+    assert request.HasField("oneToManyRequest")
+    assert not request.HasField("manyToOneRequest")
+
+
+def test_many_to_one_builds_many_to_one_message():
+    request = build_proto_request(RequestType.MANY_TO_ONE)
+    assert request.HasField("manyToOneRequest")
+    assert not request.HasField("oneToManyRequest")
 
 
 @pytest.mark.asyncio
