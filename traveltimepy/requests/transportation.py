@@ -72,6 +72,7 @@ class DrivingTrain(BaseModel):
     driving_time_to_station: Optional[int] = None
     parking_time: Optional[int] = None
     walking_time: Optional[int] = None
+    boarding_time: Optional[int] = None
     max_changes: Optional[MaxChanges] = None
     traffic_model: Optional[DrivingTrafficModel] = None
 
