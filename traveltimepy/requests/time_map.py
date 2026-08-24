@@ -19,7 +19,7 @@ from traveltimepy.requests.common import (
     PolygonsFilter,
     RenderMode,
     Snapping,
-    Coordinates,
+    Coords,
     Range,
 )
 from traveltimepy.requests.request import TravelTimeRequest
@@ -33,7 +33,8 @@ class TimeMapDepartureSearch(BaseModel):
 
     Attributes:
         id: Unique identifier for this search
-        coords: Departure point coordinates for the isochrone center
+        coords: Departure point for the isochrone center - lat/lng coordinates,
+            or an H3 / geohash cell centroid
         departure_time: Specific departure time for the journey
         travel_time: Maximum journey time in seconds (max 14,400 = 4 hours)
         transportation: Transportation mode
@@ -52,7 +53,7 @@ class TimeMapDepartureSearch(BaseModel):
     """
 
     id: str
-    coords: Coordinates
+    coords: Coords
     departure_time: datetime
     travel_time: int
     transportation: typing.Union[
@@ -79,7 +80,8 @@ class TimeMapArrivalSearch(BaseModel):
 
     Attributes:
         id: Unique identifier for this search
-        coords: Arrival point coordinates for the isochrone center
+        coords: Arrival point for the isochrone center - lat/lng coordinates,
+            or an H3 / geohash cell centroid
         arrival_time: Specific arrival time for the journey
         travel_time: Maximum journey time in seconds (max 14,400 = 4 hours)
         transportation: Transportation mode
@@ -98,7 +100,7 @@ class TimeMapArrivalSearch(BaseModel):
     """
 
     id: str
-    coords: Coordinates
+    coords: Coords
     arrival_time: datetime
     travel_time: int
     transportation: typing.Union[

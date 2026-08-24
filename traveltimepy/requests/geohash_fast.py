@@ -14,8 +14,7 @@ from traveltimepy.requests.transportation import (
 )
 from traveltimepy.requests.common import (
     CellProperty,
-    Coordinates,
-    GeohashCentroid,
+    Coords,
     Snapping,
     ArrivalTimePeriod,
 )
@@ -41,7 +40,7 @@ class GeoHashFastSearch(BaseModel):
     """
 
     id: str
-    coords: Union[Coordinates, GeohashCentroid]
+    coords: Coords
     transportation: Union[
         PublicTransportFast,
         DrivingFast,

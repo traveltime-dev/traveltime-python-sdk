@@ -16,8 +16,7 @@ from traveltimepy.requests.transportation import (
 )
 from traveltimepy.requests.common import (
     CellProperty,
-    Coordinates,
-    H3Centroid,
+    Coords,
     Snapping,
     Range,
 )
@@ -45,7 +44,7 @@ class H3DepartureSearch(BaseModel):
     """
 
     id: str
-    coords: typing.Union[Coordinates, H3Centroid]
+    coords: Coords
     departure_time: datetime
     travel_time: int
     transportation: typing.Union[
@@ -77,7 +76,7 @@ class H3ArrivalSearch(BaseModel):
     """
 
     id: str
-    coords: typing.Union[Coordinates, H3Centroid]
+    coords: Coords
     arrival_time: datetime
     travel_time: int
     transportation: typing.Union[

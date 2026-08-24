@@ -3,7 +3,11 @@ from typing import List, Union, Optional
 
 from pydantic import BaseModel
 
-from traveltimepy.requests.common import Coordinates, Property, FullRange
+from traveltimepy.requests.common import (
+    Coords,
+    Property,
+    FullRange,
+)
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.postcodes import PostcodesResponse
 from traveltimepy.itertools import split, flatten
@@ -25,7 +29,7 @@ class PostcodeArrivalSearch(BaseModel):
 
     Attributes:
         id: Unique identifier for this search
-        coords: Arrival location coordinates (lat/lng)
+        coords: Arrival location - lat/lng coordinates, or an H3 / geohash cell centroid
         travel_time: Maximum journey time in seconds (max 14,400 = 4 hours)
         arrival_time: Specific arrival time
         transportation: Transportation method (driving, public_transport, walking, etc.)
@@ -34,7 +38,7 @@ class PostcodeArrivalSearch(BaseModel):
     """
 
     id: str
-    coords: Coordinates
+    coords: Coords
     travel_time: int
     arrival_time: datetime
     transportation: Union[
@@ -57,7 +61,7 @@ class PostcodeDepartureSearch(BaseModel):
 
     Attributes:
         id: Unique identifier for this search
-        coords: Departure location coordinates (lat/lng)
+        coords: Departure location - lat/lng coordinates, or an H3 / geohash cell centroid
         travel_time: Maximum journey time in seconds (max 14,400 = 4 hours)
         departure_time: Specific departure time
         transportation: Transportation method (driving, public_transport, walking, etc.)
@@ -66,7 +70,7 @@ class PostcodeDepartureSearch(BaseModel):
     """
 
     id: str
-    coords: Coordinates
+    coords: Coords
     travel_time: int
     departure_time: datetime
     transportation: Union[
