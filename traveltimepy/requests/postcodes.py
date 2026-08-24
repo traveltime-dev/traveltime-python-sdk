@@ -7,6 +7,7 @@ from traveltimepy.requests.common import (
     Coords,
     Property,
     FullRange,
+    Snapping,
 )
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.postcodes import PostcodesResponse
@@ -35,6 +36,7 @@ class PostcodeArrivalSearch(BaseModel):
         transportation: Transportation method (driving, public_transport, walking, etc.)
         properties: Data to return for each postcode (travel_time, distance)
         range: Optional arrival time window for multiple journey options
+        snapping: Optional road network lookup settings
     """
 
     id: str
@@ -52,6 +54,7 @@ class PostcodeArrivalSearch(BaseModel):
     ]
     properties: List[Property]
     range: Optional[FullRange] = None
+    snapping: Optional[Snapping] = None
 
 
 class PostcodeDepartureSearch(BaseModel):
@@ -67,6 +70,7 @@ class PostcodeDepartureSearch(BaseModel):
         transportation: Transportation method (driving, public_transport, walking, etc.)
         properties: Data to return for each postcode (travel_time, distance)
         range: Optional departure time window for multiple journey options
+        snapping: Optional road network lookup settings
     """
 
     id: str
@@ -84,6 +88,7 @@ class PostcodeDepartureSearch(BaseModel):
     ]
     properties: List[Property]
     range: Optional[FullRange] = None
+    snapping: Optional[Snapping] = None
 
 
 class PostcodesRequest(TravelTimeRequest[PostcodesResponse]):

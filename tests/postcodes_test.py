@@ -4,7 +4,12 @@ import pytest
 
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.client import Client
-from traveltimepy.requests.common import Coordinates
+from traveltimepy.requests.common import (
+    Coordinates,
+    Snapping,
+    SnappingAcceptRoads,
+    SnappingPenalty,
+)
 from traveltimepy.requests.postcodes import (
     PostcodeDepartureSearch,
     PostcodeArrivalSearch,
@@ -225,6 +230,72 @@ def test_sectors_arrival_sync(client: Client):
             )
         ],
         departure_searches=[],
+    )
+
+    assert len(response.results) > 0
+
+
+def test_departures_with_snapping_sync(client: Client):
+    response = client.postcodes(
+        departure_searches=[
+            PostcodeDepartureSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                travel_time=900,
+                departure_time=datetime.now(),
+                transportation=PublicTransport(),
+                properties=[],
+                snapping=Snapping(
+                    penalty=SnappingPenalty.DISABLED,
+                    accept_roads=SnappingAcceptRoads.ANY_DRIVABLE,
+                ),
+            )
+        ],
+        arrival_searches=[],
+    )
+
+    assert len(response.results) > 0
+
+
+def test_districts_departure_with_snapping_sync(client: Client):
+    response = client.postcode_districts(
+        departure_searches=[
+            PostcodeFilterDepartureSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                travel_time=900,
+                departure_time=datetime.now(),
+                transportation=PublicTransport(),
+                properties=[],
+                snapping=Snapping(
+                    penalty=SnappingPenalty.DISABLED,
+                    accept_roads=SnappingAcceptRoads.ANY_DRIVABLE,
+                ),
+            )
+        ],
+        arrival_searches=[],
+    )
+
+    assert len(response.results) > 0
+
+
+def test_sectors_departure_with_snapping_sync(client: Client):
+    response = client.postcode_sectors(
+        departure_searches=[
+            PostcodeFilterDepartureSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                travel_time=900,
+                departure_time=datetime.now(),
+                transportation=PublicTransport(),
+                properties=[],
+                snapping=Snapping(
+                    penalty=SnappingPenalty.DISABLED,
+                    accept_roads=SnappingAcceptRoads.ANY_DRIVABLE,
+                ),
+            )
+        ],
+        arrival_searches=[],
     )
 
     assert len(response.results) > 0
