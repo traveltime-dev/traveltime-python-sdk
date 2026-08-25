@@ -42,6 +42,7 @@ class GeohashFastProtoRequest:
     country: ProtoCountry
     resolution: int
     properties: List[ProtoCellProperty]
+    removeWaterBodies: bool
 
     def __init__(
         self,
@@ -52,6 +53,7 @@ class GeohashFastProtoRequest:
         country: ProtoCountry,
         resolution: int,
         properties: List[ProtoCellProperty],
+        remove_water_bodies: bool = True,
     ):
         self.originCoordinate = origin_coordinate
         self.transportation = transportation
@@ -60,6 +62,7 @@ class GeohashFastProtoRequest:
         self.country = country
         self.resolution = resolution
         self.properties = properties
+        self.removeWaterBodies = remove_water_bodies
 
     def get_request(self) -> "GeohashFastRequest_pb2.GeohashFastRequest":  # type: ignore
         if not PROTOBUF_AVAILABLE:
@@ -111,6 +114,7 @@ class GeohashFastProtoRequest:
         req.travelTime = self.travelTime
         req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
         req.resolution = self.resolution
+        req.removeWaterBodies = self.removeWaterBodies
 
         for prop in self.properties:
             req.properties.append(prop.value)

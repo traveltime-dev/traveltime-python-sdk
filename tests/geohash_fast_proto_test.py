@@ -150,3 +150,17 @@ def test_many_to_one_sync(client: Client):
     )
     assert len(response.ids) > 0
     assert len(response.mean_travel_times) == len(response.ids)
+
+
+def test_keep_water_bodies_sync(client: Client):
+    response = client.geohash_fast_proto(
+        origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
+        transportation=ProtoTransportation.DRIVING_FERRY,
+        travel_time=900,
+        request_type=RequestType.ONE_TO_MANY,
+        country=ProtoCountry.UNITED_KINGDOM,
+        resolution=6,
+        properties=[ProtoCellProperty.MEAN],
+        remove_water_bodies=False,
+    )
+    assert len(response.ids) > 0
