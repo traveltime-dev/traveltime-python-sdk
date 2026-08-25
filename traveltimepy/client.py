@@ -276,7 +276,7 @@ class Client(SyncBaseClient):
         country: ProtoCountry,
         resolution: int,
         properties: List[ProtoCellProperty],
-        remove_water_bodies: bool = True,
+        remove_water_bodies: Optional[bool] = None,
     ) -> H3FastProtoResponse:
         """Calculate travel times to H3 cells using Protocol Buffers.
 
@@ -291,7 +291,8 @@ class Client(SyncBaseClient):
             country: Specific country for the calculation
             resolution: H3 resolution level (4-12). Caps the travel time a search may use.
             properties: Statistical properties to calculate (min, max, mean)
-            remove_water_bodies: Exclude cells covering large water bodies. Defaults to True.
+            remove_water_bodies: Whether to exclude cells covering large water bodies.
+                                When omitted, the API default applies.
 
         Returns:
             H3FastProtoResponse: Response with H3 cell indices (lowercase hex) and travel time statistics.

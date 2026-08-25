@@ -1,4 +1,4 @@
-from typing import List, Union
+from typing import List, Optional, Union
 
 try:
     from traveltimepy.proto import RequestsCommon_pb2  # type: ignore
@@ -35,7 +35,7 @@ class H3FastProtoRequest:
     country: ProtoCountry
     resolution: int
     properties: List[ProtoCellProperty]
-    removeWaterBodies: bool
+    removeWaterBodies: Optional[bool]
 
     def __init__(
         self,
@@ -46,7 +46,7 @@ class H3FastProtoRequest:
         country: ProtoCountry,
         resolution: int,
         properties: List[ProtoCellProperty],
-        remove_water_bodies: bool = True,
+        remove_water_bodies: Optional[bool] = None,
     ):
         self.originCoordinate = origin_coordinate
         self.transportation = transportation
@@ -106,7 +106,8 @@ class H3FastProtoRequest:
         req.travelTime = self.travelTime
         req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
         req.resolution = self.resolution
-        req.removeWaterBodies = self.removeWaterBodies
+        if self.removeWaterBodies is not None:
+            req.removeWaterBodies = self.removeWaterBodies
 
         for prop in self.properties:
             req.properties.append(prop.value)
