@@ -1,9 +1,15 @@
-from typing import Optional, List
+from typing import Dict, Optional, List
 
 from pydantic import BaseModel
 
 from traveltimepy.requests.common import Rectangle
 from traveltimepy.itertools import join_opt
+
+
+def language_header(accept_language: Optional[str]) -> Optional[Dict[str, str]]:
+    if accept_language is None:
+        return None
+    return {"Accept-Language": accept_language}
 
 
 class GeocodingRequest(BaseModel):

@@ -210,9 +210,10 @@ class SyncBaseClient(BaseClient):
         endpoint: str,
         accept_type: AcceptType,
         params: Optional[Dict[str, str]],
+        extra_headers: Optional[Dict[str, str]] = None,
     ) -> T:
         url = self._build_url(endpoint)
-        headers = self._get_json_headers(accept_type)
+        headers = {**self._get_json_headers(accept_type), **(extra_headers or {})}
 
         return self._make_request(
             method="GET",
