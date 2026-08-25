@@ -241,7 +241,7 @@ class AsyncClient(AsyncBaseClient):
         country: ProtoCountry,
         resolution: int,
         properties: List[ProtoCellProperty],
-        remove_water_bodies: bool = True,
+        remove_water_bodies: Optional[bool] = None,
     ) -> GeohashFastProtoResponse:
         """Calculate travel times to geohash cells using Protocol Buffers.
 
@@ -256,7 +256,8 @@ class AsyncClient(AsyncBaseClient):
             country: Specific country for the calculation
             resolution: Geohash resolution level
             properties: Statistical properties to calculate (min, max, mean)
-            remove_water_bodies: Exclude cells covering large water bodies. Defaults to True.
+            remove_water_bodies: Whether to exclude cells covering large water bodies.
+                                When omitted, the API default applies.
 
         Returns:
             GeohashFastProtoResponse: Response with geohash cell IDs and travel time statistics.
