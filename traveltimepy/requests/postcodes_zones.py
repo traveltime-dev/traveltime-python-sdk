@@ -7,6 +7,7 @@ from pydantic import BaseModel
 from traveltimepy.requests.common import (
     Coords,
     FullRange,
+    Snapping,
 )
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.zones import (
@@ -48,6 +49,7 @@ class PostcodeFilterArrivalSearch(BaseModel):
     properties: List[ZonesProperty]
     reachable_postcodes_threshold: float = 0
     range: Optional[FullRange] = None
+    snapping: Optional[Snapping] = None
 
 
 class PostcodeFilterDepartureSearch(BaseModel):
@@ -67,6 +69,7 @@ class PostcodeFilterDepartureSearch(BaseModel):
     properties: List[ZonesProperty]
     reachable_postcodes_threshold: float = 0
     range: Optional[FullRange] = None
+    snapping: Optional[Snapping] = None
 
 
 class PostcodesSectorsRequest(TravelTimeRequest[PostcodesSectorsResponse]):
