@@ -11,6 +11,7 @@ from traveltimepy.requests.time_filter import (
 )
 from traveltimepy.requests.transportation import (
     Driving,
+    DrivingTrain,
     IncludeRoads,
     PublicTransport,
 )
@@ -167,6 +168,25 @@ def test_departures_with_include_roads_sync(client: Client, locations):
                 travel_time=1800,
                 properties=[Property.TRAVEL_TIME],
             ),
+        ],
+        arrival_searches=[],
+    )
+    assert len(response.results) == 1
+
+
+def test_departures_driving_train_with_boarding_time_sync(client: Client, locations):
+    response = client.time_filter(
+        locations=locations,
+        departure_searches=[
+            TimeFilterDepartureSearch(
+                id="London center",
+                departure_location_id="London center",
+                arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                departure_time=datetime.now(),
+                transportation=DrivingTrain(boarding_time=120),
+                travel_time=1800,
+                properties=[Property.TRAVEL_TIME],
+            )
         ],
         arrival_searches=[],
     )
