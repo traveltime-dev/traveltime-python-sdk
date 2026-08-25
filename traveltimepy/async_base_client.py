@@ -16,12 +16,14 @@ from tenacity import (
 try:
     from traveltimepy.proto import TimeFilterFastResponse_pb2  # type: ignore
     from traveltimepy.proto import GeohashFastResponse_pb2  # type: ignore
+    from traveltimepy.proto import H3FastResponse_pb2  # type: ignore
 
     PROTOBUF_AVAILABLE = True
 except ImportError:
     PROTOBUF_AVAILABLE = False
     TimeFilterFastResponse_pb2 = None  # type: ignore
     GeohashFastResponse_pb2 = None  # type: ignore
+    H3FastResponse_pb2 = None  # type: ignore
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import BaseClient, __version__
 from traveltimepy.errors import (
@@ -36,9 +38,13 @@ from traveltimepy.requests.time_filter_proto import (
 from traveltimepy.requests.geohash_fast_proto import (
     GeohashFastProtoRequest,
 )
+from traveltimepy.requests.h3_fast_proto import (
+    H3FastProtoRequest,
+)
 from traveltimepy.responses.error import ResponseError
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.responses.geohash_fast_proto import GeohashFastProtoResponse
+from traveltimepy.responses.h3_fast_proto import H3FastProtoResponse
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -259,6 +265,51 @@ class AsyncBaseClient(BaseClient):
                         )
 
         return await _make_geohash_proto_request()
+
+    async def _api_call_h3_proto(self, req: H3FastProtoRequest) -> H3FastProtoResponse:
+        if not PROTOBUF_AVAILABLE:
+            raise ImportError(
+                "protobuf is required for proto API calls. "
+                "Install it with: pip install 'traveltimepy[proto]'"
+            )
+
+        @retry(
+            retry=retry_if_exception_type(TravelTimeServerError),
+            stop=stop_after_attempt(
+                self.retry_attempts + 1
+            ),  # First attempt is not a retry, that's why `+1`
+            wait=wait_none(),  # No wait between retries
+        )
+        async def _make_h3_proto_request():
+            session = await self._get_session()
+            async with self.async_limiter:
+                transportation_mode = self._get_transportation_mode(req.transportation)
+
+                async with session.post(
+                    url=f"https://{self._proto_host}/api/v3/{req.country.value}/h3/fast/{transportation_mode}",
+                    headers=self._get_proto_headers(),
+                    data=req.get_request().SerializeToString(),
+                    auth=BasicAuth(self.app_id, self.api_key),
+                ) as response:
+                    content = await response.read()
+                    if response.status != 200:
+                        self._handle_proto_error(response.status, response.headers)
+                    else:
+                        response_body = (
+                            H3FastResponse_pb2.H3FastResponse()  # type: ignore
+                        )
+                        response_body.ParseFromString(content)
+                        return H3FastProtoResponse(
+                            ids=[
+                                format(cell_id, "x")
+                                for cell_id in response_body.cells.ids
+                            ],
+                            min_travel_times=response_body.cells.minTravelTimes[:],
+                            max_travel_times=response_body.cells.maxTravelTimes[:],
+                            mean_travel_times=response_body.cells.meanTravelTimes[:],
+                        )
+
+        return await _make_h3_proto_request()
 
     async def _handle_response(
         self, response: ClientResponse, response_class: Type[T]
