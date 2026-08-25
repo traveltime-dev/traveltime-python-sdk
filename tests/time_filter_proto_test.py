@@ -23,6 +23,7 @@ def build_proto_request(request_type: RequestType):
         request_type=request_type,
         country=ProtoCountry.UNITED_KINGDOM,
         with_distance=False,
+        with_fares=False,
     ).get_request()
 
 

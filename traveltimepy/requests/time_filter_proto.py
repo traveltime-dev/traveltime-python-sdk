@@ -136,7 +136,7 @@ class TimeFilterFastProtoRequest:
         request_type: RequestType,
         country: ProtoCountry,
         with_distance: bool,
-        with_fares: bool = False,
+        with_fares: bool,
     ):
         self.originCoordinate = origin_coordinate
         self.destinationCoordinates = destination_coordinates
