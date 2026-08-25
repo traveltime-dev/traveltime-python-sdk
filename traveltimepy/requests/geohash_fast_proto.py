@@ -53,7 +53,7 @@ class GeohashFastProtoRequest:
         country: ProtoCountry,
         resolution: int,
         properties: List[ProtoCellProperty],
-        remove_water_bodies: Optional[bool] = None,
+        remove_water_bodies: Optional[bool],
     ):
         self.originCoordinate = origin_coordinate
         self.transportation = transportation
