@@ -192,6 +192,7 @@ class Client(SyncBaseClient):
         request_type: RequestType,
         country: ProtoCountry,
         with_distance: bool,
+        with_fares: bool = False,
     ) -> TimeFilterProtoResponse:
         """Calculate ultra-high-performance distance matrix using Protocol Buffers.
 
@@ -207,6 +208,7 @@ class Client(SyncBaseClient):
             request_type: Type of request calculation
             country: Specific country for the calculation
             with_distance: Whether to include distance data in response
+            with_fares: Whether to include monthly public transport fares in response
 
         Returns:
             TimeFilterProtoResponse: Response with travel times and optionally distances for reachable destinations.
@@ -220,6 +222,7 @@ class Client(SyncBaseClient):
                 request_type,
                 country,
                 with_distance,
+                with_fares,
             )
         )
 

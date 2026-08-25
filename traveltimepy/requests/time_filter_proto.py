@@ -125,6 +125,7 @@ class TimeFilterFastProtoRequest:
     requestType: RequestType
     country: ProtoCountry
     withDistance: bool
+    withFares: bool
 
     def __init__(
         self,
@@ -135,6 +136,7 @@ class TimeFilterFastProtoRequest:
         request_type: RequestType,
         country: ProtoCountry,
         with_distance: bool,
+        with_fares: bool = False,
     ):
         self.originCoordinate = origin_coordinate
         self.destinationCoordinates = destination_coordinates
@@ -143,6 +145,7 @@ class TimeFilterFastProtoRequest:
         self.requestType = request_type
         self.country = country
         self.withDistance = with_distance
+        self.withFares = with_fares
 
     def get_request(self) -> "TimeFilterFastRequest_pb2.TimeFilterFastRequest":  # type: ignore
         if not PROTOBUF_AVAILABLE:
@@ -199,6 +202,10 @@ class TimeFilterFastProtoRequest:
         if self.withDistance:
             req.properties.extend(
                 [TimeFilterFastRequest_pb2.TimeFilterFastRequest.Property.DISTANCES]  # type: ignore
+            )
+        if self.withFares:
+            req.properties.extend(
+                [TimeFilterFastRequest_pb2.TimeFilterFastRequest.Property.FARES]  # type: ignore
             )
 
         # Calculate and add location deltas
