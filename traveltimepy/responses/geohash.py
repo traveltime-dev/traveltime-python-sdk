@@ -25,11 +25,11 @@ class Cell(BaseModel):
 
     Attributes:
         id: Geohash string identifier for this geographic cell.
-        properties: Travel time statistics for this cell.
+        properties: Travel time statistics for this cell. Absent when no properties were requested.
     """
 
     id: str
-    properties: Properties
+    properties: Optional[Properties] = None
 
 
 class GeoHashResult(BaseModel):

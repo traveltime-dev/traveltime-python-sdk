@@ -26,11 +26,12 @@ class Cell(BaseModel):
 
     Attributes:
         id: H3 cell identifier string for this hexagonal geographic cell.
-        properties: Travel time statistics calculated for this cell.
+        properties: Travel time statistics calculated for this cell. Absent when no properties
+            were requested.
     """
 
     id: str
-    properties: Properties
+    properties: Optional[Properties] = None
 
 
 class H3Result(BaseModel):
