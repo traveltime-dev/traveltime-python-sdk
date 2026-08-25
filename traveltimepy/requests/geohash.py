@@ -16,8 +16,7 @@ from traveltimepy.requests.transportation import (
 )
 from traveltimepy.requests.common import (
     CellProperty,
-    Coordinates,
-    GeohashCentroid,
+    Coords,
     Snapping,
     Range,
 )
@@ -41,7 +40,7 @@ class GeoHashDepartureSearch(BaseModel):
     """
 
     id: str
-    coords: typing.Union[Coordinates, GeohashCentroid]
+    coords: Coords
     departure_time: datetime
     travel_time: int
     transportation: typing.Union[
@@ -73,7 +72,7 @@ class GeoHashArrivalSearch(BaseModel):
     """
 
     id: str
-    coords: typing.Union[Coordinates, GeohashCentroid]
+    coords: Coords
     arrival_time: datetime
     travel_time: int
     transportation: typing.Union[

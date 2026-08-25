@@ -56,9 +56,13 @@ class H3Centroid(BaseModel):
     h3_centroid: str
 
 
+Coords = Union[Coordinates, H3Centroid, GeohashCentroid]
+"""Location input: lat/lng coordinates, an H3 cell centroid, or a geohash centroid."""
+
+
 class Location(BaseModel):
     id: str
-    coords: Coordinates
+    coords: Coords
 
     def __hash__(self):
         return hash(self.id)

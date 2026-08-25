@@ -3,7 +3,12 @@ from datetime import datetime
 
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.client import Client
-from traveltimepy.requests.common import Coordinates, Range
+from traveltimepy.requests.common import (
+    Coordinates,
+    GeohashCentroid,
+    H3Centroid,
+    Range,
+)
 from traveltimepy.requests.level_of_detail import (
     SimpleLevelOfDetail,
     SimpleNumericLevelOfDetail,
@@ -698,3 +703,38 @@ def test_intersection_departures_sync(client: Client):
         ],
     )
     assert len(response.results[0].shapes) > 0
+
+
+@pytest.mark.asyncio
+async def test_departure_with_h3_centroid_coords(async_client: AsyncClient):
+    response = await async_client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            TimeMapDepartureSearch(
+                id="id",
+                coords=H3Centroid(h3_centroid="87195da49ffffff"),
+                departure_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving(),
+            )
+        ],
+    )
+
+    assert len(response.results) == 1 and len(response.results[0].shapes) > 0
+
+
+def test_departure_with_geohash_centroid_coords_sync(client: Client):
+    response = client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            TimeMapDepartureSearch(
+                id="id",
+                coords=GeohashCentroid(geohash_centroid="gcpvj3"),
+                departure_time=datetime.now(),
+                travel_time=900,
+                transportation=Driving(),
+            )
+        ],
+    )
+
+    assert len(response.results) == 1 and len(response.results[0].shapes) > 0

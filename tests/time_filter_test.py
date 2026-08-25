@@ -4,7 +4,12 @@ import pytest
 
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.client import Client
-from traveltimepy.requests.common import Property
+from traveltimepy.requests.common import (
+    GeohashCentroid,
+    H3Centroid,
+    Location,
+    Property,
+)
 from traveltimepy.requests.time_filter import (
     TimeFilterDepartureSearch,
     TimeFilterArrivalSearch,
@@ -184,6 +189,31 @@ def test_departures_driving_train_with_boarding_time_sync(client: Client, locati
                 arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
                 departure_time=datetime.now(),
                 transportation=DrivingTrain(boarding_time=120),
+                travel_time=1800,
+                properties=[Property.TRAVEL_TIME],
+            )
+        ],
+        arrival_searches=[],
+    )
+    assert len(response.results) == 1
+
+
+@pytest.mark.asyncio
+async def test_departures_with_centroid_locations(async_client: AsyncClient):
+    response = await async_client.time_filter(
+        locations=[
+            Location(
+                id="London center", coords=H3Centroid(h3_centroid="87195da49ffffff")
+            ),
+            Location(id="Hyde Park", coords=GeohashCentroid(geohash_centroid="gcpvj3")),
+        ],
+        departure_searches=[
+            TimeFilterDepartureSearch(
+                id="London center",
+                departure_location_id="London center",
+                arrival_location_ids=["Hyde Park"],
+                departure_time=datetime.now(),
+                transportation=PublicTransport(),
                 travel_time=1800,
                 properties=[Property.TRAVEL_TIME],
             )

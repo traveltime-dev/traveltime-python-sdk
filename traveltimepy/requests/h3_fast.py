@@ -4,8 +4,7 @@ from pydantic import BaseModel
 
 from traveltimepy.requests.common import (
     CellProperty,
-    Coordinates,
-    H3Centroid,
+    Coords,
     Snapping,
     ArrivalTimePeriod,
 )
@@ -40,7 +39,7 @@ class H3FastSearch(BaseModel):
     """
 
     id: str
-    coords: Union[Coordinates, H3Centroid]
+    coords: Coords
     transportation: Union[
         PublicTransportFast,
         DrivingFast,

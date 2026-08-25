@@ -4,7 +4,10 @@ from typing import List, Union, Optional
 
 from pydantic import BaseModel
 
-from traveltimepy.requests.common import Coordinates, FullRange
+from traveltimepy.requests.common import (
+    Coords,
+    FullRange,
+)
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.zones import (
     PostcodesDistrictsResponse,
@@ -30,7 +33,7 @@ class ZonesProperty(str, Enum):
 
 class PostcodeFilterArrivalSearch(BaseModel):
     id: str
-    coords: Coordinates
+    coords: Coords
     travel_time: int
     arrival_time: datetime
     transportation: Union[
@@ -49,7 +52,7 @@ class PostcodeFilterArrivalSearch(BaseModel):
 
 class PostcodeFilterDepartureSearch(BaseModel):
     id: str
-    coords: Coordinates
+    coords: Coords
     travel_time: int
     departure_time: datetime
     transportation: Union[

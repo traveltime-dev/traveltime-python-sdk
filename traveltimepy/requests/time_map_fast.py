@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 from pydantic import BaseModel
 
 from traveltimepy.requests.common import (
-    Coordinates,
+    Coords,
     PolygonsFilter,
     RenderMode,
     Snapping,
@@ -31,7 +31,8 @@ class TimeMapFastSearch(BaseModel):
 
     Attributes:
         id: Unique identifier for this search
-        coords: Center point coordinates for the isochrone
+        coords: Center point for the isochrone - lat/lng coordinates, or an H3 /
+            geohash cell centroid
         transportation: Transportation mode
         travel_time: Maximum journey time in seconds (max 10,800 = 3 hours)
         arrival_time_period: Time period instead of specific time
@@ -48,7 +49,7 @@ class TimeMapFastSearch(BaseModel):
     """
 
     id: str
-    coords: Coordinates
+    coords: Coords
     transportation: Union[
         PublicTransportFast,
         DrivingFast,

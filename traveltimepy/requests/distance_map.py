@@ -18,7 +18,7 @@ from traveltimepy.requests.transportation import (
     CyclingPublicTransport,
 )
 from traveltimepy.itertools import split, flatten
-from traveltimepy.requests.common import Coordinates
+from traveltimepy.requests.common import Coords
 from traveltimepy.responses.time_map import TimeMapResponse
 
 
@@ -54,7 +54,7 @@ class DistanceMapDepartureSearch(BaseModel):
     """
 
     id: str
-    coords: Coordinates
+    coords: Coords
     departure_time: datetime
     travel_distance: int
     transportation: typing.Union[
@@ -108,7 +108,7 @@ class DistanceMapArrivalSearch(BaseModel):
     """
 
     id: str
-    coords: Coordinates
+    coords: Coords
     arrival_time: datetime
     travel_distance: int
     transportation: typing.Union[
