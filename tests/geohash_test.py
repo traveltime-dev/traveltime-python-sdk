@@ -253,3 +253,23 @@ def test_intersection_arrivals_sync(client: Client):
     )
 
     assert len(response.results) == 3
+
+
+def test_no_properties_requested_sync(client: Client):
+    response = client.geohash(
+        arrival_searches=[],
+        departure_searches=[
+            GeoHashDepartureSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                departure_time=datetime.now(),
+                travel_time=600,
+                transportation=Driving(),
+            )
+        ],
+        properties=[],
+        resolution=6,
+    )
+
+    assert len(response.results[0].cells) > 0
+    assert all(cell.properties is None for cell in response.results[0].cells)
