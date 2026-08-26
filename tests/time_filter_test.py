@@ -248,7 +248,5 @@ def test_departures_with_distance_breakdown_sync(client: Client, locations):
     for location in response.results[0].locations:
         properties = location.properties[0]
         assert properties.distance_breakdown
-        assert (
-            sum(part.distance for part in properties.distance_breakdown)
-            == properties.distance
-        )
+        total = sum(part.distance for part in properties.distance_breakdown)
+        assert total == properties.distance
