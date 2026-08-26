@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import List, Union
+from typing import List, Optional, Union
 
 try:
     from traveltimepy.proto import RequestsCommon_pb2  # type: ignore
@@ -42,6 +42,7 @@ class GeohashFastProtoRequest:
     country: ProtoCountry
     resolution: int
     properties: List[ProtoCellProperty]
+    removeWaterBodies: Optional[bool]
 
     def __init__(
         self,
@@ -52,6 +53,7 @@ class GeohashFastProtoRequest:
         country: ProtoCountry,
         resolution: int,
         properties: List[ProtoCellProperty],
+        remove_water_bodies: Optional[bool],
     ):
         self.originCoordinate = origin_coordinate
         self.transportation = transportation
@@ -60,6 +62,7 @@ class GeohashFastProtoRequest:
         self.country = country
         self.resolution = resolution
         self.properties = properties
+        self.removeWaterBodies = remove_water_bodies
 
     def get_request(self) -> "GeohashFastRequest_pb2.GeohashFastRequest":  # type: ignore
         if not PROTOBUF_AVAILABLE:
@@ -111,6 +114,8 @@ class GeohashFastProtoRequest:
         req.travelTime = self.travelTime
         req.arrivalTimePeriod = RequestsCommon_pb2.TimePeriod.WEEKDAY_MORNING  # type: ignore
         req.resolution = self.resolution
+        if self.removeWaterBodies is not None:
+            req.removeWaterBodies = self.removeWaterBodies
 
         for prop in self.properties:
             req.properties.append(prop.value)
