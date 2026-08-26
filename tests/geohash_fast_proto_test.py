@@ -10,7 +10,10 @@ from traveltimepy.requests.time_filter_proto import (
     ProtoPublicTransportWithDetails,
     RequestType,
 )
-from traveltimepy.requests.geohash_fast_proto import ProtoCellProperty
+from traveltimepy.requests.geohash_fast_proto import (
+    GeohashFastProtoRequest,
+    ProtoCellProperty,
+)
 
 
 @pytest.mark.asyncio
@@ -152,15 +155,41 @@ def test_many_to_one_sync(client: Client):
     assert len(response.mean_travel_times) == len(response.ids)
 
 
-def test_keep_water_bodies_sync(client: Client):
-    response = client.geohash_fast_proto(
-        origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
+def build_request(remove_water_bodies):
+    return GeohashFastProtoRequest(
+        origin_coordinate=Coordinates(lat=51.5066, lng=-0.1176),
         transportation=ProtoTransportation.DRIVING_FERRY,
         travel_time=900,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=7,
         properties=[ProtoCellProperty.MEAN],
-        remove_water_bodies=False,
-    )
-    assert len(response.ids) > 0
+        remove_water_bodies=remove_water_bodies,
+    ).get_request()
+
+
+def test_remove_water_bodies_is_set_on_the_proto_message():
+    assert build_request(True).oneToManyRequest.removeWaterBodies is True
+    assert build_request(False).oneToManyRequest.removeWaterBodies is False
+
+
+def test_remove_water_bodies_omitted_leaves_proto_default():
+    assert build_request(None).oneToManyRequest.removeWaterBodies is False
+
+
+def test_remove_water_bodies_drops_cells_over_the_thames_sync(client: Client):
+    def cells(remove_water_bodies):
+        return client.geohash_fast_proto(
+            origin_coordinate=Coordinates(lat=51.5066, lng=-0.1176),
+            transportation=ProtoTransportation.DRIVING_FERRY,
+            travel_time=900,
+            request_type=RequestType.ONE_TO_MANY,
+            country=ProtoCountry.UNITED_KINGDOM,
+            resolution=7,
+            properties=[ProtoCellProperty.MEAN],
+            remove_water_bodies=remove_water_bodies,
+        ).ids
+
+    with_water, without_water = set(cells(False)), set(cells(True))
+    assert len(without_water) < len(with_water)
+    assert without_water < with_water
