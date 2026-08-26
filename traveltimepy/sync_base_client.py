@@ -257,6 +257,7 @@ class SyncBaseClient(BaseClient):
                 return TimeFilterProtoResponse(
                     travel_times=response_body.properties.travelTimes[:],
                     distances=response_body.properties.distances[:],
+                    monthly_fares=response_body.properties.monthlyFares[:],
                 )
 
         return _make_proto_request()

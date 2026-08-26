@@ -11,6 +11,7 @@ from traveltimepy.requests.time_filter_proto import (
     RequestType,
     TimeFilterFastProtoRequest,
 )
+from traveltimepy.proto import TimeFilterFastRequest_pb2  # type: ignore
 
 
 def build_proto_request(request_type: RequestType):
@@ -22,6 +23,7 @@ def build_proto_request(request_type: RequestType):
         request_type=request_type,
         country=ProtoCountry.UNITED_KINGDOM,
         with_distance=False,
+        with_fares=False,
     ).get_request()
 
 
@@ -207,3 +209,52 @@ def test_many_to_one_sync(client: Client):
         with_distance=False,
     )
     assert len(response.travel_times) == 2 and len(response.distances) == 0
+
+
+def test_with_fares_builds_fares_property():
+    request = TimeFilterFastProtoRequest(
+        origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
+        destination_coordinates=[Coordinates(lat=51.348605, lng=-0.314783)],
+        transportation=ProtoTransportation.PUBLIC_TRANSPORT,
+        travel_time=7200,
+        request_type=RequestType.ONE_TO_MANY,
+        country=ProtoCountry.UNITED_KINGDOM,
+        with_distance=False,
+        with_fares=True,
+    ).get_request()
+    properties = list(request.oneToManyRequest.properties)
+    assert properties == [
+        TimeFilterFastRequest_pb2.TimeFilterFastRequest.Property.FARES
+    ]
+
+
+def test_one_to_many_with_fares_sync(client: Client):
+    response = client.time_filter_fast_proto(
+        origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
+        destination_coordinates=[
+            Coordinates(lat=51.348605, lng=-0.314783),
+            Coordinates(lat=51.337205, lng=-0.315793),
+        ],
+        transportation=ProtoTransportation.PUBLIC_TRANSPORT,
+        travel_time=7200,
+        request_type=RequestType.ONE_TO_MANY,
+        country=ProtoCountry.UNITED_KINGDOM,
+        with_distance=False,
+        with_fares=True,
+    )
+    assert len(response.travel_times) == 2
+    assert len(response.monthly_fares) == 2
+    assert len(response.distances) == 0
+
+
+def test_fares_not_returned_by_default_sync(client: Client):
+    response = client.time_filter_fast_proto(
+        origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
+        destination_coordinates=[Coordinates(lat=51.348605, lng=-0.314783)],
+        transportation=ProtoTransportation.PUBLIC_TRANSPORT,
+        travel_time=7200,
+        request_type=RequestType.ONE_TO_MANY,
+        country=ProtoCountry.UNITED_KINGDOM,
+        with_distance=False,
+    )
+    assert len(response.travel_times) == 1 and response.monthly_fares == []
