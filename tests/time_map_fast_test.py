@@ -11,6 +11,7 @@ from traveltimepy.requests.time_map_fast import (
 )
 from traveltimepy.requests.transportation import (
     DrivingFerryFast,
+    DrivingPublicTransportFast,
     FastTrafficModel,
     PublicTransportFast,
 )
@@ -616,3 +617,23 @@ def test_no_holes_removes_holes_sync(client: Client):
 
     assert holes(None) > 0
     assert holes(True) == 0
+
+
+def test_one_to_many_driving_public_transport_with_params_sync(client: Client):
+    response = client.time_map_fast(
+        arrival_searches=TimeMapFastArrivalSearches(
+            one_to_many=[
+                TimeMapFastSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.507609, lng=-0.128315),
+                    transportation=DrivingPublicTransportFast(
+                        walking_time=600, driving_time_to_station=600, parking_time=120
+                    ),
+                    travel_time=900,
+                )
+            ],
+            many_to_one=[],
+        )
+    )
+
+    assert len(response.results) == 1 and len(response.results[0].shapes) > 0
