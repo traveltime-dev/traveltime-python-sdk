@@ -221,3 +221,34 @@ async def test_departures_with_centroid_locations(async_client: AsyncClient):
         arrival_searches=[],
     )
     assert len(response.results) == 1
+
+
+def test_departures_with_distance_breakdown_sync(client: Client, locations):
+    response = client.time_filter(
+        locations=locations,
+        departure_searches=[
+            TimeFilterDepartureSearch(
+                id="London center",
+                departure_location_id="London center",
+                arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                departure_time=datetime.now(),
+                transportation=Driving(),
+                travel_time=1800,
+                properties=[
+                    Property.TRAVEL_TIME,
+                    Property.DISTANCE,
+                    Property.DISTANCE_BREAKDOWN,
+                ],
+            )
+        ],
+        arrival_searches=[],
+    )
+
+    assert len(response.results[0].locations) == 2
+    for location in response.results[0].locations:
+        properties = location.properties[0]
+        assert properties.distance_breakdown
+        assert (
+            sum(part.distance for part in properties.distance_breakdown)
+            == properties.distance
+        )

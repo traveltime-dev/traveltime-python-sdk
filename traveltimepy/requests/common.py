@@ -172,12 +172,14 @@ class Property(str, Enum):
     Attributes:
         TRAVEL_TIME: Journey time in seconds
         DISTANCE: Journey distance in meters
+        DISTANCE_BREAKDOWN: Journey distance in meters split by transportation mode
         ROUTE: Detailed route information with turn-by-turn directions
         FARES: Public transport fare information (where available)
     """
 
     TRAVEL_TIME = "travel_time"
     DISTANCE = "distance"
+    DISTANCE_BREAKDOWN = "distance_breakdown"
     ROUTE = "route"
     FARES = "fares"
 
