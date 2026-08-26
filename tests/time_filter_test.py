@@ -5,6 +5,7 @@ import pytest
 from traveltimepy.async_client import AsyncClient
 from traveltimepy.client import Client
 from traveltimepy.requests.common import (
+    Coordinates,
     GeohashCentroid,
     H3Centroid,
     Location,
@@ -16,6 +17,7 @@ from traveltimepy.requests.time_filter import (
 )
 from traveltimepy.requests.transportation import (
     Driving,
+    DrivingPublicTransport,
     DrivingTrain,
     IncludeRoads,
     PublicTransport,
@@ -250,3 +252,55 @@ def test_departures_with_distance_breakdown_sync(client: Client, locations):
         assert properties.distance_breakdown
         total = sum(part.distance for part in properties.distance_breakdown)
         assert total == properties.distance
+
+
+def test_departures_driving_public_transport_sync(client: Client, locations):
+    response = client.time_filter(
+        locations=locations,
+        departure_searches=[
+            TimeFilterDepartureSearch(
+                id="London center",
+                departure_location_id="London center",
+                arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                departure_time=datetime.now(),
+                transportation=DrivingPublicTransport(
+                    driving_time_to_station=600, parking_time=120, walking_time=300
+                ),
+                travel_time=1800,
+                properties=[Property.TRAVEL_TIME],
+            )
+        ],
+        arrival_searches=[],
+    )
+    assert len(response.results) == 1
+
+
+def test_driving_public_transport_differs_from_driving_train_sync(client: Client):
+    far_locations = [
+        Location(id="London", coords=Coordinates(lat=51.507609, lng=-0.128315)),
+        Location(id="Birmingham", coords=Coordinates(lat=52.4778, lng=-1.8990)),
+        Location(id="Brighton", coords=Coordinates(lat=50.8292, lng=-0.1411)),
+    ]
+
+    def travel_times(transportation):
+        response = client.time_filter(
+            locations=far_locations,
+            departure_searches=[
+                TimeFilterDepartureSearch(
+                    id="x",
+                    departure_location_id="London",
+                    arrival_location_ids=["Birmingham", "Brighton"],
+                    departure_time=datetime.now(),
+                    transportation=transportation,
+                    travel_time=14400,
+                    properties=[Property.TRAVEL_TIME],
+                )
+            ],
+            arrival_searches=[],
+        )
+        return {
+            loc.id: loc.properties[0].travel_time
+            for loc in response.results[0].locations
+        }
+
+    assert travel_times(DrivingPublicTransport()) != travel_times(DrivingTrain())

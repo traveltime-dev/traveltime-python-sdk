@@ -23,7 +23,11 @@ from traveltimepy.requests.time_map import (
     TimeMapUnion,
     TimeMapIntersection,
 )
-from traveltimepy.requests.transportation import Driving, Walking
+from traveltimepy.requests.transportation import (
+    Driving,
+    Walking,
+    DrivingPublicTransport,
+)
 
 
 @pytest.mark.asyncio
@@ -749,7 +753,7 @@ def test_no_holes_removes_holes_sync(client: Client):
                 TimeMapDepartureSearch(
                     id="id",
                     coords=Coordinates(lat=53.4808, lng=-2.2426),
-                    departure_time=datetime(2026, 9, 1, 8, 0),
+                    departure_time=datetime.now(),
                     travel_time=2700,
                     transportation=Driving(),
                     no_holes=no_holes,
@@ -770,7 +774,7 @@ def test_is_only_walking_property_sync(client: Client):
                 TimeMapDepartureSearch(
                     id="id",
                     coords=Coordinates(lat=51.507609, lng=-0.128315),
-                    departure_time=datetime(2026, 9, 1, 8, 0),
+                    departure_time=datetime.now(),
                     travel_time=600,
                     transportation=transportation,
                     properties=[TimeMapProperty.IS_ONLY_WALKING],
@@ -781,3 +785,20 @@ def test_is_only_walking_property_sync(client: Client):
 
     assert is_only_walking(Walking()) is True
     assert is_only_walking(Driving()) is False
+
+
+def test_departure_driving_public_transport_sync(client: Client):
+    response = client.time_map(
+        arrival_searches=[],
+        departure_searches=[
+            TimeMapDepartureSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                departure_time=datetime.now(),
+                travel_time=900,
+                transportation=DrivingPublicTransport(),
+            )
+        ],
+    )
+
+    assert len(response.results) == 1 and len(response.results[0].shapes) > 0
