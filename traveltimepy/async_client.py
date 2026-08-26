@@ -87,6 +87,10 @@ from traveltimepy.requests.geohash_fast_proto import (
     GeohashFastProtoTransportation,
     ProtoCellProperty,
 )
+from traveltimepy.requests.h3_fast_proto import (
+    H3FastProtoRequest,
+    H3FastProtoTransportation,
+)
 from traveltimepy.requests.time_map import (
     TimeMapDepartureSearch,
     TimeMapArrivalSearch,
@@ -116,6 +120,7 @@ from traveltimepy.responses.time_filter_fast import (
 )
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.responses.geohash_fast_proto import GeohashFastProtoResponse
+from traveltimepy.responses.h3_fast_proto import H3FastProtoResponse
 from traveltimepy.responses.time_map import TimeMapResponse
 from traveltimepy.responses.time_map_wkt import TimeMapWKTResponse
 from traveltimepy.responses.zones import (
@@ -239,6 +244,7 @@ class AsyncClient(AsyncBaseClient):
         country: ProtoCountry,
         resolution: int,
         properties: List[ProtoCellProperty],
+        remove_water_bodies: Optional[bool] = None,
     ) -> GeohashFastProtoResponse:
         """Calculate travel times to geohash cells using Protocol Buffers.
 
@@ -253,6 +259,8 @@ class AsyncClient(AsyncBaseClient):
             country: Specific country for the calculation
             resolution: Geohash resolution level
             properties: Statistical properties to calculate (min, max, mean)
+            remove_water_bodies: Whether to exclude cells covering large water bodies.
+                                When omitted, the API default applies.
 
         Returns:
             GeohashFastProtoResponse: Response with geohash cell IDs and travel time statistics.
@@ -266,6 +274,50 @@ class AsyncClient(AsyncBaseClient):
                 country,
                 resolution,
                 properties,
+                remove_water_bodies,
+            )
+        )
+
+    async def h3_fast_proto(
+        self,
+        origin_coordinate: Coordinates,
+        transportation: H3FastProtoTransportation,
+        travel_time: int,
+        request_type: RequestType,
+        country: ProtoCountry,
+        resolution: int,
+        properties: List[ProtoCellProperty],
+        remove_water_bodies: Optional[bool] = None,
+    ) -> H3FastProtoResponse:
+        """Calculate travel times to H3 cells using Protocol Buffers.
+
+        High-performance endpoint using protobuf format for H3-based
+        travel time calculations.
+
+        Args:
+            origin_coordinate: Single origin coordinate (lat/lng)
+            transportation: Transportation mode
+            travel_time: Maximum journey time in seconds
+            request_type: Type of request calculation
+            country: Specific country for the calculation
+            resolution: H3 resolution level (4-12). Caps the travel time a search may use.
+            properties: Statistical properties to calculate (min, max, mean)
+            remove_water_bodies: Whether to exclude cells covering large water bodies.
+                                When omitted, the API default applies.
+
+        Returns:
+            H3FastProtoResponse: Response with H3 cell indices (lowercase hex) and travel time statistics.
+        """
+        return await self._api_call_h3_proto(
+            H3FastProtoRequest(
+                origin_coordinate,
+                transportation,
+                travel_time,
+                request_type,
+                country,
+                resolution,
+                properties,
+                remove_water_bodies,
             )
         )
 

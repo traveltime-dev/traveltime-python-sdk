@@ -1,17 +1,17 @@
-from enum import Enum
 from typing import List, Optional, Union
 
 try:
     from traveltimepy.proto import RequestsCommon_pb2  # type: ignore
-    from traveltimepy.proto import GeohashFastRequest_pb2  # type: ignore
+    from traveltimepy.proto import H3FastRequest_pb2  # type: ignore
 
     PROTOBUF_AVAILABLE = True
 except ImportError:
     PROTOBUF_AVAILABLE = False
     RequestsCommon_pb2 = None  # type: ignore
-    GeohashFastRequest_pb2 = None  # type: ignore
+    H3FastRequest_pb2 = None  # type: ignore
 
 from traveltimepy.requests.common import Coordinates
+from traveltimepy.requests.geohash_fast_proto import ProtoCellProperty
 from traveltimepy.requests.time_filter_proto import (
     ProtoTransportation,
     ProtoPublicTransportWithDetails,
@@ -20,23 +20,16 @@ from traveltimepy.requests.time_filter_proto import (
     ProtoCountry,
 )
 
-
-class ProtoCellProperty(Enum):
-    MEAN = 0
-    MIN = 1
-    MAX = 2
-
-
-GeohashFastProtoTransportation = Union[
+H3FastProtoTransportation = Union[
     ProtoTransportation,
     ProtoPublicTransportWithDetails,
     ProtoDrivingAndPublicTransportWithDetails,
 ]
 
 
-class GeohashFastProtoRequest:
+class H3FastProtoRequest:
     originCoordinate: Coordinates
-    transportation: GeohashFastProtoTransportation
+    transportation: H3FastProtoTransportation
     travelTime: int
     requestType: RequestType
     country: ProtoCountry
@@ -47,7 +40,7 @@ class GeohashFastProtoRequest:
     def __init__(
         self,
         origin_coordinate: Coordinates,
-        transportation: GeohashFastProtoTransportation,
+        transportation: H3FastProtoTransportation,
         travel_time: int,
         request_type: RequestType,
         country: ProtoCountry,
@@ -64,13 +57,13 @@ class GeohashFastProtoRequest:
         self.properties = properties
         self.removeWaterBodies = remove_water_bodies
 
-    def get_request(self) -> "GeohashFastRequest_pb2.GeohashFastRequest":  # type: ignore
+    def get_request(self) -> "H3FastRequest_pb2.H3FastRequest":  # type: ignore
         if not PROTOBUF_AVAILABLE:
             raise ImportError(
-                "protobuf is required for GeohashFastProtoRequest. "
+                "protobuf is required for H3FastProtoRequest. "
                 "Install it with: pip install 'traveltimepy[proto]'"
             )
-        request = GeohashFastRequest_pb2.GeohashFastRequest()  # type: ignore
+        request = H3FastRequest_pb2.H3FastRequest()  # type: ignore
 
         if self.requestType == RequestType.ONE_TO_MANY:
             req = request.oneToManyRequest
@@ -81,7 +74,6 @@ class GeohashFastProtoRequest:
             req.arrivalLocation.lat = self.originCoordinate.lat
             req.arrivalLocation.lng = self.originCoordinate.lng
 
-        # Set transportation type
         if isinstance(self.transportation, ProtoTransportation):
             req.transportation.type = self.transportation.value.code
         else:

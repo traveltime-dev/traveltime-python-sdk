@@ -1,3 +1,4 @@
+import re
 import pytest
 
 from traveltimepy.requests.common import Coordinates
@@ -10,21 +11,19 @@ from traveltimepy.requests.time_filter_proto import (
     ProtoPublicTransportWithDetails,
     RequestType,
 )
-from traveltimepy.requests.geohash_fast_proto import (
-    GeohashFastProtoRequest,
-    ProtoCellProperty,
-)
+from traveltimepy.requests.geohash_fast_proto import ProtoCellProperty
+from traveltimepy.requests.h3_fast_proto import H3FastProtoRequest
 
 
 @pytest.mark.asyncio
 async def test_one_to_many(async_client: AsyncClient):
-    response = await async_client.geohash_fast_proto(
+    response = await async_client.h3_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoTransportation.DRIVING_FERRY,
         travel_time=900,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=8,
         properties=[ProtoCellProperty.MEAN],
     )
     assert len(response.ids) > 0
@@ -33,13 +32,13 @@ async def test_one_to_many(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_many_to_one(async_client: AsyncClient):
-    response = await async_client.geohash_fast_proto(
+    response = await async_client.h3_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoTransportation.DRIVING_FERRY,
         travel_time=900,
         request_type=RequestType.MANY_TO_ONE,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=8,
         properties=[ProtoCellProperty.MEAN],
     )
     assert len(response.ids) > 0
@@ -48,13 +47,13 @@ async def test_many_to_one(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_all_properties(async_client: AsyncClient):
-    response = await async_client.geohash_fast_proto(
+    response = await async_client.h3_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoTransportation.DRIVING_FERRY,
         travel_time=900,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=8,
         properties=[
             ProtoCellProperty.MIN,
             ProtoCellProperty.MAX,
@@ -69,13 +68,13 @@ async def test_all_properties(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_one_to_many_pt_with_params(async_client: AsyncClient):
-    response = await async_client.geohash_fast_proto(
+    response = await async_client.h3_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoPublicTransportWithDetails(walking_time_to_station=900),
         travel_time=900,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=8,
         properties=[ProtoCellProperty.MEAN],
     )
     assert len(response.ids) > 0
@@ -83,13 +82,13 @@ async def test_one_to_many_pt_with_params(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_many_to_one_pt_with_params(async_client: AsyncClient):
-    response = await async_client.geohash_fast_proto(
+    response = await async_client.h3_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoPublicTransportWithDetails(walking_time_to_station=900),
         travel_time=900,
         request_type=RequestType.MANY_TO_ONE,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=8,
         properties=[ProtoCellProperty.MEAN],
     )
     assert len(response.ids) > 0
@@ -97,7 +96,7 @@ async def test_many_to_one_pt_with_params(async_client: AsyncClient):
 
 @pytest.mark.asyncio
 async def test_one_to_many_driving_and_pt_with_params(async_client: AsyncClient):
-    response = await async_client.geohash_fast_proto(
+    response = await async_client.h3_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoDrivingAndPublicTransportWithDetails(
             walking_time_to_station=900, driving_time_to_station=900, parking_time=300
@@ -105,7 +104,7 @@ async def test_one_to_many_driving_and_pt_with_params(async_client: AsyncClient)
         travel_time=900,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=8,
         properties=[ProtoCellProperty.MEAN],
     )
     assert len(response.ids) > 0
@@ -113,7 +112,7 @@ async def test_one_to_many_driving_and_pt_with_params(async_client: AsyncClient)
 
 @pytest.mark.asyncio
 async def test_many_to_one_driving_and_pt_with_params(async_client: AsyncClient):
-    response = await async_client.geohash_fast_proto(
+    response = await async_client.h3_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoDrivingAndPublicTransportWithDetails(
             walking_time_to_station=900, driving_time_to_station=900, parking_time=300
@@ -121,20 +120,20 @@ async def test_many_to_one_driving_and_pt_with_params(async_client: AsyncClient)
         travel_time=900,
         request_type=RequestType.MANY_TO_ONE,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=8,
         properties=[ProtoCellProperty.MEAN],
     )
     assert len(response.ids) > 0
 
 
 def test_one_to_many_sync(client: Client):
-    response = client.geohash_fast_proto(
+    response = client.h3_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoTransportation.DRIVING_FERRY,
         travel_time=900,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=8,
         properties=[ProtoCellProperty.MEAN],
     )
     assert len(response.ids) > 0
@@ -142,27 +141,41 @@ def test_one_to_many_sync(client: Client):
 
 
 def test_many_to_one_sync(client: Client):
-    response = client.geohash_fast_proto(
+    response = client.h3_fast_proto(
         origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoTransportation.DRIVING_FERRY,
         travel_time=900,
         request_type=RequestType.MANY_TO_ONE,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=6,
+        resolution=8,
         properties=[ProtoCellProperty.MEAN],
     )
     assert len(response.ids) > 0
     assert len(response.mean_travel_times) == len(response.ids)
 
 
-def build_request(remove_water_bodies):
-    return GeohashFastProtoRequest(
-        origin_coordinate=Coordinates(lat=51.5066, lng=-0.1176),
+def test_ids_are_hex_h3_indices_sync(client: Client):
+    response = client.h3_fast_proto(
+        origin_coordinate=Coordinates(lat=51.425709, lng=-0.122061),
         transportation=ProtoTransportation.DRIVING_FERRY,
         travel_time=900,
         request_type=RequestType.ONE_TO_MANY,
         country=ProtoCountry.UNITED_KINGDOM,
-        resolution=7,
+        resolution=8,
+        properties=[ProtoCellProperty.MEAN],
+    )
+    assert len(response.ids) > 0
+    assert all(re.fullmatch(r"[0-9a-f]{15}", cell_id) for cell_id in response.ids)
+
+
+def build_request(remove_water_bodies):
+    return H3FastProtoRequest(
+        origin_coordinate=Coordinates(lat=51.5066, lng=-0.1176),
+        transportation=ProtoTransportation.DRIVING_FERRY,
+        travel_time=600,
+        request_type=RequestType.ONE_TO_MANY,
+        country=ProtoCountry.UNITED_KINGDOM,
+        resolution=11,
         properties=[ProtoCellProperty.MEAN],
         remove_water_bodies=remove_water_bodies,
     ).get_request()
@@ -179,13 +192,13 @@ def test_remove_water_bodies_omitted_leaves_proto_default():
 
 def test_remove_water_bodies_drops_cells_over_the_thames_sync(client: Client):
     def cells(remove_water_bodies):
-        return client.geohash_fast_proto(
+        return client.h3_fast_proto(
             origin_coordinate=Coordinates(lat=51.5066, lng=-0.1176),
             transportation=ProtoTransportation.DRIVING_FERRY,
-            travel_time=900,
+            travel_time=600,
             request_type=RequestType.ONE_TO_MANY,
             country=ProtoCountry.UNITED_KINGDOM,
-            resolution=7,
+            resolution=11,
             properties=[ProtoCellProperty.MEAN],
             remove_water_bodies=remove_water_bodies,
         ).ids

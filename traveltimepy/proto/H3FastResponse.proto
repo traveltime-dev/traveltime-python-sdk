@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package com.igeolise.traveltime.rabbitmq.responses;
+
+message H3FastResponse {
+  message Cells {
+    // H3 cell indices as fixed64 (the native H3Index representation,
+    // see https://h3geo.org/docs/library/index/cell). fixed64 (not uint64):
+    // every valid H3 cell ID has the mode bit set (bit 59), so values are
+    // always >= 2^59 and varint would always spend the full 9 bytes.
+    // fixed64 is 8 bytes and avoids varint encode/decode overhead.
+    // Clients that need the 15-char hex form should call their H3 library's
+    // int-to-string.
+    repeated fixed64 ids = 1;
+    repeated sint32 minTravelTimes = 2;
+    repeated sint32 maxTravelTimes = 3;
+    repeated sint32 meanTravelTimes = 4;
+  }
+
+  Cells cells = 1;
+}

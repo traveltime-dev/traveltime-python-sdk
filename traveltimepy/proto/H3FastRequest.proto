@@ -4,7 +4,7 @@ package com.igeolise.traveltime.rabbitmq.requests;
 
 import "traveltimepy/proto/RequestsCommon.proto";
 
-message GeohashFastRequest {
+message H3FastRequest {
   message OneToMany {
     Coords departureLocation = 1;
     Transportation transportation = 2;

@@ -61,7 +61,7 @@ def generate_async_client(content: str) -> str:
 
     # 4. Add await to API calls
     content = re.sub(
-        r"(\s+)return (self\._api_call_(?:post|get|proto|geohash_proto)\()",
+        r"(\s+)return (self\._api_call_(?:post|get|proto|geohash_proto|h3_proto)\()",
         r"\1return await \2",
         content,
     )
