@@ -11,7 +11,7 @@ from traveltimepy.requests.time_filter_proto import (
     RequestType,
     TimeFilterFastProtoRequest,
 )
-from traveltimepy.proto import TimeFilterFastRequest_pb2
+from traveltimepy.proto import TimeFilterFastRequest_pb2  # type: ignore
 
 
 def build_proto_request(request_type: RequestType):
