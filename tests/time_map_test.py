@@ -18,11 +18,12 @@ from traveltimepy.requests.level_of_detail import (
 )
 from traveltimepy.requests.time_map import (
     TimeMapDepartureSearch,
+    TimeMapProperty,
     TimeMapArrivalSearch,
     TimeMapUnion,
     TimeMapIntersection,
 )
-from traveltimepy.requests.transportation import Driving
+from traveltimepy.requests.transportation import Driving, Walking
 
 
 @pytest.mark.asyncio

@@ -596,21 +596,23 @@ def test_many_to_one_with_traffic_model_sync(client: Client):
     assert len(response.results) == 1
 
 
-def test_no_holes_sync(client: Client):
-    response = client.time_map_fast(
-        arrival_searches=TimeMapFastArrivalSearches(
-            one_to_many=[
-                TimeMapFastSearch(
-                    id="id",
-                    coords=Coordinates(lat=53.4808, lng=-2.2426),
-                    transportation=DrivingFerryFast(),
-                    travel_time=2700,
-                    no_holes=True,
-                )
-            ],
-            many_to_one=[],
+def test_no_holes_removes_holes_sync(client: Client):
+    def holes(no_holes):
+        response = client.time_map_fast(
+            arrival_searches=TimeMapFastArrivalSearches(
+                one_to_many=[
+                    TimeMapFastSearch(
+                        id="id",
+                        coords=Coordinates(lat=53.4808, lng=-2.2426),
+                        transportation=DrivingFerryFast(),
+                        travel_time=2700,
+                        no_holes=no_holes,
+                    )
+                ],
+                many_to_one=[],
+            )
         )
-    )
+        return sum(len(shape.holes) for shape in response.results[0].shapes)
 
-    assert len(response.results[0].shapes) > 0
-    assert all(not shape.holes for shape in response.results[0].shapes)
+    assert holes(None) > 0
+    assert holes(True) == 0
