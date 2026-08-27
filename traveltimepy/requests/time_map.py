@@ -1,4 +1,5 @@
 import typing
+from enum import Enum
 from datetime import datetime
 
 from typing import List, Optional
@@ -27,6 +28,17 @@ from traveltimepy.responses.time_map import TimeMapResponse
 from traveltimepy.itertools import split, flatten
 
 
+class TimeMapProperty(str, Enum):
+    """Additional properties that can be requested for each time-map result.
+
+    Attributes:
+        IS_ONLY_WALKING: Whether the reachable area is walking-only, i.e. no other
+            transportation mode was used to reach it.
+    """
+
+    IS_ONLY_WALKING = "is_only_walking"
+
+
 class TimeMapDepartureSearch(BaseModel):
     """Creates travel time catchment area polygons showing all locations reachable from
     a departure point with specific departure time and comprehensive transport options.
@@ -42,6 +54,8 @@ class TimeMapDepartureSearch(BaseModel):
         level_of_detail: Optional polygon detail level for shape complexity
         snapping: Optional road network lookup settings
         polygons_filter: Optional filtering for polygon complexity and size
+        no_holes: Optional flag to remove holes from the returned polygons
+        properties: Optional additional properties to return for the result
         remove_water_bodies: Optional flag to exclude water areas from polygons
         render_mode: Optional rendering mode for polygon output optimization
         buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
@@ -69,6 +83,8 @@ class TimeMapDepartureSearch(BaseModel):
     level_of_detail: Optional[LevelOfDetail] = None
     snapping: Optional[Snapping] = None
     polygons_filter: Optional[PolygonsFilter] = None
+    no_holes: Optional[bool] = None
+    properties: Optional[List[TimeMapProperty]] = None
     remove_water_bodies: Optional[bool] = None
     render_mode: Optional[RenderMode] = None
     buffer_distance: Optional[int] = None
@@ -89,6 +105,8 @@ class TimeMapArrivalSearch(BaseModel):
         level_of_detail: Optional polygon detail level for shape complexity
         snapping: Optional road network lookup settings
         polygons_filter: Optional filtering for polygon complexity and size
+        no_holes: Optional flag to remove holes from the returned polygons
+        properties: Optional additional properties to return for the result
         remove_water_bodies: Optional flag to exclude water areas from polygons
         render_mode: Optional rendering mode for polygon output optimization
         buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
@@ -116,6 +134,8 @@ class TimeMapArrivalSearch(BaseModel):
     level_of_detail: Optional[LevelOfDetail] = None
     snapping: Optional[Snapping] = None
     polygons_filter: Optional[PolygonsFilter] = None
+    no_holes: Optional[bool] = None
+    properties: Optional[List[TimeMapProperty]] = None
     remove_water_bodies: Optional[bool] = None
     render_mode: Optional[RenderMode] = None
     buffer_distance: Optional[int] = None

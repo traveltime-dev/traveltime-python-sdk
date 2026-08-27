@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic.main import BaseModel
 
@@ -17,16 +17,28 @@ class Shape(BaseModel):
     holes: List[List[Coordinates]]
 
 
+class TimeMapProperties(BaseModel):
+    """Additional properties returned for a time-map result when requested.
+
+    Attributes:
+        is_only_walking: Whether the reachable area is walking-only.
+    """
+
+    is_only_walking: Optional[bool] = None
+
+
 class TimeMapResult(BaseModel):
     """Catchment area calculation result for a single search operation.
 
     Attributes:
         search_id: Search identifier from the original request.
         shapes: Collection of polygon shapes defining the reachable area.
+        properties: Additional properties, present when requested.
     """
 
     search_id: str
     shapes: List[Shape]
+    properties: Optional[TimeMapProperties] = None
 
 
 class TimeMapResponse(BaseModel):

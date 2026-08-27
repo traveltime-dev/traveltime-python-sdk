@@ -18,11 +18,12 @@ from traveltimepy.requests.level_of_detail import (
 )
 from traveltimepy.requests.time_map import (
     TimeMapDepartureSearch,
+    TimeMapProperty,
     TimeMapArrivalSearch,
     TimeMapUnion,
     TimeMapIntersection,
 )
-from traveltimepy.requests.transportation import Driving
+from traveltimepy.requests.transportation import Driving, Walking
 
 
 @pytest.mark.asyncio
@@ -738,3 +739,45 @@ def test_departure_with_geohash_centroid_coords_sync(client: Client):
     )
 
     assert len(response.results) == 1 and len(response.results[0].shapes) > 0
+
+
+def test_no_holes_removes_holes_sync(client: Client):
+    def holes(no_holes):
+        response = client.time_map(
+            arrival_searches=[],
+            departure_searches=[
+                TimeMapDepartureSearch(
+                    id="id",
+                    coords=Coordinates(lat=53.4808, lng=-2.2426),
+                    departure_time=datetime(2026, 9, 1, 8, 0),
+                    travel_time=2700,
+                    transportation=Driving(),
+                    no_holes=no_holes,
+                )
+            ],
+        )
+        return sum(len(shape.holes) for shape in response.results[0].shapes)
+
+    assert holes(None) > 0
+    assert holes(True) == 0
+
+
+def test_is_only_walking_property_sync(client: Client):
+    def is_only_walking(transportation):
+        response = client.time_map(
+            arrival_searches=[],
+            departure_searches=[
+                TimeMapDepartureSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.507609, lng=-0.128315),
+                    departure_time=datetime(2026, 9, 1, 8, 0),
+                    travel_time=600,
+                    transportation=transportation,
+                    properties=[TimeMapProperty.IS_ONLY_WALKING],
+                )
+            ],
+        )
+        return response.results[0].properties.is_only_walking
+
+    assert is_only_walking(Walking()) is True
+    assert is_only_walking(Driving()) is False
