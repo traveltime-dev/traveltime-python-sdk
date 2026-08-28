@@ -44,7 +44,7 @@ test = [
 	"pytest-asyncio",
 	"flake8",
 	"flake8-pyproject",
-	"mypy<2",
+	"mypy<3",
 	"black",
 	"types-shapely",
 	"docformatter",
