@@ -23,6 +23,7 @@ from traveltimepy.requests.distance_map import (
 from traveltimepy.requests.geocoding import (
     GeocodingRequest,
     ReverseGeocodingRequest,
+    language_header,
 )
 from traveltimepy.requests.geohash import (
     GeoHashDepartureSearch,
@@ -335,6 +336,7 @@ class AsyncClient(AsyncBaseClient):
         format_name: Optional[bool] = None,
         format_exclude_country: Optional[bool] = None,
         bounds: Optional[Rectangle] = None,
+        accept_language: Optional[str] = None,
     ) -> FeatureCollection:
         """Match a query string to geographic coordinates using geocoding search.
 
@@ -361,6 +363,9 @@ class AsyncClient(AsyncBaseClient):
             bounds: Geographic bounding box to limit search results.
                    Results will only include locations within this rectangle.
 
+            accept_language: BCP47 language tag (e.g. "de", "fr-CA") requesting results
+                            in that language where available. Defaults to English.
+
         Returns:
             FeatureCollection containing geocoding results with coordinates,
             addresses, confidence scores, and location metadata.
@@ -377,12 +382,14 @@ class AsyncClient(AsyncBaseClient):
                 format_exclude_country=format_exclude_country,
                 bounds=bounds,
             ).get_params(),
+            language_header(accept_language),
         )
 
     async def reverse_geocoding(
         self,
         lat: float,
         lng: float,
+        accept_language: Optional[str] = None,
     ) -> FeatureCollection:
         """Convert geographic coordinates to an address using reverse geocoding.
 
@@ -395,6 +402,9 @@ class AsyncClient(AsyncBaseClient):
 
             lng: Longitude coordinate in decimal degrees.
                  Valid range: -180.0 to +180.0
+
+            accept_language: BCP47 language tag (e.g. "de", "fr-CA") requesting results
+                            in that language where available. Defaults to English.
 
         Returns:
             FeatureCollection containing address information, confidence scores,
@@ -409,6 +419,7 @@ class AsyncClient(AsyncBaseClient):
             "geocoding/reverse",
             AcceptType.JSON,
             ReverseGeocodingRequest(lat=lat, lng=lng).get_params(),
+            language_header(accept_language),
         )
 
     async def supported_locations(
