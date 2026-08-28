@@ -1,6 +1,5 @@
 from enum import Enum
-from typing import List, Optional
-from typing_extensions import Literal
+from typing import List, Literal, Optional
 
 from pydantic.main import BaseModel
 from pydantic import model_validator

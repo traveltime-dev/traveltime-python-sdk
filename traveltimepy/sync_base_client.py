@@ -4,7 +4,6 @@ from typing import Optional, Dict, TypeVar, Type, List, cast
 
 import requests
 from pydantic import BaseModel, ValidationError
-from requests.adapters import HTTPAdapter
 from requests.auth import HTTPBasicAuth
 from requests_ratelimiter import LimiterSession
 from tenacity import (
@@ -114,10 +113,6 @@ class SyncBaseClient(BaseClient):
             limit_statuses=[429],
             per_host=True,
         )
-
-        adapter = HTTPAdapter()
-        session.mount("http://", adapter)
-        session.mount("https://", adapter)
 
         return session
 

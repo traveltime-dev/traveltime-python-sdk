@@ -13,11 +13,8 @@ authors = [{ name = "TravelTime" }]
 requires-python = ">=3.8"
 dependencies = [
 	"pydantic",
-	"typing-extensions",
 	"geojson-pydantic>=1.0.1",
 	"shapely",
-	"dacite",
-	"certifi>=2021.5.30",
 	"aiohttp",
 	"aiolimiter",
 	"tenacity",
