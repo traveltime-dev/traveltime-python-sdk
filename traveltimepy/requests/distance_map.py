@@ -42,6 +42,7 @@ class DistanceMapDepartureSearch(BaseModel):
                          Useful when the reachable area consists of multiple disconnected regions.
         no_holes: Enable to remove holes from returned polygons. Note that this will likely result in loss in accuracy.
         render_mode: Optional rendering mode for polygon output optimization
+        remove_water_bodies: Optional flag to exclude water areas from polygons
         buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
                 - When `render_mode=approximate_time_filter` - controls how far from the reached road
                   network the isochrone generation algorithm may consider locations as reachable.
@@ -65,6 +66,7 @@ class DistanceMapDepartureSearch(BaseModel):
     polygons_filter: Optional[PolygonsFilter] = None
     no_holes: Optional[bool] = None
     render_mode: Optional[RenderMode] = None
+    remove_water_bodies: Optional[bool] = None
     buffer_distance: Optional[int] = None
 
 
@@ -93,6 +95,7 @@ class DistanceMapArrivalSearch(BaseModel):
                          Useful when the reachable area consists of multiple disconnected regions.
         no_holes: Enable to remove holes from returned polygons. Note that this will likely result in loss in accuracy.
         render_mode: Optional rendering mode for polygon output optimization
+        remove_water_bodies: Optional flag to exclude water areas from polygons
         buffer_distance: Optional integer. minimum value is 250 meters. Default value is 1000 meters.
                 - When `render_mode=approximate_time_filter` - controls how far from the reached road
                   network the isochrone generation algorithm may consider locations as reachable.
@@ -116,6 +119,7 @@ class DistanceMapArrivalSearch(BaseModel):
     polygons_filter: Optional[PolygonsFilter] = None
     no_holes: Optional[bool] = None
     render_mode: Optional[RenderMode] = None
+    remove_water_bodies: Optional[bool] = None
     buffer_distance: Optional[int] = None
 
 

@@ -162,3 +162,23 @@ def test_driving_ferry_sync(client: Client):
     )
 
     assert len(response.results[0].shapes) > 0
+
+
+def test_remove_water_bodies_changes_shapes_sync(client: Client):
+    def shapes(remove_water_bodies):
+        response = client.distance_map(
+            arrival_searches=[],
+            departure_searches=[
+                DistanceMapDepartureSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.5066, lng=-0.1176),
+                    departure_time=datetime.now(),
+                    travel_distance=2000,
+                    transportation=Driving(),
+                    remove_water_bodies=remove_water_bodies,
+                )
+            ],
+        )
+        return response.results[0].shapes
+
+    assert shapes(False) != shapes(True)
