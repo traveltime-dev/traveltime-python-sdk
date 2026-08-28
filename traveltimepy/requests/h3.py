@@ -41,6 +41,7 @@ class H3DepartureSearch(BaseModel):
         transportation: Transportation method (public_transport, driving, walking, etc.)
         range: Optional distance/time range constraints
         snapping: Optional road network lookup settings
+        remove_water_bodies: Optional flag to exclude cells covering large water bodies
     """
 
     id: str
@@ -58,6 +59,7 @@ class H3DepartureSearch(BaseModel):
     ]
     range: Optional[Range] = None
     snapping: Optional[Snapping] = None
+    remove_water_bodies: Optional[bool] = None
 
 
 class H3ArrivalSearch(BaseModel):
@@ -73,6 +75,7 @@ class H3ArrivalSearch(BaseModel):
         transportation: Transportation method (public_transport, driving, walking, etc.)
         range: Optional distance/time range constraints
         snapping: Optional road network lookup settings
+        remove_water_bodies: Optional flag to exclude cells covering large water bodies
     """
 
     id: str
@@ -90,6 +93,7 @@ class H3ArrivalSearch(BaseModel):
     ]
     range: Optional[Range] = None
     snapping: Optional[Snapping] = None
+    remove_water_bodies: Optional[bool] = None
 
 
 class H3Intersection(BaseModel):

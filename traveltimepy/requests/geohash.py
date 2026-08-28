@@ -37,6 +37,7 @@ class GeoHashDepartureSearch(BaseModel):
         transportation: Transportation mode for the journey calculation.
         range: Optional departure time window for range search functionality.
         snapping: Configuration for connecting coordinates to the transportation network.
+        remove_water_bodies: Optional flag to exclude cells covering large water bodies
     """
 
     id: str
@@ -54,6 +55,7 @@ class GeoHashDepartureSearch(BaseModel):
     ]
     range: Optional[Range] = None
     snapping: Optional[Snapping] = None
+    remove_water_bodies: Optional[bool] = None
 
 
 class GeoHashArrivalSearch(BaseModel):
@@ -69,6 +71,7 @@ class GeoHashArrivalSearch(BaseModel):
         transportation: Transportation mode for the journey calculation.
         range: Optional arrival time window for range search functionality.
         snapping: Configuration for connecting coordinates to the transportation network.
+        remove_water_bodies: Optional flag to exclude cells covering large water bodies
     """
 
     id: str
@@ -86,6 +89,7 @@ class GeoHashArrivalSearch(BaseModel):
     ]
     range: Optional[Range] = None
     snapping: Optional[Snapping] = None
+    remove_water_bodies: Optional[bool] = None
 
 
 class GeoHashIntersection(BaseModel):

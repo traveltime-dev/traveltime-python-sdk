@@ -37,6 +37,7 @@ class GeoHashFastSearch(BaseModel):
         travel_time: Maximum journey time in seconds. Maximum value is 10800 (3 hours).
         arrival_time_period: Time period for the search instead of specific time.
         snapping: Configuration for connecting coordinates to the transportation network.
+        remove_water_bodies: Optional flag to exclude cells covering large water bodies
     """
 
     id: str
@@ -54,6 +55,7 @@ class GeoHashFastSearch(BaseModel):
     travel_time: int
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
+    remove_water_bodies: Optional[bool] = None
 
 
 class GeoHashFastArrivalSearches(BaseModel):

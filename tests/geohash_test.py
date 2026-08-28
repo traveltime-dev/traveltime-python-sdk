@@ -273,3 +273,26 @@ def test_no_properties_requested_sync(client: Client):
 
     assert len(response.results[0].cells) > 0
     assert all(cell.properties is None for cell in response.results[0].cells)
+
+
+def test_remove_water_bodies_drops_cells_over_the_thames_sync(client: Client):
+    def cells(remove_water_bodies):
+        response = client.geohash(
+            arrival_searches=[],
+            departure_searches=[
+                GeoHashDepartureSearch(
+                    id="id",
+                    coords=Coordinates(lat=51.5066, lng=-0.1176),
+                    departure_time=datetime.now(),
+                    travel_time=600,
+                    transportation=Driving(),
+                    remove_water_bodies=remove_water_bodies,
+                )
+            ],
+            properties=[CellProperty.MEAN],
+            resolution=7,
+        )
+        return {cell.id for cell in response.results[0].cells}
+
+    with_water, without_water = cells(False), cells(True)
+    assert without_water < with_water

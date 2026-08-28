@@ -36,6 +36,7 @@ class H3FastSearch(BaseModel):
                          https://docs.traveltime.com/api/reference/h3-fast#limits-of-resolution-and-traveltime.
         arrival_time_period: Time period for the search
         snapping: Optional settings for adjusting road network lookup behavior
+        remove_water_bodies: Optional flag to exclude cells covering large water bodies
     """
 
     id: str
@@ -53,6 +54,7 @@ class H3FastSearch(BaseModel):
     travel_time: int
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
     snapping: Optional[Snapping] = None
+    remove_water_bodies: Optional[bool] = None
 
 
 class H3FastArrivalSearches(BaseModel):

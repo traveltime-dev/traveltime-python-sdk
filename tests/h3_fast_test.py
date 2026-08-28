@@ -324,3 +324,27 @@ def test_intersection_many_to_one_sync(client: Client):
     )
 
     assert len(response.results) == 3
+
+
+def test_remove_water_bodies_drops_cells_over_the_thames_sync(client: Client):
+    def cells(remove_water_bodies):
+        response = client.h3_fast(
+            arrival_searches=H3FastArrivalSearches(
+                one_to_many=[
+                    H3FastSearch(
+                        id="id",
+                        coords=Coordinates(lat=51.5066, lng=-0.1176),
+                        transportation=DrivingFerryFast(),
+                        travel_time=600,
+                        remove_water_bodies=remove_water_bodies,
+                    )
+                ],
+                many_to_one=[],
+            ),
+            properties=[CellProperty.MEAN],
+            resolution=10,
+        )
+        return {cell.id for cell in response.results[0].cells}
+
+    with_water, without_water = cells(False), cells(True)
+    assert without_water < with_water
