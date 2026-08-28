@@ -9,13 +9,10 @@ from traveltimepy.requests.common import RenderMode, Snapping, PolygonsFilter
 from traveltimepy.requests.level_of_detail import LevelOfDetail
 from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.requests.transportation import (
-    PublicTransport,
     Driving,
     Ferry,
     Walking,
     Cycling,
-    DrivingTrain,
-    CyclingPublicTransport,
 )
 from traveltimepy.itertools import split, flatten
 from traveltimepy.requests.common import Coords
@@ -58,13 +55,10 @@ class DistanceMapDepartureSearch(BaseModel):
     departure_time: datetime
     travel_distance: int
     transportation: typing.Union[
-        PublicTransport,
         Driving,
         Ferry,
         Walking,
         Cycling,
-        DrivingTrain,
-        CyclingPublicTransport,
     ]
     level_of_detail: Optional[LevelOfDetail] = None
     snapping: Optional[Snapping] = None
@@ -112,13 +106,10 @@ class DistanceMapArrivalSearch(BaseModel):
     arrival_time: datetime
     travel_distance: int
     transportation: typing.Union[
-        PublicTransport,
         Driving,
         Ferry,
         Walking,
         Cycling,
-        DrivingTrain,
-        CyclingPublicTransport,
     ]
     level_of_detail: Optional[LevelOfDetail] = None
     snapping: Optional[Snapping] = None
