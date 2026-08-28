@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import pytest
+from pydantic import ValidationError
 
 from traveltimepy import AsyncClient
 from traveltimepy.client import Client
@@ -14,7 +15,7 @@ from traveltimepy.requests.level_of_detail import (
     SimpleLevelOfDetail,
     Level,
 )
-from traveltimepy.requests.transportation import Driving
+from traveltimepy.requests.transportation import Driving, Ferry, PublicTransport
 
 
 @pytest.mark.asyncio
@@ -133,3 +134,31 @@ def test_arrivals_sync(client: Client):
         departure_searches=[],
     )
     assert len(response.results) == 2
+
+
+def test_public_transport_modes_are_rejected():
+    with pytest.raises(ValidationError):
+        DistanceMapDepartureSearch(
+            id="id",
+            coords=Coordinates(lat=51.507609, lng=-0.128315),
+            departure_time=datetime.now(),
+            travel_distance=2000,
+            transportation=PublicTransport(),
+        )
+
+
+def test_driving_ferry_sync(client: Client):
+    response = client.distance_map(
+        arrival_searches=[],
+        departure_searches=[
+            DistanceMapDepartureSearch(
+                id="id",
+                coords=Coordinates(lat=51.507609, lng=-0.128315),
+                departure_time=datetime.now(),
+                travel_distance=2000,
+                transportation=Ferry(type="driving+ferry"),
+            )
+        ],
+    )
+
+    assert len(response.results[0].shapes) > 0
