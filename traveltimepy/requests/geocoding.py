@@ -3,7 +3,6 @@ from typing import Dict, Optional, List
 from pydantic import BaseModel
 
 from traveltimepy.requests.common import Rectangle
-from traveltimepy.itertools import join_opt
 
 
 def language_header(accept_language: Optional[str]) -> Optional[Dict[str, str]]:
@@ -24,7 +23,9 @@ class GeocodingRequest(BaseModel):
         full_query = {
             "query": self.query,
             "limit": self.limit,
-            "within.country": join_opt(self.within_countries, ","),
+            "within.country": (
+                ",".join(self.within_countries) if self.within_countries else None
+            ),
             "format.name": self.format_name,
             "format.exclude.country": self.format_exclude_country,
             "bounds": self.bounds.to_str() if self.bounds is not None else self.bounds,
