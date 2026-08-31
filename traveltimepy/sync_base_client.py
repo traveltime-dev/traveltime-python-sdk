@@ -1,6 +1,6 @@
 import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from typing import Optional, Dict, TypeVar, Type, List, cast
+from typing import Callable, Optional, Dict, TypeVar, Type, List, Union, cast
 
 import requests
 from pydantic import BaseModel, ValidationError
@@ -13,19 +13,15 @@ from tenacity import (
     retry_if_exception_type,
 )
 
-try:
-    from traveltimepy.proto import TimeFilterFastResponse_pb2  # type: ignore
-    from traveltimepy.proto import GeohashFastResponse_pb2  # type: ignore
-    from traveltimepy.proto import H3FastResponse_pb2  # type: ignore
-
-    PROTOBUF_AVAILABLE = True
-except ImportError:
-    PROTOBUF_AVAILABLE = False
-    TimeFilterFastResponse_pb2 = None  # type: ignore
-    GeohashFastResponse_pb2 = None  # type: ignore
-    H3FastResponse_pb2 = None  # type: ignore
 from traveltimepy.accept_type import AcceptType
-from traveltimepy.base_client import BaseClient, __version__
+from traveltimepy.base_client import (
+    BaseClient,
+    __version__,
+    check_protobuf_available,
+    parse_geohash_proto_response,
+    parse_h3_proto_response,
+    parse_time_filter_proto_response,
+)
 from traveltimepy.errors import (
     TravelTimeError,
     TravelTimeJsonError,
@@ -218,14 +214,15 @@ class SyncBaseClient(BaseClient):
             params=params,
         )
 
-    def _api_call_proto(
-        self, req: TimeFilterFastProtoRequest
-    ) -> TimeFilterProtoResponse:
-        if not PROTOBUF_AVAILABLE:
-            raise ImportError(
-                "protobuf is required for proto API calls. "
-                "Install it with: pip install 'traveltimepy[proto]'"
-            )
+    def _proto_call(
+        self,
+        req: Union[
+            TimeFilterFastProtoRequest, GeohashFastProtoRequest, H3FastProtoRequest
+        ],
+        endpoint: str,
+        parse: Callable[[bytes], T],
+    ) -> T:
+        check_protobuf_available()
 
         @retry(
             retry=retry_if_exception_type(TravelTimeServerError),
@@ -234,10 +231,10 @@ class SyncBaseClient(BaseClient):
             ),  # First attempt is not a retry, that's why `+1`
             wait=wait_none(),  # No wait between retries
         )
-        def _make_proto_request():
+        def _make_proto_request() -> T:
             transportation_mode = self._get_transportation_mode(req.transportation)
 
-            url = f"https://{self._proto_host}/api/v3/{req.country.value}/time-filter/fast/{transportation_mode}"
+            url = f"https://{self._proto_host}/api/v3/{req.country.value}/{endpoint}/fast/{transportation_mode}"
             headers = self._get_proto_headers()
             auth = HTTPBasicAuth(self.app_id, self.api_key)
             data = req.get_request().SerializeToString()
@@ -253,108 +250,22 @@ class SyncBaseClient(BaseClient):
 
             if response.status_code != 200:
                 self._handle_proto_error(response.status_code, response.headers)
-            else:
-                response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
-                response_body.ParseFromString(response.content)
-                return TimeFilterProtoResponse(
-                    travel_times=response_body.properties.travelTimes[:],
-                    distances=response_body.properties.distances[:],
-                    monthly_fares=response_body.properties.monthlyFares[:],
-                )
+            return parse(response.content)
 
         return _make_proto_request()
+
+    def _api_call_proto(
+        self, req: TimeFilterFastProtoRequest
+    ) -> TimeFilterProtoResponse:
+        return self._proto_call(req, "time-filter", parse_time_filter_proto_response)
 
     def _api_call_geohash_proto(
         self, req: GeohashFastProtoRequest
     ) -> GeohashFastProtoResponse:
-        if not PROTOBUF_AVAILABLE:
-            raise ImportError(
-                "protobuf is required for proto API calls. "
-                "Install it with: pip install 'traveltimepy[proto]'"
-            )
-
-        @retry(
-            retry=retry_if_exception_type(TravelTimeServerError),
-            stop=stop_after_attempt(
-                self.retry_attempts + 1
-            ),  # First attempt is not a retry, that's why `+1`
-            wait=wait_none(),  # No wait between retries
-        )
-        def _make_geohash_proto_request():
-            transportation_mode = self._get_transportation_mode(req.transportation)
-
-            url = f"https://{self._proto_host}/api/v3/{req.country.value}/geohash/fast/{transportation_mode}"
-            headers = self._get_proto_headers()
-            auth = HTTPBasicAuth(self.app_id, self.api_key)
-            data = req.get_request().SerializeToString()
-
-            response = self._session.post(
-                url=url,
-                headers=headers,
-                data=data,
-                auth=auth,
-                timeout=self.timeout,
-                verify=self.use_ssl,
-            )
-
-            if response.status_code != 200:
-                self._handle_proto_error(response.status_code, response.headers)
-            else:
-                response_body = GeohashFastResponse_pb2.GeohashFastResponse()  # type: ignore
-                response_body.ParseFromString(response.content)
-                return GeohashFastProtoResponse(
-                    ids=response_body.cells.ids[:],
-                    min_travel_times=response_body.cells.minTravelTimes[:],
-                    max_travel_times=response_body.cells.maxTravelTimes[:],
-                    mean_travel_times=response_body.cells.meanTravelTimes[:],
-                )
-
-        return _make_geohash_proto_request()
+        return self._proto_call(req, "geohash", parse_geohash_proto_response)
 
     def _api_call_h3_proto(self, req: H3FastProtoRequest) -> H3FastProtoResponse:
-        if not PROTOBUF_AVAILABLE:
-            raise ImportError(
-                "protobuf is required for proto API calls. "
-                "Install it with: pip install 'traveltimepy[proto]'"
-            )
-
-        @retry(
-            retry=retry_if_exception_type(TravelTimeServerError),
-            stop=stop_after_attempt(
-                self.retry_attempts + 1
-            ),  # First attempt is not a retry, that's why `+1`
-            wait=wait_none(),  # No wait between retries
-        )
-        def _make_h3_proto_request():
-            transportation_mode = self._get_transportation_mode(req.transportation)
-
-            url = f"https://{self._proto_host}/api/v3/{req.country.value}/h3/fast/{transportation_mode}"
-            headers = self._get_proto_headers()
-            auth = HTTPBasicAuth(self.app_id, self.api_key)
-            data = req.get_request().SerializeToString()
-
-            response = self._session.post(
-                url=url,
-                headers=headers,
-                data=data,
-                auth=auth,
-                timeout=self.timeout,
-                verify=self.use_ssl,
-            )
-
-            if response.status_code != 200:
-                self._handle_proto_error(response.status_code, response.headers)
-            else:
-                response_body = H3FastResponse_pb2.H3FastResponse()  # type: ignore
-                response_body.ParseFromString(response.content)
-                return H3FastProtoResponse(
-                    ids=[format(cell_id, "x") for cell_id in response_body.cells.ids],
-                    min_travel_times=response_body.cells.minTravelTimes[:],
-                    max_travel_times=response_body.cells.maxTravelTimes[:],
-                    mean_travel_times=response_body.cells.meanTravelTimes[:],
-                )
-
-        return _make_h3_proto_request()
+        return self._proto_call(req, "h3", parse_h3_proto_response)
 
     def _handle_response(
         self, response: requests.Response, response_class: Type[T]

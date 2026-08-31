@@ -1,6 +1,6 @@
 import asyncio
 import json
-from typing import Optional, Dict, TypeVar, Type
+from typing import Callable, Optional, Dict, TypeVar, Type, Union
 
 import aiohttp
 from aiohttp import ClientSession, ClientResponse, BasicAuth, TCPConnector
@@ -13,19 +13,15 @@ from tenacity import (
     retry_if_exception_type,
 )
 
-try:
-    from traveltimepy.proto import TimeFilterFastResponse_pb2  # type: ignore
-    from traveltimepy.proto import GeohashFastResponse_pb2  # type: ignore
-    from traveltimepy.proto import H3FastResponse_pb2  # type: ignore
-
-    PROTOBUF_AVAILABLE = True
-except ImportError:
-    PROTOBUF_AVAILABLE = False
-    TimeFilterFastResponse_pb2 = None  # type: ignore
-    GeohashFastResponse_pb2 = None  # type: ignore
-    H3FastResponse_pb2 = None  # type: ignore
 from traveltimepy.accept_type import AcceptType
-from traveltimepy.base_client import BaseClient, __version__
+from traveltimepy.base_client import (
+    BaseClient,
+    __version__,
+    check_protobuf_available,
+    parse_geohash_proto_response,
+    parse_h3_proto_response,
+    parse_time_filter_proto_response,
+)
 from traveltimepy.errors import (
     TravelTimeError,
     TravelTimeJsonError,
@@ -182,14 +178,15 @@ class AsyncBaseClient(BaseClient):
             params=params,
         )
 
-    async def _api_call_proto(
-        self, req: TimeFilterFastProtoRequest
-    ) -> TimeFilterProtoResponse:
-        if not PROTOBUF_AVAILABLE:
-            raise ImportError(
-                "protobuf is required for proto API calls. "
-                "Install it with: pip install 'traveltimepy[proto]'"
-            )
+    async def _proto_call(
+        self,
+        req: Union[
+            TimeFilterFastProtoRequest, GeohashFastProtoRequest, H3FastProtoRequest
+        ],
+        endpoint: str,
+        parse: Callable[[bytes], T],
+    ) -> T:
+        check_protobuf_available()
 
         @retry(
             retry=retry_if_exception_type(TravelTimeServerError),
@@ -198,13 +195,13 @@ class AsyncBaseClient(BaseClient):
             ),  # First attempt is not a retry, that's why `+1`
             wait=wait_none(),  # No wait between retries
         )
-        async def _make_proto_request():
+        async def _make_proto_request() -> T:
             session = await self._get_session()
             async with self.async_limiter:
                 transportation_mode = self._get_transportation_mode(req.transportation)
 
                 async with session.post(
-                    url=f"https://{self._proto_host}/api/v3/{req.country.value}/time-filter/fast/{transportation_mode}",
+                    url=f"https://{self._proto_host}/api/v3/{req.country.value}/{endpoint}/fast/{transportation_mode}",
                     headers=self._get_proto_headers(),
                     data=req.get_request().SerializeToString(),
                     auth=BasicAuth(self.app_id, self.api_key),
@@ -212,107 +209,24 @@ class AsyncBaseClient(BaseClient):
                     content = await response.read()
                     if response.status != 200:
                         self._handle_proto_error(response.status, response.headers)
-                    else:
-                        response_body = (
-                            TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
-                        )
-                        response_body.ParseFromString(content)
-                        return TimeFilterProtoResponse(
-                            travel_times=response_body.properties.travelTimes[:],
-                            distances=response_body.properties.distances[:],
-                            monthly_fares=response_body.properties.monthlyFares[:],
-                        )
+                    return parse(content)
 
         return await _make_proto_request()
+
+    async def _api_call_proto(
+        self, req: TimeFilterFastProtoRequest
+    ) -> TimeFilterProtoResponse:
+        return await self._proto_call(
+            req, "time-filter", parse_time_filter_proto_response
+        )
 
     async def _api_call_geohash_proto(
         self, req: GeohashFastProtoRequest
     ) -> GeohashFastProtoResponse:
-        if not PROTOBUF_AVAILABLE:
-            raise ImportError(
-                "protobuf is required for proto API calls. "
-                "Install it with: pip install 'traveltimepy[proto]'"
-            )
-
-        @retry(
-            retry=retry_if_exception_type(TravelTimeServerError),
-            stop=stop_after_attempt(
-                self.retry_attempts + 1
-            ),  # First attempt is not a retry, that's why `+1`
-            wait=wait_none(),  # No wait between retries
-        )
-        async def _make_geohash_proto_request():
-            session = await self._get_session()
-            async with self.async_limiter:
-                transportation_mode = self._get_transportation_mode(req.transportation)
-
-                async with session.post(
-                    url=f"https://{self._proto_host}/api/v3/{req.country.value}/geohash/fast/{transportation_mode}",
-                    headers=self._get_proto_headers(),
-                    data=req.get_request().SerializeToString(),
-                    auth=BasicAuth(self.app_id, self.api_key),
-                ) as response:
-                    content = await response.read()
-                    if response.status != 200:
-                        self._handle_proto_error(response.status, response.headers)
-                    else:
-                        response_body = (
-                            GeohashFastResponse_pb2.GeohashFastResponse()  # type: ignore
-                        )
-                        response_body.ParseFromString(content)
-                        return GeohashFastProtoResponse(
-                            ids=response_body.cells.ids[:],
-                            min_travel_times=response_body.cells.minTravelTimes[:],
-                            max_travel_times=response_body.cells.maxTravelTimes[:],
-                            mean_travel_times=response_body.cells.meanTravelTimes[:],
-                        )
-
-        return await _make_geohash_proto_request()
+        return await self._proto_call(req, "geohash", parse_geohash_proto_response)
 
     async def _api_call_h3_proto(self, req: H3FastProtoRequest) -> H3FastProtoResponse:
-        if not PROTOBUF_AVAILABLE:
-            raise ImportError(
-                "protobuf is required for proto API calls. "
-                "Install it with: pip install 'traveltimepy[proto]'"
-            )
-
-        @retry(
-            retry=retry_if_exception_type(TravelTimeServerError),
-            stop=stop_after_attempt(
-                self.retry_attempts + 1
-            ),  # First attempt is not a retry, that's why `+1`
-            wait=wait_none(),  # No wait between retries
-        )
-        async def _make_h3_proto_request():
-            session = await self._get_session()
-            async with self.async_limiter:
-                transportation_mode = self._get_transportation_mode(req.transportation)
-
-                async with session.post(
-                    url=f"https://{self._proto_host}/api/v3/{req.country.value}/h3/fast/{transportation_mode}",
-                    headers=self._get_proto_headers(),
-                    data=req.get_request().SerializeToString(),
-                    auth=BasicAuth(self.app_id, self.api_key),
-                ) as response:
-                    content = await response.read()
-                    if response.status != 200:
-                        self._handle_proto_error(response.status, response.headers)
-                    else:
-                        response_body = (
-                            H3FastResponse_pb2.H3FastResponse()  # type: ignore
-                        )
-                        response_body.ParseFromString(content)
-                        return H3FastProtoResponse(
-                            ids=[
-                                format(cell_id, "x")
-                                for cell_id in response_body.cells.ids
-                            ],
-                            min_travel_times=response_body.cells.minTravelTimes[:],
-                            max_travel_times=response_body.cells.maxTravelTimes[:],
-                            mean_travel_times=response_body.cells.meanTravelTimes[:],
-                        )
-
-        return await _make_h3_proto_request()
+        return await self._proto_call(req, "h3", parse_h3_proto_response)
 
     async def _handle_response(
         self, response: ClientResponse, response_class: Type[T]
