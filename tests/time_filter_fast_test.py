@@ -10,6 +10,7 @@ from traveltimepy.requests.time_filter_fast import (
 )
 from traveltimepy.requests.transportation import (
     DrivingFerryFast,
+    DrivingPublicTransportFast,
     PublicTransportFast,
     FastTrafficModel,
 )
@@ -272,3 +273,53 @@ def test_one_to_many_with_snapping_threshold_sync(client: Client, locations):
     )
 
     assert len(response.results) > 0
+
+
+def test_public_transport_walking_time_limits_reach_sync(client: Client, locations):
+    def reached(transportation):
+        response = client.time_filter_fast(
+            locations=locations,
+            arrival_searches=TimeFilterFastArrivalSearches(
+                one_to_many=[
+                    TimeFilterFastOneToMany(
+                        id="id",
+                        departure_location_id="London center",
+                        arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                        transportation=transportation,
+                        travel_time=1800,
+                        properties=[Property.TRAVEL_TIME],
+                    )
+                ],
+                many_to_one=[],
+            ),
+        )
+        return {
+            loc.id: loc.properties.travel_time for loc in response.results[0].locations
+        }
+
+    unrestricted = reached(PublicTransportFast())
+    short_walk = reached(PublicTransportFast(walking_time=60))
+    assert unrestricted
+    assert short_walk != unrestricted
+
+
+def test_driving_public_transport_with_params_sync(client: Client, locations):
+    response = client.time_filter_fast(
+        locations=locations,
+        arrival_searches=TimeFilterFastArrivalSearches(
+            one_to_many=[
+                TimeFilterFastOneToMany(
+                    id="id",
+                    departure_location_id="London center",
+                    arrival_location_ids=["Hyde Park", "ZSL London Zoo"],
+                    transportation=DrivingPublicTransportFast(
+                        walking_time=600, driving_time_to_station=900, parking_time=120
+                    ),
+                    travel_time=1800,
+                    properties=[Property.TRAVEL_TIME],
+                )
+            ],
+            many_to_one=[],
+        ),
+    )
+    assert len(response.results) == 1

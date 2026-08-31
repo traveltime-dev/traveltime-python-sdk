@@ -118,6 +118,7 @@ class FastTrafficModel(str, Enum):
 
 class PublicTransportFast(BaseModel):
     type: Literal["public_transport"] = "public_transport"
+    walking_time: Optional[int] = None
 
 
 class WalkingFast(BaseModel):
@@ -148,3 +149,6 @@ class DrivingFerryFast(BaseModel):
 
 class DrivingPublicTransportFast(BaseModel):
     type: Literal["driving+public_transport"] = "driving+public_transport"
+    walking_time: Optional[int] = None
+    driving_time_to_station: Optional[int] = None
+    parking_time: Optional[int] = None
