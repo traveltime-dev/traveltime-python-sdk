@@ -4,11 +4,66 @@ from typing import Dict, Mapping, Union, Any
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.errors import TravelTimeProtoError, TravelTimeServerError
 from traveltimepy.requests.time_filter_proto import ProtoTransportation
+from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
+from traveltimepy.responses.geohash_fast_proto import GeohashFastProtoResponse
+from traveltimepy.responses.h3_fast_proto import H3FastProtoResponse
 
 try:
     __version__ = version(__name__)
 except PackageNotFoundError:
     __version__ = "unknown"
+
+try:
+    from traveltimepy.proto import TimeFilterFastResponse_pb2  # type: ignore
+    from traveltimepy.proto import GeohashFastResponse_pb2  # type: ignore
+    from traveltimepy.proto import H3FastResponse_pb2  # type: ignore
+
+    PROTOBUF_AVAILABLE = True
+except ImportError:
+    PROTOBUF_AVAILABLE = False
+    TimeFilterFastResponse_pb2 = None  # type: ignore
+    GeohashFastResponse_pb2 = None  # type: ignore
+    H3FastResponse_pb2 = None  # type: ignore
+
+
+def check_protobuf_available() -> None:
+    if not PROTOBUF_AVAILABLE:
+        raise ImportError(
+            "protobuf is required for proto API calls. "
+            "Install it with: pip install 'traveltimepy[proto]'"
+        )
+
+
+def parse_time_filter_proto_response(content: bytes) -> TimeFilterProtoResponse:
+    response_body = TimeFilterFastResponse_pb2.TimeFilterFastResponse()  # type: ignore
+    response_body.ParseFromString(content)
+    return TimeFilterProtoResponse(
+        travel_times=response_body.properties.travelTimes[:],
+        distances=response_body.properties.distances[:],
+        monthly_fares=response_body.properties.monthlyFares[:],
+    )
+
+
+def parse_geohash_proto_response(content: bytes) -> GeohashFastProtoResponse:
+    response_body = GeohashFastResponse_pb2.GeohashFastResponse()  # type: ignore
+    response_body.ParseFromString(content)
+    return GeohashFastProtoResponse(
+        ids=response_body.cells.ids[:],
+        min_travel_times=response_body.cells.minTravelTimes[:],
+        max_travel_times=response_body.cells.maxTravelTimes[:],
+        mean_travel_times=response_body.cells.meanTravelTimes[:],
+    )
+
+
+def parse_h3_proto_response(content: bytes) -> H3FastProtoResponse:
+    response_body = H3FastResponse_pb2.H3FastResponse()  # type: ignore
+    response_body.ParseFromString(content)
+    return H3FastProtoResponse(
+        ids=[format(cell_id, "x") for cell_id in response_body.cells.ids],
+        min_travel_times=response_body.cells.minTravelTimes[:],
+        max_travel_times=response_body.cells.maxTravelTimes[:],
+        mean_travel_times=response_body.cells.meanTravelTimes[:],
+    )
 
 
 class BaseClient:
