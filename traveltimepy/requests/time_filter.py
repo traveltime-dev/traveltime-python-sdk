@@ -14,6 +14,7 @@ from traveltimepy.requests.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
+    DrivingPublicTransport,
     CyclingPublicTransport,
 )
 
@@ -46,6 +47,7 @@ class TimeFilterArrivalSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
+        DrivingPublicTransport,
         CyclingPublicTransport,
     ]
     properties: List[Property]
@@ -81,6 +83,7 @@ class TimeFilterDepartureSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
+        DrivingPublicTransport,
         CyclingPublicTransport,
     ]
     properties: List[Property]

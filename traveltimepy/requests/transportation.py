@@ -76,6 +76,17 @@ class DrivingTrain(BaseModel):
     traffic_model: Optional[DrivingTrafficModel] = None
 
 
+class DrivingPublicTransport(BaseModel):
+    type: Literal["driving+public_transport"] = "driving+public_transport"
+    pt_change_delay: Optional[int] = None
+    driving_time_to_station: Optional[int] = None
+    parking_time: Optional[int] = None
+    walking_time: Optional[int] = None
+    boarding_time: Optional[int] = None
+    max_changes: Optional[MaxChanges] = None
+    traffic_model: Optional[DrivingTrafficModel] = None
+
+
 class PublicTransport(BaseModel):
     type: Literal["public_transport", "train", "bus", "coach"] = "public_transport"
     pt_change_delay: Optional[int] = None

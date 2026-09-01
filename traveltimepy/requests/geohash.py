@@ -12,6 +12,7 @@ from traveltimepy.requests.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
+    DrivingPublicTransport,
     CyclingPublicTransport,
 )
 from traveltimepy.requests.common import (
@@ -51,6 +52,7 @@ class GeoHashDepartureSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
+        DrivingPublicTransport,
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None
@@ -85,6 +87,7 @@ class GeoHashArrivalSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
+        DrivingPublicTransport,
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None

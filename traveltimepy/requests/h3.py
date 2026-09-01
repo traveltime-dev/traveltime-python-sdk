@@ -12,6 +12,7 @@ from traveltimepy.requests.transportation import (
     Walking,
     Cycling,
     DrivingTrain,
+    DrivingPublicTransport,
     CyclingPublicTransport,
 )
 from traveltimepy.requests.common import (
@@ -55,6 +56,7 @@ class H3DepartureSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
+        DrivingPublicTransport,
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None
@@ -89,6 +91,7 @@ class H3ArrivalSearch(BaseModel):
         Walking,
         Cycling,
         DrivingTrain,
+        DrivingPublicTransport,
         CyclingPublicTransport,
     ]
     range: Optional[Range] = None
