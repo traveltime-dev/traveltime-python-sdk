@@ -222,7 +222,7 @@ The SDK provides both synchronous (`Client`) and asynchronous (`AsyncClient`) ve
 
 ### Route Planning
 
-- [`routes()`](https://docs.traveltime.com/api/reference/routes) - Calculate detailed routes between locations
+- [`routes()`](https://docs.traveltime.com/api/reference/routes) - Calculate detailed routes between locations, optionally with the H3 cells each route passes through
 
 ### Geocoding
 

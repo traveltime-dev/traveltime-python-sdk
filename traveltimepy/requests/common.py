@@ -174,6 +174,7 @@ class Property(str, Enum):
         DISTANCE_BREAKDOWN: Journey distance in meters split by transportation mode
         ROUTE: Detailed route information with turn-by-turn directions
         FARES: Public transport fare information (where available)
+        H3: H3 cells each route passes through
     """
 
     TRAVEL_TIME = "travel_time"
@@ -181,6 +182,7 @@ class Property(str, Enum):
     DISTANCE_BREAKDOWN = "distance_breakdown"
     ROUTE = "route"
     FARES = "fares"
+    H3 = "h3"
 
 
 class CellProperty(str, Enum):

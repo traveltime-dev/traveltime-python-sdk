@@ -3,7 +3,13 @@ from typing import List, Optional, Union
 
 from pydantic.main import BaseModel
 
-from traveltimepy.requests.common import Location, Property, FullRange, Snapping
+from traveltimepy.requests.common import (
+    CellProperty,
+    Location,
+    Property,
+    FullRange,
+    Snapping,
+)
 from traveltimepy.requests.transportation import (
     PublicTransport,
     Driving,
@@ -19,6 +25,21 @@ from traveltimepy.responses.routes import RoutesResponse
 from traveltimepy.itertools import split, flatten
 
 
+class RoutesH3Params(BaseModel):
+    """H3 representation settings for a route search.
+
+    Applies only when the search's properties include Property.H3.
+
+    Attributes:
+        resolution: H3 resolution of the cells. The API default applies when omitted.
+        properties: Travel time statistics to return for each cell. Cells carry only
+            their id when omitted.
+    """
+
+    resolution: Optional[int] = None
+    properties: Optional[List[CellProperty]] = None
+
+
 class RoutesArrivalSearch(BaseModel):
     """Arrival-based route search for A to B routing with turn-by-turn directions.
 
@@ -31,9 +52,10 @@ class RoutesArrivalSearch(BaseModel):
         arrival_location_id: Single arrival location ID
         arrival_time: Specific arrival time for the journey
         transportation: Transportation method (driving, public_transport, walking, etc.)
-        properties: Data to return (route, travel_time, distance, fares)
+        properties: Data to return (route, travel_time, distance, fares, h3)
         range: Optional arrival time window for multiple journey options
         snapping: Optional road network lookup settings
+        h3: Optional H3 representation settings, used when properties include h3
     """
 
     id: str
@@ -53,6 +75,7 @@ class RoutesArrivalSearch(BaseModel):
     properties: List[Property]
     range: Optional[FullRange] = None
     snapping: Optional[Snapping] = None
+    h3: Optional[RoutesH3Params] = None
 
 
 class RoutesDepartureSearch(BaseModel):
@@ -67,9 +90,10 @@ class RoutesDepartureSearch(BaseModel):
         departure_location_id: Single departure location ID
         departure_time: Specific departure time for the journey
         transportation: Transportation method (driving, public_transport, walking, etc.)
-        properties: Data to return (route, travel_time, distance, fares)
+        properties: Data to return (route, travel_time, distance, fares, h3)
         range: Optional departure time window for multiple journey options
         snapping: Optional road network lookup settings
+        h3: Optional H3 representation settings, used when properties include h3
     """
 
     id: str
@@ -89,6 +113,7 @@ class RoutesDepartureSearch(BaseModel):
     properties: List[Property]
     range: Optional[FullRange] = None
     snapping: Optional[Snapping] = None
+    h3: Optional[RoutesH3Params] = None
 
 
 class RoutesRequest(TravelTimeRequest[RoutesResponse]):
