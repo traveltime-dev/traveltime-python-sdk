@@ -3,6 +3,17 @@ from typing import List, Optional
 from pydantic.main import BaseModel
 
 from traveltimepy.requests.common import Fares, Route
+from traveltimepy.responses.h3 import Cell
+
+
+class RoutesH3Cells(BaseModel):
+    """H3 cells a route passes through.
+
+    Attributes:
+        cells: Cells along the route, with travel time statistics when requested.
+    """
+
+    cells: List[Cell]
 
 
 class RoutesProperty(BaseModel):
@@ -13,12 +24,14 @@ class RoutesProperty(BaseModel):
         fares: Public transport fare information.
         distance: Journey distance in meters.
         route: Detailed route with turn-by-turn directions.
+        h3: H3 cells the route passes through.
     """
 
     travel_time: Optional[int] = None
     fares: Optional[Fares] = None
     distance: Optional[int] = None
     route: Optional[Route] = None
+    h3: Optional[RoutesH3Cells] = None
 
 
 class Location(BaseModel):

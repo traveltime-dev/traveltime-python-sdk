@@ -12,8 +12,13 @@ from traveltimepy.requests.common import (
     Property,
     Location,
     Coordinates,
+    CellProperty,
 )
-from traveltimepy.requests.routes import RoutesDepartureSearch, RoutesArrivalSearch
+from traveltimepy.requests.routes import (
+    RoutesDepartureSearch,
+    RoutesArrivalSearch,
+    RoutesH3Params,
+)
 from traveltimepy.requests.transportation import Driving, PublicTransport
 
 
@@ -29,7 +34,8 @@ async def test_departures(async_client: AsyncClient, locations):
                 departure_location_id="London center",
                 departure_time=datetime.now(),
                 transportation=Driving(),
-                properties=[Property.TRAVEL_TIME],
+                properties=[Property.TRAVEL_TIME, Property.H3],
+                h3=RoutesH3Params(resolution=9, properties=[CellProperty.MEAN]),
             ),
             RoutesDepartureSearch(
                 id="id 2",
@@ -42,6 +48,9 @@ async def test_departures(async_client: AsyncClient, locations):
         ],
     )
     assert len(response.results) == 2
+    h3 = response.results[0].locations[0].properties[0].h3
+    assert h3 is not None and len(h3.cells) > 0
+    assert all(cell.properties and cell.properties.mean for cell in h3.cells)
 
 
 @pytest.mark.asyncio
@@ -131,7 +140,8 @@ def test_departures_sync(client: Client, locations):
                 departure_location_id="London center",
                 departure_time=datetime.now(),
                 transportation=Driving(),
-                properties=[Property.TRAVEL_TIME],
+                properties=[Property.TRAVEL_TIME, Property.H3],
+                h3=RoutesH3Params(resolution=9, properties=[CellProperty.MEAN]),
             ),
             RoutesDepartureSearch(
                 id="id 2",
@@ -144,6 +154,9 @@ def test_departures_sync(client: Client, locations):
         ],
     )
     assert len(response.results) == 2
+    h3 = response.results[0].locations[0].properties[0].h3
+    assert h3 is not None and len(h3.cells) > 0
+    assert all(cell.properties and cell.properties.mean for cell in h3.cells)
 
 
 def test_arrivals_sync(client: Client, locations):
