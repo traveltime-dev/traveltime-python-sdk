@@ -31,7 +31,8 @@ class RoutesH3Params(BaseModel):
     Applies only when the search's properties include Property.H3.
 
     Attributes:
-        resolution: H3 resolution of the cells. The API default applies when omitted.
+        resolution: H3 resolution of the cells. Valid range: 6-11. The API default
+            applies when omitted.
         properties: Travel time statistics to return for each cell. Cells carry only
             their id when omitted.
     """
