@@ -53,19 +53,19 @@ jobs:
               TimeFilterFastResponse_pb2,
               GeohashFastRequest_pb2,
               GeohashFastResponse_pb2,
+              H3FastRequest_pb2,
+              H3FastResponse_pb2,
           )
-          from traveltimepy.async_base_client import PROTOBUF_AVAILABLE as async_ok
-          from traveltimepy.sync_base_client import PROTOBUF_AVAILABLE as sync_ok
-          assert async_ok and sync_ok, 'PROTOBUF_AVAILABLE should be True with [proto] extra'
+          from traveltimepy.base_client import PROTOBUF_AVAILABLE
+          assert PROTOBUF_AVAILABLE, 'PROTOBUF_AVAILABLE should be True with [proto] extra'
           "
 
           python -m venv smoke-bare
           smoke-bare/bin/pip install --upgrade pip
           smoke-bare/bin/pip install "${WHEEL}"
           smoke-bare/bin/python -c "
-          from traveltimepy.async_base_client import PROTOBUF_AVAILABLE as async_ok
-          from traveltimepy.sync_base_client import PROTOBUF_AVAILABLE as sync_ok
-          assert not async_ok and not sync_ok, 'PROTOBUF_AVAILABLE should be False without [proto] extra'
+          from traveltimepy.base_client import PROTOBUF_AVAILABLE
+          assert not PROTOBUF_AVAILABLE, 'PROTOBUF_AVAILABLE should be False without [proto] extra'
           "
 
       - name: Publish
