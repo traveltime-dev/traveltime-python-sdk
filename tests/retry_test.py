@@ -148,7 +148,7 @@ class TestRetryLogic:
     @pytest.mark.parametrize(
         "error, raised, calls",
         [
-            (aiohttp.ServerDisconnectedError(), RetryError, 3),
+            (aiohttp.ServerDisconnectedError(), aiohttp.ServerDisconnectedError, 3),
             (asyncio.TimeoutError(), asyncio.TimeoutError, 1),
         ],
     )
@@ -165,7 +165,11 @@ class TestRetryLogic:
     @pytest.mark.parametrize(
         "error, raised, calls",
         [
-            (requests.exceptions.ConnectionError(), RetryError, 3),
+            (
+                requests.exceptions.ConnectionError(),
+                requests.exceptions.ConnectionError,
+                3,
+            ),
             (requests.exceptions.ReadTimeout(), requests.exceptions.ReadTimeout, 1),
         ],
     )

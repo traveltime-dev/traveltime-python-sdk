@@ -2,6 +2,8 @@ from importlib.metadata import version, PackageNotFoundError
 from typing import Any, Callable, Dict, Mapping, Tuple, Type, TypeVar, Union, cast
 
 from tenacity import (
+    RetryCallState,
+    RetryError,
     retry,
     retry_if_exception,
     stop_after_attempt,
@@ -91,6 +93,15 @@ def _is_rate_limited(error: BaseException) -> bool:
     return isinstance(error, TravelTimeApiError) and error.status_code == 429
 
 
+def _raise_exhausted(retry_state: RetryCallState) -> None:
+    assert retry_state.outcome is not None
+    error = retry_state.outcome.exception()
+    # Exhausted 5xx retries have always surfaced as RetryError
+    if error is None or isinstance(error, TravelTimeServerError):
+        raise RetryError(retry_state.outcome)
+    raise error
+
+
 class BaseClient:
     _connection_errors: Tuple[Type[BaseException], ...] = ()
     _timeout_errors: Tuple[Type[BaseException], ...] = ()
@@ -136,6 +147,7 @@ class BaseClient:
             retry=retry_if_exception(self._is_transient),
             stop=stop_after_attempt(self.retry_attempts + 1),
             wait=server_wait + wait_random(0, SERVER_RETRY_JITTER),
+            retry_error_callback=_raise_exhausted,
         )
         retry_rate_limited = retry(
             retry=retry_if_exception(_is_rate_limited),
