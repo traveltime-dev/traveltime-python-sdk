@@ -259,7 +259,8 @@ client = Client(
     app_id="YOUR_APP_ID",
     api_key="YOUR_API_KEY",
     timeout=300,                    # Request timeout in seconds
-    retry_attempts=3,               # Number of retry attempts for 5xx errors
+    retry_attempts=3,               # Number of retry attempts for 5xx errors and connection failures
+    rate_limit_retry_attempts=4,    # Number of retry attempts for 429 errors
     max_rpm=60,                     # Maximum requests per minute
 )
 
@@ -269,6 +270,7 @@ async_client = AsyncClient(
     api_key="YOUR_API_KEY",
     timeout=300,
     retry_attempts=3,
+    rate_limit_retry_attempts=4,
     max_rpm=60
 )
 ```
@@ -278,9 +280,9 @@ async_client = AsyncClient(
 
 The SDK automatically handles both rate limiting and server error retries:
 
-- **Rate limiting**: Automatically handled with exponential backoff
-- **Server errors (5xx)**: Automatically retried up to 3 times with immediate retry
-- **Client errors (4xx)**: Not retried (indicates invalid request)
+- **Rate limiting (429)**: Retried up to 4 times, about 30 seconds apart
+- **Server errors (5xx) and connection failures**: Retried up to 3 times with exponential backoff (1s, 2s, 4s)
+- **Timeouts and client errors (4xx)**: Not retried
 
 ```python
 # Retries are built-in - no additional code needed
@@ -288,7 +290,7 @@ client = Client(app_id="YOUR_APP_ID", api_key="YOUR_API_KEY")
 response = client.time_filter(
     locations=locations,
     departure_searches=searches
-)  # Automatically retries on 5xx errors
+)  # Automatically retries on 429, 5xx and connection errors
 ```
 
 ### Configuring Retries
@@ -300,14 +302,16 @@ You can configure the number of retry attempts:
 client = Client(
     app_id="YOUR_APP_ID", 
     api_key="YOUR_API_KEY",
-    retry_attempts=5  # Will retry up to 5 times on 5xx errors
+    retry_attempts=5,  # Will retry up to 5 times on 5xx and connection errors
+    rate_limit_retry_attempts=10  # Will retry up to 10 times on 429 errors
 )
 
 # Disable retries completely
 client = Client(
     app_id="YOUR_APP_ID", 
     api_key="YOUR_API_KEY",
-    retry_attempts=0  # No retries, fail immediately
+    retry_attempts=0,  # No retries, fail immediately
+    rate_limit_retry_attempts=0
 )
 ```
 

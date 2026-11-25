@@ -1,8 +1,21 @@
 from importlib.metadata import version, PackageNotFoundError
-from typing import Dict, Mapping, Union, Any
+from typing import Any, Callable, Dict, Mapping, Tuple, Type, TypeVar, Union, cast
+
+from tenacity import (
+    retry,
+    retry_if_exception,
+    stop_after_attempt,
+    wait_exponential,
+    wait_fixed,
+    wait_random,
+)
 
 from traveltimepy.accept_type import AcceptType
-from traveltimepy.errors import TravelTimeProtoError, TravelTimeServerError
+from traveltimepy.errors import (
+    TravelTimeApiError,
+    TravelTimeProtoError,
+    TravelTimeServerError,
+)
 from traveltimepy.requests.time_filter_proto import ProtoTransportation
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
 from traveltimepy.responses.geohash_fast_proto import GeohashFastProtoResponse
@@ -66,7 +79,21 @@ def parse_h3_proto_response(content: bytes) -> H3FastProtoResponse:
     )
 
 
+SERVER_RETRY_BASE_DELAY = 1
+SERVER_RETRY_JITTER = 0.5
+RATE_LIMIT_RETRY_DELAY = 30
+RATE_LIMIT_RETRY_JITTER = 5
+
+F = TypeVar("F", bound=Callable[..., Any])
+
+
+def _is_rate_limited(error: BaseException) -> bool:
+    return isinstance(error, TravelTimeApiError) and error.status_code == 429
+
+
 class BaseClient:
+    _connection_errors: Tuple[Type[BaseException], ...] = ()
+    _timeout_errors: Tuple[Type[BaseException], ...] = ()
 
     def __init__(
         self,
@@ -74,6 +101,7 @@ class BaseClient:
         api_key: str,
         timeout: int = 300,
         retry_attempts: int = 3,
+        rate_limit_retry_attempts: int = 4,
         max_rpm: int = 60,
         use_ssl: bool = True,
         split_large_requests: bool = True,
@@ -85,12 +113,37 @@ class BaseClient:
         self.api_key = api_key
         self.timeout = timeout
         self.retry_attempts = retry_attempts
+        self.rate_limit_retry_attempts = rate_limit_retry_attempts
         self.max_rpm = max_rpm
         self.use_ssl = use_ssl
         self.split_large_requests = split_large_requests
         self._host = _host
         self._proto_host = _proto_host
         self._user_agent = _user_agent
+
+    def _is_transient(self, error: BaseException) -> bool:
+        if isinstance(error, TravelTimeServerError):
+            return True
+        return isinstance(error, self._connection_errors) and not isinstance(
+            error, self._timeout_errors
+        )
+
+    def _with_retries(self, attempt: F) -> F:
+        server_wait = wait_exponential(multiplier=SERVER_RETRY_BASE_DELAY)
+        rate_limit_wait = wait_fixed(RATE_LIMIT_RETRY_DELAY)
+        # First attempt is not a retry, that's why `+ 1`
+        retry_transient = retry(
+            retry=retry_if_exception(self._is_transient),
+            stop=stop_after_attempt(self.retry_attempts + 1),
+            wait=server_wait + wait_random(0, SERVER_RETRY_JITTER),
+        )
+        retry_rate_limited = retry(
+            retry=retry_if_exception(_is_rate_limited),
+            stop=stop_after_attempt(self.rate_limit_retry_attempts + 1),
+            wait=rate_limit_wait + wait_random(0, RATE_LIMIT_RETRY_JITTER),
+            reraise=True,
+        )
+        return cast(F, retry_rate_limited(retry_transient(attempt)))
 
     def _build_url(self, endpoint: str) -> str:
         return f"https://{self._host}/v4/{endpoint}"
