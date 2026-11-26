@@ -103,8 +103,8 @@ def _raise_exhausted(retry_state: RetryCallState) -> None:
 
 
 class BaseClient:
-    _connection_errors: Tuple[Type[BaseException], ...] = ()
-    _timeout_errors: Tuple[Type[BaseException], ...] = ()
+    _connection_errors: Tuple[Type[Exception], ...] = ()
+    _timeout_errors: Tuple[Type[Exception], ...] = ()
 
     def __init__(
         self,

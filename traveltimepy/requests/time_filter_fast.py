@@ -17,6 +17,17 @@ from traveltimepy.requests.request import TravelTimeRequest
 from traveltimepy.responses.time_filter_fast import TimeFilterFastResponse
 from traveltimepy.itertools import split, flatten
 
+TimeFilterFastTransportation = Union[
+    PublicTransportFast,
+    DrivingFast,
+    CyclingFast,
+    WalkingFast,
+    WalkingFerryFast,
+    CyclingFerryFast,
+    DrivingFerryFast,
+    DrivingPublicTransportFast,
+]
+
 
 class TimeFilterFastOneToMany(BaseModel):
     """One-to-many travel time search for high-performance distance matrix calculation.
@@ -38,16 +49,7 @@ class TimeFilterFastOneToMany(BaseModel):
     id: str
     departure_location_id: str
     arrival_location_ids: List[str]
-    transportation: Union[
-        PublicTransportFast,
-        DrivingFast,
-        CyclingFast,
-        WalkingFast,
-        WalkingFerryFast,
-        CyclingFerryFast,
-        DrivingFerryFast,
-        DrivingPublicTransportFast,
-    ]
+    transportation: TimeFilterFastTransportation
     travel_time: int
     properties: List[Property]
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING
@@ -74,16 +76,7 @@ class TimeFilterFastManyToOne(BaseModel):
     id: str
     arrival_location_id: str
     departure_location_ids: List[str]
-    transportation: Union[
-        PublicTransportFast,
-        DrivingFast,
-        CyclingFast,
-        WalkingFast,
-        WalkingFerryFast,
-        CyclingFerryFast,
-        DrivingFerryFast,
-        DrivingPublicTransportFast,
-    ]
+    transportation: TimeFilterFastTransportation
     travel_time: int
     properties: List[Property]
     arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING

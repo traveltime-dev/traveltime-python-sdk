@@ -210,6 +210,7 @@ The SDK provides both synchronous (`Client`) and asynchronous (`AsyncClient`) ve
 - [`time_filter()`](https://docs.traveltime.com/api/reference/travel-time-distance-matrix) - Calculate travel times between locations
 - [`time_filter_fast()`](https://docs.traveltime.com/api/reference/time-filter-fast) - High-performance version for large datasets
 - [`time_filter_proto()`](https://docs.traveltime.com/api/start/travel-time-distance-matrix-proto) - Ultra-fast protocol buffer implementation (requires `pip install 'traveltimepy[proto]'`)
+- `time_filter_matrix()`, `time_filter_fast_matrix()`, `time_filter_fast_proto_matrix()` - Full origins x destinations matrices, split into as many requests as needed, see [Travel Time Matrices](#travel-time-matrices)
 
 ### Isochrone Generation
 
@@ -275,6 +276,38 @@ async_client = AsyncClient(
 )
 ```
 
+
+## Travel Time Matrices
+
+The `*_matrix()` methods calculate travel times from every origin to every destination. They split the matrix into as many requests as the endpoint needs, send them concurrently within your `max_rpm`, and put the results back together in input order:
+
+```python
+from traveltimepy import Client
+from traveltimepy.requests.common import Coordinates
+from traveltimepy.requests.transportation import DrivingFast
+
+with Client(app_id="YOUR_APP_ID", api_key="YOUR_API_KEY") as client:
+    matrix = client.time_filter_fast_matrix(
+        origins=[Coordinates(lat=51.508930, lng=-0.131387), ...],
+        destinations=[Coordinates(lat=51.536067, lng=-0.153596), ...],
+        transportation=DrivingFast(),
+        travel_time=3600,
+        with_distance=True,
+        checkpoint="matrix.jsonl",  # optional
+    )
+
+matrix.travel_times[0][1]  # seconds from origin 0 to destination 1, None if unreachable
+matrix.distances[0][1]
+```
+
+If your plan's per-minute limit is hit, requests are retried and made smaller until they fit. If requests still fail (for example the connection drops), the cells computed so far are returned and the rest are listed in `matrix.failures`, so nothing already paid for is lost:
+
+```python
+if not matrix.is_complete:
+    matrix = client.time_filter_fast_matrix(..., resume_from=matrix)  # computes only the failed cells
+```
+
+For long runs, pass a `checkpoint` file path. Every finished search is saved to it as it arrives, and running the same matrix again with the same path continues where the last run stopped, even if the process was killed. The file can be deleted once the matrix is complete.
 
 ## Error Handling and Retries
 

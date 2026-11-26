@@ -18,6 +18,17 @@ from traveltimepy.requests.transportation import (
     CyclingPublicTransport,
 )
 
+TimeFilterTransportation = Union[
+    PublicTransport,
+    Driving,
+    Ferry,
+    Walking,
+    Cycling,
+    DrivingTrain,
+    DrivingPublicTransport,
+    CyclingPublicTransport,
+]
+
 
 class TimeFilterArrivalSearch(BaseModel):
     """Calculates travel times from multiple departure locations to a single arrival
@@ -40,16 +51,7 @@ class TimeFilterArrivalSearch(BaseModel):
     arrival_location_id: str
     arrival_time: datetime
     travel_time: int
-    transportation: Union[
-        PublicTransport,
-        Driving,
-        Ferry,
-        Walking,
-        Cycling,
-        DrivingTrain,
-        DrivingPublicTransport,
-        CyclingPublicTransport,
-    ]
+    transportation: TimeFilterTransportation
     properties: List[Property]
     range: Optional[FullRange] = None
     snapping: Optional[Snapping] = None
@@ -76,16 +78,7 @@ class TimeFilterDepartureSearch(BaseModel):
     departure_location_id: str
     departure_time: datetime
     travel_time: int
-    transportation: Union[
-        PublicTransport,
-        Driving,
-        Ferry,
-        Walking,
-        Cycling,
-        DrivingTrain,
-        DrivingPublicTransport,
-        CyclingPublicTransport,
-    ]
+    transportation: TimeFilterTransportation
     properties: List[Property]
     range: Optional[FullRange] = None
     snapping: Optional[Snapping] = None
