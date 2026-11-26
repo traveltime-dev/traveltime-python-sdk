@@ -1,6 +1,7 @@
 import hashlib
 import json
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from datetime import datetime
 from typing import (
     Any,
@@ -50,7 +51,8 @@ from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
 F = TypeVar("F")
 
 
-class MatrixBackend(ABC, Generic[F]):
+@dataclass
+class MatrixEndpoint(ABC, Generic[F]):
     """Turns planned searches into calls of one endpoint and its responses back into
     matrix values.
 
@@ -58,31 +60,20 @@ class MatrixBackend(ABC, Generic[F]):
     client and an awaitable for an async one.
     """
 
-    endpoint: str
-    max_searches_per_request: int
-    max_points_per_search: int
-    max_points_per_request: int
+    name: ClassVar[str]
+    max_searches_per_request: ClassVar[int]
+    max_points_per_search: ClassVar[int]
+    max_points_per_request: ClassVar[int]
     fares_adapter: ClassVar[TypeAdapter[Any]]
 
-    def __init__(
-        self,
-        origins: Sequence[Any],
-        destinations: Sequence[Any],
-        with_distance: bool,
-        with_fares: bool,
-    ):
-        self.origins = origins
-        self.destinations = destinations
-        self.with_distance = with_distance
-        self.with_fares = with_fares
+    origins: Sequence[Any]
+    destinations: Sequence[Any]
+    with_distance: bool
+    with_fares: bool
 
     @property
     def direction(self) -> Optional[Direction]:
         return None
-
-    @abstractmethod
-    def _params(self) -> Dict[str, Any]:
-        pass
 
     @abstractmethod
     def send(self, client: Any, direction: Direction, searches: List[Search]) -> Any:
@@ -95,15 +86,8 @@ class MatrixBackend(ABC, Generic[F]):
         pass
 
     def fingerprint(self) -> str:
-        inputs = {
-            "endpoint": self.endpoint,
-            "origins": self.origins,
-            "destinations": self.destinations,
-            "with_distance": self.with_distance,
-            "with_fares": self.with_fares,
-            "params": self._params(),
-        }
-        encoded = json.dumps(to_jsonable_python(inputs), sort_keys=True)
+        inputs = {"endpoint": self.name, "inputs": to_jsonable_python(self)}
+        encoded = json.dumps(inputs, sort_keys=True)
         return hashlib.sha256(encoded.encode()).hexdigest()
 
     def to_record(self, search: Search, result: SearchResult[F]) -> Dict[str, Any]:
@@ -137,8 +121,9 @@ class MatrixBackend(ABC, Generic[F]):
         )
 
 
-class _JsonBackend(MatrixBackend[F]):
-    max_searches_per_request = 10
+@dataclass
+class _JsonEndpoint(MatrixEndpoint[F]):
+    max_searches_per_request: ClassVar[int] = 10
 
     def _properties(self) -> List[Property]:
         properties = [Property.TRAVEL_TIME]
@@ -149,14 +134,21 @@ class _JsonBackend(MatrixBackend[F]):
         return properties
 
     @staticmethod
-    def _ids(direction: Direction) -> Tuple[str, str]:
+    def _prefixes(direction: Direction) -> Tuple[str, str]:
         return ("o", "d") if direction == Direction.ONE_TO_MANY else ("d", "o")
+
+    def _location_ids(
+        self, direction: Direction, search: Search
+    ) -> Tuple[str, List[str]]:
+        anchor_prefix, other_prefix = self._prefixes(direction)
+        others = [f"{other_prefix}{i}" for i in range(search.start, search.end)]
+        return f"{anchor_prefix}{search.anchor}", others
 
     def _locations(
         self, direction: Direction, searches: List[Search]
     ) -> List[Location]:
         anchors, others = self._anchor_and_others(direction)
-        anchor_prefix, other_prefix = self._ids(direction)
+        anchor_prefix, other_prefix = self._prefixes(direction)
         anchor_indices = sorted({search.anchor for search in searches})
         other_indices = sorted(
             {i for search in searches for i in range(search.start, search.end)}
@@ -189,32 +181,28 @@ class _JsonBackend(MatrixBackend[F]):
         return parsed
 
 
-class TimeFilterBackend(_JsonBackend[Fares]):
-    endpoint = "time-filter"
-    max_points_per_search = 2000
-    max_points_per_request = 20_000
-    fares_adapter = TypeAdapter(Optional[List[Optional[Fares]]])
+@dataclass
+class TimeFilterEndpoint(_JsonEndpoint[Fares]):
+    name: ClassVar[str] = "time-filter"
+    max_points_per_search: ClassVar[int] = 2000
+    max_points_per_request: ClassVar[int] = 20_000
+    fares_adapter: ClassVar[TypeAdapter[Any]] = TypeAdapter(
+        Optional[List[Optional[Fares]]]
+    )
 
-    def __init__(
-        self,
-        origins: Sequence[Coords],
-        destinations: Sequence[Coords],
-        with_distance: bool,
-        with_fares: bool,
-        transportation: TimeFilterTransportation,
-        travel_time: int,
-        departure_time: Optional[datetime],
-        arrival_time: Optional[datetime],
-        snapping: Optional[Snapping],
-    ):
-        if (departure_time is None) == (arrival_time is None):
+    origins: Sequence[Coords]
+    destinations: Sequence[Coords]
+    transportation: TimeFilterTransportation
+    travel_time: int
+    departure_time: Optional[datetime]
+    arrival_time: Optional[datetime]
+    snapping: Optional[Snapping]
+
+    def __post_init__(self) -> None:
+        times = [t for t in (self.departure_time, self.arrival_time) if t is not None]
+        if len(times) != 1:
             raise ValueError("Provide exactly one of departure_time or arrival_time")
-        super().__init__(origins, destinations, with_distance, with_fares)
-        self.transportation = transportation
-        self.travel_time = travel_time
-        self.departure_time = departure_time
-        self.arrival_time = arrival_time
-        self.snapping = snapping
+        self._time = times[0]
 
     @property
     def direction(self) -> Optional[Direction]:
@@ -222,50 +210,37 @@ class TimeFilterBackend(_JsonBackend[Fares]):
             return Direction.ONE_TO_MANY
         return Direction.MANY_TO_ONE
 
-    def _params(self) -> Dict[str, Any]:
-        return {
-            "transportation": self.transportation,
+    def send(self, client: Any, direction: Direction, searches: List[Search]) -> Any:
+        fields: Dict[str, Any] = {
             "travel_time": self.travel_time,
-            "departure_time": self.departure_time,
-            "arrival_time": self.arrival_time,
+            "transportation": self.transportation,
+            "properties": self._properties(),
             "snapping": self.snapping,
         }
-
-    def send(self, client: Any, direction: Direction, searches: List[Search]) -> Any:
         departures = []
         arrivals = []
-        if self.departure_time is not None:
-            departures = [
-                TimeFilterDepartureSearch(
-                    id=search.id,
-                    departure_location_id=f"o{search.anchor}",
-                    arrival_location_ids=[
-                        f"d{i}" for i in range(search.start, search.end)
-                    ],
-                    departure_time=self.departure_time,
-                    travel_time=self.travel_time,
-                    transportation=self.transportation,
-                    properties=self._properties(),
-                    snapping=self.snapping,
+        for search in searches:
+            anchor, others = self._location_ids(direction, search)
+            if direction == Direction.ONE_TO_MANY:
+                departures.append(
+                    TimeFilterDepartureSearch(
+                        id=search.id,
+                        departure_location_id=anchor,
+                        arrival_location_ids=others,
+                        departure_time=self._time,
+                        **fields,
+                    )
                 )
-                for search in searches
-            ]
-        if self.arrival_time is not None:
-            arrivals = [
-                TimeFilterArrivalSearch(
-                    id=search.id,
-                    arrival_location_id=f"d{search.anchor}",
-                    departure_location_ids=[
-                        f"o{i}" for i in range(search.start, search.end)
-                    ],
-                    arrival_time=self.arrival_time,
-                    travel_time=self.travel_time,
-                    transportation=self.transportation,
-                    properties=self._properties(),
-                    snapping=self.snapping,
+            else:
+                arrivals.append(
+                    TimeFilterArrivalSearch(
+                        id=search.id,
+                        arrival_location_id=anchor,
+                        departure_location_ids=others,
+                        arrival_time=self._time,
+                        **fields,
+                    )
                 )
-                for search in searches
-            ]
         return client.time_filter(
             self._locations(direction, searches), departures, arrivals
         )
@@ -275,72 +250,52 @@ class TimeFilterBackend(_JsonBackend[Fares]):
         return properties.travel_time, properties.distance, properties.fares
 
 
-class TimeFilterFastBackend(_JsonBackend[FastFares]):
-    endpoint = "time-filter/fast"
-    max_points_per_search = 100_000
-    max_points_per_request = 100_000
-    fares_adapter = TypeAdapter(Optional[List[Optional[FastFares]]])
+@dataclass
+class TimeFilterFastEndpoint(_JsonEndpoint[FastFares]):
+    name: ClassVar[str] = "time-filter/fast"
+    max_points_per_search: ClassVar[int] = 100_000
+    max_points_per_request: ClassVar[int] = 100_000
+    fares_adapter: ClassVar[TypeAdapter[Any]] = TypeAdapter(
+        Optional[List[Optional[FastFares]]]
+    )
 
-    def __init__(
-        self,
-        origins: Sequence[Coords],
-        destinations: Sequence[Coords],
-        with_distance: bool,
-        with_fares: bool,
-        transportation: TimeFilterFastTransportation,
-        travel_time: int,
-        arrival_time_period: ArrivalTimePeriod,
-        snapping: Optional[Snapping],
-    ):
-        super().__init__(origins, destinations, with_distance, with_fares)
-        self.transportation = transportation
-        self.travel_time = travel_time
-        self.arrival_time_period = arrival_time_period
-        self.snapping = snapping
+    origins: Sequence[Coords]
+    destinations: Sequence[Coords]
+    transportation: TimeFilterFastTransportation
+    travel_time: int
+    arrival_time_period: ArrivalTimePeriod
+    snapping: Optional[Snapping]
 
-    def _params(self) -> Dict[str, Any]:
-        return {
+    def send(self, client: Any, direction: Direction, searches: List[Search]) -> Any:
+        fields: Dict[str, Any] = {
             "transportation": self.transportation,
             "travel_time": self.travel_time,
+            "properties": self._properties(),
             "arrival_time_period": self.arrival_time_period,
             "snapping": self.snapping,
         }
-
-    def send(self, client: Any, direction: Direction, searches: List[Search]) -> Any:
         one_to_many = []
         many_to_one = []
-        if direction == Direction.ONE_TO_MANY:
-            one_to_many = [
-                TimeFilterFastOneToMany(
-                    id=search.id,
-                    departure_location_id=f"o{search.anchor}",
-                    arrival_location_ids=[
-                        f"d{i}" for i in range(search.start, search.end)
-                    ],
-                    transportation=self.transportation,
-                    travel_time=self.travel_time,
-                    properties=self._properties(),
-                    arrival_time_period=self.arrival_time_period,
-                    snapping=self.snapping,
+        for search in searches:
+            anchor, others = self._location_ids(direction, search)
+            if direction == Direction.ONE_TO_MANY:
+                one_to_many.append(
+                    TimeFilterFastOneToMany(
+                        id=search.id,
+                        departure_location_id=anchor,
+                        arrival_location_ids=others,
+                        **fields,
+                    )
                 )
-                for search in searches
-            ]
-        else:
-            many_to_one = [
-                TimeFilterFastManyToOne(
-                    id=search.id,
-                    arrival_location_id=f"d{search.anchor}",
-                    departure_location_ids=[
-                        f"o{i}" for i in range(search.start, search.end)
-                    ],
-                    transportation=self.transportation,
-                    travel_time=self.travel_time,
-                    properties=self._properties(),
-                    arrival_time_period=self.arrival_time_period,
-                    snapping=self.snapping,
+            else:
+                many_to_one.append(
+                    TimeFilterFastManyToOne(
+                        id=search.id,
+                        arrival_location_id=anchor,
+                        departure_location_ids=others,
+                        **fields,
+                    )
                 )
-                for search in searches
-            ]
         return client.time_filter_fast(
             self._locations(direction, searches),
             TimeFilterFastArrivalSearches(
@@ -353,34 +308,21 @@ class TimeFilterFastBackend(_JsonBackend[FastFares]):
         return properties.travel_time, properties.distance, properties.fares
 
 
-class TimeFilterProtoBackend(MatrixBackend[int]):
-    endpoint = "time-filter/fast/proto"
-    max_searches_per_request = 1
-    max_points_per_search = 100_000
-    max_points_per_request = 100_000
-    fares_adapter = TypeAdapter(Optional[List[Optional[int]]])
+@dataclass
+class TimeFilterProtoEndpoint(MatrixEndpoint[int]):
+    name: ClassVar[str] = "time-filter/fast/proto"
+    max_searches_per_request: ClassVar[int] = 1
+    max_points_per_search: ClassVar[int] = 100_000
+    max_points_per_request: ClassVar[int] = 100_000
+    fares_adapter: ClassVar[TypeAdapter[Any]] = TypeAdapter(
+        Optional[List[Optional[int]]]
+    )
 
-    def __init__(
-        self,
-        origins: Sequence[Coordinates],
-        destinations: Sequence[Coordinates],
-        with_distance: bool,
-        with_fares: bool,
-        transportation: TimeFilterFastProtoTransportation,
-        travel_time: int,
-        country: ProtoCountry,
-    ):
-        super().__init__(origins, destinations, with_distance, with_fares)
-        self.transportation = transportation
-        self.travel_time = travel_time
-        self.country = country
-
-    def _params(self) -> Dict[str, Any]:
-        return {
-            "transportation": self.transportation,
-            "travel_time": self.travel_time,
-            "country": self.country,
-        }
+    origins: Sequence[Coordinates]
+    destinations: Sequence[Coordinates]
+    transportation: TimeFilterFastProtoTransportation
+    travel_time: int
+    country: ProtoCountry
 
     def send(self, client: Any, direction: Direction, searches: List[Search]) -> Any:
         (search,) = searches

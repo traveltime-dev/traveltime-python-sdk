@@ -26,7 +26,7 @@ def _is_rejected(error: Exception) -> bool:
     return isinstance(error, TravelTimeApiError) and 400 <= error.status_code < 500
 
 
-class MatrixRun(Generic[F]):
+class Scheduler(Generic[F]):
     """Decides which searches to send next and how to react to failed requests, without
     doing any IO.
 

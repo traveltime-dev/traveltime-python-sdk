@@ -4,10 +4,10 @@ from typing import List, Optional, Sequence
 from geojson_pydantic import FeatureCollection
 
 from traveltimepy.matrix import Matrix
-from traveltimepy.matrix.backends import (
-    TimeFilterBackend,
-    TimeFilterFastBackend,
-    TimeFilterProtoBackend,
+from traveltimepy.matrix.endpoints import (
+    TimeFilterEndpoint,
+    TimeFilterFastEndpoint,
+    TimeFilterProtoEndpoint,
 )
 from traveltimepy.matrix.checkpoint import PathLike
 from traveltimepy.accept_type import AcceptType
@@ -288,7 +288,7 @@ class Client(SyncBaseClient):
                 time-filter Fares objects.
         """
         return self._api_call_matrix(
-            TimeFilterBackend(
+            TimeFilterEndpoint(
                 origins,
                 destinations,
                 with_distance,
@@ -344,7 +344,7 @@ class Client(SyncBaseClient):
                 time-filter/fast Fares objects.
         """
         return self._api_call_matrix(
-            TimeFilterFastBackend(
+            TimeFilterFastEndpoint(
                 origins,
                 destinations,
                 with_distance,
@@ -397,7 +397,7 @@ class Client(SyncBaseClient):
                 monthly prices in minor currency units (e.g. pence).
         """
         return self._api_call_matrix(
-            TimeFilterProtoBackend(
+            TimeFilterProtoEndpoint(
                 origins,
                 destinations,
                 with_distance,

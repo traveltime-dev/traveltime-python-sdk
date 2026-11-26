@@ -36,7 +36,7 @@ class Checkpoint:
         records = (_parse(line) for line in lines[1:])
         return [record for record in records if record is not None]
 
-    def __enter__(self) -> "Checkpoint":
+    def open(self) -> None:
         self._file = open(self._path, "ab+")
         size = self._file.tell()
         if size == 0:
@@ -45,9 +45,8 @@ class Checkpoint:
             self._file.seek(size - 1)
             if self._file.read(1) != b"\n":
                 self._file.write(b"\n")
-        return self
 
-    def __exit__(self, *_: Any) -> None:
+    def close(self) -> None:
         if self._file is not None:
             self._file.close()
 

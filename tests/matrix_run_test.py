@@ -4,10 +4,10 @@ from typing import AbstractSet, Dict, List, Optional
 import pytest
 
 from traveltimepy.errors import TravelTimeJsonError, TravelTimeServerError
-from traveltimepy.matrix.backends import TimeFilterFastBackend
+from traveltimepy.matrix.endpoints import TimeFilterFastEndpoint
 from traveltimepy.matrix.plan import Search
 from traveltimepy.matrix.runner import run_matrix, run_matrix_async
-from traveltimepy.matrix.scheduler import MatrixRun
+from traveltimepy.matrix.scheduler import Scheduler
 from traveltimepy.requests.common import ArrivalTimePeriod, Coordinates
 from traveltimepy.requests.transportation import DrivingFast
 from traveltimepy.responses.time_filter_fast import (
@@ -29,16 +29,16 @@ def searches(count: int) -> List[Search]:
 def new_run(count: int, max_batch_size: int):
     results: Dict[int, object] = {}
     failures: Dict[int, Exception] = {}
-    run: MatrixRun[object] = MatrixRun(
+    scheduler: Scheduler[object] = Scheduler(
         searches(count),
         max_batch_size,
         lambda search, result: results.__setitem__(search.anchor, result),
         lambda search, error: failures.__setitem__(search.anchor, error),
     )
-    return run, results, failures
+    return scheduler, results, failures
 
 
-def drain(run: MatrixRun) -> list:
+def drain(run: Scheduler) -> list:
     batches = []
     while (batch := run.next_batch()) is not None:
         batches.append(batch)
@@ -153,8 +153,8 @@ class AsyncFakeClient(FakeClient):
         return self.respond(arrival_searches)
 
 
-def backend(origins=ORIGINS):
-    return TimeFilterFastBackend(
+def endpoint(origins=ORIGINS):
+    return TimeFilterFastEndpoint(
         origins,
         DESTINATIONS,
         False,
@@ -170,10 +170,10 @@ def run(client_class, checkpoint=None, resume_from=None, **client_args):
     client = client_class(**client_args)
     if client_class is AsyncFakeClient:
         matrix = asyncio.run(
-            run_matrix_async(client, backend(), checkpoint, resume_from)
+            run_matrix_async(client, endpoint(), checkpoint, resume_from)
         )
     else:
-        matrix = run_matrix(client, backend(), checkpoint, resume_from)
+        matrix = run_matrix(client, endpoint(), checkpoint, resume_from)
     return matrix, client
 
 
@@ -237,4 +237,4 @@ def test_checkpoint_for_other_inputs_is_rejected(tmp_path):
     run(FakeClient, checkpoint)
 
     with pytest.raises(ValueError, match="different matrix"):
-        run_matrix(FakeClient(), backend(ORIGINS[:-1]), checkpoint, None)
+        run_matrix(FakeClient(), endpoint(ORIGINS[:-1]), checkpoint, None)

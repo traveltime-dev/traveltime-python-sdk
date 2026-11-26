@@ -16,7 +16,7 @@ from traveltimepy.base_client import (
     parse_h3_proto_response,
     parse_time_filter_proto_response,
 )
-from traveltimepy.matrix.backends import MatrixBackend
+from traveltimepy.matrix.endpoints import MatrixEndpoint
 from traveltimepy.matrix.checkpoint import PathLike
 from traveltimepy.matrix.result import Matrix
 from traveltimepy.matrix.runner import run_matrix_async
@@ -221,11 +221,11 @@ class AsyncBaseClient(BaseClient):
 
     async def _api_call_matrix(
         self,
-        backend: MatrixBackend[F],
+        endpoint: MatrixEndpoint[F],
         checkpoint: Optional[PathLike],
         resume_from: Optional[Matrix[F]],
     ) -> Matrix[F]:
-        return await run_matrix_async(self, backend, checkpoint, resume_from)
+        return await run_matrix_async(self, endpoint, checkpoint, resume_from)
 
     async def _handle_response(
         self, response: ClientResponse, response_class: Type[T]

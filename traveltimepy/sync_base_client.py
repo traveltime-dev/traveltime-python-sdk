@@ -16,7 +16,7 @@ from traveltimepy.base_client import (
     parse_h3_proto_response,
     parse_time_filter_proto_response,
 )
-from traveltimepy.matrix.backends import MatrixBackend
+from traveltimepy.matrix.endpoints import MatrixEndpoint
 from traveltimepy.matrix.checkpoint import PathLike
 from traveltimepy.matrix.result import Matrix
 from traveltimepy.matrix.runner import run_matrix
@@ -259,11 +259,11 @@ class SyncBaseClient(BaseClient):
 
     def _api_call_matrix(
         self,
-        backend: MatrixBackend[F],
+        endpoint: MatrixEndpoint[F],
         checkpoint: Optional[PathLike],
         resume_from: Optional[Matrix[F]],
     ) -> Matrix[F]:
-        return run_matrix(self, backend, checkpoint, resume_from)
+        return run_matrix(self, endpoint, checkpoint, resume_from)
 
     def _handle_response(
         self, response: requests.Response, response_class: Type[T]
