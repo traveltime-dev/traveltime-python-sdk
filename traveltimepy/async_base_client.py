@@ -16,6 +16,10 @@ from traveltimepy.base_client import (
     parse_h3_proto_response,
     parse_time_filter_proto_response,
 )
+from traveltimepy.matrix.backends import MatrixBackend
+from traveltimepy.matrix.checkpoint import PathLike
+from traveltimepy.matrix.result import Matrix
+from traveltimepy.matrix.runner import run_matrix_async
 from traveltimepy.errors import (
     TravelTimeError,
     TravelTimeJsonError,
@@ -37,6 +41,7 @@ from traveltimepy.responses.geohash_fast_proto import GeohashFastProtoResponse
 from traveltimepy.responses.h3_fast_proto import H3FastProtoResponse
 
 T = TypeVar("T", bound=BaseModel)
+F = TypeVar("F")
 
 
 class AsyncBaseClient(BaseClient):
@@ -213,6 +218,14 @@ class AsyncBaseClient(BaseClient):
 
     async def _api_call_h3_proto(self, req: H3FastProtoRequest) -> H3FastProtoResponse:
         return await self._proto_call(req, "h3", parse_h3_proto_response)
+
+    async def _api_call_matrix(
+        self,
+        backend: MatrixBackend[F],
+        checkpoint: Optional[PathLike],
+        resume_from: Optional[Matrix[F]],
+    ) -> Matrix[F]:
+        return await run_matrix_async(self, backend, checkpoint, resume_from)
 
     async def _handle_response(
         self, response: ClientResponse, response_class: Type[T]

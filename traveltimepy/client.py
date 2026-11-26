@@ -1,13 +1,25 @@
-from typing import List, Optional
+from datetime import datetime
+from typing import List, Optional, Sequence
 
 from geojson_pydantic import FeatureCollection
 
+from traveltimepy.matrix import Matrix
+from traveltimepy.matrix.backends import (
+    TimeFilterBackend,
+    TimeFilterFastBackend,
+    TimeFilterProtoBackend,
+)
+from traveltimepy.matrix.checkpoint import PathLike
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.requests.common import (
+    ArrivalTimePeriod,
     Location,
     Rectangle,
     CellProperty,
     Coordinates,
+    Coords,
+    Fares,
+    Snapping,
 )
 from traveltimepy.requests.distance_map import (
     DistanceMapDepartureSearch,
@@ -68,10 +80,12 @@ from traveltimepy.requests.time_filter import (
     TimeFilterRequest,
     TimeFilterDepartureSearch,
     TimeFilterArrivalSearch,
+    TimeFilterTransportation,
 )
 from traveltimepy.requests.time_filter_fast import (
     TimeFilterFastArrivalSearches,
     TimeFilterFastRequest,
+    TimeFilterFastTransportation,
 )
 from traveltimepy.requests.time_filter_proto import (
     TimeFilterFastProtoRequest,
@@ -113,6 +127,7 @@ from traveltimepy.responses.routes import RoutesResponse
 from traveltimepy.responses.supported_locations import SupportedLocationsResponse
 from traveltimepy.responses.time_filter import TimeFilterResponse
 from traveltimepy.responses.time_filter_fast import (
+    Fares as FastFares,
     TimeFilterFastResponse,
 )
 from traveltimepy.responses.time_filter_proto import TimeFilterProtoResponse
@@ -230,6 +245,169 @@ class Client(SyncBaseClient):
                 with_distance,
                 with_fares,
             )
+        )
+
+    def time_filter_matrix(
+        self,
+        origins: Sequence[Coords],
+        destinations: Sequence[Coords],
+        transportation: TimeFilterTransportation,
+        travel_time: int,
+        departure_time: Optional[datetime] = None,
+        arrival_time: Optional[datetime] = None,
+        with_distance: bool = False,
+        with_fares: bool = False,
+        snapping: Optional[Snapping] = None,
+        checkpoint: Optional[PathLike] = None,
+        resume_from: Optional[Matrix[Fares]] = None,
+    ) -> Matrix[Fares]:
+        """Calculate a travel time matrix using the time-filter endpoint.
+
+        The matrix is split into as many requests as needed. Rate limits and network
+        failures are retried; if requests still fail, the cells computed so far are
+        returned and the rest are listed in `failures`.
+
+        Args:
+            origins: Departure locations, the matrix rows
+            destinations: Arrival locations, the matrix columns
+            transportation: Transportation mode
+            travel_time: Maximum journey time in seconds
+            departure_time: Leave every origin at this time. Exactly one of
+                departure_time and arrival_time is required.
+            arrival_time: Arrive at every destination by this time
+            with_distance: Whether to include distances
+            with_fares: Whether to include public transport fares
+            snapping: Optional road network lookup settings
+            checkpoint: Optional file path to save progress to. Running the same
+                matrix with the same path skips the cells already saved there.
+            resume_from: A previous incomplete result for the same inputs; only its
+                failed cells are computed.
+
+        Returns:
+            Matrix: Travel times indexed as [origin][destination], with fares as
+                time-filter Fares objects.
+        """
+        return self._api_call_matrix(
+            TimeFilterBackend(
+                origins,
+                destinations,
+                with_distance,
+                with_fares,
+                transportation,
+                travel_time,
+                departure_time,
+                arrival_time,
+                snapping,
+            ),
+            checkpoint,
+            resume_from,
+        )
+
+    def time_filter_fast_matrix(
+        self,
+        origins: Sequence[Coords],
+        destinations: Sequence[Coords],
+        transportation: TimeFilterFastTransportation,
+        travel_time: int,
+        arrival_time_period: ArrivalTimePeriod = ArrivalTimePeriod.WEEKDAY_MORNING,
+        with_distance: bool = False,
+        with_fares: bool = False,
+        snapping: Optional[Snapping] = None,
+        checkpoint: Optional[PathLike] = None,
+        resume_from: Optional[Matrix[FastFares]] = None,
+    ) -> Matrix[FastFares]:
+        """Calculate a travel time matrix using the time-filter/fast endpoint.
+
+        The matrix is split into as many requests as needed. Rate limits and network
+        failures are retried; if requests still fail, the cells computed so far are
+        returned and the rest are listed in `failures`.
+
+        Searches run in whichever direction needs fewer of them, so public transport
+        times may differ slightly from a one-to-many call for the same pair.
+
+        Args:
+            origins: Departure locations, the matrix rows
+            destinations: Arrival locations, the matrix columns
+            transportation: Transportation mode
+            travel_time: Maximum journey time in seconds
+            arrival_time_period: Time period of the journeys
+            with_distance: Whether to include distances
+            with_fares: Whether to include public transport fares
+            snapping: Optional road network lookup settings
+            checkpoint: Optional file path to save progress to. Running the same
+                matrix with the same path skips the cells already saved there.
+            resume_from: A previous incomplete result for the same inputs; only its
+                failed cells are computed.
+
+        Returns:
+            Matrix: Travel times indexed as [origin][destination], with fares as
+                time-filter/fast Fares objects.
+        """
+        return self._api_call_matrix(
+            TimeFilterFastBackend(
+                origins,
+                destinations,
+                with_distance,
+                with_fares,
+                transportation,
+                travel_time,
+                arrival_time_period,
+                snapping,
+            ),
+            checkpoint,
+            resume_from,
+        )
+
+    def time_filter_fast_proto_matrix(
+        self,
+        origins: Sequence[Coordinates],
+        destinations: Sequence[Coordinates],
+        transportation: TimeFilterFastProtoTransportation,
+        travel_time: int,
+        country: ProtoCountry,
+        with_distance: bool = False,
+        with_fares: bool = False,
+        checkpoint: Optional[PathLike] = None,
+        resume_from: Optional[Matrix[int]] = None,
+    ) -> Matrix[int]:
+        """Calculate a travel time matrix using the time-filter/fast proto endpoint.
+
+        The matrix is split into as many requests as needed. Rate limits and network
+        failures are retried; if requests still fail, the cells computed so far are
+        returned and the rest are listed in `failures`.
+
+        Searches run in whichever direction needs fewer of them, so travel times may
+        differ slightly from a one-to-many call for the same pair.
+
+        Args:
+            origins: Departure coordinates, the matrix rows
+            destinations: Arrival coordinates, the matrix columns
+            transportation: Transportation mode
+            travel_time: Maximum journey time in seconds
+            country: Country of the locations
+            with_distance: Whether to include distances
+            with_fares: Whether to include monthly public transport fares
+            checkpoint: Optional file path to save progress to. Running the same
+                matrix with the same path skips the cells already saved there.
+            resume_from: A previous incomplete result for the same inputs; only its
+                failed cells are computed.
+
+        Returns:
+            Matrix: Travel times indexed as [origin][destination], with fares as
+                monthly prices in minor currency units (e.g. pence).
+        """
+        return self._api_call_matrix(
+            TimeFilterProtoBackend(
+                origins,
+                destinations,
+                with_distance,
+                with_fares,
+                transportation,
+                travel_time,
+                country,
+            ),
+            checkpoint,
+            resume_from,
         )
 
     def geohash_fast_proto(
