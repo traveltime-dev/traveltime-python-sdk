@@ -6,12 +6,6 @@ import aiohttp
 from aiohttp import ClientSession, ClientResponse, BasicAuth, TCPConnector
 from aiolimiter import AsyncLimiter
 from pydantic import BaseModel, ValidationError
-from tenacity import (
-    retry,
-    stop_after_attempt,
-    wait_none,
-    retry_if_exception_type,
-)
 
 from traveltimepy.accept_type import AcceptType
 from traveltimepy.base_client import (
@@ -51,7 +45,8 @@ class AsyncBaseClient(BaseClient):
         app_id: Your TravelTime API application ID
         api_key: Your TravelTime API key
         timeout: Request timeout in seconds (default: 300)
-        retry_attempts: Number of retry attempts for 5xx server errors (default: 3)
+        retry_attempts: Number of retry attempts for 5xx server errors and connection failures (default: 3)
+        rate_limit_retry_attempts: Number of retry attempts for 429 rate limit errors, ~30s apart (default: 4)
         max_rpm: Maximum requests per minute for rate limiting (default: 60)
         use_ssl: Whether to use SSL for connections (default: True)
         split_large_requests: Split large requests into smaller requests for performance (default: True)
@@ -60,12 +55,16 @@ class AsyncBaseClient(BaseClient):
         _user_agent: User agent string for requests
     """
 
+    _connection_errors = (aiohttp.ClientConnectionError,)
+    _timeout_errors = (asyncio.TimeoutError,)
+
     def __init__(
         self,
         app_id: str,
         api_key: str,
         timeout: int = 300,
         retry_attempts: int = 3,
+        rate_limit_retry_attempts: int = 4,
         max_rpm: int = 60,
         use_ssl: bool = True,
         split_large_requests: bool = True,
@@ -78,6 +77,7 @@ class AsyncBaseClient(BaseClient):
             api_key=api_key,
             timeout=timeout,
             retry_attempts=retry_attempts,
+            rate_limit_retry_attempts=rate_limit_retry_attempts,
             max_rpm=max_rpm,
             use_ssl=use_ssl,
             split_large_requests=split_large_requests,
@@ -118,14 +118,7 @@ class AsyncBaseClient(BaseClient):
         data: Optional[str] = None,
         params: Optional[Dict[str, str]] = None,
     ) -> T:
-        @retry(
-            retry=retry_if_exception_type(TravelTimeServerError),
-            stop=stop_after_attempt(
-                self.retry_attempts + 1
-            ),  # First attempt is not a retry, that's why `+1`
-            wait=wait_none(),  # No wait between retries
-        )
-        async def _make_request_with_retry():
+        async def _attempt() -> T:
             session = await self._get_session()
             async with self.async_limiter:
                 async with session.request(
@@ -133,7 +126,7 @@ class AsyncBaseClient(BaseClient):
                 ) as response:
                     return await self._handle_response(response, response_class)
 
-        return await _make_request_with_retry()
+        return await self._with_retries(_attempt)()
 
     async def _api_call_post(
         self,
@@ -188,14 +181,7 @@ class AsyncBaseClient(BaseClient):
     ) -> T:
         check_protobuf_available()
 
-        @retry(
-            retry=retry_if_exception_type(TravelTimeServerError),
-            stop=stop_after_attempt(
-                self.retry_attempts + 1
-            ),  # First attempt is not a retry, that's why `+1`
-            wait=wait_none(),  # No wait between retries
-        )
-        async def _make_proto_request() -> T:
+        async def _attempt() -> T:
             session = await self._get_session()
             async with self.async_limiter:
                 transportation_mode = self._get_transportation_mode(req.transportation)
@@ -211,7 +197,7 @@ class AsyncBaseClient(BaseClient):
                         self._handle_proto_error(response.status, response.headers)
                     return parse(content)
 
-        return await _make_proto_request()
+        return await self._with_retries(_attempt)()
 
     async def _api_call_proto(
         self, req: TimeFilterFastProtoRequest
